@@ -6,21 +6,27 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "preview": "next build && next start",
+    "typecheck": "tsc --noEmit",
+    "analyze": "cross-env ANALYZE=true next build",
+    "genTypes": "supabase gen types typescript --local > ./src/types/database.ts",
+    "supabase:reset": "supabase stop && supabase start && npm run genTypes"
   },
   "dependencies": {
     "next": "13.4.4",
-    "react-dom": "18.2.0",
-    "react": "18.2.0"
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@types/node": "20.2.6",
-    "@types/react-dom": "18.2.4",
     "@types/react": "18.2.11",
+    "@types/react-dom": "18.2.4",
     "autoprefixer": "10.4.14",
+    "eslint": "8.42.0",
     "eslint-config-next": "13.4.4",
     "eslint-config-prettier": "^8.8.0",
-    "eslint": "8.42.0",
     "postcss": "8.4.24",
     "prettier": "^2.8.8",
     "tailwindcss": "3.3.2",
