@@ -3,7 +3,7 @@ import { clsx } from 'clsx'
 
 import { Inter } from '@/lib/fonts'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
-import { ThemeProvider } from '@/components/theme-provider'
+
 import '@/styles/globals.css'
 
 export const metadata: Metadata = {
@@ -33,12 +33,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <html lang="en" suppressHydrationWarning>
         <head />
         <body className={clsx('min-h-screen bg-background font-sans antialiased', Inter.variable)}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <div className="relative flex min-h-screen flex-col">
-              <div className="flex-1">{children}</div>
-            </div>
-            <TailwindIndicator />
-          </ThemeProvider>
+          <div className="relative flex min-h-screen flex-col">
+            <div className="flex-1">{children}</div>
+          </div>
+          <TailwindIndicator />
         </body>
       </html>
     </>
