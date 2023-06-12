@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   colorScheme: 'normal',
   viewport: 'width=device-width, initial-scale=1',
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
+    { media: '(prefers-color-scheme: light)', color: '#fff' },
+    { media: '(prefers-color-scheme: dark)', color: '#040916' },
   ],
   icons: {
     icon: '/favicon.ico',
