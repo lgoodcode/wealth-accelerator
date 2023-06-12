@@ -11,7 +11,6 @@ import { Header } from '@/components/dashboard/header'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
-  description: 'Example dashboard app using the components.',
 }
 
 export default function DashboardPage() {

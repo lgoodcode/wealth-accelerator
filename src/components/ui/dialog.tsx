@@ -6,6 +6,10 @@ import { X } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
+// backdrop-filter: blur(10px) saturate(190%) contrast(70%) brightness(70%);
+//     background-color: rgba(29, 30, 43, 0.7);
+//     border: 1px solid rgba(82, 82, 111, 0.7);
+
 const Dialog = DialogPrimitive.Root
 
 const DialogTrigger = DialogPrimitive.Trigger

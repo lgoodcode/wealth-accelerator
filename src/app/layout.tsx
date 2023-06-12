@@ -1,27 +1,12 @@
-import { Metadata } from 'next'
 import { clsx } from 'clsx'
 
+import { metadata as siteMetadata } from '@/config/site'
 import { Inter } from '@/lib/fonts'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
 
 import '@/styles/globals.css'
 
-export const metadata: Metadata = {
-  title: {
-    default: 'Next App',
-    template: '%s | Next App',
-  },
-  description: 'description',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
-  ],
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
-  },
-}
+export const metadata = siteMetadata
 
 interface RootLayoutProps {
   children: React.ReactNode
