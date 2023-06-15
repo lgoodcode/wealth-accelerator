@@ -1,3 +1,9 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "prettier"],
+  "rules": {
+    "eqeqeq": "error",
+    "no-unused-vars": "warn",
+    "prefer-const": "error"
+  },
+  "ignorePatterns": ["node_modules", "src/types/*.ts"]
 }
