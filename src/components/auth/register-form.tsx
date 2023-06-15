@@ -1,11 +1,13 @@
 'use client'
 
-import * as React from 'react'
 import * as z from 'zod'
 import Link from 'next/link'
+import { useState } from 'react'
+import { clsx } from 'clsx'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
+import { supabase } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
@@ -42,8 +44,16 @@ const formSchema = z.object({
     }),
 })
 
-export default function RegisterForm() {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+type ServerMessage = {
+  type: 'error' | 'success'
+  message: string
+} | null
+
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+export function RegisterForm({ className, ...props }: UserAuthFormProps) {
+  const [serverMessage, setServerMessage] = useState<ServerMessage>(null)
+  const [isLoading, setIsLoading] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,23 +63,55 @@ export default function RegisterForm() {
     },
   })
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data)
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true)
+    setServerMessage(null)
 
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+    const { error } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          name: data.name,
+        },
+        emailRedirectTo: `${location.origin}/auth/callback`,
+      },
+    })
+
+    if (error) {
+      setServerMessage({
+        type: 'error',
+        message: error.message,
+      })
+    } else {
+      setServerMessage({
+        type: 'success',
+        message: 'Check your email for the confirmation link',
+      })
+    }
+
+    setIsLoading(false)
   }
 
   return (
-    <div className="grid gap-6">
+    <div className={clsx('grid gap-6', className)} {...props}>
       <div className="flex flex-col space-y-2 text-center">
         <h1 className="text-2xl font-medium tracking-tight">Create an account</h1>
         <p className="text-sm text-muted-foreground">
           Enter your name, email, and password below to create your account
         </p>
       </div>
+
+      {serverMessage && (
+        <div
+          className={clsx('p-4 text-center text-white border rounded-md', {
+            'bg-red-500 border-red-500 ': serverMessage.type === 'error',
+            'bg-green-500  border-green-500 ': serverMessage.type === 'success',
+          })}
+        >
+          {serverMessage.message}
+        </div>
+      )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
@@ -124,7 +166,7 @@ export default function RegisterForm() {
 
       <div className="mx-auto">
         <span>Already have an account?</span>{' '}
-        <Link href="/login" className="hover:underline underline-offset-4 text-blue-500">
+        <Link href="/login" className="link">
           Sign In
         </Link>
       </div>

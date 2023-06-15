@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CalendarDateRangePicker } from '@/components/dashboard/date-range-picker'
 import { Overview } from '@/components/dashboard/overview'
 import { RecentSales } from '@/components/dashboard/recent-sales'
-import { Header } from '@/components/dashboard/header'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -16,8 +15,6 @@ export const metadata: Metadata = {
 export default function DashboardPage() {
   return (
     <>
-      <Header />
-
       <div className="flex flex-col md:flex">
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">

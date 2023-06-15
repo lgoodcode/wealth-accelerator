@@ -1,12 +1,15 @@
 'use client'
 
-import * as React from 'react'
 import * as z from 'zod'
 import Link from 'next/link'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { clsx } from 'clsx'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { captureException } from '@sentry/nextjs'
 
+import { supabase } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
@@ -27,7 +30,9 @@ const formSchema = z.object({
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const router = useRouter()
+  const [serverError, setServerError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,13 +41,23 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
     },
   })
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data)
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true)
+    setServerError('')
 
-    setTimeout(() => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    })
+
+    if (error) {
+      setServerError(error.message)
       setIsLoading(false)
-    }, 3000)
+      captureException(error)
+      return
+    }
+
+    router.push('/dashboard/home')
   }
 
   return (
@@ -51,6 +66,12 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
         <h1 className="text-3xl font-medium tracking-tight">Welcome back</h1>
         <p className="text-sm text-muted-foreground">Sign in to your account</p>
       </div>
+
+      {serverError && (
+        <div className="p-4 text-center border rounded-md text-white bg-red-500 border-red-500 ">
+          {serverError}
+        </div>
+      )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
