@@ -5,15 +5,15 @@ const requiredEnvVars = [
   'SUPABASE_SERVICE_ROLE_KEY',
   'SENTRY_DSN',
   'NEXT_PUBLIC_SENTRY_DSN',
-]
+];
 
 // Skip checking environment variables if running on CI
 if (!process.env.CI) {
   requiredEnvVars.forEach((envVar) => {
     if (!process.env[envVar]) {
-      throw new Error(`${envVar} is not defined`)
+      throw new Error(`${envVar} is not defined`);
     }
 
-    console.log('✅', envVar, 'is defined')
-  })
+    console.log('✅', envVar, 'is defined');
+  });
 }

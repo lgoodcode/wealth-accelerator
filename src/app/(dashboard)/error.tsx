@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import { useRouter } from 'next/navigation'
-import { captureException } from '@sentry/nextjs'
+import { useRouter } from 'next/navigation';
+import { captureException } from '@sentry/nextjs';
 
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button';
 
 export default function Error({ error }: any) {
-  const router = useRouter()
+  const router = useRouter();
 
-  captureException(error)
+  captureException(error);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -19,5 +19,5 @@ export default function Error({ error }: any) {
         </Button>
       </div>
     </div>
-  )
+  );
 }

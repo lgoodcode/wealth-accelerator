@@ -1,16 +1,16 @@
-import { Metadata } from 'next'
-import { Activity, CreditCard, DollarSign, Download, Users } from 'lucide-react'
+import { Metadata } from 'next';
+import { Activity, CreditCard, DollarSign, Download, Users } from 'lucide-react';
 
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CalendarDateRangePicker } from '@/components/dashboard/date-range-picker'
-import { Overview } from '@/components/dashboard/overview'
-import { RecentSales } from '@/components/dashboard/recent-sales'
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CalendarDateRangePicker } from '@/components/dashboard/date-range-picker';
+import { Overview } from '@/components/dashboard/overview';
+import { RecentSales } from '@/components/dashboard/recent-sales';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
-}
+};
 
 export default function DashboardPage() {
   return (
@@ -107,5 +107,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </>
-  )
+  );
 }

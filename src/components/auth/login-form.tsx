@@ -1,18 +1,18 @@
-'use client'
+'use client';
 
-import * as z from 'zod'
-import Link from 'next/link'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { clsx } from 'clsx'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { captureException } from '@sentry/nextjs'
+import * as z from 'zod';
+import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { clsx } from 'clsx';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { captureException } from '@sentry/nextjs';
 
-import { supabase } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Spinner } from '@/components/ui/spinner'
+import { supabase } from '@/lib/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
 import {
   Form,
   FormControl,
@@ -20,45 +20,45 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
+} from '@/components/ui/form';
 
 const formSchema = z.object({
   email: z.string().nonempty('Please enter your email').email(),
   password: z.string().nonempty('Please enter your password'),
-})
+});
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
-  const router = useRouter()
-  const [serverError, setServerError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const [serverError, setServerError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
       password: '',
     },
-  })
+  });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setIsLoading(true)
-    setServerError('')
+    setIsLoading(true);
+    setServerError('');
 
     const { error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,
-    })
+    });
 
     if (error) {
-      setServerError(error.message)
-      setIsLoading(false)
-      captureException(error)
-      return
+      setServerError(error.message);
+      setIsLoading(false);
+      captureException(error);
+      return;
     }
 
-    router.push('/dashboard/home')
-  }
+    router.push('/dashboard/home');
+  };
 
   return (
     <div className={clsx('grid gap-6', className)} {...props}>
@@ -117,5 +117,5 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
         </Link>
       </div>
     </div>
-  )
+  );
 }

@@ -1,15 +1,15 @@
-import { clsx } from 'clsx'
+import { clsx } from 'clsx';
 
-import { metadata as siteMetadata } from '@/config/site'
-import { Inter } from '@/lib/fonts'
-import { TailwindIndicator } from '@/components/tailwind-indicator'
+import { metadata as siteMetadata } from '@/config/site';
+import { Inter } from '@/lib/fonts';
+import { TailwindIndicator } from '@/components/tailwind-indicator';
 
-import '@/styles/globals.css'
+import '@/styles/globals.css';
 
-export const metadata = siteMetadata
+export const metadata = siteMetadata;
 
 interface RootLayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
@@ -25,5 +25,5 @@ export default function RootLayout({ children }: RootLayoutProps) {
         </body>
       </html>
     </>
-  )
+  );
 }

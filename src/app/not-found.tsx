@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button';
 
 export default function NotFound() {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -18,5 +18,5 @@ export default function NotFound() {
         </Button>
       </div>
     </div>
-  )
+  );
 }

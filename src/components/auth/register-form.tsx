@@ -1,16 +1,16 @@
-'use client'
+'use client';
 
-import * as z from 'zod'
-import Link from 'next/link'
-import { useState } from 'react'
-import { clsx } from 'clsx'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import * as z from 'zod';
+import Link from 'next/link';
+import { useState } from 'react';
+import { clsx } from 'clsx';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
-import { supabase } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Spinner } from '@/components/ui/spinner'
+import { supabase } from '@/lib/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
 import {
   Form,
   FormControl,
@@ -18,7 +18,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
+} from '@/components/ui/form';
 
 const formSchema = z.object({
   name: z
@@ -42,18 +42,18 @@ const formSchema = z.object({
     .refine((value) => /[!@#$%&'*+/=?^_`{|}~-]+/.test(value), {
       message: 'Password must contain at least one special character',
     }),
-})
+});
 
 type ServerMessage = {
-  type: 'error' | 'success'
-  message: string
-} | null
+  type: 'error' | 'success';
+  message: string;
+} | null;
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function RegisterForm({ className, ...props }: UserAuthFormProps) {
-  const [serverMessage, setServerMessage] = useState<ServerMessage>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,11 +61,11 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
       email: '',
       password: '',
     },
-  })
+  });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setIsLoading(true)
-    setServerMessage(null)
+    setIsLoading(true);
+    setServerMessage(null);
 
     const { error } = await supabase.auth.signUp({
       email: data.email,
@@ -76,22 +76,22 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
         },
         emailRedirectTo: `${location.origin}/auth/callback`,
       },
-    })
+    });
 
     if (error) {
       setServerMessage({
         type: 'error',
         message: error.message,
-      })
+      });
     } else {
       setServerMessage({
         type: 'success',
         message: 'Check your email for the confirmation link',
-      })
+      });
     }
 
-    setIsLoading(false)
-  }
+    setIsLoading(false);
+  };
 
   return (
     <div className={clsx('grid gap-6', className)} {...props}>
@@ -171,5 +171,5 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
         </Link>
       </div>
     </div>
-  )
+  );
 }

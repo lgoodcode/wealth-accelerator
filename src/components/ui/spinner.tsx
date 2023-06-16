@@ -1,4 +1,4 @@
-import { clsx } from 'clsx'
+import { clsx } from 'clsx';
 
 export function Spinner({ className }: React.HTMLAttributes<HTMLSpanElement>) {
   return (
@@ -8,5 +8,5 @@ export function Spinner({ className }: React.HTMLAttributes<HTMLSpanElement>) {
         className
       )}
     ></span>
-  )
+  );
 }

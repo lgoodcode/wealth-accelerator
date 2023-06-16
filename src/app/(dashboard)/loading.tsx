@@ -1,4 +1,4 @@
-import { Spinner } from '@/components/ui/spinner'
+import { Spinner } from '@/components/ui/spinner';
 
 export default function Loading() {
   return (
@@ -8,5 +8,5 @@ export default function Loading() {
         <h1 className="text-4xl font-semibold">Loading...</h1>
       </div>
     </>
-  )
+  );
 }

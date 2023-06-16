@@ -1,28 +1,28 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { redirect } from 'next/navigation'
-import { captureException } from '@sentry/nextjs'
+import Image from 'next/image';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { captureException } from '@sentry/nextjs';
 
-import { createSupabaseServer } from '@/lib/supabase/server'
-import { ThemeProvider } from '@/components/theme-provider'
+import { createSupabaseServer } from '@/lib/supabase/server';
+import { ThemeProvider } from '@/components/theme-provider';
 
 interface AuthenticationLayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export default async function AuthenticationLayout({ children }: AuthenticationLayoutProps) {
-  const supabase = createSupabaseServer()
+  const supabase = createSupabaseServer();
   const {
     error,
     data: { session },
-  } = await supabase.auth.getSession()
+  } = await supabase.auth.getSession();
 
   if (error) {
-    captureException(error)
+    captureException(error);
   }
 
   if (session) {
-    return redirect('/dashboard')
+    return redirect('/dashboard');
   }
 
   return (
@@ -59,5 +59,5 @@ export default async function AuthenticationLayout({ children }: AuthenticationL
         </div>
       </div>
     </ThemeProvider>
-  )
+  );
 }

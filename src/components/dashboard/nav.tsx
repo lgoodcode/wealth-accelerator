@@ -1,6 +1,7 @@
-import Link from 'next/link'
+import { forwardRef } from 'react';
+import { LucideIcon } from 'lucide-react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 import {
   NavigationMenu,
@@ -9,75 +10,50 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu'
-import { forwardRef } from 'react'
+} from '@/components/ui/navigation-menu';
+import { generalRoutes } from '@/routes/general';
+import { financeRoutes } from '@/routes/finance';
+import { adminRoutes } from '@/routes/admin';
 
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: 'Alert Dialog',
-    href: '/docs/primitives/alert-dialog',
-    description:
-      'A modal dialog that interrupts the user with important content and expects a response.',
-  },
-  {
-    title: 'Hover Card',
-    href: '/docs/primitives/hover-card',
-    description: 'For sighted users to preview content available behind a link.',
-  },
-  {
-    title: 'Progress',
-    href: '/docs/primitives/progress',
-    description:
-      'Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.',
-  },
-  {
-    title: 'Scroll-area',
-    href: '/docs/primitives/scroll-area',
-    description: 'Visually or semantically separates content.',
-  },
-  {
-    title: 'Tabs',
-    href: '/docs/primitives/tabs',
-    description:
-      'A set of layered sections of content—known as tab panels—that are displayed one at a time.',
-  },
-  {
-    title: 'Tooltip',
-    href: '/docs/primitives/tooltip',
-    description:
-      'A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.',
-  },
-]
+interface ListItemProps extends React.ComponentPropsWithoutRef<'a'> {
+  Icon: LucideIcon;
+}
 
-const ListItem = forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
-  ({ className, title, children, ...props }, ref) => {
+const ListItem = forwardRef<React.ElementRef<'a'>, ListItemProps>(
+  ({ className, title, Icon, children, ...props }, ref) => {
     return (
       <li>
         <NavigationMenuLink asChild>
           <a
             ref={ref}
             className={cn(
-              'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+              'block h-auto select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
               className
             )}
             {...props}
           >
-            <div className="text-sm font-medium leading-none">{title}</div>
-            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
+            <div className="flex flex-row gap-3">
+              <div className="h-full flex items-start">
+                <Icon className="w-6 h-6" />
+              </div>
+              <div className="space-y-2">
+                <div className="text-sm font-semibold leading-none">{title}</div>
+                <p className="text-sm leading-snug text-muted-foreground">{children}</p>
+              </div>
+            </div>
           </a>
         </NavigationMenuLink>
       </li>
-    )
+    );
   }
-)
-ListItem.displayName = 'ListItem'
+);
+ListItem.displayName = 'ListItem';
 
 export function Nav({ className }: React.HTMLAttributes<HTMLElement>) {
   return (
     <NavigationMenu className={className}>
       <NavigationMenuList>
-        <NavigationMenuItem>
+        {/* <NavigationMenuItem>
           <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
@@ -92,27 +68,47 @@ export function Nav({ className }: React.HTMLAttributes<HTMLElement>) {
               </ListItem>
             </ul>
           </NavigationMenuContent>
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
+
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Components</NavigationMenuTrigger>
+          <NavigationMenuTrigger>General</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {components.map((component) => (
-                <ListItem key={component.title} title={component.title} href={component.href}>
-                  {component.description}
+              {generalRoutes.map((route) => (
+                <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
+                  {route.description}
                 </ListItem>
               ))}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
+
         <NavigationMenuItem>
-          <Link href="/docs" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Documentation
-            </NavigationMenuLink>
-          </Link>
+          <NavigationMenuTrigger>Finance</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+              {financeRoutes.map((route) => (
+                <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
+                  {route.description}
+                </ListItem>
+              ))}
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+              {adminRoutes.map((route) => (
+                <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
+                  {route.description}
+                </ListItem>
+              ))}
+            </ul>
+          </NavigationMenuContent>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
-  )
+  );
 }
