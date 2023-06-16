@@ -96,7 +96,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
     <div className={clsx('grid gap-6', className)} {...props}>
       <div className="flex flex-col space-y-2 text-center">
         <h1 className="text-2xl font-medium tracking-tight">Create an account</h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="md:px-8 text-sm text-muted-foreground">
           Enter your name, email, and password below to create your account
         </p>
       </div>

@@ -15,8 +15,8 @@ export default async function AuthenticationLayout({ children }: AuthenticationL
           <Image src="/img/bg-auth.jpg" alt="mountain covered by fog" fill />
         </div>
 
-        <div className="lg:p-8 bg-white min-h-screen flex flex-col items-center justify-center">
-          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+        <div className="lg:p-8 lg:bg-muted min-h-screen flex flex-col items-center justify-center">
+          <div className="mx-auto lg:p-8 lg:py-12 rounded-md bg-white flex w-full flex-col justify-center space-y-6 sm:w-[480px]">
             <Image
               src="/img/title-logo.png"
               width={270}
