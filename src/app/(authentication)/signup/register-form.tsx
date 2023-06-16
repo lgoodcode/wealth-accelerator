@@ -156,7 +156,13 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
             )}
           />
 
-          <Button type="submit" loading={isLoading} disabled={isLoading}>
+          <Button
+            type="submit"
+            loading={isLoading}
+            disabled={isLoading}
+            // override default spinner color for light theme
+            spinnerProps={{ className: 'border-white border-b-primary' }}
+          >
             Sign Up
           </Button>
         </form>

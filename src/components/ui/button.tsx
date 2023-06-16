@@ -37,6 +37,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   loading?: boolean;
+  spinnerProps?: React.ComponentProps<typeof Spinner>;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -50,7 +51,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={loading}
         {...props}
       >
-        {loading && <Spinner className="mr-2" size={spinnerSize} />}
+        {loading && (
+          <Spinner className={cn('mr-2', props.spinnerProps?.className)} size={spinnerSize} />
+        )}
         {children}
       </Comp>
     );

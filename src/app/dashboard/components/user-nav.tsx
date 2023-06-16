@@ -33,7 +33,7 @@ export function UserNav({ user }: UserNavProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative px-3 rounded-full">
+        <Button variant="ghost" className="relative px-2 rounded-full border-primary border">
           {profileLetters}
         </Button>
       </DropdownMenuTrigger>
