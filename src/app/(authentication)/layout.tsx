@@ -1,9 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { captureException } from '@sentry/nextjs';
 
-import { createSupabaseServer } from '@/lib/supabase/server';
 import { ThemeProvider } from '@/components/theme-provider';
 
 interface AuthenticationLayoutProps {
@@ -11,20 +8,6 @@ interface AuthenticationLayoutProps {
 }
 
 export default async function AuthenticationLayout({ children }: AuthenticationLayoutProps) {
-  const supabase = createSupabaseServer();
-  const {
-    error,
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (error) {
-    captureException(error);
-  }
-
-  if (session) {
-    return redirect('/dashboard');
-  }
-
   return (
     <ThemeProvider attribute="class" forcedTheme="light">
       <div className="container relative flex flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">

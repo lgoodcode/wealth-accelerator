@@ -3,6 +3,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
+import { Spinner } from '@/components/ui/spinner';
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
@@ -17,9 +18,10 @@ const buttonVariants = cva(
         link: 'underline-offset-4 hover:underline text-primary',
       },
       size: {
-        default: 'h-10 py-2 px-4',
+        default: 'h-10 py-2 px-4 text-md',
+        xs: 'h-6 px-2 rounded-md',
         sm: 'h-9 px-3 rounded-md',
-        lg: 'h-11 px-8 rounded-md',
+        lg: 'h-11 px-8 text-lg rounded-md',
         icon: 'h-9 px-2 rounded-md',
       },
     },
@@ -34,13 +36,23 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  loading?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, children, loading, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
+    const spinnerSize = size === 'icon' ? 'sm' : size || 'default';
     return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        disabled={loading}
+        {...props}
+      >
+        {loading && <Spinner className="mr-2" size={spinnerSize} />}
+        {children}
+      </Comp>
     );
   }
 );

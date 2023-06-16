@@ -10,7 +10,6 @@ import { useForm } from 'react-hook-form';
 import { supabase } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
 import {
   Form,
   FormControl,
@@ -134,7 +133,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input placeholder="you@example.com" {...field} />
                 </FormControl>
@@ -157,8 +156,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
             )}
           />
 
-          <Button type="submit" disabled={isLoading}>
-            {isLoading && <Spinner className="mr-2" />}
+          <Button type="submit" loading={isLoading} disabled={isLoading}>
             Sign Up
           </Button>
         </form>

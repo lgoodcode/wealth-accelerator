@@ -1,8 +1,10 @@
 import { forwardRef } from 'react';
+import Link from 'next/link';
 import { LucideIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
+import { generalRoutes, financeRoutes, adminRoutes, exampleRoutes } from '@/routes';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -10,22 +12,22 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-import { generalRoutes } from '@/routes/general';
-import { financeRoutes } from '@/routes/finance';
-import { adminRoutes } from '@/routes/admin';
 
 interface ListItemProps extends React.ComponentPropsWithoutRef<'a'> {
+  href: string;
   Icon: LucideIcon;
 }
 
 const ListItem = forwardRef<React.ElementRef<'a'>, ListItemProps>(
-  ({ className, title, Icon, children, ...props }, ref) => {
+  ({ className, title, Icon, children, href, ...props }, ref) => {
     return (
       <li>
         <NavigationMenuLink asChild>
-          <a
+          <Link
             ref={ref}
+            href={href}
             className={cn(
               'block h-auto select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
               className
@@ -41,7 +43,7 @@ const ListItem = forwardRef<React.ElementRef<'a'>, ListItemProps>(
                 <p className="text-sm leading-snug text-muted-foreground">{children}</p>
               </div>
             </div>
-          </a>
+          </Link>
         </NavigationMenuLink>
       </li>
     );
@@ -108,6 +110,21 @@ export function Nav({ className }: React.HTMLAttributes<HTMLElement>) {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
+
+        {process.env.NODE_ENV === 'development' && (
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Examples</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                {exampleRoutes.map((route) => (
+                  <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
+                    {route.description}
+                  </ListItem>
+                ))}
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        )}
       </NavigationMenuList>
     </NavigationMenu>
   );

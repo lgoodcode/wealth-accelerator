@@ -11,11 +11,7 @@ export default function Error({ error }: any) {
     <div className="flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-4xl font-semibold">Oops, Something went wrong</h1>
       <div className="mt-6 text-lg text-muted-foreground">
-        <Button
-          size="lg"
-          className="text-lg"
-          onClick={() => window.location.assign('/dashboard/home')}
-        >
+        <Button size="lg" onClick={() => window.location.assign('/dashboard/home')}>
           Go home
         </Button>
       </div>

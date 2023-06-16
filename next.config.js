@@ -4,7 +4,17 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  redirects: async () => {
+    return [
+      {
+        source: '/dashboard',
+        destination: '/dashboard/home',
+        permanent: true,
+      },
+    ];
+  },
+};
 
 module.exports = withBundleAnalyzer(
   withSentryConfig(

@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
 
 import { createSupabaseServer } from '@/lib/supabase/server';
+import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
-import { Header } from '@/components/dashboard/header';
-import { Session } from '@supabase/supabase-js';
+import { Header } from './components/header';
+import type { Session } from '@supabase/supabase-js';
 
 export const metadata: Metadata = {
   description: 'Wealth Accelerator app.',
@@ -17,6 +18,8 @@ export const metadata: Metadata = {
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
+
+export const dynamic = 'force-dynamic';
 
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
   const supabase = createSupabaseServer();
@@ -36,6 +39,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
       <>
         <Header user={user} />
         {children}
+        <Toaster />
       </>
     </ThemeProvider>
   );

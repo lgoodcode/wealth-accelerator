@@ -1,36 +1,32 @@
-import { Metadata } from "next"
-import { History } from "lucide-react"
+import { Metadata } from 'next';
+import { History } from 'lucide-react';
 
-import { Button } from "@/components/ui/button"
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Textarea } from "@/components/ui/textarea"
+import { Button } from '@/components/ui/button';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 
-import { CodeViewer } from "./components/code-viewer"
-import { Icons } from "./components/icons"
-import { MaxLengthSelector } from "./components/maxlength-selector"
-import { ModelSelector } from "./components/model-selector"
-import { PresetActions } from "./components/preset-actions"
-import { PresetSave } from "./components/preset-save"
-import { PresetSelector } from "./components/preset-selector"
-import { PresetShare } from "./components/preset-share"
-import { TemperatureSelector } from "./components/temperature-selector"
-import { TopPSelector } from "./components/top-p-selector"
-import { models, types } from "./data/models"
-import { presets } from "./data/presets"
-import "./styles.css"
-import Image from "next/image"
+import { CodeViewer } from './components/code-viewer';
+import { Icons } from './components/icons';
+import { MaxLengthSelector } from './components/maxlength-selector';
+import { ModelSelector } from './components/model-selector';
+import { PresetActions } from './components/preset-actions';
+import { PresetSave } from './components/preset-save';
+import { PresetSelector } from './components/preset-selector';
+import { PresetShare } from './components/preset-share';
+import { TemperatureSelector } from './components/temperature-selector';
+import { TopPSelector } from './components/top-p-selector';
+import { models, types } from './data/models';
+import { presets } from './data/presets';
+import './styles.css';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: "Playground",
-  description: "The OpenAI Playground built using the components.",
-}
+  title: 'Playground',
+  description: 'The OpenAI Playground built using the components.',
+};
 
 export default function PlaygroundPage() {
   return (
@@ -77,10 +73,9 @@ export default function PlaygroundPage() {
                       </span>
                     </HoverCardTrigger>
                     <HoverCardContent className="w-[320px] text-sm" side="left">
-                      Choose the interface that best suits your task. You can
-                      provide: a simple prompt to complete, starting and ending
-                      text to insert a completion within, or some text with
-                      instructions to edit it.
+                      Choose the interface that best suits your task. You can provide: a simple
+                      prompt to complete, starting and ending text to insert a completion within, or
+                      some text with instructions to edit it.
                     </HoverCardContent>
                   </HoverCard>
                   <TabsList className="grid grid-cols-3">
@@ -151,10 +146,7 @@ export default function PlaygroundPage() {
                         </div>
                         <div className="flex flex-col space-y-2">
                           <Label htmlFor="instructions">Instructions</Label>
-                          <Textarea
-                            id="instructions"
-                            placeholder="Fix the grammar."
-                          />
+                          <Textarea id="instructions" placeholder="Fix the grammar." />
                         </div>
                       </div>
                       <div className="mt-[21px] min-h-[400px] rounded-md border bg-muted lg:min-h-[700px]" />
@@ -174,5 +166,5 @@ export default function PlaygroundPage() {
         </Tabs>
       </div>
     </>
-  )
+  );
 }

@@ -12,7 +12,6 @@ import { captureException } from '@sentry/nextjs';
 import { supabase } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
 import {
   Form,
   FormControl,
@@ -103,8 +102,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
             )}
           />
 
-          <Button type="submit" disabled={isLoading}>
-            {isLoading && <Spinner className="mr-2" />}
+          <Button type="submit" loading={isLoading} disabled={isLoading}>
             Sign In
           </Button>
         </form>
