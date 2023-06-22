@@ -56,6 +56,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
       return;
     }
 
+    router.refresh();
     router.push('/dashboard/home');
   };
 
@@ -107,7 +108,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
             loading={isLoading}
             disabled={isLoading}
             // override default spinner color for light theme
-            spinnerProps={{ className: 'border-white border-b-primary' }}
+            spinner={{ className: 'border-white border-b-primary' }}
           >
             Sign In
           </Button>
