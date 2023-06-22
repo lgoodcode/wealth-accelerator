@@ -30,7 +30,7 @@ export function UserNav({ user }: UserNavProps) {
     : user.name.slice(0, 2);
 
   const logout = async () => {
-    await supabase.auth.signOut();
+    supabase.auth.signOut();
     router.push('/login');
   };
 
