@@ -26,7 +26,7 @@ export default function Error({ error, reset }: any) {
       <h1 className="text-4xl font-semibold">Oops, an error occured.</h1>
       <div className="mt-6 flex gap-4">
         <Button loading={isRetrying} onClick={handleReset}>
-          Try again
+          Reload
         </Button>
         <Button loading={isLoading} onClick={handleGoHome}>
           Go home

@@ -1,10 +1,12 @@
-import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { captureException } from '@sentry/nextjs';
+import type { Metadata } from 'next';
 
 import { createSupabaseServer } from '@/lib/supabase/server';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
+import { UserProvider } from './components/user-provider';
 import { Header } from './components/header';
-import type { Session } from '@supabase/supabase-js';
 
 export const metadata: Metadata = {
   description: 'Wealth Accelerator app.',
@@ -19,28 +21,47 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
-export const dynamic = 'force-dynamic';
-
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
   const supabase = createSupabaseServer();
   const {
+    error: errorSession,
     data: { session: _session },
   } = await supabase.auth.getSession();
-  const session = _session as Session;
+  const session = _session || null;
 
-  const user: User = {
-    id: session.user.id,
-    email: session.user.email || '',
-    name: session.user.user_metadata.name,
-  };
+  if (errorSession) {
+    console.error(errorSession);
+    captureException(errorSession);
+    return;
+  }
+
+  if (!session) {
+    redirect('/login');
+  }
+
+  const { error: errorUser, data: user } = await supabase
+    .from('users')
+    .select()
+    .eq('id', session.user.id)
+    .single();
+
+  if (errorUser) {
+    console.error(errorUser);
+    captureException(errorUser);
+    return;
+  }
+
+  if (!user) {
+    redirect('/login');
+  }
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <>
+      <UserProvider user={user}>
         <Header user={user} />
         {children}
         <Toaster />
-      </>
+      </UserProvider>
     </ThemeProvider>
   );
 }
