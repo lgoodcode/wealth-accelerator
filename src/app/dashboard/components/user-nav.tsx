@@ -19,11 +19,15 @@ interface UserNavProps {
 
 export function UserNav({ user }: UserNavProps) {
   const router = useRouter();
-  const profileLetters = user.name
-    .split(' ')
-    .slice(0, 2)
-    .map((n) => n[0])
-    .join('');
+  // If the user only has one name, use the first two letters of that name as the profile letters.
+  // Otherwise, use the first letter of the first and last name.
+  const profileLetters = user.name.includes(' ')
+    ? user.name
+        .split(' ')
+        .slice(0, 2)
+        .map((name) => name[0])
+        .join('')
+    : user.name.slice(0, 2);
 
   const logout = async () => {
     await supabase.auth.signOut();
@@ -33,8 +37,11 @@ export function UserNav({ user }: UserNavProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative px-2 rounded-full border-primary border">
-          {profileLetters}
+        <Button
+          variant="ghost"
+          className="relative text-sm px-2.5 w-9 h-9 rounded-full border-primary border"
+        >
+          {profileLetters.toUpperCase()}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-64" align="end" forceMount>
