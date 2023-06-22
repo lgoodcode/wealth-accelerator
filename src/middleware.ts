@@ -14,6 +14,19 @@ export async function middleware(req: NextRequest) {
 
   // Get the auth token from the cookie, decode it, and check if it's expired
   const rawSupabaseAuthTokenCookie = req.cookies.get('sb-localhost-auth-token')?.value;
+  const isInvalidAuthTokenCookie =
+    !rawSupabaseAuthTokenCookie || rawSupabaseAuthTokenCookie === 'undefined';
+
+  // If the auth token cookie is invalid, clear the cookie and redirect to login page
+  if (isInvalidAuthTokenCookie) {
+    res.cookies.set('sb-localhost-auth-token', '', { maxAge: -1 });
+
+    if (isAuthPage) {
+      return res;
+    }
+    return NextResponse.redirect(new URL(`${req.nextUrl.origin}/login`));
+  }
+
   const supabaseAuthTokenCookie = JSON.parse(rawSupabaseAuthTokenCookie || '');
   const supabaseAuthTokenString: string | null = Array.isArray(supabaseAuthTokenCookie)
     ? supabaseAuthTokenCookie[0]
