@@ -24,7 +24,7 @@ const formSchema = z.object({
     .string()
     .min(2, 'Your name must contain at least 2 characters')
     .max(50, 'Name is too long'),
-  email: z.string().email(),
+  email: z.string().nonempty('Please enter your email').email(),
   password: z
     .string()
     .min(8, 'Password must contain at least 8 characters')
@@ -70,9 +70,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
       email: data.email,
       password: data.password,
       options: {
-        data: {
-          name: data.name,
-        },
+        data: { name: data.name },
         emailRedirectTo: `${location.origin}/auth/callback`,
       },
     });
@@ -161,7 +159,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
             loading={isLoading}
             disabled={isLoading}
             // override default spinner color for light theme
-            spinnerProps={{ className: 'border-white border-b-primary' }}
+            spinner={{ className: 'border-white border-b-primary' }}
           >
             Sign Up
           </Button>
