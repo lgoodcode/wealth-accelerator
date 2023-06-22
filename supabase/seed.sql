@@ -23,8 +23,8 @@ CREATE POLICY "Can update own user data." ON users
   FOR UPDATE
   WITH CHECK (auth.uid() = id AND role = users.role);
 
--- Function that creates a user when a new user is created in auth.users
-CREATE OR REPLACE FUNCTION public.handle_new_user()
+-- Function that creates a user in our users table when a new user is created in auth.users
+CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.users (id, email, name)
@@ -42,5 +42,4 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW
-  EXECUTE PROCEDURE public.handle_new_user();
-
+  EXECUTE PROCEDURE handle_new_user();

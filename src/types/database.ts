@@ -15,7 +15,7 @@ export interface Database {
           email: string
           id: string
           name: string
-          role: Database["public"]["Enums"]["role"]
+          role: Database["public"]["Enums"]["role_type"]
           updated_at: string
         }
         Insert: {
@@ -23,7 +23,7 @@ export interface Database {
           email: string
           id: string
           name: string
-          role?: Database["public"]["Enums"]["role"]
+          role?: Database["public"]["Enums"]["role_type"]
           updated_at?: string
         }
         Update: {
@@ -31,7 +31,7 @@ export interface Database {
           email?: string
           id?: string
           name?: string
-          role?: Database["public"]["Enums"]["role"]
+          role?: Database["public"]["Enums"]["role_type"]
           updated_at?: string
         }
       }
@@ -43,7 +43,7 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
-      role: "user" | "admin"
+      role_type: "user" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never

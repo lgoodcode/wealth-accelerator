@@ -1,8 +1,10 @@
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
 import { createSupabaseServer } from '@/lib/supabase/server';
+import { authCookieParser } from '@/lib/supabase/parseAuthCookie';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import { UserProvider } from './components/user-provider';
@@ -21,37 +23,27 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
+/**
+ * In the layout, we know the user is authenticated because the middleware refreshes the session
+ * before rendering the page. Knowing that the session cookie is valid, we can directly get the user
+ * id from it instead of having to make a duplicate request to the database to refresh/verify the session.
+ */
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
   const supabase = createSupabaseServer();
-  const {
-    error: errorSession,
-    data: { session: _session },
-  } = await supabase.auth.getSession();
-  const session = _session || null;
-
-  if (errorSession) {
-    console.error(errorSession);
-    captureException(errorSession);
-    return;
-  }
-
-  if (!session) {
-    redirect('/login');
-  }
+  const authToken = authCookieParser(cookies());
 
   const { error: errorUser, data: user } = await supabase
     .from('users')
     .select()
-    .eq('id', session.user.id)
+    .eq('id', authToken?.sub)
     .single();
 
   if (errorUser) {
-    console.error(errorUser);
+    console.error('DashboardLayout error', errorUser);
     captureException(errorUser);
-    return;
   }
 
-  if (!user) {
+  if (errorUser || !user) {
     redirect('/login');
   }
 

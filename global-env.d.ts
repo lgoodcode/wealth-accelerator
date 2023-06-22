@@ -1,11 +1,10 @@
 export declare global {
-  export type Role = 'admin' | 'user';
   /** Supabase user */
   export type User = {
     id: string;
     email: string;
     name: string;
-    role: Role;
+    role: string;
     created_at: string;
     updated_at: string;
   };

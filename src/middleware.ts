@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
-import jwtDecode, { type JwtPayload } from 'jwt-decode';
+import { captureException } from '@sentry/nextjs';
 
+import { authCookieParser } from '@/lib/supabase/parseAuthCookie';
 import type { Database } from '@/types/database';
 
 const authPagesRegex = /^\/(login|signup|forgot-password|reset-password)/;
@@ -11,35 +12,10 @@ export async function middleware(req: NextRequest) {
   const isLoginPage = req.nextUrl.pathname === '/login';
   const isAuthPage = authPagesRegex.test(req.nextUrl.pathname);
   const supabase = createMiddlewareClient<Database>({ req, res });
-
-  // Get the auth token from the cookie, decode it, and check if it's expired
-  const rawSupabaseAuthTokenCookie = req.cookies.get('sb-localhost-auth-token')?.value;
-  const isInvalidAuthTokenCookie =
-    !rawSupabaseAuthTokenCookie || rawSupabaseAuthTokenCookie === 'undefined';
-
-  // If the auth token cookie is invalid, clear the cookie and redirect to login page
-  if (isInvalidAuthTokenCookie) {
-    res.cookies.set('sb-localhost-auth-token', '', { maxAge: -1 });
-
-    if (isAuthPage) {
-      return res;
-    }
-    return NextResponse.redirect(new URL(`${req.nextUrl.origin}/login`));
-  }
-
-  const supabaseAuthTokenCookie = JSON.parse(rawSupabaseAuthTokenCookie || '');
-  const supabaseAuthTokenString: string | null = Array.isArray(supabaseAuthTokenCookie)
-    ? supabaseAuthTokenCookie[0]
-    : null;
-  const supabaseAuthToken = jwtDecode<JwtPayload>(supabaseAuthTokenString || '');
-  const isTokenInvalid =
-    !supabaseAuthToken || Date.now() >= (supabaseAuthToken.exp as number) * 1000;
-
-  // If the auth token isn't valid (none or expired), clear the cookie and redirect to login page
+  const token = authCookieParser(req.cookies);
+  // If the auth token isn't valid (none or expired), redirect to login page
   // for all pages except auth pages
-  if (isTokenInvalid) {
-    res.cookies.set('sb-localhost-auth-token', '', { maxAge: -1 });
-
+  if (!token) {
     if (isAuthPage) {
       return res;
     }
@@ -51,6 +27,11 @@ export async function middleware(req: NextRequest) {
     error,
     data: { session },
   } = await supabase.auth.getSession();
+
+  if (error) {
+    console.error('Middleware error', error);
+    captureException(error);
+  }
 
   // If there is an error or there's no session, redirect to login page for all pages except auth pages
   if ((error || !session) && !isAuthPage) {
