@@ -85,7 +85,23 @@
   }
 }
 
+/* Makes the password discs bigger */
 input[type='password'] {
   -webkit-text-stroke-width: 0.2em;
   letter-spacing: 0.2em;
+}
+
+/* Hide input controls for number type inputs */
+/*  */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
 }
