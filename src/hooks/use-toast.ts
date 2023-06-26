@@ -20,11 +20,10 @@ const actionTypes = {
   REMOVE_TOAST: 'REMOVE_TOAST',
 } as const;
 
-let count = 0;
-
-function genId() {
-  count = (count + 1) % Number.MAX_VALUE;
-  return count.toString();
+function generateId() {
+  const timestamp = Date.now().toString(36);
+  const randomNum = Math.floor(Math.random() * 1000000000).toString(36);
+  return `${timestamp}-${randomNum}`;
 }
 
 type ActionType = typeof actionTypes;
@@ -122,7 +121,6 @@ export const reducer = (state: State, action: Action): State => {
   }
 };
 
-// eslint-disable-next-line no-unused-vars
 const listeners: Array<(state: State) => void> = [];
 
 let memoryState: State = { toasts: [] };
@@ -137,7 +135,7 @@ function dispatch(action: Action) {
 type Toast = Omit<ToasterToast, 'id'>;
 
 function toast({ ...props }: Toast) {
-  const id = genId();
+  const id = generateId();
 
   const update = (props: ToasterToast) =>
     dispatch({
