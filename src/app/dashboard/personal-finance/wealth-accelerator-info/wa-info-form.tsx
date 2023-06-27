@@ -71,6 +71,7 @@ interface WaInfoFormProps {
 }
 
 export function WaInfoForm({ initialValues }: WaInfoFormProps) {
+  console.log(initialValues);
   const user = useUser();
   const form = useForm<WaInfoFormType>({
     resolver: zodResolver(WaInfoFormSchema),
@@ -137,7 +138,8 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
                 Stop Invest <span className="ml-1 text-muted-foreground">(year)</span>
               </FormLabel>
               <NumberInput
-                placeholder="Number of years"
+                placeholder="10"
+                value={field.value}
                 onValueChange={(value) => field.onChange(parseInt(value || '0'))}
               />
               <FormDescription>The number of years that you want to invest for.</FormDescription>
@@ -154,7 +156,8 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
                 Start Withdrawl<span className="ml-1 text-muted-foreground">(year)</span>
               </FormLabel>
               <NumberInput
-                placeholder="Number of years"
+                placeholder="15"
+                value={field.value}
                 onValueChange={(value) => field.onChange(parseInt(value || '0'))}
               />
               <FormDescription>
@@ -176,6 +179,7 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
               <NumberInput
                 placeholder="$100,000"
                 prefix="$"
+                value={field.value}
                 onValueChange={(value) => field.onChange(parseInt(value || '0'))}
               />
               <FormDescription>
@@ -197,6 +201,7 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
               <NumberInput
                 placeholder="25%"
                 suffix="%"
+                value={field.value}
                 onValueChange={(value) => field.onChange(parseInt(value || '0'))}
               />
               <FormDescription>Your current tax bracket.</FormDescription>
@@ -216,6 +221,7 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
               <NumberInput
                 placeholder="30%"
                 suffix="%"
+                value={field.value}
                 onValueChange={(value) => field.onChange(parseInt(value || '0'))}
               />
               <FormDescription>Your future predicted tax bracket.</FormDescription>
@@ -235,6 +241,7 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
               <NumberInput
                 placeholder="$50,000"
                 prefix="$"
+                value={field.value}
                 onValueChange={(value) => field.onChange(parseInt(value || '0'))}
               />
               <FormDescription>
