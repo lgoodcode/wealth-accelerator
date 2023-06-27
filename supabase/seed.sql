@@ -122,6 +122,8 @@ CREATE TRIGGER on_user_created_init_personal_finance
  *
  * The main Plaid table containing the user's Plaid access tokens for each item.
  */
+
+DROP TABLE IF EXISTS plaid CASCADE;
 CREATE TABLE plaid (
   item_id text PRIMARY KEY,
   user_id uuid NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
@@ -162,6 +164,7 @@ CREATE POLICY "Can delete own institutions" ON public.plaid
 DROP TYPE IF EXISTS account_type CASCADE;
 CREATE TYPE account_type AS enum ('personal', 'business');
 
+DROP TABLE IF EXISTS plaid_accounts CASCADE;
 CREATE TABLE plaid_accounts (
   account_id text PRIMARY KEY,
   item_id text NOT NULL REFERENCES plaid(item_id) ON DELETE CASCADE,
