@@ -119,17 +119,19 @@ const CommandItem = React.forwardRef<
     ref={ref}
     className={cn(
       'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground',
-      {
-        'pointer-events-not-allowed cursor-not-allowed opacity-50': disabled || loading,
-      },
+
       className
     )}
     {...props}
   >
-    {children}
-    {loading && (
-      <Spinner className="ml-auto dark:border-white dark:border-b-transparent border-primary-foreground border-b-transparent" />
-    )}
+    <span
+      className={cn('flex flex-row', {
+        'pointer-events-not-allowed cursor-not-allowed opacity-50': disabled || loading,
+      })}
+    >
+      {children}
+    </span>
+    {loading && <Spinner className="ml-auto" />}
   </CommandPrimitive.Item>
 ));
 

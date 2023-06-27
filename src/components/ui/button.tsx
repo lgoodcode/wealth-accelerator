@@ -52,7 +52,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={loading}
         {...props}
       >
-        {loading && <Spinner className={cn('mr-2', props.spinner?.className)} size={spinnerSize} />}
+        {loading && (
+          <Spinner
+            variant={variant}
+            className={cn('mr-2', props.spinner?.className)}
+            size={spinnerSize}
+          />
+        )}
         {children}
       </Comp>
     );
