@@ -1,30 +1,13 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { redirect } from 'next/navigation'
-import { captureException } from '@sentry/nextjs'
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { createSupabaseServer } from '@/lib/supabase/server'
-import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeProvider } from '@/components/theme-provider';
 
 interface AuthenticationLayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export default async function AuthenticationLayout({ children }: AuthenticationLayoutProps) {
-  const supabase = createSupabaseServer()
-  const {
-    error,
-    data: { session },
-  } = await supabase.auth.getSession()
-
-  if (error) {
-    captureException(error)
-  }
-
-  if (session) {
-    return redirect('/dashboard')
-  }
-
   return (
     <ThemeProvider attribute="class" forcedTheme="light">
       <div className="container relative flex flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
@@ -32,8 +15,8 @@ export default async function AuthenticationLayout({ children }: AuthenticationL
           <Image src="/img/bg-auth.jpg" alt="mountain covered by fog" fill />
         </div>
 
-        <div className="lg:p-8 bg-white min-h-screen flex flex-col items-center justify-center">
-          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+        <div className="lg:p-8 lg:bg-muted min-h-screen flex flex-col items-center justify-center">
+          <div className="mx-auto lg:p-8 lg:py-12 rounded-md bg-white flex w-full flex-col justify-center space-y-6 sm:w-[480px]">
             <Image
               src="/img/title-logo.png"
               width={270}
@@ -59,5 +42,5 @@ export default async function AuthenticationLayout({ children }: AuthenticationL
         </div>
       </div>
     </ThemeProvider>
-  )
+  );
 }

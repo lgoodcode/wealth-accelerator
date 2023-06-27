@@ -9,16 +9,82 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      [_ in never]: never
+      personal_finance: {
+        Row: {
+          id: number
+          money_needed_to_live: number
+          premium_deposit: number
+          rates: number[]
+          start_date: string
+          start_withdrawl: number
+          stop_invest: number
+          tax_bracket: number
+          tax_bracket_future: number
+          user_id: string
+        }
+        Insert: {
+          id?: number
+          money_needed_to_live?: number
+          premium_deposit?: number
+          rates?: number[]
+          start_date?: string
+          start_withdrawl?: number
+          stop_invest?: number
+          tax_bracket?: number
+          tax_bracket_future?: number
+          user_id: string
+        }
+        Update: {
+          id?: number
+          money_needed_to_live?: number
+          premium_deposit?: number
+          rates?: number[]
+          start_date?: string
+          start_withdrawl?: number
+          stop_invest?: number
+          tax_bracket?: number
+          tax_bracket_future?: number
+          user_id?: string
+        }
+      }
+      users: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          role: Database["public"]["Enums"]["role_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id: string
+          name: string
+          role?: Database["public"]["Enums"]["role_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          role?: Database["public"]["Enums"]["role_type"]
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_rates: {
+        Args: Record<PropertyKey, never>
+        Returns: number[]
+      }
     }
     Enums: {
-      [_ in never]: never
+      role_type: "user" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
