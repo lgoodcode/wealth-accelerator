@@ -7,9 +7,10 @@ export async function GET(req: Request) {
   const code = requestURL.searchParams.get('code');
 
   if (code) {
+    console.log('has code');
     const supabase = createRouteHandlerClient({ cookies });
     await supabase.auth.exchangeCodeForSession(code);
   }
-
+  console.log('redirecting', `${requestURL.origin}/login`);
   return NextResponse.redirect(`${requestURL.origin}/login`);
 }

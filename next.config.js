@@ -9,6 +9,11 @@ const nextConfig = {
   redirects: async () => {
     return [
       {
+        source: '/',
+        destination: '/login',
+        permanent: true,
+      },
+      {
         source: '/dashboard',
         destination: '/dashboard/home',
         permanent: true,
