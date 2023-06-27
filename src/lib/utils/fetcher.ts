@@ -21,20 +21,42 @@ export const fetcher = async <T = any>(url: string, options?: RequestInit): Fetc
     const res = await fetch(url, OPTIONS);
 
     if (res.ok) {
-      return await res.json();
+      const json = await res.json();
+      return {
+        error: null,
+        data: json,
+      };
     } else {
       if (res.status === 404) {
-        console.error('Not found');
-        return { error: 'Not found', data: null };
+        return {
+          error: 'Not found',
+          data: null,
+        };
       } else if (res.headers.get('Content-Type')?.includes('application/json')) {
-        // The server response format is { error: string, data: null }
-        return await res.json();
+        const json = await res.json();
+
+        if (json.error) {
+          return {
+            error: json.error,
+            data: null,
+          };
+        }
+        return {
+          error: null,
+          data: json,
+        };
       } else {
-        return { error: await res.text(), data: null };
+        return {
+          error: await res.text(),
+          data: null,
+        };
       }
     }
   } catch (_err) {
     const error = _err as Error;
-    return { error: error.message || 'Failed to fetch', data: null };
+    return {
+      error: error.message || 'Failed to fetch',
+      data: null,
+    };
   }
 };
