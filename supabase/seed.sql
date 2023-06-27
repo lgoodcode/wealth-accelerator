@@ -84,11 +84,11 @@ CREATE TABLE personal_finance (
 );
 
 ALTER TABLE public.personal_finance ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Can view own user data" ON public.personal_finance
+CREATE POLICY "Can view own upersonal_financeser data" ON public.personal_finance
   FOR SELECT
   TO authenticated
   USING (auth.uid() = user_id);
-CREATE POLICY "Can update own user data" ON public.personal_finance
+CREATE POLICY "Can update own personal_finance data" ON public.personal_finance
   FOR UPDATE
   TO authenticated
   USING (auth.uid() = user_id)
@@ -110,3 +110,52 @@ CREATE TRIGGER on_user_created_init_personal_finance
   AFTER INSERT ON public.users
   FOR EACH ROW
     EXECUTE FUNCTION handle_init_personal_finance();
+
+
+
+/**
+ * plaid table
+ *
+ * The main Plaid table containing the user's Plaid access tokens for each item.
+ */
+CREATE TABLE plaid (
+  item_id text PRIMARY KEY,
+  user_id uuid NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  name text NOT NULL,
+  access_token text NOT NULL,
+  expiration timestamp with time zone NOT NULL,
+  cursor text -- used to track last transactions synced
+);
+
+ALTER TABLE public.plaid ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Can view own institution data" ON public.plaid
+  FOR SELECT
+  TO authenticated
+  USING (auth.uid() = user_id);
+CREATE POLICY "Can update own institution data" ON public.plaid
+  FOR UPDATE
+  TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Can delete own institutions" ON public.plaid
+  FOR DELETE
+  TO authenticated
+  USING (auth.uid() = user_id);
+
+
+-- /**
+--  *  plaid_accounts table
+--  */
+
+-- CREATE TABLE plaid_accounts (
+--   account_id text PRIMARY KEY,
+--   item_id text NOT NULL REFERENCES plaid(item_id) ON DELETE CASCADE,
+--   name text NOT NULL,
+--   type text NOT NULL, -- personal or business
+--   enabled boolean NOT NULL DEFAULT true
+-- );
+
+-- ALTER TABLE plaid_accounts
+--   ENABLE ROW LEVEL SECURITY;
+-- CREATE POLICY "No access." ON plaid_accounts
+--   FOR SELECT USING (false);
