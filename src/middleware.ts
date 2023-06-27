@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { captureException } from '@sentry/nextjs';
 
-import { authCookieParser } from '@/lib/supabase/parseAuthCookie';
+import { parseAuthCookie } from '@/lib/supabase/parseAuthCookie';
 import type { Database } from '@/types/database';
 
 const authPagesRegex = /^\/(login|signup|forgot-password|reset-password)/;
@@ -12,7 +12,7 @@ export async function middleware(req: NextRequest) {
   const isLoginPage = req.nextUrl.pathname === '/login';
   const isAuthPage = authPagesRegex.test(req.nextUrl.pathname);
   const supabase = createMiddlewareClient<Database>({ req, res });
-  const token = authCookieParser(req.cookies);
+  const token = parseAuthCookie(req.cookies);
   // If the auth token isn't valid (none or expired), redirect to login page
   // for all pages except auth pages
   if (!token) {

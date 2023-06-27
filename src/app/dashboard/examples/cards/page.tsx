@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 import { DemoCookieSettings } from './components/cookie-settings';
 import { DemoCreateAccount } from './components/create-account';

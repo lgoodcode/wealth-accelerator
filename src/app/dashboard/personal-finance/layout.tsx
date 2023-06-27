@@ -14,24 +14,20 @@ export type SidebarNavItem = {
 
 const sidebarNavItems: SidebarNavItem[] = [
   {
-    title: 'Strategy Start Date',
-    relativePath: '/strategy-start-date',
+    title: 'Wealth Accelerator Info',
+    relativePath: '/wealth-accelerator-info',
   },
   {
     title: 'Index Fund Rates',
     relativePath: '/index-fund-rates',
   },
-  {
-    title: 'Wealth Accelerator',
-    relativePath: '/wealth-accelerator',
-  },
 ];
 
-interface SettingsLayoutProps {
+interface PersonalFinanceLayoutProps {
   children: React.ReactNode;
 }
 
-export default function SettingsLayout({ children }: SettingsLayoutProps) {
+export default function PersonalFinanceLayout({ children }: PersonalFinanceLayoutProps) {
   return (
     <>
       <div className="p-8">
@@ -43,11 +39,12 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
         </div>
         <Separator className="my-6" />
         <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-          <aside className="-mx-3 lg:w-1/5 xl:w-1/6">
+          <aside className="-mx-3 lg:w-1/5">
             <SidebarNav items={sidebarNavItems} />
           </aside>
-          <Separator orientation="vertical" />
-          <div className="flex-1 lg:max-w-2xl">{children}</div>
+          <Separator orientation="vertical" className="h-auto hidden lg:flex" />
+          <Separator className="flex lg:hidden" />
+          <div className="flex-1">{children}</div>
         </div>
       </div>
     </>

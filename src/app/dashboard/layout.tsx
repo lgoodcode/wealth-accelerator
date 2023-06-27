@@ -1,14 +1,11 @@
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
-import { createSupabaseServer } from '@/lib/supabase/server';
-import { authCookieParser } from '@/lib/supabase/parseAuthCookie';
+import { getUser } from '@/lib/supabase/getUser';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
-import { UserProvider } from './components/user-provider';
 import { Header } from './components/header';
+import { QueryProvider } from './components/query-provider';
+import { UserProvider } from './components/user-provider';
 
 export const metadata: Metadata = {
   description: 'Wealth Accelerator app.',
@@ -29,30 +26,21 @@ interface DashboardLayoutProps {
  * id from it instead of having to make a duplicate request to the database to refresh/verify the session.
  */
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
-  const supabase = createSupabaseServer();
-  const authToken = authCookieParser(cookies());
-
-  const { error: errorUser, data: user } = await supabase
-    .from('users')
-    .select()
-    .eq('id', authToken?.sub)
-    .single();
-
-  if (errorUser) {
-    console.error('DashboardLayout error', errorUser);
-    captureException(errorUser);
-  }
-
-  if (errorUser || !user) {
-    redirect('/login');
-  }
+  const user = await getUser();
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      themes={['light', 'dark', 'system']}
+    >
       <UserProvider user={user}>
-        <Header user={user} />
-        {children}
-        <Toaster />
+        <QueryProvider>
+          <Header user={user} />
+          {children}
+          <Toaster />
+        </QueryProvider>
       </UserProvider>
     </ThemeProvider>
   );

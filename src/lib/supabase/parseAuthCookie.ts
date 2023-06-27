@@ -18,7 +18,7 @@ type Token = {
  *
  * Can only be used in middleware or on the server.
  */
-export const authCookieParser = (cookies: RequestCookies | ReadonlyRequestCookies) => {
+export const parseAuthCookie = (cookies: RequestCookies | ReadonlyRequestCookies) => {
   const cookie = cookies.get('sb-localhost-auth-token')?.value;
   const isInvalidCookie = !cookie || cookie === 'undefined';
   const destoryCookie = () => cookies.set('sb-localhost-auth-token', '', { maxAge: -1 });

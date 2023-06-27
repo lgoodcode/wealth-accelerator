@@ -1,4 +1,7 @@
+'use client';
+
 import { useRouter } from 'next/navigation';
+import { setUser as setSentryUser } from '@sentry/nextjs';
 import { LogOut, User } from 'lucide-react';
 
 import { supabase } from '@/lib/supabase/client';
@@ -29,7 +32,9 @@ export function UserNav({ user }: UserNavProps) {
         .join('')
     : user.name.slice(0, 2);
 
+  // On logout, clear the Sentry user context and redirect to the login page.
   const logout = async () => {
+    setSentryUser(null);
     supabase.auth.signOut();
     router.push('/login');
   };

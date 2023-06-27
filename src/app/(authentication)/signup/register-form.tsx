@@ -3,11 +3,11 @@
 import * as z from 'zod';
 import Link from 'next/link';
 import { useState } from 'react';
-import { clsx } from 'clsx';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { supabase } from '@/lib/supabase/client';
+import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -91,7 +91,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   };
 
   return (
-    <div className={clsx('grid gap-6', className)} {...props}>
+    <div className={cn('grid gap-6', className)} {...props}>
       <div className="flex flex-col space-y-2 text-center">
         <h1 className="text-2xl font-medium tracking-tight">Create an account</h1>
         <p className="md:px-8 text-sm text-muted-foreground">
@@ -101,7 +101,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
 
       {serverMessage && (
         <div
-          className={clsx('p-4 text-center text-white border rounded-md', {
+          className={cn('p-4 text-center text-white border rounded-md', {
             'bg-red-500 border-red-500 ': serverMessage.type === 'error',
             'bg-green-500  border-green-500 ': serverMessage.type === 'success',
           })}

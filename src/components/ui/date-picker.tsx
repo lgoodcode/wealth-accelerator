@@ -2,10 +2,9 @@
 
 import * as React from 'react';
 import { format } from 'date-fns';
-import { atom, useAtom } from 'jotai';
 import { Calendar as CalendarIcon } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -14,12 +13,8 @@ interface DatePickerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSel
   initialDate?: Date;
   placeholder?: string;
   variant?: Variant;
-  // Disable because the value is passed to a callback function.
-  // eslint-disable-next-line no-unused-vars
   onSelect?: (date: Date | undefined) => void;
 }
-
-const dateAtom = atom<Date | undefined>(undefined);
 
 export function DatePicker({
   className,
@@ -29,7 +24,7 @@ export function DatePicker({
   variant = 'outline',
   ...props
 }: DatePickerProps) {
-  const [date, setDate] = useAtom(dateAtom);
+  const [date, setDate] = React.useState<Date | undefined>(initialDate);
   const handleSelect = React.useCallback(
     (date: Date | undefined) => {
       setDate(date);

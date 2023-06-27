@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-import { ThemeToggle } from '@/components/theme-toggle';
 import { Nav } from './nav';
+import { ThemeToggle } from './theme-toggle';
 import { UserNav } from './user-nav';
 
 interface HeaderProps {

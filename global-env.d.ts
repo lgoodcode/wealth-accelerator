@@ -1,4 +1,11 @@
 export declare global {
+  // Type utility that will yield a type error if A and B are not the same
+  export type AssertEqual<T, Expected> = T extends Expected
+    ? Expected extends T
+      ? true
+      : never
+    : never;
+
   /** Supabase user */
   export type User = {
     id: string;

@@ -4,12 +4,12 @@ import * as z from 'zod';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { clsx } from 'clsx';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { captureException } from '@sentry/nextjs';
 
 import { supabase } from '@/lib/supabase/client';
+import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -61,7 +61,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
   };
 
   return (
-    <div className={clsx('grid gap-6', className)} {...props}>
+    <div className={cn('grid gap-6', className)} {...props}>
       <div className="flex flex-col space-y-2 text-center">
         <h1 className="text-3xl font-medium tracking-tight">Welcome back</h1>
         <p className="text-sm text-muted-foreground">Sign in to your account</p>

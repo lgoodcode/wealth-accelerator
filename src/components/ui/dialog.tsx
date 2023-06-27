@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 // backdrop-filter: blur(10px) saturate(190%) contrast(70%) brightness(70%);
 //     background-color: rgba(29, 30, 43, 0.7);

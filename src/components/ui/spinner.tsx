@@ -1,4 +1,4 @@
-import { clsx } from 'clsx';
+import { cn } from '@/lib/utils/cn';
 
 const sizes = {
   xs: 'h-2 w-2',
@@ -16,7 +16,7 @@ interface SpinnerProps extends React.HTMLAttributes<HTMLSpanElement> {
 export function Spinner({ className, size = 'default' }: SpinnerProps) {
   return (
     <span
-      className={clsx(
+      className={cn(
         'animate-spin border-primary border-b-transparent border-2 rounded-[50%] box-border inline-block',
         sizes[size],
         className
