@@ -1,6 +1,5 @@
 'use client';
 
-import * as z from 'zod';
 import { useState } from 'react';
 import { captureException } from '@sentry/nextjs';
 import { useForm } from 'react-hook-form';
@@ -20,60 +19,18 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
-const WaInfoFormSchema = z.object({
-  start_date: z.date({
-    required_error: 'Select a date.',
-  }),
-  stop_invest: z
-    .number({
-      required_error: 'Enter the year',
-    })
-    .min(1, 'Enter a number greater than 0')
-    .max(100, 'Enter a number less than or equal to 100'),
-  start_withdrawl: z
-    .number({
-      required_error: 'Enter the year',
-    })
-    .min(1, 'Enter a number greater than 0')
-    .max(100, 'Enter a number less than or equal to 100'),
-  money_needed_to_live: z
-    .number({
-      required_error: 'Enter the amount',
-    })
-    .min(1, 'Enter an amount greater than 0'),
-  tax_bracket: z
-    .number({
-      required_error: 'Enter the tax bracket percentage',
-    })
-    .min(0, 'Enter a positive percentage')
-    .max(101, 'Enter a valid percentage'),
-  tax_bracket_future: z
-    .number({
-      required_error: 'Enter the tax bracket percentage',
-    })
-    .min(0, 'Enter a positive percentage')
-    .max(101, 'Enter a valid percentage'),
-  premium_deposit: z
-    .number({
-      required_error: 'Enter the amount',
-    })
-    .min(1, 'Enter an amount greater than 0'),
-});
-
-export type WaInfoFormType = z.infer<typeof WaInfoFormSchema>;
+import { WaInfoFormSchema, type WaInfoFormSchemaType } from '../schema';
 
 // Override the type for the start_date because Supabase returns a string.
 interface WaInfoFormProps {
-  initialValues?: Omit<WaInfoFormType, 'start_date'> & {
+  initialValues?: Omit<WaInfoFormSchemaType, 'start_date'> & {
     start_date: Date | string;
   };
 }
 
 export function WaInfoForm({ initialValues }: WaInfoFormProps) {
-  console.log(initialValues);
   const user = useUser();
-  const form = useForm<WaInfoFormType>({
+  const form = useForm<WaInfoFormSchemaType>({
     resolver: zodResolver(WaInfoFormSchema),
     defaultValues: {
       ...initialValues,
@@ -82,7 +39,7 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit = async (formData: WaInfoFormType) => {
+  const onSubmit = async (formData: WaInfoFormSchemaType) => {
     setIsSubmitting(true);
 
     const { error } = await supabase
