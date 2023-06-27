@@ -1,6 +1,7 @@
 'use client';
 
 import * as z from 'zod';
+import { useState } from 'react';
 import { captureException } from '@sentry/nextjs';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -78,8 +79,11 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
       start_date: initialValues?.start_date ? new Date(initialValues.start_date) : undefined,
     },
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async (formData: WaInfoFormType) => {
+    setIsSubmitting(true);
+
     const { error } = await supabase
       .from('personal_finance')
       .update({
@@ -99,6 +103,7 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
       return;
     }
 
+    setIsSubmitting(false);
     toast({
       variant: 'success',
       title: 'Success!',
@@ -222,7 +227,9 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Save changes</Button>
+        <Button type="submit" loading={isSubmitting}>
+          Save changes
+        </Button>
       </form>
     </Form>
   );

@@ -12,7 +12,7 @@ export default async function WealthAcceleratorInfoPage() {
 
   const { error, data } = await supabase
     .from('personal_finance')
-    .select()
+    .select('*')
     .eq('user_id', user.id)
     .single();
 
