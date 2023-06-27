@@ -7,6 +7,7 @@ import { Search } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Spinner } from '@/components/ui/spinner';
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -106,21 +107,30 @@ const CommandSeparator = React.forwardRef<
 ));
 CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
 
+interface CommandItemProps extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item> {
+  loading?: boolean;
+}
+
 const CommandItem = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
->(({ className, disabled, ...props }, ref) => (
+  CommandItemProps
+>(({ className, disabled, children, loading, ...props }, ref) => (
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
       'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground',
       {
-        'pointer-events-not-allowed cursor-not-allowed opacity-50': disabled,
+        'pointer-events-not-allowed cursor-not-allowed opacity-50': disabled || loading,
       },
       className
     )}
     {...props}
-  />
+  >
+    {children}
+    {loading && (
+      <Spinner className="ml-auto dark:border-white dark:border-b-transparent border-primary-foreground border-b-transparent" />
+    )}
+  </CommandPrimitive.Item>
 ));
 
 CommandItem.displayName = CommandPrimitive.Item.displayName;
