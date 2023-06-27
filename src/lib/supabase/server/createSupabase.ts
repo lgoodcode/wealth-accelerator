@@ -3,4 +3,4 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import type { Database } from '@/types/database';
 
-export const createSupabaseServer = () => createServerComponentClient<Database>({ cookies });
+export const createSupabase = () => createServerComponentClient<Database>({ cookies });
