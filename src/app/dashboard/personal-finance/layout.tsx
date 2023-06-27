@@ -44,7 +44,7 @@ export default function PersonalFinanceLayout({ children }: PersonalFinanceLayou
           </aside>
           <Separator orientation="vertical" className="h-auto hidden lg:flex" />
           <Separator className="flex lg:hidden" />
-          <div className="flex-1">{children}</div>
+          <div className="flex-1 max-w-xl">{children}</div>
         </div>
       </div>
     </>
