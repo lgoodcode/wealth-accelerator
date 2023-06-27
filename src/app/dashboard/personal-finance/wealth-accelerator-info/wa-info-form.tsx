@@ -11,6 +11,7 @@ import { useUser } from '@/hooks/use-user';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
+import { NumberInput } from '@/components/ui/number-input';
 import {
   Form,
   FormDescription,
@@ -19,7 +20,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { NumberInput } from '@/components/ui/number-input';
 
 const WaInfoFormSchema = z.object({
   start_date: z.date({
@@ -30,13 +30,13 @@ const WaInfoFormSchema = z.object({
       required_error: 'Enter the year',
     })
     .min(1, 'Enter a number greater than 0')
-    .max(100, 'Enter a number less than 100'),
+    .max(100, 'Enter a number less than or equal to 100'),
   start_withdrawl: z
     .number({
       required_error: 'Enter the year',
     })
     .min(1, 'Enter a number greater than 0')
-    .max(100, 'Enter a number less than 100'),
+    .max(100, 'Enter a number less than or equal to 100'),
   money_needed_to_live: z
     .number({
       required_error: 'Enter the amount',
@@ -113,19 +113,14 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit, console.log)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="start_date"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Strategy Start Date</FormLabel>
-              <DatePicker
-                initialDate={field.value}
-                onSelect={field.onChange}
-                className="w-full"
-                {...field}
-              />
+              <DatePicker className="w-full" initialDate={field.value} onSelect={field.onChange} />
               <FormDescription>
                 The month and year that you want to start comparing the strategy timeframe.
               </FormDescription>
@@ -141,7 +136,10 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
               <FormLabel>
                 Stop Invest <span className="ml-1 text-muted-foreground">(year)</span>
               </FormLabel>
-              <NumberInput placeholder="Number of years" className="w-auto" {...field} />
+              <NumberInput
+                placeholder="Number of years"
+                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+              />
               <FormDescription>The number of years that you want to invest for.</FormDescription>
               <FormMessage />
             </FormItem>
@@ -155,7 +153,10 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
               <FormLabel>
                 Start Withdrawl<span className="ml-1 text-muted-foreground">(year)</span>
               </FormLabel>
-              <NumberInput placeholder="Number of years" className="w-auto" {...field} />
+              <NumberInput
+                placeholder="Number of years"
+                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+              />
               <FormDescription>
                 The number of years to wait after stopped investing.
               </FormDescription>
@@ -172,7 +173,11 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
                 Money Needed To Live
                 <span className="ml-1 text-muted-foreground">(dollars)</span>
               </FormLabel>
-              <NumberInput placeholder="$100,000" prefix="$" className="w-auto" {...field} />
+              <NumberInput
+                placeholder="$100,000"
+                prefix="$"
+                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+              />
               <FormDescription>
                 Index Fund ROR Needed to Equal Life Insurance Income Distributions
               </FormDescription>
@@ -189,7 +194,11 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
                 Tax Bracket
                 <span className="ml-1 text-muted-foreground">(percentage)</span>
               </FormLabel>
-              <NumberInput placeholder="25%" suffix="%" className="w-auto" {...field} />
+              <NumberInput
+                placeholder="25%"
+                suffix="%"
+                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+              />
               <FormDescription>Your current tax bracket.</FormDescription>
               <FormMessage />
             </FormItem>
@@ -204,7 +213,11 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
                 Future Tax Bracket
                 <span className="ml-1 text-muted-foreground">(percentage)</span>
               </FormLabel>
-              <NumberInput placeholder="30%" suffix="%" className="w-auto" {...field} />
+              <NumberInput
+                placeholder="30%"
+                suffix="%"
+                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+              />
               <FormDescription>Your future predicted tax bracket.</FormDescription>
               <FormMessage />
             </FormItem>
@@ -219,7 +232,11 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
                 Premium Deposit
                 <span className="ml-1 text-muted-foreground">(dollars)</span>
               </FormLabel>
-              <NumberInput placeholder="$50,000" prefix="$" className="w-auto" {...field} />
+              <NumberInput
+                placeholder="$50,000"
+                prefix="$"
+                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+              />
               <FormDescription>
                 The amount of money you want to deposit into your life insurance policy.
               </FormDescription>

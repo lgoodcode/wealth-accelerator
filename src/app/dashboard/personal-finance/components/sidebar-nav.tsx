@@ -1,19 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/utils/cn';
 import { buttonVariants } from '@/components/ui/button';
 import type { SidebarNavItem } from '../layout';
+
+const PATH_NAME = '/dashboard/personal-finance';
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   items: SidebarNavItem[];
 }
 
 export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
-  const pathname = usePathname();
-
   return (
     <nav
       className={cn(
@@ -25,10 +24,10 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
       {items.map((item) => (
         <Link
           key={item.relativePath}
-          href={pathname + item.relativePath}
+          href={PATH_NAME + item.relativePath}
           className={cn(
             buttonVariants({ variant: 'ghost' }),
-            pathname === item.relativePath
+            PATH_NAME === item.relativePath
               ? 'bg-muted hover:bg-muted'
               : 'hover:bg-transparent hover:underline',
             'justify-start',

@@ -24,7 +24,7 @@ export default async function WealthAcceleratorInfoPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-xl">
+    <div className="space-y-6">
       <div className="space-y-1">
         <h3 className="text-lg font-medium">Wealth Accelerator Information</h3>
         <p className="text-sm text-muted-foreground">
@@ -32,7 +32,9 @@ export default async function WealthAcceleratorInfoPage() {
         </p>
       </div>
       <Separator />
-      <WaInfoForm initialValues={data} />
+      <div className="max-w-xl">
+        <WaInfoForm initialValues={data} />
+      </div>
     </div>
   );
 }
