@@ -47,6 +47,55 @@ export interface Database {
           user_id?: string
         }
       }
+      plaid: {
+        Row: {
+          access_token: string
+          cursor: string | null
+          expiration: string
+          item_id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          access_token: string
+          cursor?: string | null
+          expiration: string
+          item_id: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string
+          cursor?: string | null
+          expiration?: string
+          item_id?: string
+          name?: string
+          user_id?: string
+        }
+      }
+      plaid_accounts: {
+        Row: {
+          account_id: string
+          enabled: boolean
+          item_id: string
+          name: string
+          type: string
+        }
+        Insert: {
+          account_id: string
+          enabled?: boolean
+          item_id: string
+          name: string
+          type?: string
+        }
+        Update: {
+          account_id?: string
+          enabled?: boolean
+          item_id?: string
+          name?: string
+          type?: string
+        }
+      }
       users: {
         Row: {
           created_at: string
@@ -84,6 +133,7 @@ export interface Database {
       }
     }
     Enums: {
+      account_type: "personal" | "business"
       role_type: "user" | "admin"
     }
     CompositeTypes: {

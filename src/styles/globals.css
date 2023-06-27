@@ -69,8 +69,8 @@
     --destructive: 0 76.66% 57.25%;
     --destructive-foreground: 210 40% 98%;
 
-    --success: 123 45% 45%;
-    --success-foreground: 210 40% 98%;
+    --success: 123 45% 35%; /* From 45% to 35% */
+    --success-foreground: 210 40% 88%; /* From 98% to 88% */
 
     --ring: 216 34% 17%;
 

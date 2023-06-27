@@ -5,6 +5,14 @@ const requiredEnvVars = [
   'SUPABASE_PROJECT_ID',
   'SENTRY_DSN',
   'NEXT_PUBLIC_SENTRY_DSN',
+  'PLAID_ENV',
+  'PLAID_CLIENT_NAME',
+  'PLAID_CLIENT_ID',
+  'PLAID_URL',
+  'PLAID_SECRET',
+  'PLAID_VERSION',
+  'PLAID_REDIRECT_URI',
+  'PLAID_WEBHOOK_URI',
 ];
 
 // Skip checking environment variables if in local development or running on CI

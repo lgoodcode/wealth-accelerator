@@ -35,30 +35,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-const groups = [
-  {
-    label: 'Personal Account',
-    teams: [
-      {
-        label: 'Alicia Koch',
-        value: 'personal',
-      },
-    ],
-  },
-  {
-    label: 'Teams',
-    teams: [
-      {
-        label: 'Acme Inc.',
-        value: 'acme-inc',
-      },
-      {
-        label: 'Monsters Inc.',
-        value: 'monsters',
-      },
-    ],
-  },
-];
+const groups = [];
 
 type Team = (typeof groups)[number]['teams'][number];
 

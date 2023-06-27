@@ -1,7 +1,12 @@
+import { redirect } from 'next/navigation';
+import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
+import { createSupabase } from '@/lib/supabase/server/createSupabase';
+import { getUser } from '@/lib/supabase/server/getUser';
+import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
-import { InstitutionSelection } from './components/institution-selection';
+import { Institutions } from './components/institutions';
 
 export const metadata: Metadata = {
   title: 'Banking',
@@ -11,7 +16,23 @@ interface BankingLayoutProps {
   children: React.ReactNode;
 }
 
-export default function BankingLayout({ children }: BankingLayoutProps) {
+export default async function BankingLayout({ children }: BankingLayoutProps) {
+  const supabase = createSupabase();
+  const user = await getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  // Get all institutions for the user
+  const { error, data } = await supabase.from('plaid').select('*').eq('user_id', user.id);
+  const institutionData = data || [];
+
+  if (error) {
+    console.error(error);
+    captureException(error);
+  }
+
   return (
     <div className="p-8">
       <div className="space-y-1">
@@ -22,10 +43,8 @@ export default function BankingLayout({ children }: BankingLayoutProps) {
       </div>
       <Separator className="mt-6" />
       <div className="flex flex-col space-y-8">
-        <div className="flex w-full h-20 items-center border-b">
-          <InstitutionSelection />
-        </div>
-        <div className="flex-1">{children}</div>
+        <Institutions institutions={institutionData} />
+        <div className="flex-1 mt-6">{error ? <PageError /> : children}</div>
       </div>
     </div>
   );

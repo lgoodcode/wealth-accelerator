@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronsUpDown, PlusCircle, Landmark } from 'lucide-react';
+import { ChevronsUpDown, PlusCircle } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
+import { usePlaid } from '@/lib/plaid/use-plaid';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
@@ -13,45 +14,31 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command';
-
-const teams = [
-  {
-    label: 'Alicia Koch',
-    value: 'personal',
-  },
-
-  {
-    label: 'Acme Inc.',
-    value: 'acme-inc',
-  },
-  {
-    label: 'Monsters Inc.',
-    value: 'monsters',
-  },
-];
+import { Institution } from '@/lib/plaid/types/institutions';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
-interface InstitutionSelectionProps extends PopoverTriggerProps {}
+interface InstitutionSelectionProps extends PopoverTriggerProps {
+  institutions: Institution[];
+}
 
-export function InstitutionSelection({ className }: InstitutionSelectionProps) {
-  const [open, setOpen] = useState(false);
-  const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState(null);
+export function InstitutionSelection({ className, institutions }: InstitutionSelectionProps) {
+  const { open, ready, isGettingLinkToken } = usePlaid();
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedInstitution, setSelectedInstitution] = useState<Institution | null>(null);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
-          aria-expanded={open}
+          aria-expanded={isOpen}
           aria-label="Select an institution"
           className={cn('w-[420px] flex items-center text-muted-foreground', className)}
         >
           <span className="flex flex-row">
-            <Landmark className="h-5 w-5" />
-            <span className="ml-2">No institution selected</span>
+            {selectedInstitution ? selectedInstitution.name : 'Select an institution'}
           </span>
           <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0" />
         </Button>
@@ -59,27 +46,31 @@ export function InstitutionSelection({ className }: InstitutionSelectionProps) {
       <PopoverContent className="p-0 w-[420px]">
         <Command>
           <CommandList>
-            {teams.map((team: any) => (
-              <CommandItem
-                key={team.value}
-                onSelect={() => {
-                  setSelectedTeam(team);
-                  setOpen(false);
-                }}
-                className="text-md"
-              >
-                {team.label}
-              </CommandItem>
-            ))}
+            <CommandGroup>
+              {!institutions.length
+                ? null
+                : institutions.map((ins) => (
+                    <CommandItem
+                      key={ins.item_id}
+                      className="text-md"
+                      onSelect={() => {
+                        setIsOpen(false);
+                        setSelectedInstitution(ins);
+                      }}
+                    >
+                      {ins.name}
+                    </CommandItem>
+                  ))}
+            </CommandGroup>
           </CommandList>
           <CommandSeparator />
           <CommandList>
             <CommandGroup>
               <CommandItem
                 className="text-md"
-                onSelect={() => {
-                  // Plaid open
-                }}
+                onSelect={() => open()}
+                disabled={!ready}
+                loading={isGettingLinkToken}
               >
                 <PlusCircle className="mr-2 h-5 w-5" />
                 Add institution

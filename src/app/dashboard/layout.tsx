@@ -1,6 +1,7 @@
+import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 
-import { getUser } from '@/lib/supabase/getUser';
+import { getUser } from '@/lib/supabase/server/getUser';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from './components/header';
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
     follow: false,
   },
 };
+
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
@@ -27,6 +29,10 @@ interface DashboardLayoutProps {
  */
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
   const user = await getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
 
   return (
     <ThemeProvider

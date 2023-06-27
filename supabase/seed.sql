@@ -20,10 +20,12 @@ CREATE TABLE users (
 );
 
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+
 CREATE POLICY "Can view own user data" ON users
   FOR SELECT
   TO authenticated
   USING (auth.uid() = id);
+
 CREATE POLICY "Can update own user data" ON users
   FOR UPDATE
   TO authenticated
@@ -84,10 +86,12 @@ CREATE TABLE personal_finance (
 );
 
 ALTER TABLE public.personal_finance ENABLE ROW LEVEL SECURITY;
+
 CREATE POLICY "Can view own upersonal_financeser data" ON public.personal_finance
   FOR SELECT
   TO authenticated
   USING (auth.uid() = user_id);
+
 CREATE POLICY "Can update own personal_finance data" ON public.personal_finance
   FOR UPDATE
   TO authenticated
@@ -128,34 +132,85 @@ CREATE TABLE plaid (
 );
 
 ALTER TABLE public.plaid ENABLE ROW LEVEL SECURITY;
+
 CREATE POLICY "Can view own institution data" ON public.plaid
   FOR SELECT
   TO authenticated
   USING (auth.uid() = user_id);
+
+CREATE POLICY "Can insert new institutions" ON public.plaid
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+
 CREATE POLICY "Can update own institution data" ON public.plaid
   FOR UPDATE
   TO authenticated
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
+
 CREATE POLICY "Can delete own institutions" ON public.plaid
   FOR DELETE
   TO authenticated
   USING (auth.uid() = user_id);
 
 
--- /**
---  *  plaid_accounts table
---  */
+/**
+ *  plaid_accounts table
+ */
 
--- CREATE TABLE plaid_accounts (
---   account_id text PRIMARY KEY,
---   item_id text NOT NULL REFERENCES plaid(item_id) ON DELETE CASCADE,
---   name text NOT NULL,
---   type text NOT NULL, -- personal or business
---   enabled boolean NOT NULL DEFAULT true
--- );
+DROP TYPE IF EXISTS account_type CASCADE;
+CREATE TYPE account_type AS enum ('personal', 'business');
 
--- ALTER TABLE plaid_accounts
---   ENABLE ROW LEVEL SECURITY;
--- CREATE POLICY "No access." ON plaid_accounts
---   FOR SELECT USING (false);
+CREATE TABLE plaid_accounts (
+  account_id text PRIMARY KEY,
+  item_id text NOT NULL REFERENCES plaid(item_id) ON DELETE CASCADE,
+  name text NOT NULL,
+  type text NOT NULL DEFAULT 'business'::account_type,
+  enabled boolean NOT NULL DEFAULT true
+);
+
+ALTER TABLE public.plaid_accounts ENABLE ROW LEVEL SECURITY;
+
+-- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
+
+CREATE POLICY "Can view own plaid accounts data" ON public.plaid_accounts
+  FOR SELECT
+  TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_accounts.item_id AND plaid.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Can insert own plaid accounts" ON public.plaid_accounts
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_accounts.item_id AND plaid.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Can update own plaid accounts data" ON public.plaid_accounts
+  FOR UPDATE
+  TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_accounts.item_id AND plaid.user_id = auth.uid()
+    )
+  )
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_accounts.item_id AND plaid.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Can delete own plaid accounts" ON public.plaid_accounts
+  FOR DELETE
+  TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_accounts.item_id AND plaid.user_id = auth.uid()
+    )
+  );
