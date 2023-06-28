@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 import { getUser } from '@/lib/supabase/server/getUser';
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
-import { client } from '@/lib/plaid/config';
+import { plaidClient } from '@/lib/plaid/config';
 import type { ExchangeLinkTokenBody } from '@/lib/plaid/types/link-token';
 
 export async function POST(req: Request) {
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
   try {
     const {
       data: { item_id, access_token },
-    } = await client.itemPublicTokenExchange({ public_token });
+    } = await plaidClient.itemPublicTokenExchange({ public_token });
     // Expire the access token in 90 days minus 60 seconds
     const expiration = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000 - 60 * 1000).toUTCString();
 

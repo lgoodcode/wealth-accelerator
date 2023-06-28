@@ -18,7 +18,7 @@ export const configuration = new Configuration({
   },
 });
 
-export const client = new PlaidApi(configuration);
+export const plaidClient = new PlaidApi(configuration);
 
 // Configuration for the Plaid client
 export const createLinkTokenRequest = (id: string): LinkTokenCreateRequest => ({

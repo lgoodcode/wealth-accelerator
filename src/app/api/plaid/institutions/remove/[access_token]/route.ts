@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
 import { getUser } from '@/lib/supabase/server/getUser';
-import { client } from '@/lib/plaid/config';
+import { plaidClient } from '@/lib/plaid/config';
 
 interface RenameParams {
   params: {
@@ -24,7 +24,7 @@ export async function DELETE(_: any, { params: { access_token } }: RenameParams)
 
   // Revoke the access token
   try {
-    await client.itemRemove({ access_token });
+    await plaidClient.itemRemove({ access_token });
   } catch (error) {
     console.error(error);
     captureException(error);
