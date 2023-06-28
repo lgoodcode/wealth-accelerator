@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { captureException } from '@sentry/nextjs';
 
 import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils/cn';
@@ -52,7 +51,6 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
     if (error) {
       setServerError(error.message);
       setIsLoading(false);
-      captureException(error);
       return;
     }
 
