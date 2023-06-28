@@ -1,14 +1,19 @@
+import { redirect } from 'next/navigation';
 import { captureException } from '@sentry/nextjs';
 
-import { createSupabaseServer } from '@/lib/supabase/server';
-import { getUser } from '@/lib/supabase/getUser';
+import { createSupabase } from '@/lib/supabase/server/createSupabase';
+import { getUser } from '@/lib/supabase/server/getUser';
 import { Separator } from '@/components/ui/separator';
 import { PageError } from '@/components/page-error';
 import { RatesForm } from './rates-form';
 
 export default async function IndexFundRatesPage() {
-  const supabase = createSupabaseServer();
+  const supabase = createSupabase();
   const user = await getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
 
   const { error, data } = await supabase
     .from('personal_finance')

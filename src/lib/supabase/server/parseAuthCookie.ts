@@ -2,6 +2,8 @@ import jwtDecode from 'jwt-decode';
 import { RequestCookies } from 'next/dist/compiled/@edge-runtime/cookies';
 import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
+const PROJECT_ID = process.env.SUPABASE_PROJECT_ID;
+
 /** Partial of the values contained in the Supabase JWT in the cookies */
 type Token = {
   exp: number;
@@ -19,9 +21,9 @@ type Token = {
  * Can only be used in middleware or on the server.
  */
 export const parseAuthCookie = (cookies: RequestCookies | ReadonlyRequestCookies) => {
-  const cookie = cookies.get('sb-localhost-auth-token')?.value;
+  const cookie = cookies.get(`sb-${PROJECT_ID}-auth-token`)?.value;
   const isInvalidCookie = !cookie || cookie === 'undefined';
-  const destoryCookie = () => cookies.set('sb-localhost-auth-token', '', { maxAge: -1 });
+  const destoryCookie = () => cookies.set(`sb-${PROJECT_ID}-auth-token`, '', { maxAge: -1 });
 
   if (isInvalidCookie) {
     destoryCookie();

@@ -1,6 +1,5 @@
 'use client';
 
-import * as z from 'zod';
 import { useState } from 'react';
 import { captureException } from '@sentry/nextjs';
 import { useForm } from 'react-hook-form';
@@ -14,38 +13,25 @@ import { Button } from '@/components/ui/button';
 import { NumberInput } from '@/components/ui/number-input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { RatesFormSchema, type RatesFormSchemaType } from '../schema';
 
 const NUM_RATE_YEARS = 60;
-const RatesFormSchema = z.object({
-  rates: z
-    .array(
-      z
-        .number({
-          required_error: 'Enter a rate',
-        })
-        .min(-1, 'Enter a non-negative percentage')
-        .max(101, 'Enter a valid percentage')
-    )
-    .length(NUM_RATE_YEARS, `Enter ${NUM_RATE_YEARS} rates`),
-});
-
-export type RatesFormType = z.infer<typeof RatesFormSchema>;
 
 // Override the type for the start_date because Supabase returns a string.
 interface RatesFormProps {
-  initialValues?: RatesFormType;
+  initialValues?: RatesFormSchemaType;
 }
 
 export function RatesForm({ initialValues }: RatesFormProps) {
   const user = useUser();
-  const form = useForm<RatesFormType>({
-    resolver: zodResolver(RatesFormSchema),
+  const form = useForm<RatesFormSchemaType>({
+    resolver: zodResolver(RatesFormSchema(NUM_RATE_YEARS)),
     defaultValues: initialValues,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [allRates, setAllRates] = useState<number>();
 
-  const onSubmit = async ({ rates }: RatesFormType) => {
+  const onSubmit = async ({ rates }: RatesFormSchemaType) => {
     const { error } = await supabase
       .from('personal_finance')
       .update({ rates })

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { captureException } from '@sentry/nextjs';
 
-import { parseAuthCookie } from '@/lib/supabase/parseAuthCookie';
+import { parseAuthCookie } from '@/lib/supabase/server/parseAuthCookie';
 import type { Database } from '@/types/database';
 
 const authPagesRegex = /^\/(login|signup|forgot-password|reset-password)/;

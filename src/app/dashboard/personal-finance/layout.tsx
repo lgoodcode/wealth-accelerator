@@ -31,7 +31,7 @@ export default function PersonalFinanceLayout({ children }: PersonalFinanceLayou
   return (
     <div className="p-8">
       <div className="space-y-1">
-        <h2 className="text-2xl font-bold">Personal Finance</h2>
+        <h2 className="text-3xl font-bold">Personal Finance</h2>
         <p className="text-muted-foreground">
           Manage settings used in calculalations for your finances.
         </p>

@@ -52,7 +52,11 @@ const ListItem = forwardRef<React.ElementRef<'a'>, ListItemProps>(
 );
 ListItem.displayName = 'ListItem';
 
-export function Nav({ className }: React.HTMLAttributes<HTMLElement>) {
+interface NavProps extends React.HTMLAttributes<HTMLElement> {
+  isAdmin: boolean;
+}
+
+export function Nav({ className, isAdmin }: NavProps) {
   return (
     <NavigationMenu className={className}>
       <NavigationMenuList>
@@ -82,18 +86,20 @@ export function Nav({ className }: React.HTMLAttributes<HTMLElement>) {
           </NavigationMenuContent>
         </NavigationMenuItem>
 
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {adminRoutes.map((route) => (
-                <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
-                  {route.description}
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
+        {isAdmin && (
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                {adminRoutes.map((route) => (
+                  <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
+                    {route.description}
+                  </ListItem>
+                ))}
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        )}
 
         {process.env.NODE_ENV === 'development' && (
           <NavigationMenuItem>

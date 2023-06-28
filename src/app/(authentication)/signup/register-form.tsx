@@ -71,7 +71,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
       password: data.password,
       options: {
         data: { name: data.name },
-        emailRedirectTo: `${location.origin}/auth/callback`,
+        emailRedirectTo: `${location.origin}/api/auth/callback`,
       },
     });
 
