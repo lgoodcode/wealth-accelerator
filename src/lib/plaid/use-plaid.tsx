@@ -68,7 +68,6 @@ export const usePlaid = () => {
     // or click a different institution
     if (metadata.status === 'requires_credentials') {
       setLinkToken(null);
-      createLinkToken().then(setLinkToken);
     }
   }, []);
 
@@ -109,7 +108,6 @@ export const usePlaid = () => {
         })
         .finally(() => setIsGettingLinkToken(false));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [linkToken]);
 
   return {
