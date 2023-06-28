@@ -82,12 +82,12 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Error storing accounts' }, { status: 500 });
       }
     }
+
+    return NextResponse.json({ item_id });
     // Catch the error if the exchange fails
   } catch (error) {
     console.error(error);
     captureException(error);
     return NextResponse.json({ error: 'Error exchanging public token' }, { status: 500 });
   }
-
-  return NextResponse.json({ success: true });
 }
