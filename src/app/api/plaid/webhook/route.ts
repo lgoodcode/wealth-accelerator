@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { captureMessage } from '@sentry/nextjs';
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
@@ -8,21 +9,18 @@ export async function POST(req: Request) {
   }
 
   console.log('/api/plaid/webhook POST', body);
+  captureMessage('/api/plaid/webhook POST', { extra: body });
 
-  const { webhook_code, item_id } = body;
+  // const { webhook_code, item_id } = body;
+  // const { webhook_code } = body;
 
-  switch (webhook_code) {
-    case 'DEFAULT_UPDATE':
-      break;
+  // switch (webhook_code) {
+  //   case 'DEFAULT_UPDATE':
+  //     break;
 
-    case 'SYNC_UPDATES_AVAILABLE': {
-      console.log('trigger sync');
-      break;
-    }
-
-    default:
-      console.log('unhandled webhook_code', webhook_code);
-  }
+  //   default:
+  //     console.log('unhandled webhook_code', webhook_code);
+  // }
 
   return NextResponse.json({ success: true });
 }
