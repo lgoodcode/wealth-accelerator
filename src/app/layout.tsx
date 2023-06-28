@@ -6,6 +6,8 @@ import { TailwindIndicator } from '@/components/tailwind-indicator';
 import '@/styles/globals.css';
 
 export const metadata = siteMetadata;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -13,16 +15,14 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <>
-      <html lang="en" suppressHydrationWarning>
-        <head />
-        <body className={cn('min-h-screen bg-background font-sans antialiased', Inter.variable)}>
-          <div className="relative flex min-h-screen flex-col">
-            <div className="flex-1">{children}</div>
-          </div>
-          <TailwindIndicator />
-        </body>
-      </html>
-    </>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body className={cn('min-h-screen bg-background font-sans antialiased', Inter.variable)}>
+        <div className="relative flex min-h-screen flex-col">
+          <div className="flex-1">{children}</div>
+        </div>
+        <TailwindIndicator />
+      </body>
+    </html>
   );
 }

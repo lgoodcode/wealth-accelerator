@@ -1,0 +1,41 @@
+version: 2.1
+
+# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to
+# create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
+# See: https://circleci.com/docs/2.0/orb-intro/
+orbs:
+  node: circleci/node@5.1.0
+
+jobs:
+  build: # this can be any name you choose
+    executor: node/default # use the default executor defined within the orb
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+            - ./.next/cache
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+            - ./.next/cache
+      # Need to exit the commands with a non-zero code to fail fast
+      - run:
+          name: Lint
+          command: npm run lint
+      # - run:
+      #     name: Test
+      #     # https://circleci.com/docs/collect-test-data/#jest
+      #     command: npm run test:ci
+      - run:
+          name: Build
+          command: npm run build
+workflows:
+  main:
+    jobs:
+      - build

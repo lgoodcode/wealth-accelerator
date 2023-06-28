@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { captureException } from '@sentry/nextjs';
 
 import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils/cn';
@@ -31,7 +30,6 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
   const router = useRouter();
   const [serverError, setServerError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,7 +39,6 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setIsLoading(true);
     setServerError('');
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -51,8 +48,6 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
 
     if (error) {
       setServerError(error.message);
-      setIsLoading(false);
-      captureException(error);
       return;
     }
 
@@ -105,8 +100,8 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
 
           <Button
             type="submit"
-            loading={isLoading}
-            disabled={isLoading}
+            loading={form.formState.isSubmitting}
+            disabled={form.formState.isSubmitting || form.formState.isSubmitSuccessful}
             // override default spinner color for light theme
             spinner={{ className: 'border-white border-b-primary' }}
           >
