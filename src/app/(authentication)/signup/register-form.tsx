@@ -52,7 +52,6 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -63,7 +62,6 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setIsLoading(true);
     setServerMessage(null);
 
     const { error } = await supabase.auth.signUp({
@@ -86,8 +84,6 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
         message: 'Check your email for the confirmation link',
       });
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -156,8 +152,8 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
 
           <Button
             type="submit"
-            loading={isLoading}
-            disabled={isLoading}
+            loading={form.formState.isSubmitting}
+            disabled={form.formState.isSubmitting || form.formState.isSubmitSuccessful}
             // override default spinner color for light theme
             spinner={{ className: 'border-white border-b-primary' }}
           >
