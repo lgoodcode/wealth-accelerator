@@ -14,7 +14,7 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command';
-import { Institution } from '@/lib/plaid/types/institutions';
+import type { Institution } from '@/lib/plaid/types/institutions';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
