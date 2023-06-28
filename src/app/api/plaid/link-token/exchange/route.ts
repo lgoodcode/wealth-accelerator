@@ -14,7 +14,13 @@ export async function POST(req: Request) {
   }
 
   // Validate the request body
-  const { public_token, metadata } = (await req.json()) as ExchangeLinkTokenBody;
+  const body = await req.json().catch(() => null);
+
+  if (!body) {
+    return NextResponse.json({ error: 'Invalid body' }, { status: 400 });
+  }
+
+  const { public_token, metadata } = body as ExchangeLinkTokenBody;
 
   if (!public_token) {
     return NextResponse.json({ error: 'Missing public_token' }, { status: 400 });
