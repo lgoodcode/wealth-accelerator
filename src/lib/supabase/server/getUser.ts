@@ -25,7 +25,7 @@ export const getUser = async (): Promise<User | null> => {
     .single();
 
   if (error) {
-    console.error('DashboardLayout error', error);
+    console.error(error);
     captureException(error);
   }
 

@@ -64,7 +64,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setServerMessage(null);
 
-    const { error } = await supabase.auth.signUp({
+    const { error, data: stuff } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
       options: {
@@ -72,8 +72,9 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
         emailRedirectTo: `${location.origin}/api/auth/callback`,
       },
     });
-
+    console.log('data', stuff);
     if (error) {
+      console.error(error);
       setServerMessage({
         type: 'error',
         message: error.message,

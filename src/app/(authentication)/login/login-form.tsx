@@ -47,6 +47,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
     });
 
     if (error) {
+      console.error(error);
       setServerError(error.message);
       return;
     }
