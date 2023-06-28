@@ -20,12 +20,18 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
 interface InstitutionSelectionProps extends PopoverTriggerProps {
   institutions: Institution[];
+  selectedInstitution: Institution | null;
+  setSelectedInstitution: (institution: Institution) => void;
 }
 
-export function InstitutionSelection({ className, institutions }: InstitutionSelectionProps) {
+export function InstitutionSelection({
+  className,
+  institutions,
+  selectedInstitution,
+  setSelectedInstitution,
+}: InstitutionSelectionProps) {
   const { open, ready, isGettingLinkToken } = usePlaid();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedInstitution, setSelectedInstitution] = useState<Institution | null>(null);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>

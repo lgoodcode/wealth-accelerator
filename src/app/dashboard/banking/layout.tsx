@@ -42,9 +42,9 @@ export default async function BankingLayout({ children }: BankingLayoutProps) {
         </p>
       </div>
       <Separator className="mt-6" />
-      <div className="flex flex-col space-y-8">
+      <div className="flex flex-col space-y-4">
         <Institutions institutions={institutionData} />
-        <div className="flex-1 mt-6">{error ? <PageError /> : children}</div>
+        <div className="flex-1">{error ? <PageError /> : children}</div>
       </div>
     </div>
   );
