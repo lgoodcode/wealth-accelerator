@@ -32,6 +32,7 @@ export function InstitutionSelection({
 }: InstitutionSelectionProps) {
   const { open, ready, isGettingLinkToken } = usePlaid();
   const [isOpen, setIsOpen] = useState(false);
+  console.log('institution', institutions);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -41,7 +42,7 @@ export function InstitutionSelection({
           role="combobox"
           aria-expanded={isOpen}
           aria-label="Select an institution"
-          className={cn('w-[420px] flex items-center text-muted-foreground', className)}
+          className={cn('w-[420px] flex items-center', className)}
         >
           <span className="flex flex-row">
             {selectedInstitution ? selectedInstitution.name : 'Select an institution'}
