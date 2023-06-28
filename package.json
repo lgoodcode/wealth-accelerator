@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit",
     "pre-deploy": "node ./src/scripts/pre-deploy.js",
     "analyze": "cross-env ANALYZE=true next build",
-    "supabase:genTypes": "supabase gen types typescript --local > ./src/types/database.ts",
+    "supabase:genTypes": "supabase gen types typescript --local > ./src/lib/supabase/database.ts",
     "supabase:reset": "supabase stop && supabase start && npm run genTypes"
   },
   "dependencies": {
