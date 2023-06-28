@@ -4,18 +4,15 @@ import { captureException } from '@sentry/nextjs';
 import { getUser } from '@/lib/supabase/server/getUser';
 import { plaidClient } from '@/lib/plaid/config';
 
-interface RenameParams {
-  params: {
-    access_token: string;
-  };
-}
-
-export async function DELETE(_: any, { params: { access_token } }: RenameParams) {
+export async function DELETE(req: Request) {
   const user = await getUser();
 
   if (!user) {
     return NextResponse.json({ error: 'No user found' }, { status: 401 });
   }
+
+  const url = new URL(req.url);
+  const access_token = url.searchParams.get('access_token');
 
   // Verify the parameters
   if (!access_token) {
