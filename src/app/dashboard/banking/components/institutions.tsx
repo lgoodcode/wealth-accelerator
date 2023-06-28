@@ -73,6 +73,14 @@ export function Institutions({ institutions }: InstitutionsProps) {
     setShowRenameDialog(false);
   }, [form]);
 
+  const handleRenameDialogOpenChange = useCallback(
+    (open: boolean) => {
+      form.reset();
+      setShowRenameDialog(open);
+    },
+    [form]
+  );
+
   const onSubmitRename = async (data: z.infer<typeof renameFormSchema>) => {
     if (!selectedInstitution) {
       return;
@@ -178,7 +186,7 @@ export function Institutions({ institutions }: InstitutionsProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Dialog open={showRenameDialog} onOpenChange={setShowRenameDialog}>
+      <Dialog open={showRenameDialog} onOpenChange={handleRenameDialogOpenChange}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Rename institution</DialogTitle>
