@@ -15,7 +15,7 @@ interface SpinnerProps extends React.HTMLAttributes<HTMLSpanElement> {
    * This is used so that the `primary` button variant, which has a white background works while
    * all other variants have a transparent or dark background.
    */
-  variant?: 'primary' | string | undefined | null;
+  variant?: 'primary' | 'default' | string | undefined | null;
 }
 
 export function Spinner({ className, size = 'default', variant = 'other' }: SpinnerProps) {
@@ -25,9 +25,9 @@ export function Spinner({ className, size = 'default', variant = 'other' }: Spin
         'animate-spin border-2 rounded-[50%] box-border inline-block',
         {
           'border-white border-b-transparent dark:border-primary-foreground dark:border-b-transparent':
-            variant === 'primary',
+            variant === 'primary' || variant === 'other',
           'dark:border-white dark:border-b-transparent border-primary-foreground border-b-transparent':
-            variant !== 'primary',
+            variant !== 'primary' && variant !== 'other',
         },
         sizes[size],
         className
