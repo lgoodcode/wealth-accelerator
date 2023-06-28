@@ -3,9 +3,6 @@ import Link from 'next/link';
 
 import { ThemeProvider } from '@/components/theme-provider';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = Infinity;
-
 interface AuthenticationLayoutProps {
   children: React.ReactNode;
 }
