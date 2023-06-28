@@ -3,6 +3,8 @@ import Link from 'next/link';
 
 import { ThemeProvider } from '@/components/theme-provider';
 
+export const dynamic = 'force-dynamic';
+
 interface AuthenticationLayoutProps {
   children: React.ReactNode;
 }
