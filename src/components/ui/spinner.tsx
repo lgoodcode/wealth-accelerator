@@ -18,16 +18,16 @@ interface SpinnerProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: 'primary' | 'default' | string | undefined | null;
 }
 
-export function Spinner({ className, size = 'default', variant = 'other' }: SpinnerProps) {
+export function Spinner({ className, size = 'default', variant }: SpinnerProps) {
   return (
     <span
       className={cn(
         'animate-spin border-2 rounded-[50%] box-border inline-block',
         {
           'border-white border-b-transparent dark:border-primary-foreground dark:border-b-transparent':
-            variant === 'primary' || variant === 'other',
+            variant === 'primary' || variant === 'default',
           'dark:border-white dark:border-b-transparent border-primary-foreground border-b-transparent':
-            variant !== 'primary' && variant !== 'other',
+            variant !== 'primary' && variant !== 'default',
         },
         sizes[size],
         className
