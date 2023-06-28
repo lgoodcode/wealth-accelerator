@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import {
   usePlaidLink,
   type PlaidLinkOptions,
@@ -11,7 +11,9 @@ import { captureException } from '@sentry/nextjs';
 
 import { createLinkToken } from '@/lib/plaid/create-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
+import { syncTransactions } from '@/lib/plaid/transactions/syncTransactions';
 import { toast } from '@/hooks/use-toast';
+import { PlaidCredentialErrorCode } from '@/lib/plaid/types/sync';
 
 export const usePlaid = () => {
   const router = useRouter();
@@ -23,23 +25,55 @@ export const usePlaid = () => {
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token, metadata) => {
       exchangeLinkToken({ public_token, metadata })
-        .then(() => router.refresh()) // Need to refresh the page to get the new data
+        .then(async ({ item_id }) => {
+          // Need to refresh the page to get the new data
+          router.refresh();
+
+          toast({
+            title: 'Syncing transactions',
+            description:
+              'Please wait and do not leave the page while all your transactions from your bank are being synced.',
+          });
+
+          // Trigger sync
+          const error = await syncTransactions(item_id);
+
+          if (error instanceof Error) {
+            console.error(error);
+            captureException(error);
+            toast({
+              variant: 'destructive',
+              title: 'Error',
+              description: 'Failed to sync transactions',
+            });
+            return;
+          }
+
+          // If the user is required to update their credentials, set update mode
+          if (error === PlaidCredentialErrorCode) {
+            setUpdateMode(true);
+            return;
+          }
+
+          toast({
+            title: 'Transactions synced',
+            description: 'All your transactions have been synced.',
+          });
+        })
         .catch((err) => {
           console.error(err);
-          captureException(err);
           toast({
             variant: 'destructive',
             title: 'Error',
-            description: err,
+            description: 'Failed to exchange link token',
           });
         });
 
       toast({
-        variant: 'success',
-        title: 'Plaid connected',
+        title: 'Institution connected',
         description: `Successfully connected ${
           metadata?.institution?.name ?? 'Unknown institution'
-        }.\nPlease wait a moment for the update to appear.`,
+        }. Please wait a moment for the institution to appear.`,
       });
     },
     [router]
@@ -99,7 +133,6 @@ export const usePlaid = () => {
         .then(setLinkToken)
         .catch((err) => {
           console.error(err);
-          captureException(err);
           toast({
             variant: 'destructive',
             title: 'Error',

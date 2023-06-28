@@ -18,18 +18,18 @@ export const getUser = async (): Promise<User | null> => {
     return null;
   }
 
-  const { error: errorUser, data: user } = await supabase
+  const { error, data: user } = await supabase
     .from('users')
     .select('*')
     .eq('id', authToken.sub)
     .single();
 
-  if (errorUser) {
-    console.error('DashboardLayout error', errorUser);
-    captureException(errorUser);
+  if (error) {
+    console.error('DashboardLayout error', error);
+    captureException(error);
   }
 
-  if (errorUser || !user) {
+  if (error || !user) {
     return null;
   }
 

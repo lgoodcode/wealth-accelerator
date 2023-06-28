@@ -26,7 +26,7 @@ export function Spinner({ className, size = 'default', variant }: SpinnerProps) 
         {
           'border-white border-b-transparent dark:border-primary-foreground dark:border-b-transparent':
             variant === 'primary' || variant === 'default',
-          'dark:border-white dark:border-b-transparent border-primary-foreground border-b-transparent':
+          'dark:border-white dark:border-b-transparent border-primary border-b-transparent':
             variant !== 'primary' && variant !== 'default',
         },
         sizes[size],

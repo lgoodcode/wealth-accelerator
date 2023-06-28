@@ -56,7 +56,7 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description: 'Please try again.',
+        description: 'An error occurred. Please try again.',
       });
       return;
     }
@@ -64,8 +64,7 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
     setIsSubmitting(false);
     toast({
       variant: 'success',
-      title: 'Success!',
-      description: 'Your information has been saved.',
+      title: 'Your information has beeen saved',
     });
   };
 

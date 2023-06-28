@@ -14,14 +14,14 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command';
-import type { Institution } from '@/lib/plaid/types/institutions';
+import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
 interface InstitutionSelectionProps extends PopoverTriggerProps {
-  institutions: Institution[];
-  selectedInstitution: Institution | null;
-  setSelectedInstitution: (institution: Institution) => void;
+  institutions: ClientInstitution[];
+  selectedInstitution: ClientInstitution | null;
+  setSelectedInstitution: (institution: ClientInstitution) => void;
 }
 
 export function InstitutionSelection({
@@ -32,7 +32,6 @@ export function InstitutionSelection({
 }: InstitutionSelectionProps) {
   const { open, ready, isGettingLinkToken } = usePlaid();
   const [isOpen, setIsOpen] = useState(false);
-  console.log('institution', institutions);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
