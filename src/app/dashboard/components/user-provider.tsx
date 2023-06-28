@@ -4,7 +4,7 @@ import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { setUser as setSentryUser } from '@sentry/nextjs';
 
-import { userAtom } from '@/lib/atoms/user';
+import { userAtom } from '@/lib/atoms';
 
 interface UserProviderProps {
   user: User;
