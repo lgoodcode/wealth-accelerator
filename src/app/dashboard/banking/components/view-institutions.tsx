@@ -12,7 +12,7 @@ export function ViewInstitutions() {
 
   return (
     <div className="flex py-4 items-center justify-start lg:justify-end">
-      <Tabs value={selectedTab} onValueChange={setSelectedTab}>
+      <Tabs className="w-full" value={selectedTab} onValueChange={setSelectedTab}>
         <TabsList className="grid w-[400px] grid-cols-2 ml-auto">
           <TabsTrigger disabled={!selectedInstitution} value="account">
             Account

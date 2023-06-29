@@ -14,10 +14,12 @@ export function ToastProvider() {
       theme={themeValue}
       position="bottom-right"
       newestOnTop
+      limit={5}
+      toastClassName="border border-background-contrast shadow-lg"
       bodyStyle={{
         ...Inter.style,
         fontWeight: 500,
-        paddingBottom: '1rem',
+        paddingBottom: '0.75rem',
       }}
     />
   );

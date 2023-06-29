@@ -62,7 +62,7 @@ export function InstitutionSelection({
                     <CommandItem
                       key={ins.item_id}
                       className="text-md"
-                      disabled={ins.item_id === isInsItemIdSyncingOrLoading}
+                      loading={ins.item_id === isInsItemIdSyncingOrLoading}
                       onSelect={() => {
                         setIsOpen(false);
                         setSelectedInstitution(ins);

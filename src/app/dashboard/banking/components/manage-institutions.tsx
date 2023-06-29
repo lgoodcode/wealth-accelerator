@@ -6,11 +6,11 @@ import { useCallback, useState } from 'react';
 import { captureException } from '@sentry/nextjs';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'react-toastify';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 
 import { supabase } from '@/lib/supabase/client';
 import { fetcher } from '@/lib/utils/fetcher';
-import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -97,18 +97,11 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
     if (error) {
       console.error(error);
       captureException(error);
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: error.message,
-      });
+      toast.error('Uh oh! Something went wrong. Please try again.');
       return;
     }
 
-    toast({
-      variant: 'success',
-      title: 'Institution renamed successfully',
-    });
+    toast.success('Institution name updated');
 
     // Update the institution name in the list
     setSelectedInstitution((prev) => {
@@ -122,6 +115,7 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
       };
     });
     setShowRenameDialog(false);
+    router.refresh();
   };
 
   const handleDelete = useCallback(async () => {
@@ -140,11 +134,7 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
       console.error(supabaseError);
       captureException(supabaseError);
       setIsWaiting(false);
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: supabaseError.message,
-      });
+      toast.error('Uh oh! Something went wrong. Please try again.');
       return;
     }
 
@@ -161,7 +151,7 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
       console.error(plaidError);
     }
 
-    toast({ title: `Institution ${selectedInstitution.name} has been removed.` });
+    toast.success(`Institution ${selectedInstitution.name} has been removed`);
 
     setIsWaiting(false);
     setShowDeleteDialog(false);

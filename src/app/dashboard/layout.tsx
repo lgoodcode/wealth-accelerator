@@ -2,7 +2,6 @@ import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 
 import { getUser } from '@/lib/supabase/server/getUser';
-import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from './components/header';
 import { QueryProvider } from './components/query-provider';
@@ -46,7 +45,6 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
         <QueryProvider>
           <Header user={user} />
           {children}
-          <Toaster />
         </QueryProvider>
         <ToastProvider />
       </UserProvider>

@@ -9,76 +9,104 @@ import {
   type PlaidLinkOnSuccess,
 } from 'react-plaid-link';
 import { captureException } from '@sentry/nextjs';
+import { toast } from 'react-toastify';
 
 import { createLinkToken } from '@/lib/plaid/create-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { syncTransactions } from '@/lib/plaid/transactions/syncTransactions';
 import { PlaidCredentialErrorCode } from '@/lib/plaid/types/sync';
 import { isInsItemIdSyncingOrLoadingAtom } from '@/lib/atoms/institutions';
-import { toast } from '@/hooks/use-toast';
+import { Toast } from '@/components/ui/toast';
 
 export const usePlaid = () => {
   const router = useRouter();
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [updateMode, setUpdateMode] = useState(false);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
-  const setIsInstitutionsSyncingOrLoadingAtom = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
+  const isInsItemIdSyncingOrLoading = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
 
   // On successful link, exchange the public token for an access token
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token, metadata) => {
-      exchangeLinkToken({ public_token, metadata })
-        .then(async ({ item_id }) => {
-          // Need to refresh the page to get the new data
-          router.refresh();
-          setIsInstitutionsSyncingOrLoadingAtom(item_id);
+      try {
+        const { item_id } = await exchangeLinkToken({ public_token, metadata });
+        // Need to refresh the page to get the new data
+        router.refresh();
+        isInsItemIdSyncingOrLoading(item_id);
 
-          toast({
-            title: 'Syncing transactions',
-            description:
-              'Please wait and do not leave the page while all your transactions from your bank are being synced.',
-          });
-
-          // Trigger sync
-          const error = await syncTransactions(item_id);
-
-          if (error instanceof Error) {
-            console.error(error);
-            captureException(error);
-            toast({
-              variant: 'destructive',
-              title: 'Error',
-              description: 'Failed to sync transactions',
-            });
-          } // If the user is required to update their credentials, set update mode
-          else if (error === PlaidCredentialErrorCode) {
-            setUpdateMode(true);
-          } else {
-            toast({
-              title: 'Transactions synced',
-              description: 'All your transactions have been synced.',
-            });
-          }
-
-          setIsInstitutionsSyncingOrLoadingAtom(null);
-        })
-        .catch((err) => {
-          console.error(err);
-          toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: 'Failed to exchange link token',
-          });
-        });
-
-      toast({
-        title: 'Institution connected',
-        description: `Successfully connected ${
-          metadata?.institution?.name ?? 'Unknown institution'
-        }. Please wait a moment for the institution to appear.`,
-      });
+        toast
+          .promise(syncTransactions(item_id), {
+            pending: {
+              render() {
+                return (
+                  <Toast title="Syncing transactions">
+                    Successfully connected{' '}
+                    <span className="font-bold">
+                      {metadata?.institution?.name ?? 'Unknown institution'}
+                    </span>
+                    . Please wait and do not leave the page while all your transactions for are
+                    being synced.
+                  </Toast>
+                );
+              },
+            },
+            error: {
+              render() {
+                return (
+                  <Toast title="Syncing transactions">
+                    Failed to sync transactions for{' '}
+                    <span className="font-bold">
+                      {metadata?.institution?.name ?? 'Unknown institution'}
+                    </span>
+                  </Toast>
+                );
+              },
+            },
+            success: {
+              render({ data: error }) {
+                if (error instanceof Error) {
+                  console.error(error);
+                  captureException(error);
+                  return (
+                    <Toast title="Syncing transactions">
+                      Failed to sync transactions for{' '}
+                      <span className="font-bold">
+                        {metadata?.institution?.name ?? 'Unknown institution'}
+                      </span>
+                    </Toast>
+                  );
+                } // If the user is required to update their credentials, set update mode
+                else if (error === PlaidCredentialErrorCode) {
+                  setUpdateMode(true);
+                  return (
+                    <Toast title="Syncing transactions">
+                      Credentials need to be updated for{' '}
+                      <span className="font-bold">
+                        {metadata?.institution?.name ?? 'Unknown institution'}
+                      </span>
+                    </Toast>
+                  );
+                }
+                // If there is no error, then the sync was successful
+                return (
+                  <Toast title="Syncing transactions">
+                    All transactions for{' '}
+                    <span className="font-bold">
+                      {metadata?.institution?.name ?? 'Unknown institution'}
+                    </span>{' '}
+                    have been synced
+                  </Toast>
+                );
+              },
+            },
+          })
+          .finally(() => isInsItemIdSyncingOrLoading(null));
+      } catch (error) {
+        console.error(error);
+        toast.error('Failed to exchange link token');
+      }
     },
-    [router, setIsInstitutionsSyncingOrLoadingAtom]
+    [router, isInsItemIdSyncingOrLoading]
   );
 
   const onEvent = useCallback<PlaidLinkOnEvent>((eventName, metadata) => {
@@ -135,11 +163,7 @@ export const usePlaid = () => {
         .then(setLinkToken)
         .catch((err) => {
           console.error(err);
-          toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: 'Failed to create link token',
-          });
+          toast.error('Failed to create link token');
         })
         .finally(() => setIsGettingLinkToken(false));
     }

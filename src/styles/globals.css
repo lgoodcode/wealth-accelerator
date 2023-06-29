@@ -115,16 +115,35 @@ input[type='number'] {
 /**
  * react-toastify styles overrides
  */
+
+.Toastify__toast-theme--dark {
+  background-color: hsl(var(--card)) !important;
+}
+
+.Toastify__toast-theme--dark.Toastify__toast--error {
+  background-color: #ff13133f !important;
+}
+
+.Toastify__toast-theme--dark.Toastify__toast--success {
+  background-color: #05962433 !important;
+}
+
 .Toastify__toast-container {
-  width: 360px !important;
+  max-width: 420px !important;
+  width: 100% !important;
 }
 
 .Toastify__toast-icon {
+  width: 24px !important;
   margin-right: 1rem !important;
+}
+
+.Toastify__close-button {
+  margin-top: 4px !important;
 }
 
 .Toastify__close-button,
 .Toastify__close-button > svg {
-  width: 20px !important;
-  height: 20px !important;
+  width: 22px !important;
+  height: 22px !important;
 }
