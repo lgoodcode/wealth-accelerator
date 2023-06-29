@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAtomValue } from 'jotai';
 
 import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
@@ -9,6 +9,14 @@ export function ViewInstitutions() {
   const [selectedTab, setSelectedTab] = useState<string | undefined>(
     selectedInstitution ? 'account' : undefined
   );
+
+  useEffect(() => {
+    if (!selectedInstitution) {
+      setSelectedTab(undefined);
+    } else {
+      setSelectedTab('account');
+    }
+  }, [selectedInstitution]);
 
   return (
     <div className="flex py-4 items-center justify-start lg:justify-end">

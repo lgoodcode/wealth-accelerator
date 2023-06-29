@@ -40,12 +40,17 @@ export const usePlaid = () => {
               render() {
                 return (
                   <Toast title="Syncing transactions">
-                    Successfully connected{' '}
-                    <span className="font-bold">
-                      {metadata?.institution?.name ?? 'Unknown institution'}
-                    </span>
-                    . Please wait and do not leave the page while all your transactions for are
-                    being synced.
+                    <div className="flex flex-col space-y-3">
+                      <span>
+                        Successfully connected{' '}
+                        <span className="font-bold">
+                          {metadata?.institution?.name ?? 'Unknown institution'}
+                        </span>
+                        . Please wait and do not leave the page while all your transactions for are
+                        being synced.
+                      </span>
+                      <span className="font-semibold">NOTE: This may take a few minutes</span>
+                    </div>
                   </Toast>
                 );
               },
@@ -122,18 +127,21 @@ export const usePlaid = () => {
     }
   }, []);
 
-  const onExit = useCallback<PlaidLinkOnExit>((error, metadata) => {
-    // log onExit callbacks from Link, handle errors
-    // https://plaid.com/docs/link/web/#onexit
-    console.warn(error, metadata);
-    setUpdateMode(false);
-    // Reset the link token if it was in update mode so it can't be used again
-    // and reset the selection if the user wants to add a new institution
-    // or click a different institution
-    if (metadata.status === 'requires_credentials') {
-      setLinkToken(null);
-    }
-  }, []);
+  const onExit = useCallback<PlaidLinkOnExit>(
+    (error, metadata) => {
+      // log onExit callbacks from Link, handle errors
+      // https://plaid.com/docs/link/web/#onexit
+      console.warn(error, metadata);
+      // Reset the link token if it was in update mode so it can't be used again
+      // and reset the selection if the user wants to add a new institution
+      // or click a different institution
+      if (updateMode && metadata.status === 'requires_credentials') {
+        setUpdateMode(false);
+        setLinkToken(null);
+      }
+    },
+    [updateMode]
+  );
 
   const plaidConfig: PlaidLinkOptions = useMemo(
     () => ({
