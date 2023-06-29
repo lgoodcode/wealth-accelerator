@@ -6,7 +6,6 @@ import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { toast } from '@/hooks/use-toast';
 import {
   Form,
   FormControl,
@@ -64,7 +63,7 @@ export function DisplayForm() {
   });
 
   function onSubmit(data: DisplayFormValues) {
-    toast({
+    console.log({
       title: 'You submitted the following values:',
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
