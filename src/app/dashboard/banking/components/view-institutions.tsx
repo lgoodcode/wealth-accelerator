@@ -9,7 +9,7 @@ interface ViewInstitutionsProps {
 export function ViewInstitutions({ institutions }: ViewInstitutionsProps) {
   return (
     <div>
-      <Tabs defaultValue="account" className="w-[400px]">
+      <Tabs className="w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger disabled value="account">
             Account

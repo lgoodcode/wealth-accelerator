@@ -9,6 +9,9 @@ export const syncTransactions = async (item_id: string) => {
   let numOfRequests = 0;
 
   while (true) {
+    // Wait 5 seconds between requests
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
     numOfRequests++;
     // Plaid limits the number of requests to 50 per minute, so if we hit that limit,
     // wait a minute before continuing

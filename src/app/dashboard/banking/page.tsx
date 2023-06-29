@@ -24,13 +24,7 @@ export default async function BankingPage() {
   // Get all institutions for the user
   const { error, data } = await supabase
     .from('plaid')
-    .select(
-      `
-        item_id,
-        name,
-        expiration,
-        cursor`
-    )
+    .select('item_id, name, expiration, cursor')
     .eq('user_id', user.id);
   const institutionData: ClientInstitution[] = data ?? [];
 
@@ -49,9 +43,7 @@ export default async function BankingPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <div className="flex flex-col space-y-4">
-        <Institutions institutions={institutionData} />
-      </div>
+      <Institutions institutions={institutionData} />
     </div>
   );
 }

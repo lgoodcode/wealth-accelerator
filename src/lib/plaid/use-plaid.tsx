@@ -1,5 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useAtom } from 'jotai';
 import {
   usePlaidLink,
   type PlaidLinkOptions,
@@ -12,14 +13,16 @@ import { captureException } from '@sentry/nextjs';
 import { createLinkToken } from '@/lib/plaid/create-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { syncTransactions } from '@/lib/plaid/transactions/syncTransactions';
-import { toast } from '@/hooks/use-toast';
 import { PlaidCredentialErrorCode } from '@/lib/plaid/types/sync';
+import { isInstitutionsSyncingOrLoadingAtom } from '@/lib/atoms/institutions';
+import { toast } from '@/hooks/use-toast';
 
 export const usePlaid = () => {
   const router = useRouter();
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [updateMode, setUpdateMode] = useState(false);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
+  const [, setIsInstitutionsSyncingOrLoadingAtom] = useAtom(isInstitutionsSyncingOrLoadingAtom);
 
   // On successful link, exchange the public token for an access token
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
@@ -28,6 +31,7 @@ export const usePlaid = () => {
         .then(async ({ item_id }) => {
           // Need to refresh the page to get the new data
           router.refresh();
+          setIsInstitutionsSyncingOrLoadingAtom(true);
 
           toast({
             title: 'Syncing transactions',
@@ -46,19 +50,17 @@ export const usePlaid = () => {
               title: 'Error',
               description: 'Failed to sync transactions',
             });
-            return;
-          }
-
-          // If the user is required to update their credentials, set update mode
-          if (error === PlaidCredentialErrorCode) {
+          } // If the user is required to update their credentials, set update mode
+          else if (error === PlaidCredentialErrorCode) {
             setUpdateMode(true);
-            return;
+          } else {
+            toast({
+              title: 'Transactions synced',
+              description: 'All your transactions have been synced.',
+            });
           }
 
-          toast({
-            title: 'Transactions synced',
-            description: 'All your transactions have been synced.',
-          });
+          setIsInstitutionsSyncingOrLoadingAtom(false);
         })
         .catch((err) => {
           console.error(err);
@@ -76,7 +78,7 @@ export const usePlaid = () => {
         }. Please wait a moment for the institution to appear.`,
       });
     },
-    [router]
+    [router, setIsInstitutionsSyncingOrLoadingAtom]
   );
 
   const onEvent = useCallback<PlaidLinkOnEvent>((eventName, metadata) => {

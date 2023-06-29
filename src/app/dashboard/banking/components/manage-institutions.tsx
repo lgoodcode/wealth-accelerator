@@ -107,7 +107,17 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
       title: 'Institution renamed successfully',
     });
 
-    setSelectedInstitution(null);
+    // Update the institution name in the list
+    setSelectedInstitution((prev) => {
+      if (!prev) {
+        return null;
+      }
+
+      return {
+        ...prev,
+        name: data.name,
+      };
+    });
     setShowRenameDialog(false);
     router.refresh();
   };
@@ -149,7 +159,7 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
       console.error(plaidError);
     }
 
-    toast({ title: `${selectedInstitution.name} deleted` });
+    toast({ title: `Institution ${selectedInstitution.name} has been removed.` });
 
     setIsWaiting(false);
     setShowDeleteDialog(false);
@@ -212,7 +222,11 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
             </form>
           </Form>
           <DialogFooter>
-            <Button variant="secondary" onClick={handleCloseRenameDialog}>
+            <Button
+              variant="secondary"
+              disabled={form.formState.isSubmitting}
+              onClick={handleCloseRenameDialog}
+            >
               Close
             </Button>
             <Button
@@ -236,7 +250,7 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isWaiting}>Cancel</AlertDialogCancel>
             <Button variant="destructive" onClick={handleDelete} loading={isWaiting}>
               Delete
             </Button>
