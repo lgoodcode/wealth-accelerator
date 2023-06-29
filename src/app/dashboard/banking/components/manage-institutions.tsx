@@ -138,7 +138,7 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
 
     // Revoke access token
     const { error: plaidError } = await fetcher(
-      `/api/plaid/institutions/${selectedInstitution.item_id}/remove`,
+      `/api/plaid/institutions/remove/${selectedInstitution.item_id}`,
       {
         method: 'DELETE',
       }

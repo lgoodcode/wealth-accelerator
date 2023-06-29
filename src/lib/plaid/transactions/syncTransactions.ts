@@ -18,7 +18,7 @@ export const syncTransactions = async (item_id: string) => {
     }
 
     const { error, data } = await fetcher<SyncResponse>(
-      `/api/plaid/institutions/${item_id}?request_id=${Date.now()}/sync`
+      `/api/plaid/institutions/sync/${item_id}?request_id=${Date.now()}`
     );
 
     // If it's a generic failure, return the error
