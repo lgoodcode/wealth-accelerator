@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { useAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import {
   usePlaidLink,
   type PlaidLinkOptions,
@@ -14,7 +14,7 @@ import { createLinkToken } from '@/lib/plaid/create-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { syncTransactions } from '@/lib/plaid/transactions/syncTransactions';
 import { PlaidCredentialErrorCode } from '@/lib/plaid/types/sync';
-import { isInstitutionsSyncingOrLoadingAtom } from '@/lib/atoms/institutions';
+import { isInsItemIdSyncingOrLoadingAtom } from '@/lib/atoms/institutions';
 import { toast } from '@/hooks/use-toast';
 
 export const usePlaid = () => {
@@ -22,7 +22,7 @@ export const usePlaid = () => {
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [updateMode, setUpdateMode] = useState(false);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
-  const [, setIsInstitutionsSyncingOrLoadingAtom] = useAtom(isInstitutionsSyncingOrLoadingAtom);
+  const setIsInstitutionsSyncingOrLoadingAtom = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
 
   // On successful link, exchange the public token for an access token
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
@@ -31,7 +31,7 @@ export const usePlaid = () => {
         .then(async ({ item_id }) => {
           // Need to refresh the page to get the new data
           router.refresh();
-          setIsInstitutionsSyncingOrLoadingAtom(true);
+          setIsInstitutionsSyncingOrLoadingAtom(item_id);
 
           toast({
             title: 'Syncing transactions',
@@ -60,7 +60,7 @@ export const usePlaid = () => {
             });
           }
 
-          setIsInstitutionsSyncingOrLoadingAtom(false);
+          setIsInstitutionsSyncingOrLoadingAtom(null);
         })
         .catch((err) => {
           console.error(err);

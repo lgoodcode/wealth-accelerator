@@ -47,6 +47,8 @@ import {
 } from '@/components/ui/form';
 import { InstitutionSelection } from './institution-selection';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { selectedInstitutionAtom, setSelectedInstitutionAtom } from '@/lib/atoms/institutions';
 
 const renameFormSchema = z.object({
   name: z.string({
@@ -60,10 +62,11 @@ interface InstitutionsProps {
 
 export function ManageInstitutions({ institutions }: InstitutionsProps) {
   const router = useRouter();
-  const [selectedInstitution, setSelectedInstitution] = useState<ClientInstitution | null>(null);
   const [showRenameDialog, setShowRenameDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isWaiting, setIsWaiting] = useState(false);
+  const selectedInstitution = useAtomValue(selectedInstitutionAtom);
+  const setSelectedInstitution = useSetAtom(setSelectedInstitutionAtom);
   const form = useForm<z.infer<typeof renameFormSchema>>({
     resolver: zodResolver(renameFormSchema),
   });
@@ -119,7 +122,6 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
       };
     });
     setShowRenameDialog(false);
-    router.refresh();
   };
 
   const handleDelete = useCallback(async () => {
@@ -164,99 +166,105 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
     setIsWaiting(false);
     setShowDeleteDialog(false);
     setSelectedInstitution(null);
+    // Refresh the page to update the data
     router.refresh();
-  }, [selectedInstitution, router]);
+  }, [selectedInstitution, setSelectedInstitution, router]);
 
   return (
-    <div className="flex w-full h-20 items-center gap-4">
-      <InstitutionSelection
-        institutions={institutions}
-        selectedInstitution={selectedInstitution}
-        setSelectedInstitution={setSelectedInstitution}
-      />
+    <div className="flex flex-col lg:flex-row w-full items-center justify-start">
+      <div className="w-full mr-auto py-4">
+        <h2 className="text-3xl font-bold">
+          {selectedInstitution?.name ?? 'Select an institution'}
+        </h2>
+      </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button size="icon" variant="ghost" disabled={!selectedInstitution}>
-            <span className="sr-only">Actions</span>
-            <MoreHorizontal />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-          <DropdownMenuItem onSelect={() => setShowRenameDialog(true)}>
-            <Pencil className="mr-2 h-4 w-4" />
-            Rename
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onSelect={() => setShowDeleteDialog(true)}
-            className="text-red-600 font-medium"
-          >
-            <Trash className="mr-2 h-4 w-4" />
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      <Dialog open={showRenameDialog} onOpenChange={handleRenameDialogOpenChange}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Rename institution</DialogTitle>
-            <DialogDescription>Set a new name for this institution.</DialogDescription>
-          </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmitRename)}>
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>New name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Institution name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </form>
-          </Form>
-          <DialogFooter>
-            <Button
-              variant="secondary"
-              disabled={form.formState.isSubmitting}
-              onClick={handleCloseRenameDialog}
-            >
-              Close
+      <div className="flex h-20 w-full justify-start lg:justify-end items-center space-x-2">
+        <InstitutionSelection
+          institutions={institutions}
+          selectedInstitution={selectedInstitution}
+          setSelectedInstitution={setSelectedInstitution}
+        />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="icon" variant="ghost" disabled={!selectedInstitution}>
+              <span className="sr-only">Actions</span>
+              <MoreHorizontal />
             </Button>
-            <Button
-              type="submit"
-              loading={form.formState.isSubmitting}
-              onClick={form.handleSubmit(onSubmitRename)}
-            >
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem onSelect={() => setShowRenameDialog(true)}>
+              <Pencil className="mr-2 h-4 w-4" />
               Rename
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This institution and all the data associated with it
-              will be deleted.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isWaiting}>Cancel</AlertDialogCancel>
-            <Button variant="destructive" onClick={handleDelete} loading={isWaiting}>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onSelect={() => setShowDeleteDialog(true)}
+              className="text-red-600 font-medium"
+            >
+              <Trash className="mr-2 h-4 w-4" />
               Delete
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Dialog open={showRenameDialog} onOpenChange={handleRenameDialogOpenChange}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Rename institution</DialogTitle>
+              <DialogDescription>Set a new name for this institution.</DialogDescription>
+            </DialogHeader>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmitRename)}>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>New name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Institution name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
+            <DialogFooter>
+              <Button
+                variant="secondary"
+                disabled={form.formState.isSubmitting}
+                onClick={handleCloseRenameDialog}
+              >
+                Close
+              </Button>
+              <Button
+                type="submit"
+                loading={form.formState.isSubmitting}
+                onClick={form.handleSubmit(onSubmitRename)}
+              >
+                Rename
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This institution and all the data associated with it
+                will be deleted.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isWaiting}>Cancel</AlertDialogCancel>
+              <Button variant="destructive" onClick={handleDelete} loading={isWaiting}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </div>
   );
 }

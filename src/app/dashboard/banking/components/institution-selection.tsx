@@ -5,6 +5,7 @@ import { ChevronsUpDown, PlusCircle } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
 import { usePlaid } from '@/lib/plaid/use-plaid';
+import { isInsItemIdSyncingOrLoadingAtom } from '@/lib/atoms/institutions';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
@@ -15,6 +16,7 @@ import {
   CommandSeparator,
 } from '@/components/ui/command';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
+import { useAtomValue } from 'jotai';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
@@ -32,6 +34,7 @@ export function InstitutionSelection({
 }: InstitutionSelectionProps) {
   const { open, ready, isGettingLinkToken } = usePlaid();
   const [isOpen, setIsOpen] = useState(false);
+  const isInsItemIdSyncingOrLoading = useAtomValue(isInsItemIdSyncingOrLoadingAtom);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -59,6 +62,7 @@ export function InstitutionSelection({
                     <CommandItem
                       key={ins.item_id}
                       className="text-md"
+                      disabled={ins.item_id === isInsItemIdSyncingOrLoading}
                       onSelect={() => {
                         setIsOpen(false);
                         setSelectedInstitution(ins);

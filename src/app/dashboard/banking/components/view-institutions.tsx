@@ -1,25 +1,28 @@
+import { useState } from 'react';
+import { useAtomValue } from 'jotai';
+
+import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import type { ClientInstitution } from '@/lib/plaid/types/institutions';
+export function ViewInstitutions() {
+  const selectedInstitution = useAtomValue(selectedInstitutionAtom);
+  const [selectedTab, setSelectedTab] = useState<string | undefined>(
+    selectedInstitution ? 'account' : undefined
+  );
 
-interface ViewInstitutionsProps {
-  institutions: ClientInstitution[];
-}
-
-export function ViewInstitutions({ institutions }: ViewInstitutionsProps) {
   return (
-    <div>
-      <Tabs className="w-[400px]">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger disabled value="account">
+    <div className="flex py-4 items-center justify-start lg:justify-end">
+      <Tabs value={selectedTab} onValueChange={setSelectedTab}>
+        <TabsList className="grid w-[400px] grid-cols-2 ml-auto">
+          <TabsTrigger disabled={!selectedInstitution} value="account">
             Account
           </TabsTrigger>
-          <TabsTrigger disabled value="transactions">
+          <TabsTrigger disabled={!selectedInstitution} value="transactions">
             Transactions
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="account">Account</TabsContent>
-        <TabsContent value="transactions">Transactions</TabsContent>
+        <TabsContent value="account">{selectedInstitution?.name} accounts</TabsContent>
+        <TabsContent value="transactions">{selectedInstitution?.name} transactions</TabsContent>
       </Tabs>
     </div>
   );
