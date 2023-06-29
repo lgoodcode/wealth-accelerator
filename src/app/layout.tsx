@@ -6,6 +6,7 @@ import { TailwindIndicator } from '@/components/tailwind-indicator';
 import '@/styles/globals.css';
 
 export const metadata = siteMetadata;
+export const dynamic = 'force-dynamic';
 
 interface RootLayoutProps {
   children: React.ReactNode;
