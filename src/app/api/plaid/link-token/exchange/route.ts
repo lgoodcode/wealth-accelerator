@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     // Expire the access token in 90 days minus 60 seconds
     const expiration = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000 - 60 * 1000).toUTCString();
 
-    // Check if the insitution already exists in the database, if so, add a number to the end
+    // Check if the insitution already exists in the database for the user, if so, add a number to the end
     const { data: existingInstitutions } = await supabase
       .from('plaid')
       .select('name')
