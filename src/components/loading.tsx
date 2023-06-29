@@ -16,7 +16,7 @@ export function Loading({ className, title = 'Loading...', children }: LoadingPr
       )}
     >
       <Spinner className="mr-4" size="xl" />
-      <h1 className="text-4xl font-semibold">{title}</h1>
+      <h1 className="text-4xl font-medium">{title}</h1>
       {children}
     </div>
   );
