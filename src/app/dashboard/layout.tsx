@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from './components/header';
 import { QueryProvider } from './components/query-provider';
 import { UserProvider } from './components/user-provider';
+import { ToastProvider } from './components/toast-provider';
 
 export const metadata: Metadata = {
   description: 'Wealth Accelerator app.',
@@ -47,6 +48,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
           {children}
           <Toaster />
         </QueryProvider>
+        <ToastProvider />
       </UserProvider>
     </ThemeProvider>
   );

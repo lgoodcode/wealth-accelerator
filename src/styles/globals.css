@@ -111,3 +111,20 @@ input[type='number'] {
   appearance: textfield;
   -moz-appearance: textfield;
 }
+
+/**
+ * react-toastify styles overrides
+ */
+.Toastify__toast-container {
+  width: 360px !important;
+}
+
+.Toastify__toast-icon {
+  margin-right: 1rem !important;
+}
+
+.Toastify__close-button,
+.Toastify__close-button > svg {
+  width: 20px !important;
+  height: 20px !important;
+}
