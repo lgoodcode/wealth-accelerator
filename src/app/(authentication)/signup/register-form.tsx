@@ -43,6 +43,8 @@ const formSchema = z.object({
     }),
 });
 
+type FormType = z.infer<typeof formSchema>;
+
 type ServerMessage = {
   type: 'error' | 'success';
   message: string;
@@ -52,7 +54,7 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
@@ -61,10 +63,10 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  const onSubmit = async (data: FormType) => {
     setServerMessage(null);
 
-    const { error, data: stuff } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
       options: {
@@ -72,7 +74,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
         emailRedirectTo: `${location.origin}/api/auth/callback`,
       },
     });
-    console.log('data', stuff);
+
     if (error) {
       console.error(error);
       setServerMessage({
