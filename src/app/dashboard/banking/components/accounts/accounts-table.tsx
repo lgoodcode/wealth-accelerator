@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { captureException } from '@sentry/nextjs';
 import {
   ColumnFiltersState,
@@ -17,6 +18,7 @@ import {
 } from '@tanstack/react-table';
 
 import { supabase } from '@/lib/supabase/client';
+import { ClientError } from '@/components/client-error';
 import { Loading } from '@/components/loading';
 import {
   Table,
@@ -48,19 +50,17 @@ interface AccountsTableProps {
 }
 
 export function AccountsTable({ item_id }: AccountsTableProps) {
-  const [accounts, setAccounts] = useState<Account[]>([]);
   // const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [isFetchingData, setIsFetchingData] = useState(false);
-
-  useEffect(() => {
-    setIsFetchingData(true);
-    getAccounts(item_id)
-      .then(setAccounts)
-      .finally(() => setIsFetchingData(false));
-  }, [item_id]);
+  const {
+    isError,
+    isLoading,
+    data: accounts = [], // Use default value because initialData will be used and cached
+  } = useQuery<Account[]>(['accounts', item_id], () => getAccounts(item_id), {
+    staleTime: 1000 * 60 * 60, // cache accounts, which don't change often, for an hour
+  });
 
   const table = useReactTable<Account>({
     data: accounts,
@@ -84,7 +84,9 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
-  if (isFetchingData) {
+  if (isError) {
+    return <ClientError />;
+  } else if (isLoading) {
     return <Loading title="Fetching accounts..." />;
   }
 
@@ -122,7 +124,7 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  No results
                 </TableCell>
               </TableRow>
             )}
