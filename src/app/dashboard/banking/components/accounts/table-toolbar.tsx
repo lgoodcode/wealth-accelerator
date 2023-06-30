@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { ViewOptions } from './view-options';
 import { FacetedFilter } from './faceted-filter';
 import { typeOptions, enabledOptions } from './column-options';
-import { Account } from '@/lib/plaid/types/institutions';
+import type { Account } from '@/lib/plaid/types/institutions';
 
 interface TableToolbarProps {
   table: Table<Account>;
