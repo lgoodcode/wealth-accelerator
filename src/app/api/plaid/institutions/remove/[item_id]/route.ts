@@ -2,15 +2,16 @@ import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
 import { getUser } from '@/lib/supabase/server/getUser';
-import { client } from '@/lib/plaid/config';
+import { plaidClient } from '@/lib/plaid/config';
+import { getItemFromItemId } from '@/lib/plaid/getItemFromItemId';
 
-interface RenameParams {
+interface RemoveInstitutionParams {
   params: {
-    access_token: string;
+    item_id: string;
   };
 }
 
-export async function DELETE(_: any, { params: { access_token } }: RenameParams) {
+export async function DELETE(_: Request, { params: { item_id } }: RemoveInstitutionParams) {
   const user = await getUser();
 
   if (!user) {
@@ -18,13 +19,19 @@ export async function DELETE(_: any, { params: { access_token } }: RenameParams)
   }
 
   // Verify the parameters
-  if (!access_token) {
+  if (!item_id) {
     return NextResponse.json({ error: 'Missing access_token' }, { status: 400 });
+  }
+
+  const item = await getItemFromItemId(item_id);
+
+  if (!item) {
+    return NextResponse.json({ error: 'Failed to retrieve item' }, { status: 500 });
   }
 
   // Revoke the access token
   try {
-    await client.itemRemove({ access_token });
+    await plaidClient.itemRemove({ access_token: item.access_token });
   } catch (error) {
     console.error(error);
     captureException(error);

@@ -40,7 +40,8 @@
   }
 
   .dark {
-    --background: 224 71% 5%;
+    /* --background: 224 71% 5%; */
+    --background: 220 40% 10%;
     --foreground: 213 31% 91%;
 
     --muted: 223 47% 11%;
@@ -53,7 +54,8 @@
     --card-foreground: 213 31% 91%;
 
     /* --border: 216 34% 17%; */
-    --border: 216deg 34% 25%;
+    --border: 216 34% 25%;
+    /* This is not being used. Using just border gives a consistent look and has better contrast in dark mode */
     --input: 216 34% 17%;
 
     --primary: 210 40% 98%;
@@ -110,4 +112,40 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   appearance: textfield;
   -moz-appearance: textfield;
+}
+
+/**
+ * react-toastify styles overrides
+ */
+
+.Toastify__toast-theme--dark {
+  background-color: hsl(var(--card)) !important;
+}
+
+.Toastify__toast-theme--dark.Toastify__toast--error {
+  background-color: #5e1111 !important;
+}
+
+.Toastify__toast-theme--dark.Toastify__toast--success {
+  background-color: #0c3b16 !important;
+}
+
+.Toastify__toast-container {
+  max-width: 420px !important;
+  width: 100% !important;
+}
+
+.Toastify__toast-icon {
+  width: 24px !important;
+  margin-right: 1rem !important;
+}
+
+.Toastify__close-button {
+  margin-top: 4px !important;
+}
+
+.Toastify__close-button,
+.Toastify__close-button > svg {
+  width: 22px !important;
+  height: 22px !important;
 }

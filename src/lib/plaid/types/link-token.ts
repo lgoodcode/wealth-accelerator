@@ -8,3 +8,7 @@ export type ExchangeLinkTokenBody = {
   public_token: string;
   metadata: PlaidLinkOnSuccessMetadata;
 };
+
+export type ExchangeLinkTokenResponse = {
+  item_id: string;
+};

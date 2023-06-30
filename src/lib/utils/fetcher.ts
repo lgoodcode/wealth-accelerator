@@ -21,11 +21,8 @@ export const fetcher = async <T = any>(url: string, options?: RequestInit): Fetc
     const res = await fetch(url, OPTIONS);
 
     if (res.ok) {
-      const json = await res.json();
-      return {
-        error: null,
-        data: json,
-      };
+      const data = await res.json();
+      return { error: null, data };
     } else {
       if (res.status === 404) {
         return {
@@ -33,17 +30,17 @@ export const fetcher = async <T = any>(url: string, options?: RequestInit): Fetc
           data: null,
         };
       } else if (res.headers.get('Content-Type')?.includes('application/json')) {
-        const json = await res.json();
+        const data = await res.json();
 
-        if (json.error) {
+        if (data.error) {
           return {
-            error: json.error,
+            error: data.error,
             data: null,
           };
         }
         return {
           error: null,
-          data: json,
+          data: data,
         };
       } else {
         return {

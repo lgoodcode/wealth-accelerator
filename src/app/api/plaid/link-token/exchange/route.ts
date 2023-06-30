@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 import { getUser } from '@/lib/supabase/server/getUser';
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
-import { client } from '@/lib/plaid/config';
+import { plaidClient } from '@/lib/plaid/config';
 import type { ExchangeLinkTokenBody } from '@/lib/plaid/types/link-token';
 
 export async function POST(req: Request) {
@@ -14,7 +14,13 @@ export async function POST(req: Request) {
   }
 
   // Validate the request body
-  const { public_token, metadata } = (await req.json()) as ExchangeLinkTokenBody;
+  const body = await req.json().catch(() => null);
+
+  if (!body) {
+    return NextResponse.json({ error: 'Invalid body' }, { status: 400 });
+  }
+
+  const { public_token, metadata } = body as ExchangeLinkTokenBody;
 
   if (!public_token) {
     return NextResponse.json({ error: 'Missing public_token' }, { status: 400 });
@@ -28,11 +34,11 @@ export async function POST(req: Request) {
   try {
     const {
       data: { item_id, access_token },
-    } = await client.itemPublicTokenExchange({ public_token });
+    } = await plaidClient.itemPublicTokenExchange({ public_token });
     // Expire the access token in 90 days minus 60 seconds
     const expiration = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000 - 60 * 1000).toUTCString();
 
-    // Check if the insitution already exists in the database, if so, add a number to the end
+    // Check if the insitution already exists in the database for the user, if so, add a number to the end
     const { data: existingInstitutions } = await supabase
       .from('plaid')
       .select('name')
@@ -76,12 +82,12 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Error storing accounts' }, { status: 500 });
       }
     }
+
+    return NextResponse.json({ item_id });
     // Catch the error if the exchange fails
   } catch (error) {
     console.error(error);
     captureException(error);
     return NextResponse.json({ error: 'Error exchanging public token' }, { status: 500 });
   }
-
-  return NextResponse.json({ success: true });
 }

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
-import * as z from 'zod';
+import { z } from 'zod';
 
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { toast } from '@/hooks/use-toast';
 import {
   Form,
   FormControl,
@@ -72,7 +71,7 @@ export function ProfileForm() {
   });
 
   function onSubmit(data: ProfileFormValues) {
-    toast({
+    console.log({
       title: 'You submitted the following values:',
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">

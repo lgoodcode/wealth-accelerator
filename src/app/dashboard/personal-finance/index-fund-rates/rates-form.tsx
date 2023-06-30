@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { captureException } from '@sentry/nextjs';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'react-toastify';
 import { Copy } from 'lucide-react';
 
 import { supabase } from '@/lib/supabase/client';
 import { useUser } from '@/hooks/use-user';
-import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { NumberInput } from '@/components/ui/number-input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -40,20 +40,12 @@ export function RatesForm({ initialValues }: RatesFormProps) {
     if (error) {
       console.error(error);
       captureException(error);
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'Please try again.',
-      });
-      return;
+      toast.error('Uh oh! Something went wrong. Please try again.');
+    } else {
+      toast.success('Your information has been saved');
     }
 
     setIsSubmitting(false);
-    toast({
-      variant: 'success',
-      title: 'Success!',
-      description: 'Your information has been saved.',
-    });
   };
 
   return (

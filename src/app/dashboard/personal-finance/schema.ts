@@ -1,4 +1,4 @@
-import * as z from 'zod';
+import { z } from 'zod';
 
 export const WaInfoFormSchema = z.object({
   start_date: z.date({

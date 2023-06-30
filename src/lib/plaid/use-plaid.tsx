@@ -1,5 +1,6 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useSetAtom } from 'jotai';
 import {
   usePlaidLink,
   type PlaidLinkOptions,
@@ -8,41 +9,109 @@ import {
   type PlaidLinkOnSuccess,
 } from 'react-plaid-link';
 import { captureException } from '@sentry/nextjs';
+import { toast } from 'react-toastify';
 
 import { createLinkToken } from '@/lib/plaid/create-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
-import { toast } from '@/hooks/use-toast';
+import { syncTransactions } from '@/lib/plaid/transactions/syncTransactions';
+import { PlaidCredentialErrorCode } from '@/lib/plaid/types/sync';
+import { isInsItemIdSyncingOrLoadingAtom } from '@/lib/atoms/institutions';
+import { Toast } from '@/components/ui/toast';
 
 export const usePlaid = () => {
   const router = useRouter();
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [updateMode, setUpdateMode] = useState(false);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
+  const isInsItemIdSyncingOrLoading = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
 
   // On successful link, exchange the public token for an access token
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token, metadata) => {
-      exchangeLinkToken({ public_token, metadata })
-        .then(() => router.refresh()) // Need to refresh the page to get the new data
-        .catch((err) => {
-          console.error(err);
-          captureException(err);
-          toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: err,
-          });
-        });
+      try {
+        const { item_id } = await exchangeLinkToken({ public_token, metadata });
+        // Need to refresh the page to get the new data
+        router.refresh();
+        isInsItemIdSyncingOrLoading(item_id);
 
-      toast({
-        variant: 'success',
-        title: 'Plaid connected',
-        description: `Successfully connected ${
-          metadata?.institution?.name ?? 'Unknown institution'
-        }.\nPlease wait a moment for the update to appear.`,
-      });
+        toast
+          .promise(syncTransactions(item_id), {
+            pending: {
+              render() {
+                return (
+                  <Toast title="Syncing transactions">
+                    <div className="flex flex-col space-y-3">
+                      <span>
+                        Successfully connected{' '}
+                        <span className="font-bold">
+                          {metadata?.institution?.name ?? 'Unknown institution'}
+                        </span>
+                        . Please wait and do not close the browser while all your transactions for
+                        are being synced.
+                      </span>
+                      <span className="font-semibold">NOTE: This may take a few minutes</span>
+                    </div>
+                  </Toast>
+                );
+              },
+            },
+            error: {
+              render() {
+                return (
+                  <Toast title="Syncing transactions">
+                    Failed to sync transactions for{' '}
+                    <span className="font-bold">
+                      {metadata?.institution?.name ?? 'Unknown institution'}
+                    </span>
+                  </Toast>
+                );
+              },
+            },
+            success: {
+              render({ data: error }) {
+                if (error instanceof Error) {
+                  console.error(error);
+                  captureException(error);
+                  return (
+                    <Toast title="Syncing transactions">
+                      Failed to sync transactions for{' '}
+                      <span className="font-bold">
+                        {metadata?.institution?.name ?? 'Unknown institution'}
+                      </span>
+                    </Toast>
+                  );
+                } // If the user is required to update their credentials, set update mode
+                else if (error === PlaidCredentialErrorCode) {
+                  setUpdateMode(true);
+                  return (
+                    <Toast title="Syncing transactions">
+                      Credentials need to be updated for{' '}
+                      <span className="font-bold">
+                        {metadata?.institution?.name ?? 'Unknown institution'}
+                      </span>
+                    </Toast>
+                  );
+                }
+                // If there is no error, then the sync was successful
+                return (
+                  <Toast title="Syncing transactions">
+                    All transactions for{' '}
+                    <span className="font-bold">
+                      {metadata?.institution?.name ?? 'Unknown institution'}
+                    </span>{' '}
+                    have been synced
+                  </Toast>
+                );
+              },
+            },
+          })
+          .finally(() => isInsItemIdSyncingOrLoading(null));
+      } catch (error) {
+        console.error(error);
+        toast.error('Failed to exchange link token');
+      }
     },
-    [router]
+    [router, isInsItemIdSyncingOrLoading]
   );
 
   const onEvent = useCallback<PlaidLinkOnEvent>((eventName, metadata) => {
@@ -58,19 +127,21 @@ export const usePlaid = () => {
     }
   }, []);
 
-  const onExit = useCallback<PlaidLinkOnExit>((error, metadata) => {
-    // log onExit callbacks from Link, handle errors
-    // https://plaid.com/docs/link/web/#onexit
-    console.warn(error, metadata);
-    setUpdateMode(false);
-    // Reset the link token if it was in update mode so it can't be used again
-    // and reset the selection if the user wants to add a new institution
-    // or click a different institution
-    if (metadata.status === 'requires_credentials') {
-      setLinkToken(null);
-      createLinkToken().then(setLinkToken);
-    }
-  }, []);
+  const onExit = useCallback<PlaidLinkOnExit>(
+    (error, metadata) => {
+      // log onExit callbacks from Link, handle errors
+      // https://plaid.com/docs/link/web/#onexit
+      console.warn(error, metadata);
+      // Reset the link token if it was in update mode so it can't be used again
+      // and reset the selection if the user wants to add a new institution
+      // or click a different institution
+      if (updateMode && metadata.status === 'requires_credentials') {
+        setUpdateMode(false);
+        setLinkToken(null);
+      }
+    },
+    [updateMode]
+  );
 
   const plaidConfig: PlaidLinkOptions = useMemo(
     () => ({
@@ -100,16 +171,10 @@ export const usePlaid = () => {
         .then(setLinkToken)
         .catch((err) => {
           console.error(err);
-          captureException(err);
-          toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: 'Failed to create link token',
-          });
+          toast.error('Failed to create link token');
         })
         .finally(() => setIsGettingLinkToken(false));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [linkToken]);
 
   return {

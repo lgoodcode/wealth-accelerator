@@ -7,7 +7,6 @@ import '@/styles/globals.css';
 
 export const metadata = siteMetadata;
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
 
 interface RootLayoutProps {
   children: React.ReactNode;

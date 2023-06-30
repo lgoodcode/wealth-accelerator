@@ -1,10 +1,25 @@
+import { cn } from '@/lib/utils/cn';
 import { Spinner } from '@/components/ui/spinner';
 
-export default function Loading() {
+interface LoadingProps {
+  className?: string;
+  title?: string;
+  children?: React.ReactNode;
+}
+
+export function Loading({ className, title = 'Loading...', children }: LoadingProps) {
   return (
-    <div className="flex flex-row mt-8 items-center justify-center">
+    <div
+      className={cn(
+        'flex flex-row mt-32 items-center justify-center pointer-events-none select-none',
+        className
+      )}
+    >
       <Spinner className="mr-4" size="xl" />
-      <h1 className="text-4xl font-semibold">Loading...</h1>
+      <h1 className="text-4xl font-medium">{title}</h1>
+      {children}
     </div>
   );
 }
+
+export default Loading;

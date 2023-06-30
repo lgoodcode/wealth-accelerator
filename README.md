@@ -10,6 +10,11 @@
 
 Notes on development.
 
+### Error Logging
+
+Only use Sentry `captureException()` on errors in the backend or from Supabase; anything that is
+not a response from our server, because it is already being done in the backend.
+
 ### Theming
 
 When adding a new theme or customizing, do the following:

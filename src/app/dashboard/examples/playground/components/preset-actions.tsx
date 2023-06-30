@@ -30,7 +30,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { toast } from '@/hooks/use-toast';
 
 export function PresetActions() {
   const [open, setIsOpen] = React.useState(false);
@@ -102,7 +101,7 @@ export function PresetActions() {
               variant="destructive"
               onClick={() => {
                 setShowDeleteDialog(false);
-                toast({
+                console.log({
                   description: 'This preset has been deleted.',
                 });
               }}

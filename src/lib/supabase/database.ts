@@ -96,6 +96,52 @@ export interface Database {
           type?: string
         }
       }
+      plaid_filters: {
+        Row: {
+          category: Database["public"]["Enums"]["category_type"]
+          filter: string
+          id: number
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["category_type"]
+          filter: string
+          id?: number
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["category_type"]
+          filter?: string
+          id?: number
+        }
+      }
+      plaid_transactions: {
+        Row: {
+          account_id: string
+          amount: number
+          category: Database["public"]["Enums"]["category_type"]
+          date: string
+          id: string
+          item_id: string
+          name: string
+        }
+        Insert: {
+          account_id: string
+          amount: number
+          category: Database["public"]["Enums"]["category_type"]
+          date: string
+          id: string
+          item_id: string
+          name: string
+        }
+        Update: {
+          account_id?: string
+          amount?: number
+          category?: Database["public"]["Enums"]["category_type"]
+          date?: string
+          id?: string
+          item_id?: string
+          name?: string
+        }
+      }
       users: {
         Row: {
           created_at: string
@@ -131,9 +177,16 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: number[]
       }
+      get_accounts_and_transactions: {
+        Args: {
+          ins_item_id: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       account_type: "personal" | "business"
+      category_type: "Transfer" | "Money-In" | "Money-Out"
       role_type: "user" | "admin"
     }
     CompositeTypes: {

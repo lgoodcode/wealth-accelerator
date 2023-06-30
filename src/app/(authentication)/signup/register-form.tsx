@@ -1,6 +1,6 @@
 'use client';
 
-import * as z from 'zod';
+import { z } from 'zod';
 import Link from 'next/link';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -43,6 +43,8 @@ const formSchema = z.object({
     }),
 });
 
+type FormType = z.infer<typeof formSchema>;
+
 type ServerMessage = {
   type: 'error' | 'success';
   message: string;
@@ -52,7 +54,7 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
@@ -61,7 +63,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  const onSubmit = async (data: FormType) => {
     setServerMessage(null);
 
     const { error } = await supabase.auth.signUp({
@@ -74,6 +76,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
     });
 
     if (error) {
+      console.error(error);
       setServerMessage({
         type: 'error',
         message: error.message,
@@ -153,7 +156,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
           <Button
             type="submit"
             loading={form.formState.isSubmitting}
-            disabled={form.formState.isSubmitting || form.formState.isSubmitSuccessful}
+            disabled={form.formState.isSubmitting}
             // override default spinner color for light theme
             spinner={{ className: 'border-white border-b-primary' }}
           >
