@@ -101,7 +101,7 @@ export const columns: ColumnDef<Account>[] = [
   {
     id: 'actions',
     cell: ({ row }) => (
-      <div className="w-[10%] flex justify-end">
+      <div className="flex justify-end">
         <RowActions row={row} />
       </div>
     ),

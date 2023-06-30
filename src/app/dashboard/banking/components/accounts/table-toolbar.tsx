@@ -5,8 +5,7 @@ import { X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-// import { DataTableViewOptions } from './data-table-view-options';
-
+import { ViewOptions } from './view-options';
 import { FacetedFilter } from './faceted-filter';
 import { typeOptions, enabledOptions } from './column-options';
 import { Account } from '@/lib/plaid/types/institutions';
@@ -49,7 +48,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
           </Button>
         )}
       </div>
-      {/* <DataTableViewOptions table={table} /> */}
+      <ViewOptions table={table} />
     </div>
   );
 }

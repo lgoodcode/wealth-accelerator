@@ -42,7 +42,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
 import type { Account } from '@/lib/plaid/types/institutions';
 
 const updateAccountFormSchema = z.object({
