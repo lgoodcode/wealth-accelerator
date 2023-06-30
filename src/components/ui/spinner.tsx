@@ -18,7 +18,8 @@ interface SpinnerProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: 'primary' | 'default' | string | undefined | null;
 }
 
-export function Spinner({ className, size = 'default', variant }: SpinnerProps) {
+export function Spinner({ className, size = 'default', variant = 'default' }: SpinnerProps) {
+  console.log('variant', variant);
   return (
     <span
       className={cn(
