@@ -59,29 +59,34 @@ const updateAccountFormSchema = z.object({
 type UpdateAccountType = z.infer<typeof updateAccountFormSchema>;
 
 const updateAccount = async (account_id: string, data: UpdateAccountType) => {
-  const { error } = await supabase
+  const { error, data: updatedAccount } = await supabase
     .from('plaid_accounts')
     .update({
       name: data.name,
       type: data.type,
       enabled: data.enabled,
     })
-    .eq('account_id', account_id);
+    .eq('account_id', account_id)
+    .select('*')
+    .single();
 
   if (error) {
     console.error(error);
     captureException(error);
-    return false;
+    return null;
   }
 
-  return true;
+  return updatedAccount as Account;
 };
 
 interface RowActionsProps {
   row: Row<Account>;
 }
 
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+
 export function RowActions({ row }: RowActionsProps) {
+  const queryClient = useQueryClient();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const form = useForm<UpdateAccountType>({
     resolver: zodResolver(updateAccountFormSchema),
@@ -105,18 +110,30 @@ export function RowActions({ row }: RowActionsProps) {
     [form]
   );
 
-  const onSubmitUpdate = useCallback(
-    async (data: UpdateAccountType) => {
-      const success = await updateAccount(row.original.account_id, data);
-      if (success) {
+  const { isLoading, mutate } = useMutation({
+    mutationFn: (data: UpdateAccountType) => updateAccount(row.original.account_id, data),
+    onSuccess: (updatedAccount) => {
+      if (updatedAccount) {
+        queryClient.setQueryData<Account[]>(['accounts', row.original.item_id], (oldData) => {
+          if (oldData) {
+            return oldData.map((account) => {
+              if (account.account_id === updatedAccount.account_id) {
+                return updatedAccount;
+              }
+              return account;
+            });
+          }
+          return oldData;
+        });
         toast.success('Account updated successfully');
       } else {
         toast.error('An error occurred while updating the account');
       }
-      handleCloseUpdateDialog();
     },
-    [handleCloseUpdateDialog, row.original.account_id]
-  );
+    onSettled: handleCloseUpdateDialog,
+  });
+
+  const onSubmitUpdate = useCallback((data: UpdateAccountType) => mutate(data), [mutate]);
 
   return (
     <>
@@ -199,18 +216,10 @@ export function RowActions({ row }: RowActionsProps) {
             </form>
           </Form>
           <DialogFooter>
-            <Button
-              variant="secondary"
-              disabled={form.formState.isSubmitting}
-              onClick={handleCloseUpdateDialog}
-            >
+            <Button variant="secondary" disabled={isLoading} onClick={handleCloseUpdateDialog}>
               Cancel
             </Button>
-            <Button
-              type="submit"
-              loading={form.formState.isSubmitting}
-              onClick={form.handleSubmit(onSubmitUpdate)}
-            >
+            <Button type="submit" loading={isLoading} onClick={form.handleSubmit(onSubmitUpdate)}>
               Save
             </Button>
           </DialogFooter>
