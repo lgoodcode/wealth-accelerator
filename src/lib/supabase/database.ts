@@ -177,6 +177,12 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: number[]
       }
+      get_accounts_and_transactions: {
+        Args: {
+          ins_item_id: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       account_type: "personal" | "business"

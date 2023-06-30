@@ -1,3 +1,5 @@
+import { Category } from './transactions';
+
 export type Institution = {
   item_id: string;
   user_id: string;
@@ -12,3 +14,13 @@ export type Institution = {
  * to the server
  */
 export type ClientInstitution = Omit<Institution, 'access_token' | 'user_id'>;
+
+export type AccountType = 'business' | 'personal';
+
+export type Account = {
+  account_id: string;
+  item_id: string;
+  name: string;
+  type: AccountType;
+  enabled: boolean;
+};

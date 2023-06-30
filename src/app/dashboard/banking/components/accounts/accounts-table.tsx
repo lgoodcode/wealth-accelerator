@@ -1,0 +1,135 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { captureException } from '@sentry/nextjs';
+import {
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+
+import { supabase } from '@/lib/supabase/client';
+import { Loading } from '@/components/loading';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+
+import { columns } from './columns';
+import { TableToolbar } from './table-toolbar';
+import { TablePagination } from './table-pagination';
+import type { Account } from '@/lib/plaid/types/institutions';
+
+const getAccounts = async (item_id: string) => {
+  const { error, data } = await supabase.from('plaid_accounts').select('*').eq('item_id', item_id);
+
+  if (error) {
+    console.error(error);
+    captureException(error);
+  }
+
+  return (data ?? []) as Account[];
+};
+
+interface AccountsTableProps {
+  item_id: string;
+}
+
+export function AccountsTable({ item_id }: AccountsTableProps) {
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  // const [rowSelection, setRowSelection] = useState({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [isFetchingData, setIsFetchingData] = useState(false);
+
+  useEffect(() => {
+    setIsFetchingData(true);
+    getAccounts(item_id)
+      .then(setAccounts)
+      .finally(() => setIsFetchingData(false));
+  }, [item_id]);
+
+  const table = useReactTable<Account>({
+    data: accounts,
+    columns,
+    state: {
+      sorting,
+      columnVisibility,
+      // rowSelection,
+      columnFilters,
+    },
+    // enableRowSelection: true,
+    // onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+  });
+
+  if (isFetchingData) {
+    return <Loading title="Fetching accounts..." />;
+  }
+
+  return (
+    <div className="space-y-4 mt-8">
+      <TableToolbar table={table} />
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <TablePagination table={table} />
+    </div>
+  );
+}

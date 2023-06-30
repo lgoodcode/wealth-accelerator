@@ -362,3 +362,60 @@ CREATE TRIGGER on_update_or_insert_filter_update_transaction_categories
 AFTER INSERT OR UPDATE ON plaid_filters
   FOR EACH ROW
     EXECUTE FUNCTION update_transaction_categories();
+
+
+
+/**
+ *
+ *  FUNCTIONS
+ *
+ */
+
+--
+-- This isn't used because we are splitting the data being fetched into their own components
+--
+-- -- Retrieves all accounts and transactions for a given item_id
+-- CREATE OR REPLACE FUNCTION get_accounts_and_transactions(ins_item_id text)
+-- RETURNS JSON AS $$
+-- DECLARE
+--   accounts JSON;
+--   transactions JSON;
+-- BEGIN
+--   -- Get accounts matching item_id
+--   SELECT COALESCE(
+--     json_agg(
+--       json_build_object(
+--         'account_id', a.account_id,
+--         'item_id', a.item_id,
+--         'name', a.name,
+--         'type', a.type,
+--         'enabled', a.enabled
+--       )
+--     ),
+--     '[]'::JSON
+--   ) INTO accounts
+--   FROM plaid_accounts AS a
+--   WHERE a.item_id = ins_item_id;
+
+--   -- Get transactions matching item_id
+--   SELECT COALESCE(
+--     json_agg(
+--       json_build_object(
+--         'id', t.id,
+--         'item_id', t.item_id,
+--         'account_id', t.account_id,
+--         'name', t.name,
+--         'amount', t.amount,
+--         'category', t.category,
+--         'date', t.date
+--       )
+--     ),
+--     '[]'::JSON
+--   ) INTO transactions
+--   FROM plaid_transactions AS t
+--   WHERE t.item_id = ins_item_id;
+
+--   -- Return accounts and transactions as JSON
+--   RETURN json_build_object('accounts', accounts, 'transactions', transactions);
+-- END;
+-- $$ LANGUAGE plpgsql SECURITY definer;
