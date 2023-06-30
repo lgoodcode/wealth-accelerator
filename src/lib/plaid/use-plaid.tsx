@@ -46,8 +46,8 @@ export const usePlaid = () => {
                         <span className="font-bold">
                           {metadata?.institution?.name ?? 'Unknown institution'}
                         </span>
-                        . Please wait and do not leave the page while all your transactions for are
-                        being synced.
+                        . Please wait and do not close the browser while all your transactions for
+                        are being synced.
                       </span>
                       <span className="font-semibold">NOTE: This may take a few minutes</span>
                     </div>
