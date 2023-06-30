@@ -153,7 +153,11 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
       console.error(plaidError);
     }
 
-    toast.success(`Institution ${selectedInstitution.name} has been removed`);
+    toast.success(
+      <>
+        Institution <span className="font-bold">{selectedInstitution.name}</span> has been removed
+      </>
+    );
 
     setIsWaiting(false);
     setShowDeleteDialog(false);
