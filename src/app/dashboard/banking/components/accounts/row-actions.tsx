@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { useState, useCallback } from 'react';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { captureException } from '@sentry/nextjs';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -80,8 +81,6 @@ const updateAccount = async (account_id: string, data: UpdateAccountType) => {
 interface RowActionsProps {
   row: Row<Account>;
 }
-
-import { useQueryClient, useMutation } from '@tanstack/react-query';
 
 export function RowActions({ row }: RowActionsProps) {
   const queryClient = useQueryClient();
