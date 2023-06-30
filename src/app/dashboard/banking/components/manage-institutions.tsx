@@ -1,6 +1,6 @@
 'use client';
 
-import * as z from 'zod';
+import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { captureException } from '@sentry/nextjs';
@@ -56,6 +56,8 @@ const renameFormSchema = z.object({
   }),
 });
 
+type RenameFormType = z.infer<typeof renameFormSchema>;
+
 interface InstitutionsProps {
   institutions: ClientInstitution[];
 }
@@ -67,7 +69,7 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
   const [isWaiting, setIsWaiting] = useState(false);
   const selectedInstitution = useAtomValue(selectedInstitutionAtom);
   const setSelectedInstitution = useSetAtom(setSelectedInstitutionAtom);
-  const form = useForm<z.infer<typeof renameFormSchema>>({
+  const form = useForm<RenameFormType>({
     resolver: zodResolver(renameFormSchema),
   });
 
@@ -84,7 +86,7 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
     [form]
   );
 
-  const onSubmitRename = async (data: z.infer<typeof renameFormSchema>) => {
+  const onSubmitRename = async (data: RenameFormType) => {
     if (!selectedInstitution) {
       return;
     }
@@ -163,7 +165,7 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
   return (
     <div className="flex flex-col lg:flex-row w-full items-center justify-start">
       <div className="w-full mr-auto py-4">
-        <h2 className="text-3xl font-bold">
+        <h2 className="text-3xl font-light tracking-tighter">
           {selectedInstitution?.name ?? 'Select an institution'}
         </h2>
       </div>

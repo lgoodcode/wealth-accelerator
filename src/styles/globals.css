@@ -123,11 +123,11 @@ input[type='number'] {
 }
 
 .Toastify__toast-theme--dark.Toastify__toast--error {
-  background-color: #ff13133f !important;
+  background-color: #5e1111 !important;
 }
 
 .Toastify__toast-theme--dark.Toastify__toast--success {
-  background-color: #05962433 !important;
+  background-color: #0c3b16 !important;
 }
 
 .Toastify__toast-container {
