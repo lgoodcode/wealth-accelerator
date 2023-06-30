@@ -71,9 +71,7 @@ const updateAccount = async (account_id: string, data: UpdateAccountType) => {
     .single();
 
   if (error) {
-    console.error(error);
-    captureException(error);
-    return null;
+    throw error;
   }
 
   return updatedAccount as Account;
@@ -112,23 +110,24 @@ export function RowActions({ row }: RowActionsProps) {
 
   const { isLoading, mutate } = useMutation({
     mutationFn: (data: UpdateAccountType) => updateAccount(row.original.account_id, data),
+    onError: (error) => {
+      console.error(error);
+      captureException(error);
+      toast.error('An error occurred while updating the account');
+    },
     onSuccess: (updatedAccount) => {
-      if (updatedAccount) {
-        queryClient.setQueryData<Account[]>(['accounts', row.original.item_id], (oldData) => {
-          if (oldData) {
-            return oldData.map((account) => {
-              if (account.account_id === updatedAccount.account_id) {
-                return updatedAccount;
-              }
-              return account;
-            });
-          }
-          return oldData;
-        });
-        toast.success('Account updated successfully');
-      } else {
-        toast.error('An error occurred while updating the account');
-      }
+      queryClient.setQueryData<Account[]>(['accounts', row.original.item_id], (oldData) => {
+        if (oldData) {
+          return oldData.map((account) => {
+            if (account.account_id === updatedAccount.account_id) {
+              return updatedAccount;
+            }
+            return account;
+          });
+        }
+        return oldData;
+      });
+      toast.success('Account updated successfully');
     },
     onSettled: handleCloseUpdateDialog,
   });
