@@ -2,7 +2,6 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 
-import { dollarFormatter } from '@/lib/utils/dollarFormatter';
 import { categoryOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
@@ -100,7 +99,7 @@ export const columns: ColumnDef<TransactionWithAccountName>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
-          <span>{dollarFormatter(row.getValue<number>('amount') * -1)}</span>
+          <span>{(row.getValue<number>('amount') * -1).toFixed(2)}</span>
         </div>
       );
     },

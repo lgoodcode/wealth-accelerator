@@ -10,6 +10,7 @@ import { ViewOptions } from './view-options';
 import { FacetedFilter } from './faceted-filter';
 import { categoryOptions } from './column-options';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
+import { DateRange } from 'react-day-picker';
 
 interface TableToolbarProps {
   table: Table<TransactionWithAccountName>;
@@ -36,6 +37,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
           />
         )}
         <CalendarDateRangePicker
+          value={table.getColumn('date')?.getFilterValue() as DateRange}
           onChange={(dataRange) => table.getColumn('date')?.setFilterValue(dataRange)}
         />
         {isFiltered && (
