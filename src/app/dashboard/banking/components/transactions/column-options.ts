@@ -11,11 +11,11 @@ export const categoryOptions: CategoryOption[] = [
     value: Category.Transfer,
   },
   {
-    label: 'Money-In',
+    label: 'Money In',
     value: Category.MoneyIn,
   },
   {
-    label: 'Money-Out',
+    label: 'Money Out',
     value: Category.MoneyOut,
   },
 ];
