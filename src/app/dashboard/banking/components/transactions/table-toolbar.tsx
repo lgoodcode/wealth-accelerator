@@ -19,7 +19,7 @@ interface TableToolbarProps {
 export function TableToolbar({ table }: TableToolbarProps) {
   const isFiltered =
     table.getPreFilteredRowModel().rows.length > table.getFilteredRowModel().rows.length;
-  console.log('filter', table.getColumn('date')?.getFilterValue());
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
