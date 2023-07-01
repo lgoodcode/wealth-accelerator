@@ -10,37 +10,22 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-interface DatePickerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
-  initialDate?: Date;
+interface DatePickerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
+  date?: Date;
   variant?: Variant;
-  onChange?: (date: Date | undefined) => void;
+  onSelect?: (date: Date | undefined) => void;
   calendarProps?: DayPickerSingleProps;
 }
 
 export function DatePicker({
   className,
-  initialDate,
-  onChange,
+  date,
+  onSelect,
   calendarProps,
   placeholder = 'Select a date',
   variant = 'outline',
   ...props
 }: DatePickerProps) {
-  const [date, setDate] = React.useState<Date | undefined>(initialDate);
-  const handleSelect = React.useCallback(
-    (date: Date | undefined) => {
-      setDate(date);
-      onChange?.(date);
-    },
-    [onChange, setDate]
-  );
-
-  React.useEffect(() => {
-    if (initialDate && !date) {
-      setDate(initialDate);
-    }
-  }, [date, initialDate, setDate]);
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -61,7 +46,7 @@ export function DatePicker({
         <Calendar
           mode="single"
           selected={date}
-          onSelect={handleSelect}
+          onSelect={onSelect}
           initialFocus
           {...calendarProps}
         />

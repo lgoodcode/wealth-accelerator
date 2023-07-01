@@ -37,8 +37,8 @@ export function TableToolbar({ table }: TableToolbarProps) {
           />
         )}
         <CalendarDateRangePicker
-          value={table.getColumn('date')?.getFilterValue() as DateRange}
-          onChange={(dataRange) => table.getColumn('date')?.setFilterValue(dataRange)}
+          selected={table.getColumn('date')?.getFilterValue() as DateRange}
+          onSelect={(dataRange) => table.getColumn('date')?.setFilterValue(dataRange)}
         />
         {isFiltered && (
           <Button

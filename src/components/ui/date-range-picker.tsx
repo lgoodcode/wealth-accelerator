@@ -11,21 +11,21 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface CalendarDateRangePickerProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
-  value?: DateRange;
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
+  selected?: DateRange;
   from?: Date;
   to?: Date;
-  onChange?: (dateRange: DateRange | undefined) => void;
+  onSelect?: (dateRange: DateRange | undefined) => void;
 }
 
 export function CalendarDateRangePicker({
   className,
-  value,
+  selected,
   from,
   to,
-  onChange,
+  onSelect,
 }: CalendarDateRangePickerProps) {
-  const date = value ?? { from, to };
+  const date = selected ?? { from, to };
 
   return (
     <div className={cn('grid gap-2', className)}>
@@ -60,7 +60,7 @@ export function CalendarDateRangePicker({
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={onChange}
+            onSelect={onSelect}
             numberOfMonths={2}
           />
         </PopoverContent>

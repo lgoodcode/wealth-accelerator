@@ -70,7 +70,7 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Strategy Start Date</FormLabel>
-              <DatePicker className="w-full" initialDate={field.value} onSelect={field.onChange} />
+              <DatePicker className="w-full" date={field.value} onSelect={field.onChange} />
               <FormDescription>
                 The month and year that you want to start comparing the strategy timeframe.
               </FormDescription>
