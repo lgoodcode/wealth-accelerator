@@ -14,7 +14,8 @@
     "pre-deploy": "node ./src/scripts/pre-deploy.js",
     "analyze": "cross-env ANALYZE=true next build",
     "supabase:genTypes": "supabase gen types typescript --local > ./src/lib/supabase/database.ts",
-    "supabase:reset": "supabase stop && supabase start && npm run genTypes"
+    "supabase:reset": "supabase stop && supabase start && npm run genTypes",
+    "git:reset": "git stash && git checkout main && git pull && git branch -D work && git checkout -b work && git push -uf origin work && git stash pop"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.1.0",
