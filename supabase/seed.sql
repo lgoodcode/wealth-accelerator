@@ -371,6 +371,37 @@ AFTER INSERT OR UPDATE ON plaid_filters
  *
  */
 
+CREATE OR REPLACE FUNCTION get_transactions_with_account_name(ins_item_id text)
+RETURNS TABLE (
+    id text,
+    item_id text,
+    account_id text,
+    name text,
+    amount decimal(10,2),
+    category category_type,
+    date timestamp with time zone,
+    account text
+) AS $$
+BEGIN
+    RETURN QUERY
+        SELECT
+            t.id,
+            t.item_id,
+            t.account_id,
+            t.name,
+            t.amount,
+            t.category,
+            t.date,
+            a.name AS account
+        FROM
+            plaid_transactions t
+        INNER JOIN
+            plaid_accounts a ON t.account_id = a.account_id
+        WHERE
+            t.item_id = ins_item_id;
+END;
+$$ LANGUAGE plpgsql;
+
 --
 -- This isn't used because we are splitting the data being fetched into their own components
 --

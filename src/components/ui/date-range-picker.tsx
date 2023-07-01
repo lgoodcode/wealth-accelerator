@@ -1,20 +1,31 @@
 'use client';
 
 import * as React from 'react';
-import { addDays, format } from 'date-fns';
+import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
-import { DateRange } from 'react-day-picker';
+import type { DateRange } from 'react-day-picker';
 
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-export function CalendarDateRangePicker({ className }: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2023, 0, 20),
-    to: addDays(new Date(2023, 0, 20), 20),
-  });
+interface CalendarDateRangePickerProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
+  selected?: DateRange;
+  from?: Date;
+  to?: Date;
+  onSelect?: (dateRange: DateRange | undefined) => void;
+}
+
+export function CalendarDateRangePicker({
+  className,
+  selected,
+  from,
+  to,
+  onSelect,
+}: CalendarDateRangePickerProps) {
+  const date = selected ?? { from, to };
 
   return (
     <div className={cn('grid gap-2', className)}>
@@ -25,7 +36,7 @@ export function CalendarDateRangePicker({ className }: React.HTMLAttributes<HTML
             variant={'outline'}
             size="sm"
             className={cn(
-              'w-[240px] justify-start text-left font-normal',
+              'w-auto justify-start text-left font-normal',
               !date && 'text-muted-foreground'
             )}
           >
@@ -39,7 +50,7 @@ export function CalendarDateRangePicker({ className }: React.HTMLAttributes<HTML
                 format(date.from, 'LLL dd, y')
               )
             ) : (
-              <span>Pick a date</span>
+              <span>Filter dates</span>
             )}
           </Button>
         </PopoverTrigger>
@@ -49,7 +60,7 @@ export function CalendarDateRangePicker({ className }: React.HTMLAttributes<HTML
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={onSelect}
             numberOfMonths={2}
           />
         </PopoverContent>

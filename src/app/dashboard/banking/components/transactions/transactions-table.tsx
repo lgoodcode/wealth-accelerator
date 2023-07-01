@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAtomValue } from 'jotai';
 import { useQuery } from '@tanstack/react-query';
 import { captureException } from '@sentry/nextjs';
 import {
@@ -19,6 +20,7 @@ import {
 
 import { cn } from '@/lib/utils/cn';
 import { supabase } from '@/lib/supabase/client';
+import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
 import { ClientError } from '@/components/client-error';
 import { Loading } from '@/components/loading';
 import {
@@ -32,38 +34,45 @@ import {
 import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
-import type { Account } from '@/lib/plaid/types/institutions';
+import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 
-const getAccounts = async (item_id: string) => {
-  const { error, data } = await supabase.from('plaid_accounts').select('*').eq('item_id', item_id);
+const getTransactions = async (item_id: string) => {
+  const { error, data } = await supabase.rpc('get_transactions_with_account_name', {
+    ins_item_id: item_id,
+  });
 
   if (error) {
     console.error(error);
     captureException(error);
   }
 
-  return (data ?? []) as Account[];
+  return (data ?? []) as TransactionWithAccountName[];
 };
 
-interface AccountsTableProps {
+interface TransactionsTableProps {
   item_id: string;
 }
 
-export function AccountsTable({ item_id }: AccountsTableProps) {
+export function TransactionsTable({ item_id }: TransactionsTableProps) {
   // const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const selectedInstitution = useAtomValue(selectedInstitutionAtom);
   const {
     isError,
     isLoading,
-    data: accounts = [], // Use default value because initialData will be used and cached
-  } = useQuery<Account[]>(['accounts', item_id], () => getAccounts(item_id), {
-    staleTime: 1000 * 60 * 60, // Cache accounts, which don't change often, for an hour
-  });
+    data: transactions = [], // Use default value because initialData will be used and cached
+  } = useQuery<TransactionWithAccountName[]>(
+    ['transactions', selectedInstitution?.item_id],
+    () => getTransactions(item_id),
+    {
+      staleTime: 1000 * 60 * 5, // Cache transactions, which might change often, for 5 minutes
+    }
+  );
 
-  const table = useReactTable<Account>({
-    data: accounts,
+  const table = useReactTable<TransactionWithAccountName>({
+    data: transactions,
     columns,
     state: {
       sorting,
@@ -87,7 +96,7 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
   if (isError) {
     return <ClientError />;
   } else if (isLoading) {
-    return <Loading title="Fetching accounts..." />;
+    return <Loading title="Fetching transactions..." />;
   }
 
   return (

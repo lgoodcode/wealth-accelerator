@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { captureException } from '@sentry/nextjs';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,6 +14,7 @@ import { supabase } from '@/lib/supabase/client';
 import { fetcher } from '@/lib/utils/fetcher';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { selectedInstitutionAtom, setSelectedInstitutionAtom } from '@/lib/atoms/institutions';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,8 +49,6 @@ import {
 } from '@/components/ui/form';
 import { InstitutionSelection } from './institution-selection';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { selectedInstitutionAtom, setSelectedInstitutionAtom } from '@/lib/atoms/institutions';
 
 const renameFormSchema = z.object({
   name: z.string({
@@ -153,7 +153,11 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
       console.error(plaidError);
     }
 
-    toast.success(`Institution ${selectedInstitution.name} has been removed`);
+    toast.success(
+      <>
+        Institution <span className="font-bold">{selectedInstitution.name}</span> has been removed
+      </>
+    );
 
     setIsWaiting(false);
     setShowDeleteDialog(false);

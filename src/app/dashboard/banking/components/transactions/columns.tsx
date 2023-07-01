@@ -2,10 +2,11 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 
-import { typeOptions, enabledOptions } from './column-options';
+import { categoryOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
-import type { Account, AccountType } from '@/lib/plaid/types/institutions';
+import type { DateRange } from 'react-day-picker';
+import type { TransactionWithAccountName, Category } from '@/lib/plaid/types/transactions';
 
 /**
  * NOTES
@@ -16,7 +17,7 @@ import type { Account, AccountType } from '@/lib/plaid/types/institutions';
  * The filterFn `value` is the value set from the table.getColumn('date')?.setFilterValue() call.
  */
 
-export const columns: ColumnDef<Account>[] = [
+export const columns: ColumnDef<TransactionWithAccountName>[] = [
   // {
   //   id: 'select',
   //   header: ({ table }) => (
@@ -58,18 +59,12 @@ export const columns: ColumnDef<Account>[] = [
     },
   },
   {
-    accessorKey: 'type',
-    header: ({ column }) => <ColumnHeader column={column} title="Type" />,
+    accessorKey: 'account',
+    header: ({ column }) => <ColumnHeader column={column} title="Account" />,
     cell: ({ row }) => {
-      const type = typeOptions.find((type) => type.value === row.getValue<AccountType>('type'));
-
-      if (!type) {
-        return null;
-      }
-
       return (
-        <div className="flex w-[100px] items-center">
-          <span>{type.label}</span>
+        <div className="flex items-center">
+          <span>{row.getValue<string>('account')}</span>
         </div>
       );
     },
@@ -78,27 +73,62 @@ export const columns: ColumnDef<Account>[] = [
     },
   },
   {
-    accessorKey: 'enabled',
-    header: ({ column }) => <ColumnHeader column={column} title="Enabled" />,
+    accessorKey: 'category',
+    header: ({ column }) => <ColumnHeader column={column} title="Category" />,
     cell: ({ row }) => {
-      const enabledValue = row.getValue<boolean>('enabled');
-      const enabled = enabledOptions.find(
-        (option) => option.value === (enabledValue ? 'true' : 'false')
+      const category = categoryOptions.find(
+        (option) => option.value === row.getValue<Category>('category')
       );
 
-      if (!enabled) {
+      if (!category) {
         return null;
       }
 
       return (
         <div className="flex items-center">
-          <span>{enabled.label}</span>
+          <span>{category.label}</span>
         </div>
       );
     },
-    // Need to convert the value to a string because the filterFn value is an array of strings
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue<boolean>(id) ? 'true' : 'false');
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: 'amount',
+    header: ({ column }) => <ColumnHeader column={column} title="Amount" />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center">
+          <span>{(row.getValue<number>('amount') * -1).toFixed(2)}</span>
+        </div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: 'date',
+    header: ({ column }) => <ColumnHeader column={column} title="Date" />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center">
+          <span>{new Date(row.getValue<string>('date')).toLocaleDateString()}</span>
+        </div>
+      );
+    },
+    filterFn: (row, id, value: DateRange) => {
+      const date = new Date(row.getValue(id));
+
+      if (value.from && value.to) {
+        return date >= value.from && date <= value.to;
+      }
+      if (value.from) {
+        return date >= value.from;
+      }
+
+      return false;
     },
   },
   {

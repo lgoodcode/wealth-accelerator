@@ -1,5 +1,5 @@
 import type { Transaction as PlaidTransaction } from 'plaid';
-import type { Category, Filter, Transaction } from '@/lib/plaid/types/transactions';
+import { Category, type Filter, type Transaction } from '@/lib/plaid/types/transactions';
 
 /**
  * Parses a Plaid, or our database transaction, and returns a category
@@ -18,13 +18,13 @@ export const parseCategory = (
 
   if (filter) {
     return filter.category;
-  } else if (category === 'Transfer') {
-    return 'Transfer';
+  } else if (category === Category.Transfer) {
+    return Category.Transfer;
     // If the amount is positive, then money is moving out of the account
     // https://plaid.com/docs/api/products/transactions/#transactions-get-response-transactions-amount
   } else if (transaction.amount > 0) {
-    return 'Money-Out';
+    return Category.MoneyOut;
   } else {
-    return 'Money-In';
+    return Category.MoneyIn;
   }
 };

@@ -3,8 +3,8 @@ import { useAtomValue } from 'jotai';
 
 import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
 import { AccountsTable } from './accounts/accounts-table';
+import { TransactionsTable } from './transactions/transactions-table';
 
 enum TabsValue {
   Accounts = 'accounts',
@@ -28,7 +28,7 @@ export function ViewInstitutions() {
   }
 
   return (
-    <div className="flex py-4 items-center justify-start lg:justify-end">
+    <div className="flex py-4 items-center">
       <Tabs
         className="w-full"
         value={selectedTab}
@@ -38,7 +38,7 @@ export function ViewInstitutions() {
           );
         }}
       >
-        <TabsList className="grid w-[400px] grid-cols-2 ml-auto">
+        <TabsList className="grid w-[400px] grid-cols-2 ml-0 lg:ml-auto">
           <TabsTrigger value={TabsValue.Accounts}>Account</TabsTrigger>
           <TabsTrigger value={TabsValue.Transactions}>Transactions</TabsTrigger>
         </TabsList>
@@ -46,7 +46,7 @@ export function ViewInstitutions() {
           <AccountsTable item_id={selectedInstitution.item_id} />
         </TabsContent>
         <TabsContent value={TabsValue.Transactions}>
-          <> {selectedInstitution?.name} transactions</>
+          <TransactionsTable item_id={selectedInstitution.item_id} />
         </TabsContent>
       </Tabs>
     </div>

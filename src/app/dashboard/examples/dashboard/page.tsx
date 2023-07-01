@@ -4,7 +4,7 @@ import { Activity, CreditCard, DollarSign, Download, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CalendarDateRangePicker } from '@/components/calendar/date-range-picker';
+import { CalendarDateRangePicker } from '@/components/ui/date-range-picker';
 import { MainNav } from './components/main-nav';
 import { Overview } from './components/overview';
 import { RecentSales } from './components/recent-sales';
