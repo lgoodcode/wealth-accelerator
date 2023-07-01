@@ -48,6 +48,7 @@ export const columns: ColumnDef<TransactionWithAccountName>[] = [
   // },
   {
     accessorKey: 'name',
+    enableHiding: false,
     header: ({ column }) => <ColumnHeader column={column} title="Name" />,
     cell: ({ row }) => {
       return (

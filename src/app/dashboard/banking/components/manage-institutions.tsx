@@ -235,7 +235,7 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
               </Button>
               <Button
                 type="submit"
-                loading={!form.formState.isSubmitting}
+                loading={form.formState.isSubmitting}
                 onClick={form.handleSubmit(onSubmitRename)}
               >
                 Rename

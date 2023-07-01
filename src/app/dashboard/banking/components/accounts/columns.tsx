@@ -47,6 +47,7 @@ export const columns: ColumnDef<Account>[] = [
   // },
   {
     accessorKey: 'name',
+    enableHiding: false,
     header: ({ column }) => <ColumnHeader column={column} title="Name" />,
     cell: ({ row }) => {
       return (
