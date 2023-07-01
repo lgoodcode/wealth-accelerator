@@ -17,6 +17,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
+import { cn } from '@/lib/utils/cn';
 import { supabase } from '@/lib/supabase/client';
 import { ClientError } from '@/components/client-error';
 import { Loading } from '@/components/loading';
@@ -59,13 +60,9 @@ export function TransactionsTable({ item_id }: TransactionsTableProps) {
     isError,
     isLoading,
     data: transactions = [], // Use default value because initialData will be used and cached
-  } = useQuery<TransactionWithAccountName[]>(
-    ['transactions', item_id],
-    () => getTransactions(item_id),
-    {
-      staleTime: 1000 * 60 * 5, // Cache transactions, which might change often, for 5 minutes
-    }
-  );
+  } = useQuery<TransactionWithAccountName[]>(['transactions'], () => getTransactions(item_id), {
+    staleTime: 1000 * 60 * 5, // Cache transactions, which might change often, for 5 minutes
+  });
 
   const table = useReactTable<TransactionWithAccountName>({
     data: transactions,
@@ -92,7 +89,7 @@ export function TransactionsTable({ item_id }: TransactionsTableProps) {
   if (isError) {
     return <ClientError />;
   } else if (isLoading) {
-    return <Loading title="Fetching accounts..." />;
+    return <Loading title="Fetching transactions..." />;
   }
 
   return (
@@ -120,7 +117,13 @@ export function TransactionsTable({ item_id }: TransactionsTableProps) {
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell, i, arr) => (
-                    <TableCell key={cell.id} className={i === arr.length - 1 ? 'w-[10%]' : ''}>
+                    <TableCell
+                      key={cell.id}
+                      className={cn({
+                        'w-[40%]': i === 0,
+                        'w-[10%]': i === arr.length - 1,
+                      })}
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

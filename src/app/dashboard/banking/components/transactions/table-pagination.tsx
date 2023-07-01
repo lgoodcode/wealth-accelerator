@@ -9,10 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Account } from '@/lib/plaid/types/institutions';
+import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 
 interface TablePaginationProps {
-  table: Table<Account>;
+  table: Table<TransactionWithAccountName>;
 }
 
 export function TablePagination({ table }: TablePaginationProps) {

@@ -12,6 +12,8 @@ import type { Account, AccountType } from '@/lib/plaid/types/institutions';
  *
  * `row.getValue<string>('name')`, when retrieving the value of a column, specify the type of the value
  * to ensure that the value is of the correct type.
+ *
+ * The filterFn `value` is the value set from the table.getColumn('date')?.setFilterValue() call.
  */
 
 export const columns: ColumnDef<Account>[] = [

@@ -1,37 +1,21 @@
-import type { Category } from '@/lib/plaid/types/transactions';
+import { Category } from '@/lib/plaid/types/transactions';
 
 type CategoryOption = {
   label: string;
   value: Category;
 };
 
-type EnabledOption = {
-  label: string;
-  value: 'true' | 'false';
-};
-
 export const categoryOptions: CategoryOption[] = [
   {
     label: 'Transfer',
-    value: 'Transfer',
+    value: Category.Transfer,
   },
   {
     label: 'Money-In',
-    value: 'Money-In',
+    value: Category.MoneyIn,
   },
   {
     label: 'Money-Out',
-    value: 'Money-Out',
-  },
-];
-
-export const enabledOptions: EnabledOption[] = [
-  {
-    label: 'Enabled',
-    value: 'true',
-  },
-  {
-    label: 'Disabled',
-    value: 'false',
+    value: Category.MoneyOut,
   },
 ];

@@ -17,6 +17,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
+import { cn } from '@/lib/utils/cn';
 import { supabase } from '@/lib/supabase/client';
 import { ClientError } from '@/components/client-error';
 import { Loading } from '@/components/loading';
@@ -114,7 +115,13 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell, i, arr) => (
-                    <TableCell key={cell.id} className={i === arr.length - 1 ? 'w-[10%]' : ''}>
+                    <TableCell
+                      key={cell.id}
+                      className={cn({
+                        'w-[40%]': i === 0,
+                        'w-[10%]': i === arr.length - 1,
+                      })}
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

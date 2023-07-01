@@ -115,18 +115,18 @@ export function RowActions({ row }: RowActionsProps) {
       toast.error('An error occurred while updating the account');
     },
     onSuccess: (updatedAccount) => {
-      queryClient.setQueryData<Account[]>(['accounts', row.original.item_id], (oldData) => {
-        if (oldData) {
-          return oldData.map((account) => {
+      queryClient.setQueryData<Account[]>(['accounts', row.original.item_id], (oldAccounts) => {
+        if (oldAccounts) {
+          return oldAccounts.map((account) => {
             if (account.account_id === updatedAccount.account_id) {
               return updatedAccount;
             }
             return account;
           });
         }
-        return oldData;
+        return oldAccounts;
       });
-      toast.success('Account updated successfully');
+      toast.success('Account updated');
     },
     onSettled: handleCloseUpdateDialog,
   });

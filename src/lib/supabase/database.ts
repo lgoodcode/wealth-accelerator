@@ -183,6 +183,21 @@ export interface Database {
         }
         Returns: Json
       }
+      get_transactions_with_account_name: {
+        Args: {
+          ins_item_id: string
+        }
+        Returns: {
+          id: string
+          item_id: string
+          account_id: string
+          name: string
+          amount: number
+          category: Database["public"]["Enums"]["category_type"]
+          date: string
+          account: string
+        }[]
+      }
     }
     Enums: {
       account_type: "personal" | "business"

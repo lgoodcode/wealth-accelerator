@@ -16,10 +16,10 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
-import type { Account } from '@/lib/plaid/types/institutions';
+import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 
 interface FacetedFilterProps {
-  column?: Column<Account>;
+  column?: Column<TransactionWithAccountName>;
   title?: string;
   options: {
     label: string;
@@ -35,12 +35,12 @@ export function FacetedFilter({ column, title, options }: FacetedFilterProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
+        <Button variant="outline" size="sm" className="h-9 border-dashed">
           <PlusCircle className="mr-2 h-4 w-4" />
           {title}
           {selectedValues?.size > 0 && (
             <>
-              <Separator orientation="vertical" className="mx-2 h-4" />
+              <Separator orientation="vertical" className="mx-2 h-5" />
               <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
                 {selectedValues.size}
               </Badge>
@@ -113,10 +113,7 @@ export function FacetedFilter({ column, title, options }: FacetedFilterProps) {
               <>
                 <CommandSeparator />
                 <CommandGroup>
-                  <CommandItem
-                    onSelect={() => column?.setFilterValue(undefined)}
-                    className="justify-center text-center"
-                  >
+                  <CommandItem onSelect={() => column?.setFilterValue(undefined)}>
                     Clear filters
                   </CommandItem>
                 </CommandGroup>

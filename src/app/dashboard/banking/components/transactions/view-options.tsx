@@ -12,17 +12,17 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import type { Account } from '@/lib/plaid/types/institutions';
+import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 
 interface ViewOptionsProps {
-  table: Table<Account>;
+  table: Table<TransactionWithAccountName>;
 }
 
 export function ViewOptions({ table }: ViewOptionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex">
+        <Button variant="outline" size="sm" className="ml-auto hidden h-9 lg:flex">
           <SlidersHorizontal className="mr-2 h-4 w-4" />
           View
         </Button>

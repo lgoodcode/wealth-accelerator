@@ -2,9 +2,11 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 
+import { dollarFormatter } from '@/lib/utils/dollarFormatter';
 import { categoryOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
+import type { DateRange } from 'react-day-picker';
 import type { TransactionWithAccountName, Category } from '@/lib/plaid/types/transactions';
 
 /**
@@ -12,6 +14,8 @@ import type { TransactionWithAccountName, Category } from '@/lib/plaid/types/tra
  *
  * `row.getValue<string>('name')`, when retrieving the value of a column, specify the type of the value
  * to ensure that the value is of the correct type.
+ *
+ * The filterFn `value` is the value set from the table.getColumn('date')?.setFilterValue() call.
  */
 
 export const columns: ColumnDef<TransactionWithAccountName>[] = [
@@ -55,18 +59,12 @@ export const columns: ColumnDef<TransactionWithAccountName>[] = [
     },
   },
   {
-    accessorKey: 'account_name',
+    accessorKey: 'account',
     header: ({ column }) => <ColumnHeader column={column} title="Account" />,
     cell: ({ row }) => {
-      // const type = typeOptions.find((type) => type.value === row.getValue<string>('account_name'));
-
-      // if (!type) {
-      //   return null;
-      // }
-
       return (
-        <div className="flex w-[100px] items-center">
-          <span>{row.getValue<string>('account_name')}</span>
+        <div className="flex items-center">
+          <span>{row.getValue<string>('account')}</span>
         </div>
       );
     },
@@ -92,32 +90,45 @@ export const columns: ColumnDef<TransactionWithAccountName>[] = [
         </div>
       );
     },
-    // Need to convert the value to a string because the filterFn value is an array of strings
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue<boolean>(id) ? 'true' : 'false');
+      return value.includes(row.getValue(id));
     },
   },
   {
     accessorKey: 'amount',
-    header: ({ column }) => <ColumnHeader column={column} title="Category" />,
+    header: ({ column }) => <ColumnHeader column={column} title="Amount" />,
     cell: ({ row }) => {
-      const category = categoryOptions.find(
-        (option) => option.value === row.getValue<Category>('category')
-      );
-
-      if (!category) {
-        return null;
-      }
-
       return (
         <div className="flex items-center">
-          <span>{category.label}</span>
+          <span>{dollarFormatter(row.getValue<number>('amount') * -1)}</span>
         </div>
       );
     },
-    // Need to convert the value to a string because the filterFn value is an array of strings
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue<boolean>(id) ? 'true' : 'false');
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: 'date',
+    header: ({ column }) => <ColumnHeader column={column} title="Date" />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center">
+          <span>{new Date(row.getValue<string>('date')).toLocaleDateString()}</span>
+        </div>
+      );
+    },
+    filterFn: (row, id, value: DateRange) => {
+      const date = new Date(row.getValue(id));
+
+      if (value.from && value.to) {
+        return date >= value.from && date <= value.to;
+      }
+      if (value.from) {
+        return date >= value.from;
+      }
+
+      return false;
     },
   },
   {
