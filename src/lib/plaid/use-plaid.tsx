@@ -23,7 +23,7 @@ export const usePlaid = () => {
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [updateMode, setUpdateMode] = useState(false);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
-  const isInsItemIdSyncingOrLoading = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
+  const setIsInsItemIdSyncingOrLoading = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
 
   // On successful link, exchange the public token for an access token
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
@@ -32,7 +32,7 @@ export const usePlaid = () => {
         const { item_id } = await exchangeLinkToken({ public_token, metadata });
         // Need to refresh the page to get the new data
         router.refresh();
-        isInsItemIdSyncingOrLoading(item_id);
+        setIsInsItemIdSyncingOrLoading(item_id);
 
         toast
           .promise(syncTransactions(item_id), {
@@ -105,13 +105,13 @@ export const usePlaid = () => {
               },
             },
           })
-          .finally(() => isInsItemIdSyncingOrLoading(null));
+          .finally(() => setIsInsItemIdSyncingOrLoading(null));
       } catch (error) {
         console.error(error);
         toast.error('Failed to exchange link token');
       }
     },
-    [router, isInsItemIdSyncingOrLoading]
+    [router, setIsInsItemIdSyncingOrLoading]
   );
 
   const onEvent = useCallback<PlaidLinkOnEvent>((eventName, metadata) => {

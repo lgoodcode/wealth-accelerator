@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { useState, useCallback } from 'react';
+import { useAtomValue } from 'jotai';
 import { captureException } from '@sentry/nextjs';
 import { useForm } from 'react-hook-form';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
@@ -11,6 +12,7 @@ import { MoreHorizontal, Pen } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
 import { supabase } from '@/lib/supabase/client';
+import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -80,6 +82,7 @@ interface RowActionsProps {
 export function RowActions({ row }: RowActionsProps) {
   const queryClient = useQueryClient();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const selectedInstitution = useAtomValue(selectedInstitutionAtom);
   const form = useForm<UpdateTransactionType>({
     resolver: zodResolver(updateTransactionFormSchema),
     defaultValues: {
@@ -112,7 +115,7 @@ export function RowActions({ row }: RowActionsProps) {
     onSuccess: (updatedTransaction) => {
       if (updatedTransaction) {
         queryClient.setQueryData<TransactionWithAccountName[]>(
-          ['transactions'],
+          ['transactions', selectedInstitution?.item_id],
           (oldTransactions) => {
             if (oldTransactions) {
               return oldTransactions.map((transaction) => {

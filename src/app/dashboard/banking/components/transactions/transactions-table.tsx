@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAtomValue } from 'jotai';
 import { useQuery } from '@tanstack/react-query';
 import { captureException } from '@sentry/nextjs';
 import {
@@ -19,6 +20,7 @@ import {
 
 import { cn } from '@/lib/utils/cn';
 import { supabase } from '@/lib/supabase/client';
+import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
 import { ClientError } from '@/components/client-error';
 import { Loading } from '@/components/loading';
 import {
@@ -56,13 +58,18 @@ export function TransactionsTable({ item_id }: TransactionsTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const selectedInstitution = useAtomValue(selectedInstitutionAtom);
   const {
     isError,
     isLoading,
     data: transactions = [], // Use default value because initialData will be used and cached
-  } = useQuery<TransactionWithAccountName[]>(['transactions'], () => getTransactions(item_id), {
-    staleTime: 1000 * 60 * 5, // Cache transactions, which might change often, for 5 minutes
-  });
+  } = useQuery<TransactionWithAccountName[]>(
+    ['transactions', selectedInstitution?.item_id],
+    () => getTransactions(item_id),
+    {
+      staleTime: 1000 * 60 * 5, // Cache transactions, which might change often, for 5 minutes
+    }
+  );
 
   const table = useReactTable<TransactionWithAccountName>({
     data: transactions,
