@@ -42,9 +42,9 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, children, loading, asChild = false, ...props }, ref) => {
+  ({ className, variant = 'default', size, children, loading, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
-    const spinnerSize = size === 'icon' ? 'sm' : size || 'default';
+    const spinnerSize = size === 'icon' ? 'sm' : 'md';
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
