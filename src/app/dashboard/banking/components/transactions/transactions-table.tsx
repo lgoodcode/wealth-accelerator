@@ -20,7 +20,7 @@ import {
 
 import { cn } from '@/lib/utils/cn';
 import { supabase } from '@/lib/supabase/client';
-import { syncTransactions } from '@/lib/plaid/transactions/syncTransactions';
+import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
 import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
 import { ClientError } from '@/components/client-error';
 import { Loading } from '@/components/loading';
@@ -39,7 +39,7 @@ import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions'
 
 // Before retrieving transactions, make a check for new transactions
 const getTransactions = async (item_id: string) => {
-  const test = await syncTransactions(item_id);
+  const test = await clientSyncTransactions(item_id);
   console.log('did another sync', test);
 
   const { error, data } = await supabase.rpc('get_transactions_with_account_name', {
@@ -72,7 +72,7 @@ export function TransactionsTable({ item_id }: TransactionsTableProps) {
     ['transactions', selectedInstitution?.item_id],
     () => getTransactions(item_id),
     {
-      staleTime: 1000 * 60 * 5, // Cache transactions, which might change often, for 5 minutes
+      staleTime: 1000 * 60 * 60, // Cache transactions, which won't change often, for 60 minutes
     }
   );
 

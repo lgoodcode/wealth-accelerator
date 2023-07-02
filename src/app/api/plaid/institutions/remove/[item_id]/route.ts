@@ -20,7 +20,7 @@ export async function DELETE(_: Request, { params: { item_id } }: RemoveInstitut
 
   // Verify the parameters
   if (!item_id) {
-    return NextResponse.json({ error: 'Missing access_token' }, { status: 400 });
+    return NextResponse.json({ error: 'Missing item_id' }, { status: 400 });
   }
 
   const { error, data: item } = await getItemFromItemId(item_id);
@@ -28,7 +28,7 @@ export async function DELETE(_: Request, { params: { item_id } }: RemoveInstitut
   if (error) {
     console.error(error);
     captureException(error);
-    return NextResponse.json({ error: 'Failed to retrieve item' }, { status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   }
 
   // Revoke the access token
@@ -37,7 +37,7 @@ export async function DELETE(_: Request, { params: { item_id } }: RemoveInstitut
   } catch (error) {
     console.error(error);
     captureException(error);
-    return NextResponse.json({ error: 'Failed to remove item' }, { status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   }
 
   return NextResponse.json({ success: true });

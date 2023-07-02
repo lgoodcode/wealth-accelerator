@@ -13,9 +13,8 @@ import { toast } from 'react-toastify';
 
 import { createLinkToken } from '@/lib/plaid/create-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
-import { syncTransactions } from '@/lib/plaid/transactions/syncTransactions';
+import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
 import { updateModeAtom, isInsItemIdSyncingOrLoadingAtom } from '@/lib/atoms/institutions';
-import { PlaidCredentialErrorCode } from '@/lib/plaid/types/sync';
 import { Toast } from '@/components/ui/toast';
 
 export const usePlaid = () => {
@@ -34,78 +33,57 @@ export const usePlaid = () => {
         router.refresh();
         setIsInsItemIdSyncingOrLoading(item_id);
 
-        toast
-          .promise(syncTransactions(item_id), {
-            pending: {
-              render() {
-                return (
-                  <Toast title="Syncing transactions">
-                    <div className="flex flex-col space-y-3">
-                      <span>
-                        Successfully connected{' '}
-                        <span className="font-bold">
-                          {metadata?.institution?.name ?? 'Unknown institution'}
-                        </span>
-                        . Please wait and do not close the browser while all your transactions for
-                        are being synced.
-                      </span>
-                      <span className="font-semibold">NOTE: This may take a few minutes</span>
-                    </div>
-                  </Toast>
-                );
-              },
-            },
-            error: {
-              render() {
-                return (
-                  <Toast title="Syncing transactions">
-                    Failed to sync transactions for{' '}
-                    <span className="font-bold">
-                      {metadata?.institution?.name ?? 'Unknown institution'}
-                    </span>
-                  </Toast>
-                );
-              },
-            },
-            success: {
-              render({ data: error }) {
-                if (error instanceof Error) {
-                  console.error(error);
-                  captureException(error);
-                  return (
-                    <Toast title="Syncing transactions">
-                      Failed to sync transactions for{' '}
-                      <span className="font-bold">
-                        {metadata.institution?.name ?? 'Unknown institution'}
-                      </span>
-                    </Toast>
-                  );
-                } // If the user is required to update their credentials, set update mode
-                else if (error === PlaidCredentialErrorCode) {
-                  setUpdateMode(true);
-                  return (
-                    <Toast title="Syncing transactions">
-                      Credentials need to be updated for{' '}
-                      <span className="font-bold">
-                        {metadata.institution?.name ?? 'Unknown institution'}
-                      </span>
-                    </Toast>
-                  );
-                }
-                // If there is no error, then the sync was successful
-                return (
-                  <Toast title="Syncing transactions">
-                    All transactions for{' '}
-                    <span className="font-bold">
-                      {metadata.institution?.name ?? 'Unknown institution'}
-                    </span>{' '}
-                    have been synced
-                  </Toast>
-                );
-              },
-            },
-          })
-          .finally(() => setIsInsItemIdSyncingOrLoading(null));
+        const error = await clientSyncTransactions(item_id);
+
+        if (error) {
+          console.error(error);
+
+          if (error.general) {
+            toast.error(
+              <Toast title="Syncing transactions">
+                Failed to begin transactions sync for{' '}
+                <span className="font-bold">
+                  {metadata.institution?.name ?? 'Unknown institution'}
+                </span>
+              </Toast>
+            );
+            // Plaid credential error
+          } else if (error.plaid) {
+            if (error.plaid.isCredentialError) {
+              setUpdateMode(true);
+              toast.error(
+                <Toast title="Syncing transactions">
+                  Credentials need to be updated for{' '}
+                  <span className="font-bold">
+                    {metadata.institution?.name ?? 'Unknown institution'}
+                  </span>
+                </Toast>
+              );
+            }
+            // Other Plaid error
+          } else {
+            toast.error(
+              <Toast title="Syncing transactions">
+                Failed to sync transactions for{' '}
+                <span className="font-bold">
+                  {metadata.institution?.name ?? 'Unknown institution'}
+                </span>
+              </Toast>
+            );
+          }
+        } else {
+          toast(
+            <Toast title="Syncing transactions">
+              Transactions are now being synced for{' '}
+              <span className="font-bold">
+                {metadata.institution?.name ?? 'Unknown institution'}
+              </span>{' '}
+              it may take a few minutes for all transactions to displayed.
+            </Toast>
+          );
+        }
+
+        setIsInsItemIdSyncingOrLoading(null);
       } catch (error) {
         console.error(error);
         toast.error('Failed to exchange link token');
@@ -169,8 +147,8 @@ export const usePlaid = () => {
 
       createLinkToken()
         .then(setLinkToken)
-        .catch((err) => {
-          console.error(err);
+        .catch((error) => {
+          console.error(error);
           toast.error('Failed to create link token');
         })
         .finally(() => setIsGettingLinkToken(false));

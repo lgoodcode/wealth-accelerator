@@ -1,26 +1,62 @@
 import { NextResponse } from 'next/server';
-import { captureMessage } from '@sentry/nextjs';
 
 export async function POST(req: Request) {
-  const body = await req.json().catch(() => null);
+  const body = await req.json().catch((err) => err);
 
   if (!body) {
     return NextResponse.json({ error: 'Missing body' }, { status: 400 });
+  } else if (body instanceof Error) {
+    return NextResponse.json({ error: body.message }, { status: 400 });
   }
 
-  console.log('/api/plaid/webhook POST', body);
-  captureMessage('/api/plaid/webhook POST', { extra: body });
+  console.log('webhook body', body);
+  const { webhook_code, item_id } = body;
 
-  // const { webhook_code, item_id } = body;
-  // const { webhook_code } = body;
+  switch (webhook_code) {
+    // Fired when new transactions data becomes available.
+    case 'SYNC_UPDATES_AVAILABLE': {
+      // const { error: itemError, data: item } = await getItemFromItemId(item_id);
 
-  // switch (webhook_code) {
-  //   case 'DEFAULT_UPDATE':
-  //     break;
+      // if (itemError) {
+      //   console.error(itemError);
+      //   captureException(itemError);
+      //   return NextResponse.json<SyncTransactionsResponse>(
+      //     {
+      //       error: {
+      //         general: itemError,
+      //         plaid: null,
+      //       },
+      //     },
+      //     { status: 500 }
+      //   );
+      // }
 
-  //   default:
-  //     console.log('unhandled webhook_code', webhook_code);
-  // }
+      // const { error, data } = await serverSyncTransactions(item);
+
+      // if (error) {
+      //   console.error(error);
+      //   captureException(error);
+      //   return NextResponse.json<SyncTransactionsResponse>(
+      //     {
+      //       error: {
+      //         general: error.general,
+      //         plaid: error.plaid,
+      //       },
+      //     },
+      //     { status: error.status }
+      //   );
+      // }
+
+      break;
+    }
+    case 'DEFAULT_UPDATE':
+    case 'INITIAL_UPDATE':
+    case 'HISTORICAL_UPDATE':
+      /* ignore - not needed if using sync endpoint + webhook */
+      break;
+    default:
+      console.error(`Unhandled webhook type received: ${webhook_code}.`, item_id);
+  }
 
   return NextResponse.json({ success: true });
 }

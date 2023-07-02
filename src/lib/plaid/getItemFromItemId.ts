@@ -1,4 +1,5 @@
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
+import type { Institution } from './types/institutions';
 
 /**
  * Retrieves the institution item from the database using the item_id
@@ -16,6 +17,6 @@ export const getItemFromItemId = async (item_id: string) => {
 
   return {
     error: null,
-    data,
+    data: data as Institution,
   };
 };

@@ -1,3 +1,5 @@
+import type { PostgrestError } from '@supabase/postgrest-js';
+
 export const PlaidRateLimitErrorCode = 'TRANSACTIONS_SYNC_LIMIT';
 
 export enum PlaidCredentialErrorCode {
@@ -9,13 +11,37 @@ export enum PlaidErrorType {
   InvalidRequest = 'INVALID_REQUEST',
 }
 
-export type SyncResponse = {
-  plaidError?: {
+export type ServerSyncTransactions = {
+  error: {
+    status: number;
+    general: PostgrestError | Error | null;
+    plaid: {
+      isRateLimitError: boolean;
+      isCredentialError: boolean;
+      isOtherPlaidError: boolean;
+    } | null;
+  } | null;
+  data: {
+    hasMore: boolean;
+  };
+};
+
+export type SyncTransactionsResponseError = {
+  general: PostgrestError | Error | null;
+  plaid: {
     isRateLimitError: boolean;
     isCredentialError: boolean;
     isOtherPlaidError: boolean;
-  };
+  } | null;
+};
+
+export type SyncTransactionsResponseBody = {
   hasMore: boolean;
 };
 
-export type SyncTransactionsResponse = Error | typeof PlaidCredentialErrorCode | null;
+export type SyncTransactionsResponse =
+  | {
+      error: SyncTransactionsResponseError | null;
+    }
+  | SyncTransactionsResponseBody
+  | null;
