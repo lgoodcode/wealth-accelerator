@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 import { PlaidErrorType } from 'plaid';
 
+import { PLAID_SYNC_BATCH_SIZE } from '@/config/app';
 import { getUser } from '@/lib/supabase/server/getUser';
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { plaidClient } from '@/lib/plaid/config';
@@ -21,8 +22,6 @@ interface SyncInstitutionParams {
     item_id: string;
   };
 }
-
-const BATCH_SIZE = 100;
 
 export async function GET(_: Request, { params: { item_id } }: SyncInstitutionParams) {
   const user = await getUser();
@@ -59,7 +58,7 @@ export async function GET(_: Request, { params: { item_id } }: SyncInstitutionPa
     const { data } = await plaidClient.transactionsSync({
       access_token: item.access_token,
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
-      count: BATCH_SIZE,
+      count: PLAID_SYNC_BATCH_SIZE,
     });
 
     const addedError = await addTransactions(item_id, data.added, filters, supabase);

@@ -30,6 +30,7 @@ export const syncTransactions = async (item_id: string) => {
       // If it's a non generic plaid error
     }
 
+    console.log('response', { error, data });
     // Check if the response gives a Plaid error code
     if (data.plaidError) {
       // If it's a transactions sync limit error, wait a minute and continue
