@@ -44,7 +44,7 @@ BEGIN
   );
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql SECURITY invoker;
 
 -- Trigger that calls the function above
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
@@ -106,7 +106,7 @@ BEGIN
   INSERT INTO public.personal_finance (user_id) VALUES (NEW.id);
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql SECURITY invoker;
 
 -- Trigger the function above when a new user is created
 DROP TRIGGER IF EXISTS on_user_created_init_personal_finance ON public.users;
@@ -398,6 +398,8 @@ BEGIN
         INNER JOIN
             plaid_accounts a ON t.account_id = a.account_id
         WHERE
-            t.item_id = ins_item_id;
+            t.item_id = ins_item_id
+        ORDER BY
+            t.date DESC;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY invoker;

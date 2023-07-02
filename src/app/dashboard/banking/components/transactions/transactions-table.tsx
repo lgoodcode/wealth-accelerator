@@ -20,6 +20,7 @@ import {
 
 import { cn } from '@/lib/utils/cn';
 import { supabase } from '@/lib/supabase/client';
+import { syncTransactions } from '@/lib/plaid/transactions/syncTransactions';
 import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
 import { ClientError } from '@/components/client-error';
 import { Loading } from '@/components/loading';
@@ -36,7 +37,10 @@ import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 
+// Before retrieving transactions, make a check for new transactions
 const getTransactions = async (item_id: string) => {
+  // const test = await syncTransactions(item_id);
+
   const { error, data } = await supabase.rpc('get_transactions_with_account_name', {
     ins_item_id: item_id,
   });

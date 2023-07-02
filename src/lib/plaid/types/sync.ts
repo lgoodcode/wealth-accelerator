@@ -17,3 +17,5 @@ export type SyncResponse = {
   };
   hasMore: boolean;
 };
+
+export type SyncTransactionsResponse = Error | typeof PlaidCredentialErrorCode | null;

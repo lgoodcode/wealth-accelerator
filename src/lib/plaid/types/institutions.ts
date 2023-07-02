@@ -1,5 +1,3 @@
-import { Category } from './transactions';
-
 export type Institution = {
   item_id: string;
   user_id: string;

@@ -1,10 +1,13 @@
 import { fetcher } from '@/lib/utils/fetcher';
-import { PlaidCredentialErrorCode, SyncResponse } from '@/lib/plaid/types/sync';
-
+import {
+  PlaidCredentialErrorCode,
+  type SyncResponse,
+  type SyncTransactionsResponse,
+} from '@/lib/plaid/types/sync';
 /**
  * For a given institution item_id, sync transactions
  */
-export const syncTransactions = async (item_id: string) => {
+export const syncTransactions = async (item_id: string): Promise<SyncTransactionsResponse> => {
   // Track the number of requests made to Plaid - rate limit is 50 per minute
   let numOfRequests = 0;
 

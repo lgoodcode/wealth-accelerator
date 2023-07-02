@@ -35,9 +35,11 @@ export async function GET(_: Request, { params: { item_id } }: SyncInstitutionPa
     return NextResponse.json({ error: 'Missing item_id' }, { status: 400 });
   }
 
-  const item = await getItemFromItemId(item_id);
+  const { error: itemError, data: item } = await getItemFromItemId(item_id);
 
-  if (!item) {
+  if (itemError) {
+    console.error(itemError);
+    captureException(itemError);
     return NextResponse.json({ error: 'Failed to retrieve item' }, { status: 500 });
   }
 
@@ -60,6 +62,8 @@ export async function GET(_: Request, { params: { item_id } }: SyncInstitutionPa
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
       count: PLAID_SYNC_BATCH_SIZE,
     });
+
+    console.log('response', { data });
 
     const addedError = await addTransactions(item_id, data.added, filters, supabase);
     const updatedError = await updateTransactions(item_id, data.modified, filters, supabase);

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import {
   usePlaidLink,
   type PlaidLinkOptions,
@@ -14,15 +14,15 @@ import { toast } from 'react-toastify';
 import { createLinkToken } from '@/lib/plaid/create-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { syncTransactions } from '@/lib/plaid/transactions/syncTransactions';
+import { updateModeAtom, isInsItemIdSyncingOrLoadingAtom } from '@/lib/atoms/institutions';
 import { PlaidCredentialErrorCode } from '@/lib/plaid/types/sync';
-import { isInsItemIdSyncingOrLoadingAtom } from '@/lib/atoms/institutions';
 import { Toast } from '@/components/ui/toast';
 
 export const usePlaid = () => {
   const router = useRouter();
   const [linkToken, setLinkToken] = useState<string | null>(null);
-  const [updateMode, setUpdateMode] = useState(false);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
+  const [updateMode, setUpdateMode] = useAtom(updateModeAtom);
   const setIsInsItemIdSyncingOrLoading = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
 
   // On successful link, exchange the public token for an access token
@@ -76,7 +76,7 @@ export const usePlaid = () => {
                     <Toast title="Syncing transactions">
                       Failed to sync transactions for{' '}
                       <span className="font-bold">
-                        {metadata?.institution?.name ?? 'Unknown institution'}
+                        {metadata.institution?.name ?? 'Unknown institution'}
                       </span>
                     </Toast>
                   );
@@ -87,7 +87,7 @@ export const usePlaid = () => {
                     <Toast title="Syncing transactions">
                       Credentials need to be updated for{' '}
                       <span className="font-bold">
-                        {metadata?.institution?.name ?? 'Unknown institution'}
+                        {metadata.institution?.name ?? 'Unknown institution'}
                       </span>
                     </Toast>
                   );
@@ -97,7 +97,7 @@ export const usePlaid = () => {
                   <Toast title="Syncing transactions">
                     All transactions for{' '}
                     <span className="font-bold">
-                      {metadata?.institution?.name ?? 'Unknown institution'}
+                      {metadata.institution?.name ?? 'Unknown institution'}
                     </span>{' '}
                     have been synced
                   </Toast>
@@ -111,7 +111,7 @@ export const usePlaid = () => {
         toast.error('Failed to exchange link token');
       }
     },
-    [router, setIsInsItemIdSyncingOrLoading]
+    [router, setIsInsItemIdSyncingOrLoading, setUpdateMode]
   );
 
   const onEvent = useCallback<PlaidLinkOnEvent>((eventName, metadata) => {
@@ -140,7 +140,7 @@ export const usePlaid = () => {
         setLinkToken(null);
       }
     },
-    [updateMode]
+    [setUpdateMode, updateMode]
   );
 
   const plaidConfig: PlaidLinkOptions = useMemo(

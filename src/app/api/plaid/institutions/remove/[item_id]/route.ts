@@ -23,9 +23,11 @@ export async function DELETE(_: Request, { params: { item_id } }: RemoveInstitut
     return NextResponse.json({ error: 'Missing access_token' }, { status: 400 });
   }
 
-  const item = await getItemFromItemId(item_id);
+  const { error, data: item } = await getItemFromItemId(item_id);
 
-  if (!item) {
+  if (error) {
+    console.error(error);
+    captureException(error);
     return NextResponse.json({ error: 'Failed to retrieve item' }, { status: 500 });
   }
 
