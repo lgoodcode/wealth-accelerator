@@ -39,7 +39,8 @@ import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions'
 
 // Before retrieving transactions, make a check for new transactions
 const getTransactions = async (item_id: string) => {
-  // const test = await syncTransactions(item_id);
+  const test = await syncTransactions(item_id);
+  console.log('did another sync', test);
 
   const { error, data } = await supabase.rpc('get_transactions_with_account_name', {
     ins_item_id: item_id,

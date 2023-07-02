@@ -154,9 +154,9 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
     }
 
     toast.success(
-      <>
+      <span>
         Institution <span className="font-bold">{selectedInstitution.name}</span> has been removed
-      </>
+      </span>
     );
 
     setIsWaiting(false);
