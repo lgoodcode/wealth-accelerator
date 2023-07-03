@@ -1,7 +1,7 @@
-import { getItemFromItemId } from '@/lib/plaid/getItemFromItemId';
-import { serverSyncTransactions } from '@/lib/plaid/transactions/serverSyncTransactions';
-import { SyncTransactionsResponse } from '@/lib/plaid/types/sync';
-import { captureException } from '@sentry/nextjs';
+// import { getItemFromItemId } from '@/lib/plaid/getItemFromItemId';
+// import { serverSyncTransactions } from '@/lib/plaid/transactions/serverSyncTransactions';
+// import { SyncTransactionsResponse } from '@/lib/plaid/types/sync';
+// import { captureException } from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -19,12 +19,13 @@ export async function POST(req: Request) {
   switch (webhook_code) {
     // Fired when new transactions data becomes available.
     case 'SYNC_UPDATES_AVAILABLE': {
-      const headers = [];
+      // const headers = [];
 
-      for (const header of req.headers.keys()) {
-        headers.push(`${header}: ${req.headers.get(header)}`);
-      }
-      console.log('webhook headers', headers.join('\n'));
+      // for (const header of req.headers.keys()) {
+      //   headers.push(`${header}: ${req.headers.get(header)}`);
+      // }
+      // console.log('webhook headers', headers.join('\n'));
+
       // const { error: itemError, data: item } = await getItemFromItemId(item_id).catch((err) => {
       //   console.error('retrieve item', err);
       //   return { error: err, data: null };
