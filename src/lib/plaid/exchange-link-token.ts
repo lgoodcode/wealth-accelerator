@@ -10,8 +10,15 @@ export const exchangeLinkToken = async ({ public_token, metadata }: ExchangeLink
     }
   );
 
+  if (error || !data) {
+    return {
+      error: error || new Error('No data returned from /api/plaid/link-token/exchange'),
+      data: null,
+    };
+  }
+
   return {
-    error: error || new Error('No data returned from /api/plaid/link-token/exchange'),
+    error: null,
     data,
   };
 };
