@@ -19,7 +19,6 @@ export const clientSyncTransactions = async (
 ): Promise<SyncTransactionsResponseError | null> => {
   // Track the number of requests made to Plaid - rate limit is 50 per minute
   let numOfRequests = 0;
-  // const first = true;
 
   while (true) {
     numOfRequests++;
@@ -33,10 +32,7 @@ export const clientSyncTransactions = async (
     const { error, data } = await fetcher<
       SyncTransactionsResponseBody,
       SyncTransactionsResponseError
-    >(
-      // `/api/plaid/institutions/sync/${item_id}?first=${first}&request_id=${Date.now()}`
-      `/api/plaid/institutions/sync/${item_id}?request_id=${Date.now()}`
-    );
+    >(`/api/plaid/institutions/sync/${item_id}?request_id=${Date.now()}`);
 
     if (error) {
       // If it's a rate limit error, wait a minute and continue

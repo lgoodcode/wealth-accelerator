@@ -14,7 +14,6 @@ enum TabsValue {
 export function ViewInstitutions() {
   const selectedInstitution = useAtomValue(selectedInstitutionAtom);
   const [selectedTab, setSelectedTab] = useState<TabsValue>(TabsValue.Accounts);
-
   // Reset the selected tab when the selected institution changes
   // and fetch the institution data for the selected institution, if any
   useEffect(() => {

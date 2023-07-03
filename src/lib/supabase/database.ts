@@ -186,6 +186,8 @@ export interface Database {
       get_transactions_with_account_name: {
         Args: {
           ins_item_id: string
+          offset_val: number
+          limit_val: number
         }
         Returns: {
           id: string

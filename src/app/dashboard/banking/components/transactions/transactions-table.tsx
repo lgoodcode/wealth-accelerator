@@ -18,9 +18,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
+import { SUPABASE_QUERY_LIMIT } from '@/config/app';
 import { cn } from '@/lib/utils/cn';
 import { supabase } from '@/lib/supabase/client';
-import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
 import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
 import { ClientError } from '@/components/client-error';
 import { Loading } from '@/components/loading';
@@ -37,21 +37,36 @@ import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 
-// Before retrieving transactions, make a check for new transactions
+/**
+ * When retrieving the transactions, we are keeping the Supabase default limit of 1000.
+ * If we will have to make multiple requests using the offset and limit to get all the transactions.
+ */
 const getTransactions = async (item_id: string) => {
-  const test = await clientSyncTransactions(item_id);
-  console.log('did another sync', test);
+  const transactions: TransactionWithAccountName[] = [];
+  let offset = 0;
 
-  const { error, data } = await supabase.rpc('get_transactions_with_account_name', {
-    ins_item_id: item_id,
-  });
+  while (true) {
+    const { error, data } = await supabase.rpc('get_transactions_with_account_name', {
+      ins_item_id: item_id,
+      offset_val: offset,
+      limit_val: SUPABASE_QUERY_LIMIT,
+    });
 
-  if (error) {
-    console.error(error);
-    captureException(error);
+    if (error) {
+      console.error(error);
+      captureException(error);
+      return [];
+    }
+
+    transactions.concat(data as TransactionWithAccountName[]);
+
+    if (data.length < SUPABASE_QUERY_LIMIT) {
+      break;
+    } else {
+      offset += SUPABASE_QUERY_LIMIT;
+    }
   }
-
-  return (data ?? []) as TransactionWithAccountName[];
+  return (transactions ?? []) as TransactionWithAccountName[];
 };
 
 interface TransactionsTableProps {

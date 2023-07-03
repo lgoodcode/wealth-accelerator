@@ -27,67 +27,72 @@ export const usePlaid = () => {
   // On successful link, exchange the public token for an access token
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token, metadata) => {
-      try {
-        const { item_id } = await exchangeLinkToken({ public_token, metadata });
-        // Need to refresh the page to get the new data
-        router.refresh();
-        setIsInsItemIdSyncingOrLoading(item_id);
+      const { error: tokenError, data } = await exchangeLinkToken({ public_token, metadata });
 
-        const error = await clientSyncTransactions(item_id);
+      if (tokenError || !data) {
+        console.error(tokenError);
+        toast.error(
+          <Toast title="Syncing transactions">
+            Failed to connect{' '}
+            <span className="font-bold">{metadata.institution?.name ?? 'Unknown institution'}</span>
+          </Toast>
+        );
+        return;
+      }
 
-        if (error) {
-          console.error(error);
+      // Need to refresh the page to get the new data
+      router.refresh();
+      setIsInsItemIdSyncingOrLoading(data.item_id);
 
-          if (error.general) {
+      const syncError = await clientSyncTransactions(data.item_id);
+
+      if (syncError) {
+        console.error(syncError);
+
+        if (syncError.general) {
+          toast.error(
+            <Toast title="Syncing transactions">
+              Failed to begin transactions sync for{' '}
+              <span className="font-bold">
+                {metadata.institution?.name ?? 'Unknown institution'}
+              </span>
+            </Toast>
+          );
+          // Plaid credential error
+        } else if (syncError.plaid) {
+          if (syncError.plaid.isCredentialError) {
+            setUpdateMode(true);
             toast.error(
               <Toast title="Syncing transactions">
-                Failed to begin transactions sync for{' '}
-                <span className="font-bold">
-                  {metadata.institution?.name ?? 'Unknown institution'}
-                </span>
-              </Toast>
-            );
-            // Plaid credential error
-          } else if (error.plaid) {
-            if (error.plaid.isCredentialError) {
-              setUpdateMode(true);
-              toast.error(
-                <Toast title="Syncing transactions">
-                  Credentials need to be updated for{' '}
-                  <span className="font-bold">
-                    {metadata.institution?.name ?? 'Unknown institution'}
-                  </span>
-                </Toast>
-              );
-            }
-            // Other Plaid error
-          } else {
-            toast.error(
-              <Toast title="Syncing transactions">
-                Failed to sync transactions for{' '}
+                Credentials need to be updated for{' '}
                 <span className="font-bold">
                   {metadata.institution?.name ?? 'Unknown institution'}
                 </span>
               </Toast>
             );
           }
+          // Other Plaid error
         } else {
-          toast(
+          toast.error(
             <Toast title="Syncing transactions">
-              Transactions are now being synced for{' '}
+              Failed to sync transactions for{' '}
               <span className="font-bold">
                 {metadata.institution?.name ?? 'Unknown institution'}
-              </span>{' '}
-              it may take a few minutes for all transactions to displayed.
+              </span>
             </Toast>
           );
         }
-
-        setIsInsItemIdSyncingOrLoading(null);
-      } catch (error) {
-        console.error(error);
-        toast.error('Failed to exchange link token');
+      } else {
+        toast(
+          <Toast title="Syncing transactions">
+            Transactions are now being synced for{' '}
+            <span className="font-bold">{metadata.institution?.name ?? 'Unknown institution'}</span>{' '}
+            it may take a few minutes for all transactions to displayed.
+          </Toast>
+        );
       }
+
+      setIsInsItemIdSyncingOrLoading(null);
     },
     [router, setIsInsItemIdSyncingOrLoading, setUpdateMode]
   );

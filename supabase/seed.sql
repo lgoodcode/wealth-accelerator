@@ -371,7 +371,7 @@ AFTER INSERT OR UPDATE ON plaid_filters
  *
  */
 
-CREATE OR REPLACE FUNCTION get_transactions_with_account_name(ins_item_id text)
+CREATE OR REPLACE FUNCTION get_transactions_with_account_name(ins_item_id text, offset_val int, limit_val int)
 RETURNS TABLE (
     id text,
     item_id text,
@@ -400,6 +400,10 @@ BEGIN
         WHERE
             t.item_id = ins_item_id
         ORDER BY
-            t.date DESC;
+            t.date DESC
+        OFFSET
+            offset_val
+        LIMIT
+            limit_val;
 END;
 $$ LANGUAGE plpgsql SECURITY invoker;
