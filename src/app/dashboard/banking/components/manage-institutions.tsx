@@ -127,19 +127,6 @@ export function ManageInstitutions({ institutions }: InstitutionsProps) {
 
     setIsWaiting(true);
 
-    const { error: supabaseError } = await supabase
-      .from('plaid')
-      .delete()
-      .eq('item_id', selectedInstitution.item_id);
-
-    if (supabaseError) {
-      console.error(supabaseError);
-      captureException(supabaseError);
-      setIsWaiting(false);
-      toast.error('Uh oh! Something went wrong. Please try again.');
-      return;
-    }
-
     // Revoke access token
     const { error: plaidError } = await fetcher(
       `/api/plaid/institutions/remove/${selectedInstitution.item_id}`,
