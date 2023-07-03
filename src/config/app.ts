@@ -1,3 +1,3 @@
-export const PLAID_SYNC_BATCH_SIZE = 100;
+export const PLAID_SYNC_BATCH_SIZE = 500;
 
 export const SUPABASE_QUERY_LIMIT = 1000;
