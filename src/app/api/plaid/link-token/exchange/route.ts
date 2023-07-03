@@ -84,7 +84,6 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ item_id });
-    // Catch the error if the exchange fails
   } catch (error) {
     console.error(error);
     captureException(error);

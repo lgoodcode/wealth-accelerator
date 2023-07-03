@@ -1,4 +1,3 @@
-import { useRouter } from 'next/navigation';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import {
@@ -14,11 +13,11 @@ import { toast } from 'react-toastify';
 import { createLinkToken } from '@/lib/plaid/create-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
+import { handleClientSyncTransactionsError } from '@/lib/plaid/transactions/handleClientSyncTransactionsError';
 import { updateModeAtom, isInsItemIdSyncingOrLoadingAtom } from '@/lib/atoms/institutions';
 import { Toast } from '@/components/ui/toast';
 
 export const usePlaid = () => {
-  const router = useRouter();
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
   const [updateMode, setUpdateMode] = useAtom(updateModeAtom);
@@ -28,65 +27,38 @@ export const usePlaid = () => {
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token, metadata) => {
       const { error: tokenError, data } = await exchangeLinkToken({ public_token, metadata });
+      const institutionName = metadata.institution?.name ?? 'Unknown institution';
 
       if (tokenError || !data) {
         console.error(tokenError);
         toast.error(
           <Toast title="Syncing transactions">
-            Failed to connect{' '}
-            <span className="font-bold">{metadata.institution?.name ?? 'Unknown institution'}</span>
+            Failed to connect <span className="font-bold">{institutionName}</span>
           </Toast>
         );
         return;
       }
 
-      // Need to refresh the page to get the new data
-      router.refresh();
       setIsInsItemIdSyncingOrLoading(data.item_id);
 
       const syncError = await clientSyncTransactions(data.item_id);
 
       if (syncError) {
-        console.error(syncError);
+        handleClientSyncTransactionsError(
+          syncError,
+          metadata.institution?.name ?? 'Unknown institution'
+        );
 
-        if (syncError.general) {
-          toast.error(
-            <Toast title="Syncing transactions">
-              Failed to begin transactions sync for{' '}
-              <span className="font-bold">
-                {metadata.institution?.name ?? 'Unknown institution'}
-              </span>
-            </Toast>
-          );
-          // Plaid credential error
-        } else if (syncError.plaid) {
-          if (syncError.plaid.isCredentialError) {
-            setUpdateMode(true);
-            toast.error(
-              <Toast title="Syncing transactions">
-                Credentials need to be updated for{' '}
-                <span className="font-bold">
-                  {metadata.institution?.name ?? 'Unknown institution'}
-                </span>
-              </Toast>
-            );
-          }
-          // Other Plaid error
-        } else {
-          toast.error(
-            <Toast title="Syncing transactions">
-              Failed to sync transactions for{' '}
-              <span className="font-bold">
-                {metadata.institution?.name ?? 'Unknown institution'}
-              </span>
-            </Toast>
-          );
+        if (syncError.plaid?.isCredentialError) {
+          setUpdateMode(true);
         }
       } else {
         toast(
           <Toast title="Syncing transactions">
             Transactions are now being synced for{' '}
-            <span className="font-bold">{metadata.institution?.name ?? 'Unknown institution'}</span>{' '}
+            <span className="font-bold">
+              {<span className="font-bold">{institutionName}</span>}
+            </span>{' '}
             it may take a few minutes for all transactions to displayed.
           </Toast>
         );
@@ -94,7 +66,7 @@ export const usePlaid = () => {
 
       setIsInsItemIdSyncingOrLoading(null);
     },
-    [router, setIsInsItemIdSyncingOrLoading, setUpdateMode]
+    [setIsInsItemIdSyncingOrLoading, setUpdateMode]
   );
 
   const onEvent = useCallback<PlaidLinkOnEvent>((eventName, metadata) => {
