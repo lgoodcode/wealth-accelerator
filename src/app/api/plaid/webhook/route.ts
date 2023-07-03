@@ -68,6 +68,8 @@ export async function POST(req: Request) {
       default:
         console.error(`Unhandled webhook type received: ${webhook_code}.`, item_id);
     }
+
+    return NextResponse.json({ success: true });
   } catch (err) {
     const error = err as Error;
     console.error(error);
