@@ -87,7 +87,7 @@ CREATE TABLE personal_finance (
 
 ALTER TABLE public.personal_finance ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Can view own upersonal_financeser data" ON public.personal_finance
+CREATE POLICY "Can view own personal_finance data" ON public.personal_finance
   FOR SELECT
   TO authenticated
   USING (auth.uid() = user_id);
