@@ -20,7 +20,10 @@ export function TablePagination({ table }: TablePaginationProps) {
     <div className="flex items-center justify-between px-2">
       <div className="flex-1 text-sm text-muted-foreground">
         Displaying{' '}
-        {table.getState().pagination.pageSize * table.getState().pagination.pageIndex + 1} through{' '}
+        {table.getFilteredRowModel().rows.length === 0
+          ? 0
+          : table.getState().pagination.pageSize * table.getState().pagination.pageIndex + 1}{' '}
+        through{' '}
         {table.getFilteredRowModel().rows.length < table.getState().pagination.pageSize
           ? table.getFilteredRowModel().rows.length
           : table.getState().pagination.pageSize * (table.getState().pagination.pageIndex + 1)}{' '}

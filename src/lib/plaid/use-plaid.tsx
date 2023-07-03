@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import {
@@ -18,6 +19,7 @@ import { updateModeAtom, isInsItemIdSyncingOrLoadingAtom } from '@/lib/atoms/ins
 import { Toast } from '@/components/ui/toast';
 
 export const usePlaid = () => {
+  const router = useRouter();
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
   const [updateMode, setUpdateMode] = useAtom(updateModeAtom);
@@ -39,6 +41,7 @@ export const usePlaid = () => {
         return;
       }
 
+      router.refresh();
       setIsInsItemIdSyncingOrLoading(data.item_id);
 
       const syncError = await clientSyncTransactions(data.item_id);
@@ -66,7 +69,7 @@ export const usePlaid = () => {
 
       setIsInsItemIdSyncingOrLoading(null);
     },
-    [setIsInsItemIdSyncingOrLoading, setUpdateMode]
+    [router, setIsInsItemIdSyncingOrLoading, setUpdateMode]
   );
 
   const onEvent = useCallback<PlaidLinkOnEvent>((eventName, metadata) => {

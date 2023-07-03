@@ -1,3 +1,7 @@
+import { getItemFromItemId } from '@/lib/plaid/getItemFromItemId';
+import { serverSyncTransactions } from '@/lib/plaid/transactions/serverSyncTransactions';
+import { SyncTransactionsResponse } from '@/lib/plaid/types/sync';
+import { captureException } from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -15,37 +19,28 @@ export async function POST(req: Request) {
   switch (webhook_code) {
     // Fired when new transactions data becomes available.
     case 'SYNC_UPDATES_AVAILABLE': {
-      // const { error: itemError, data: item } = await getItemFromItemId(item_id);
+      const { error: itemError, data: item } = await getItemFromItemId(item_id);
 
-      // if (itemError) {
-      //   console.error(itemError);
-      //   captureException(itemError);
-      //   return NextResponse.json<SyncTransactionsResponse>(
-      //     {
-      //       error: {
-      //         general: itemError,
-      //         plaid: null,
-      //       },
-      //     },
-      //     { status: 500 }
-      //   );
-      // }
+      if (itemError) {
+        console.error(itemError);
+        captureException(itemError);
+        return NextResponse.json<SyncTransactionsResponse>(
+          {
+            error: {
+              general: itemError,
+              plaid: null,
+            },
+          },
+          { status: 500 }
+        );
+      }
 
-      // const { error, data } = await serverSyncTransactions(item);
+      const { error } = await serverSyncTransactions(item);
 
-      // if (error) {
-      //   console.error(error);
-      //   captureException(error);
-      //   return NextResponse.json<SyncTransactionsResponse>(
-      //     {
-      //       error: {
-      //         general: error.general,
-      //         plaid: error.plaid,
-      //       },
-      //     },
-      //     { status: error.status }
-      //   );
-      // }
+      if (error) {
+        console.error(error);
+        captureException(error);
+      }
 
       break;
     }
@@ -57,6 +52,4 @@ export async function POST(req: Request) {
     default:
       console.error(`Unhandled webhook type received: ${webhook_code}.`, item_id);
   }
-
-  return NextResponse.json({ success: true });
 }
