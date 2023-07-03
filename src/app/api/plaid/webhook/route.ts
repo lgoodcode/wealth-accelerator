@@ -19,34 +19,40 @@ export async function POST(req: Request) {
   switch (webhook_code) {
     // Fired when new transactions data becomes available.
     case 'SYNC_UPDATES_AVAILABLE': {
-      const { error: itemError, data: item } = await getItemFromItemId(item_id).catch((err) => {
-        console.error('retrieve item', err);
-        return { error: err, data: null };
-      });
+      const headers = [];
 
-      if (itemError) {
-        console.error(itemError);
-        captureException(itemError);
-        return NextResponse.json<SyncTransactionsResponse>(
-          {
-            error: {
-              general: itemError,
-              plaid: null,
-            },
-          },
-          { status: 500 }
-        );
+      for (const header of req.headers.keys()) {
+        headers.push(`${header}: ${req.headers.get(header)}`);
       }
+      console.log('webhook headers', headers.join('\n'));
+      // const { error: itemError, data: item } = await getItemFromItemId(item_id).catch((err) => {
+      //   console.error('retrieve item', err);
+      //   return { error: err, data: null };
+      // });
 
-      const { error } = await serverSyncTransactions(item!).catch((err) => {
-        console.error('sync transactions', err);
-        return { error: err };
-      });
+      // if (itemError) {
+      //   console.error(itemError);
+      //   captureException(itemError);
+      //   return NextResponse.json<SyncTransactionsResponse>(
+      //     {
+      //       error: {
+      //         general: itemError,
+      //         plaid: null,
+      //       },
+      //     },
+      //     { status: 500 }
+      //   );
+      // }
 
-      if (error) {
-        console.error(error);
-        captureException(error);
-      }
+      // const { error } = await serverSyncTransactions(item!).catch((err) => {
+      //   console.error('sync transactions', err);
+      //   return { error: err };
+      // });
+
+      // if (error) {
+      //   console.error(error);
+      //   captureException(error);
+      // }
 
       break;
     }

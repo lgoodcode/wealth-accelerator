@@ -40,6 +40,8 @@ import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions'
 /**
  * When retrieving the transactions, we are keeping the Supabase default limit of 1000.
  * If we will have to make multiple requests using the offset and limit to get all the transactions.
+ *
+ * **Note:** We need to make a sync request to ensure that we have all the transactions.
  */
 const getTransactions = async (item_id: string) => {
   const transactions: TransactionWithAccountName[] = [];
