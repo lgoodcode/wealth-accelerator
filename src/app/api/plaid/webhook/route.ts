@@ -50,11 +50,13 @@ export async function POST(req: Request) {
 
       break;
     }
+
     case 'DEFAULT_UPDATE':
     case 'INITIAL_UPDATE':
     case 'HISTORICAL_UPDATE':
-      /* ignore - not needed if using sync endpoint + webhook */
+      // Ignore - not needed if using sync endpoint + webhook
       break;
+
     default:
       console.error(`Unhandled webhook type received: ${webhook_code}.`, item_id);
   }

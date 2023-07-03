@@ -44,7 +44,7 @@ BEGIN
   );
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY invoker;
+$$ LANGUAGE plpgsql SECURITY definer;
 
 -- Trigger that calls the function above
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
@@ -106,7 +106,7 @@ BEGIN
   INSERT INTO public.personal_finance (user_id) VALUES (NEW.id);
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY invoker;
+$$ LANGUAGE plpgsql SECURITY definer;
 
 -- Trigger the function above when a new user is created
 DROP TRIGGER IF EXISTS on_user_created_init_personal_finance ON public.users;
@@ -406,4 +406,4 @@ BEGIN
         LIMIT
             limit_val;
 END;
-$$ LANGUAGE plpgsql SECURITY invoker;
+$$ LANGUAGE plpgsql SECURITY definer;
