@@ -12,9 +12,10 @@ import type { Filter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
 
 export const serverSyncTransactions = async (
-  item: Institution
+  item: Institution,
+  admin?: boolean
 ): Promise<ServerSyncTransactions> => {
-  const supabase = createSupabase();
+  const supabase = createSupabase(admin);
   const { error: filtersError, data: filtersData } = await supabase
     .from('plaid_filters')
     .select('*');

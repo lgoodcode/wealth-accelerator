@@ -41,6 +41,12 @@ export const usePlaid = () => {
         return;
       }
 
+      toast(
+        <Toast title="Connected institution">
+          Connected <span className="font-bold">{institutionName}</span>
+        </Toast>
+      );
+
       router.refresh();
       setIsInsItemIdSyncingOrLoading(data.item_id);
 
