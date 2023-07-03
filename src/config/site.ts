@@ -5,7 +5,7 @@ export const metadata: Metadata = {
     default: 'Wealth Accelerator',
     template: '%s | Wealth Accelerator',
   },
-  metadataBase: new URL('https://app.chirowealth.com'),
+  metadataBase: new URL('https://test.chirowealth.com'),
   keywords: ['Wealth Accelerator'],
   description: 'Wealth Accelerator app.',
   colorScheme: 'normal',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    url: 'https://app.chirowealth.com',
+    url: 'https://test.chirowealth.com',
     title: 'Wealth Accelerator',
     description: 'Wealth Accelerator app.',
     siteName: 'Wealth Accelerator',
