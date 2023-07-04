@@ -48,7 +48,7 @@ const getTransactions = async (item_id: string) => {
   let offset = 0;
 
   while (true) {
-    const { error, data } = await supabase.rpc('get_transactions_with_account_name', {
+    const { error, data = [] } = await supabase.rpc('get_transactions_with_account_name', {
       ins_item_id: item_id,
       offset_val: offset,
       limit_val: SUPABASE_QUERY_LIMIT,
@@ -60,14 +60,16 @@ const getTransactions = async (item_id: string) => {
       return [];
     }
 
-    transactions.concat(data as TransactionWithAccountName[]);
+    transactions.push(...(data as TransactionWithAccountName[]));
 
-    if (data.length < SUPABASE_QUERY_LIMIT) {
+    // We know the transactions are all fetched when the data is less than the limit
+    if (!data || data.length < SUPABASE_QUERY_LIMIT) {
       break;
     } else {
       offset += SUPABASE_QUERY_LIMIT;
     }
   }
+
   return (transactions ?? []) as TransactionWithAccountName[];
 };
 
