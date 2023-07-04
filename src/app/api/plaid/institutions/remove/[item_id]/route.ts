@@ -1,13 +1,5 @@
-const testFunc = () => {
-  throw new Error('test');
-};
-
-export function DELETE() {
-  testFunc();
-}
-
 // import { NextResponse } from 'next/server';
-// import { captureException } from '@sentry/nextjs';
+import { captureException } from '@sentry/nextjs';
 
 // import { getUser } from '@/lib/supabase/server/getUser';
 // import { createSupabase } from '@/lib/supabase/server/createSupabase';
@@ -19,6 +11,14 @@ export function DELETE() {
 //     item_id: string;
 //   };
 // }
+
+const testFunc = () => {
+  captureException(new Error('test'));
+};
+
+export function DELETE() {
+  testFunc();
+}
 
 // export async function DELETE(_: Request, { params: { item_id } }: RemoveInstitutionParams) {
 //   const user = await getUser();
