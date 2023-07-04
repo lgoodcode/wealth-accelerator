@@ -16,18 +16,28 @@ interface TablePaginationProps {
 }
 
 export function TablePagination({ table }: TablePaginationProps) {
+  const filteredRowsLength = table.getFilteredRowModel().rows.length;
+  const paginationSize = table.getState().pagination.pageSize;
+  const paginationIndex = table.getState().pagination.pageIndex;
+
+  const startRecord = filteredRowsLength === 0 ? 0 : paginationSize * paginationIndex + 1;
+  let endRecord;
+
+  // If no rows are filtered, then the end row is 0
+  if (filteredRowsLength === 0) {
+    endRecord = 0;
+    // If the number of rows is less than the total number of rows, that it's the total number of rows
+  } else if (filteredRowsLength < paginationSize) {
+    endRecord = filteredRowsLength;
+    // Otherwise, the end row is the page size times the page index plus 1
+  } else {
+    endRecord = paginationSize * (paginationIndex + 1);
+  }
+
   return (
     <div className="flex items-center justify-between px-2">
       <div className="flex-1 text-sm text-muted-foreground">
-        Displaying{' '}
-        {table.getFilteredRowModel().rows.length === 0
-          ? 0
-          : table.getState().pagination.pageSize * table.getState().pagination.pageIndex + 1}{' '}
-        through{' '}
-        {table.getFilteredRowModel().rows.length < table.getState().pagination.pageSize
-          ? table.getFilteredRowModel().rows.length
-          : table.getState().pagination.pageSize * (table.getState().pagination.pageIndex + 1)}{' '}
-        of {table.getFilteredRowModel().rows.length} row(s)
+        Displaying {startRecord} through {endRecord} of {filteredRowsLength} row(s)
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
@@ -50,7 +60,7 @@ export function TablePagination({ table }: TablePaginationProps) {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+        <div className="flex min-w-[100px] items-center justify-center text-sm font-medium">
           Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
         </div>
         <div className="flex items-center space-x-2">
