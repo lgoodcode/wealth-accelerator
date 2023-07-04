@@ -19,6 +19,7 @@ export async function POST(req: Request) {
   switch (webhook_code) {
     // Fired when new transactions data becomes available.
     case 'SYNC_UPDATES_AVAILABLE': {
+      console.log('Updating transactions for item:', item_id);
       const { error: itemError, data: item } = await getItemFromItemId(item_id, true);
 
       if (itemError) {
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
       }
 
       const { error: syncError } = await serverSyncTransactions(item!, true);
-
+      console.log('Transactions updated for item:', item_id);
       if (syncError) {
         console.error(syncError);
         captureException(syncError);

@@ -48,53 +48,38 @@ export const usePlaid = () => {
       );
 
       router.refresh();
-      toast(
-        <Toast title="Syncing transactions">
-          <div className="flex flex-col space-y-3">
-            <span>
-              Transactions are now being synced for{' '}
-              <span className="font-bold">
-                {<span className="font-bold">{institutionName}</span>}
+      setIsInsItemIdSyncingOrLoading(data.item_id);
+
+      const syncError = await clientSyncTransactions(data.item_id);
+
+      if (syncError) {
+        handleClientSyncTransactionsError(
+          syncError,
+          metadata.institution?.name ?? 'Unknown institution'
+        );
+
+        if (syncError.plaid?.isCredentialError) {
+          setUpdateMode(true);
+        }
+      } else {
+        toast(
+          <Toast title="Syncing transactions">
+            <div className="flex flex-col space-y-3">
+              <span>
+                Transactions are now being synced for{' '}
+                <span className="font-bold">
+                  {<span className="font-bold">{institutionName}</span>}
+                </span>
+                . The last 30 days of transactions are available to be viewed while the rest are
+                being retrieved.
               </span>
-              . The last 30 days of transactions are available to be viewed while the rest are being
-              retrieved.
-            </span>
-            <span className="font-extrabold">NOTE: This may take a few minutes.</span>
-          </div>
-        </Toast>
-      );
-      // setIsInsItemIdSyncingOrLoading(data.item_id);
+              <span className="font-extrabold">NOTE: This may take a few minutes.</span>
+            </div>
+          </Toast>
+        );
+      }
 
-      // const syncError = await clientSyncTransactions(data.item_id);
-
-      // if (syncError) {
-      //   handleClientSyncTransactionsError(
-      //     syncError,
-      //     metadata.institution?.name ?? 'Unknown institution'
-      //   );
-
-      //   if (syncError.plaid?.isCredentialError) {
-      //     setUpdateMode(true);
-      //   }
-      // } else {
-      //   toast(
-      //     <Toast title="Syncing transactions">
-      //       <div className="flex flex-col space-y-3">
-      //         <span>
-      //           Transactions are now being synced for{' '}
-      //           <span className="font-bold">
-      //             {<span className="font-bold">{institutionName}</span>}
-      //           </span>
-      //           . The last 30 days of transactions are available to be viewed while the rest are
-      //           being retrieved.
-      //         </span>
-      //         <span className="font-extrabold">NOTE: This may take a few minutes.</span>
-      //       </div>
-      //     </Toast>
-      //   );
-      // }
-
-      // setIsInsItemIdSyncingOrLoading(null);
+      setIsInsItemIdSyncingOrLoading(null);
     },
     [router, setIsInsItemIdSyncingOrLoading, setUpdateMode]
   );
