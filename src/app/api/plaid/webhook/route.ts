@@ -44,10 +44,10 @@ export async function POST(req: Request) {
       break;
     }
 
+    // Ignore - not needed if using sync endpoint + webhook
     case 'DEFAULT_UPDATE':
     case 'INITIAL_UPDATE':
     case 'HISTORICAL_UPDATE':
-      // Ignore - not needed if using sync endpoint + webhook
       break;
 
     default:
