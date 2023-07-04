@@ -22,6 +22,8 @@ import { SUPABASE_QUERY_LIMIT } from '@/config/app';
 import { cn } from '@/lib/utils/cn';
 import { supabase } from '@/lib/supabase/client';
 import { updateModeAtom } from '@/lib/atoms/institutions';
+import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
+import { displaySyncError } from '@/lib/plaid/transactions/displaySyncError';
 import { ClientError } from '@/components/client-error';
 import { Loading } from '@/components/loading';
 import {
@@ -35,17 +37,21 @@ import {
 import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
+import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 
-import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
-import { handleClientSyncTransactionsError } from '@/lib/plaid/transactions/handleClientSyncTransactionsError';
-import { ClientInstitution } from '@/lib/plaid/types/institutions';
-
+/**
+ * Before making a request for tranasactions, we need to make sure that the item is synced
+ * and doesn't have any credential errors.
+ *
+ * @returns `true` if the item needs to be updated, `false` otherwise.
+ */
 const syncTransactions = async (item: ClientInstitution) => {
   const syncError = await clientSyncTransactions(item.item_id);
 
   if (syncError) {
-    handleClientSyncTransactionsError(syncError, item.name);
+    console.error(syncError);
+    displaySyncError(syncError, item.name);
 
     if (syncError.plaid?.isCredentialError) {
       return true;
@@ -58,8 +64,6 @@ const syncTransactions = async (item: ClientInstitution) => {
 /**
  * When retrieving the transactions, we are keeping the Supabase default limit of 1000.
  * If we will have to make multiple requests using the offset and limit to get all the transactions.
- *
- * **Note:** We need to make a sync request to ensure that we have all the transactions.
  */
 const getTransactions = async (item_id: string) => {
   const transactions: TransactionWithAccountName[] = [];
@@ -80,7 +84,7 @@ const getTransactions = async (item_id: string) => {
 
     transactions.push(...(data as TransactionWithAccountName[]));
 
-    // We know the transactions are all fetched when the data is less than the limit
+    // We know all the transactions are fetched when the data length received is less than the limit
     if (!data || data.length < SUPABASE_QUERY_LIMIT) {
       break;
     } else {
@@ -102,6 +106,13 @@ export function TransactionsTable({ item }: TransactionsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const setUpdateMode = useSetAtom(updateModeAtom);
 
+  /**
+   * Handles the request for the transaction data, which makes a sync request intially
+   * and if a credential error is returned, it will set the update mode to true and
+   * return an empty array.
+   *
+   * @returns An array of transactions
+   */
   const handleGetTransactions = useCallback(async () => {
     const needsUpdate = await syncTransactions(item);
 
@@ -121,7 +132,7 @@ export function TransactionsTable({ item }: TransactionsTableProps) {
     ['transactions', item.item_id],
     () => handleGetTransactions(),
     {
-      staleTime: 1000 * 60 * 60, // Cache transactions for an hour
+      staleTime: 1000 * 60 * 60 * 24, // Cache transactions for a day on client
     }
   );
 

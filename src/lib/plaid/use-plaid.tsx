@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import { createLinkToken } from '@/lib/plaid/create-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
-import { handleClientSyncTransactionsError } from '@/lib/plaid/transactions/handleClientSyncTransactionsError';
+import { displaySyncError } from '@/lib/plaid/transactions/displaySyncError';
 import { updateModeAtom, isInsItemIdSyncingOrLoadingAtom } from '@/lib/atoms/institutions';
 import { Toast } from '@/components/ui/toast';
 
@@ -53,10 +53,7 @@ export const usePlaid = () => {
       const syncError = await clientSyncTransactions(data.item_id);
 
       if (syncError) {
-        handleClientSyncTransactionsError(
-          syncError,
-          metadata.institution?.name ?? 'Unknown institution'
-        );
+        displaySyncError(syncError, metadata.institution?.name ?? 'Unknown institution');
 
         if (syncError.plaid?.isCredentialError) {
           setUpdateMode(true);

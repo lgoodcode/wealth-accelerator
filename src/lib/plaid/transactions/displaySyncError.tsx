@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { Toast } from '@/components/ui/toast';
 import type { SyncTransactionsResponseError } from '@/lib/plaid/types/sync';
 
-export const handleClientSyncTransactionsError = (
+export const displaySyncError = (
   syncError: SyncTransactionsResponseError,
   institutionName: string
 ) => {

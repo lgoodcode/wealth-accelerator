@@ -59,7 +59,7 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
     isLoading,
     data: accounts = [], // Use default value because initialData will be used and cached
   } = useQuery<Account[]>(['accounts', item_id], () => getAccounts(item_id), {
-    staleTime: 1000 * 60 * 60, // Cache accounts, which don't change often, for an hour
+    staleTime: 1000 * 60 * 60 * 24, // Cache accounts for a day on client
   });
 
   const table = useReactTable<Account>({
