@@ -1,8 +1,7 @@
+import { NextResponse } from 'next/server';
+import { captureException } from '@sentry/nextjs';
 import { getItemFromItemId } from '@/lib/plaid/getItemFromItemId';
 import { serverSyncTransactions } from '@/lib/plaid/transactions/serverSyncTransactions';
-import { SyncTransactionsResponse } from '@/lib/plaid/types/sync';
-import { captureException } from '@sentry/nextjs';
-import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const body = await req.json().catch((err) => err);
@@ -25,22 +24,21 @@ export async function POST(req: Request) {
       if (itemError) {
         console.error(itemError);
         captureException(itemError);
-        return NextResponse.json<SyncTransactionsResponse>(
-          {
-            error: {
-              general: itemError,
-              plaid: null,
-            },
-          },
-          { status: 500 }
-        );
+
+        return NextResponse.json({ error: itemError.message }, { status: 500 });
       }
 
-      const { error } = await serverSyncTransactions(item!, true);
+      const { error: syncError } = await serverSyncTransactions(item!, true);
 
-      if (error) {
-        console.error(error);
-        captureException(error);
+      if (syncError) {
+        console.error(syncError);
+        captureException(syncError);
+
+        if (syncError.general) {
+          return NextResponse.json({ error: syncError.general.message }, { status: 500 });
+        }
+
+        return NextResponse.json({ error: syncError.plaid }, { status: 500 });
       }
 
       break;
