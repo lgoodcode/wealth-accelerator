@@ -91,7 +91,7 @@ export function TransactionsTable({ item_id }: TransactionsTableProps) {
     ['transactions', selectedInstitution?.item_id],
     () => getTransactions(item_id),
     {
-      staleTime: 1000 * 60 * 60, // Cache transactions, which won't change often, for 60 minutes
+      staleTime: 1000 * 30, // Cache transactions, which may change often if it's a new account, every 30 seconds
     }
   );
 
