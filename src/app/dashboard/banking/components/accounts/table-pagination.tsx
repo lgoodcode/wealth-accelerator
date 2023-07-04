@@ -27,7 +27,7 @@ export function TablePagination({ table }: TablePaginationProps) {
   if (filteredRowsLength === 0) {
     endRecord = 0;
     // If the number of rows is less than the total number of rows, that it's the total number of rows
-  } else if (filteredRowsLength < paginationSize) {
+  } else if (filteredRowsLength < paginationSize * (paginationIndex + 1)) {
     endRecord = filteredRowsLength;
     // Otherwise, the end row is the page size times the page index plus 1
   } else {
