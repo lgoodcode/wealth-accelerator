@@ -29,8 +29,8 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: itemError.message }, { status: 500 });
       }
 
-      const { error: syncError } = await serverSyncTransactions(item!, true);
-      console.log('Transactions updated for item:', item_id);
+      const { error: syncError, data } = await serverSyncTransactions(item!, true);
+      console.log('Transactions updated for item:', item_id, data);
       if (syncError) {
         console.error(syncError);
         captureException(syncError);
