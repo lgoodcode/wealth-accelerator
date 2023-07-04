@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useAtomValue } from 'jotai';
+import { useState, useEffect } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useQuery } from '@tanstack/react-query';
 import { captureException } from '@sentry/nextjs';
 import {
@@ -21,7 +21,7 @@ import {
 import { SUPABASE_QUERY_LIMIT } from '@/config/app';
 import { cn } from '@/lib/utils/cn';
 import { supabase } from '@/lib/supabase/client';
-import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
+import { selectedInstitutionAtom, updateModeAtom } from '@/lib/atoms/institutions';
 import { ClientError } from '@/components/client-error';
 import { Loading } from '@/components/loading';
 import {
@@ -36,6 +36,45 @@ import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
+
+import { toast } from 'react-toastify';
+import { Toast } from '@/components/ui/toast';
+import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
+import { handleClientSyncTransactionsError } from '@/lib/plaid/transactions/handleClientSyncTransactionsError';
+import { ClientInstitution } from '@/lib/plaid/types/institutions';
+
+const syncTransactions = async (
+  item: ClientInstitution | null,
+  setUpdateMode: (updateMode: boolean) => void
+) => {
+  if (!item) {
+    return;
+  }
+
+  console.log('useSyncTransactions');
+
+  const syncError = await clientSyncTransactions(item.item_id);
+
+  if (syncError) {
+    handleClientSyncTransactionsError(syncError, item.name);
+
+    if (syncError.plaid?.isCredentialError) {
+      setUpdateMode(true);
+    }
+  }
+
+  toast(
+    <Toast title="Syncing transactions">
+      <div className="flex flex-col space-y-3">
+        <span>
+          Transactions syncing for{' '}
+          <span className="font-bold">{<span className="font-bold">{item.name}</span>}</span>.
+        </span>
+        <span className="font-extrabold">NOTE: This may take a few minutes.</span>
+      </div>
+    </Toast>
+  );
+};
 
 /**
  * When retrieving the transactions, we are keeping the Supabase default limit of 1000.
@@ -83,6 +122,7 @@ export function TransactionsTable({ item_id }: TransactionsTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const selectedInstitution = useAtomValue(selectedInstitutionAtom);
+  const setUpdateMode = useSetAtom(updateModeAtom);
   const {
     isError,
     isLoading,
@@ -116,6 +156,11 @@ export function TransactionsTable({ item_id }: TransactionsTableProps) {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
+
+  useEffect(() => {
+    console.log('running');
+    syncTransactions(selectedInstitution, setUpdateMode);
+  }, [selectedInstitution, setUpdateMode]);
 
   if (isError) {
     return <ClientError />;

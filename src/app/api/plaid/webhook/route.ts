@@ -19,7 +19,6 @@ export async function POST(req: Request) {
   switch (webhook_code) {
     // Fired when new transactions data becomes available.
     case 'SYNC_UPDATES_AVAILABLE': {
-      console.log('Updating transactions for item:', item_id);
       const { error: itemError, data: item } = await getItemFromItemId(item_id, true);
 
       if (itemError) {
@@ -29,8 +28,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: itemError.message }, { status: 500 });
       }
 
-      const { error: syncError, data } = await serverSyncTransactions(item!, true);
-      console.log('Transactions updated for item:', item_id, data);
+      const { error: syncError } = await serverSyncTransactions(item!, true);
       if (syncError) {
         console.error(syncError);
         captureException(syncError);
