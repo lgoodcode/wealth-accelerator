@@ -13,11 +13,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'No user found' }, { status: 401 });
   }
 
-  // Validate the request body
-  const body = await req.json().catch(() => null);
+  const body = await req.json().catch((err) => err);
 
   if (!body) {
     return NextResponse.json({ error: 'Invalid body' }, { status: 400 });
+  } else if (body instanceof Error) {
+    return NextResponse.json({ error: body.message }, { status: 400 });
   }
 
   const { public_token, metadata } = body as ExchangeLinkTokenBody;
