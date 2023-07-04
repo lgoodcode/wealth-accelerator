@@ -37,38 +37,22 @@ import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 
-import { toast } from 'react-toastify';
-import { Toast } from '@/components/ui/toast';
 import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
 import { handleClientSyncTransactionsError } from '@/lib/plaid/transactions/handleClientSyncTransactionsError';
 import { ClientInstitution } from '@/lib/plaid/types/institutions';
 
 const syncTransactions = async (item: ClientInstitution) => {
-  console.log('syncTransactions');
-
   const syncError = await clientSyncTransactions(item.item_id);
 
   if (syncError) {
     handleClientSyncTransactionsError(syncError, item.name);
 
     if (syncError.plaid?.isCredentialError) {
-      return false;
+      return true;
     }
   }
 
-  toast(
-    <Toast title="Syncing transactions">
-      <div className="flex flex-col space-y-3">
-        <span>
-          Transactions syncing for{' '}
-          <span className="font-bold">{<span className="font-bold">{item.name}</span>}</span>.
-        </span>
-        <span className="font-extrabold">NOTE: This may take a few minutes.</span>
-      </div>
-    </Toast>
-  );
-
-  return true;
+  return false;
 };
 
 /**
@@ -78,7 +62,6 @@ const syncTransactions = async (item: ClientInstitution) => {
  * **Note:** We need to make a sync request to ensure that we have all the transactions.
  */
 const getTransactions = async (item_id: string) => {
-  console.log('getTransactions');
   const transactions: TransactionWithAccountName[] = [];
   let offset = 0;
 
@@ -120,11 +103,11 @@ export function TransactionsTable({ item }: TransactionsTableProps) {
   const setUpdateMode = useSetAtom(updateModeAtom);
 
   const handleGetTransactions = useCallback(async () => {
-    console.log('handleGetTransactions');
-    const synced = await syncTransactions(item);
+    const needsUpdate = await syncTransactions(item);
 
-    if (!synced) {
+    if (needsUpdate) {
       setUpdateMode(true);
+      return [];
     }
 
     return await getTransactions(item.item_id);
@@ -138,7 +121,7 @@ export function TransactionsTable({ item }: TransactionsTableProps) {
     ['transactions', item.item_id],
     () => handleGetTransactions(),
     {
-      staleTime: 1000 * 30, // Cache transactions, which may change often if it's a new account, every 30 seconds
+      staleTime: 1000 * 60 * 60, // Cache transactions for an hour
     }
   );
 
