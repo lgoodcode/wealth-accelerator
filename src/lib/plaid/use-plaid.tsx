@@ -64,11 +64,17 @@ export const usePlaid = () => {
       } else {
         toast(
           <Toast title="Syncing transactions">
-            Transactions are now being synced for{' '}
-            <span className="font-bold">
-              {<span className="font-bold">{institutionName}</span>}
-            </span>{' '}
-            it may take a few minutes for all transactions to displayed.
+            <div className="flex flex-col space-y-3">
+              <span>
+                Transactions are now being synced for{' '}
+                <span className="font-bold">
+                  {<span className="font-bold">{institutionName}</span>}
+                </span>
+                . The last 30 days of transactions are available to be viewed while the rest are
+                being retrieved.
+              </span>
+              <span className="font-extrabold">NOTE: This may take a few minutes.</span>
+            </div>
           </Toast>
         );
       }
