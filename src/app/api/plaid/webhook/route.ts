@@ -3,7 +3,9 @@ import { captureException } from '@sentry/nextjs';
 import { getItemFromItemId } from '@/lib/plaid/getItemFromItemId';
 import { serverSyncTransactions } from '@/lib/plaid/transactions/serverSyncTransactions';
 
-export async function POST(req: Request) {
+export const POST = syncTransactionsWebhook;
+
+async function syncTransactionsWebhook(req: Request) {
   const body = await req.json().catch((err) => err);
 
   if (!body) {

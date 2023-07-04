@@ -5,7 +5,9 @@ import { getUser } from '@/lib/supabase/server/getUser';
 import { plaidClient, createLinkTokenRequest } from '@/lib/plaid/config';
 import type { CreateLinkTokenResponse } from '@/lib/plaid/types/link-token';
 
-export async function GET() {
+export const GET = createLinkToken;
+
+async function createLinkToken() {
   const user = await getUser();
 
   if (!user) {

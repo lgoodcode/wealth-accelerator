@@ -6,7 +6,9 @@ import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { plaidClient } from '@/lib/plaid/config';
 import type { ExchangeLinkTokenBody } from '@/lib/plaid/types/link-token';
 
-export async function POST(req: Request) {
+export const POST = exchangeLinkToken;
+
+async function exchangeLinkToken(req: Request) {
   const user = await getUser();
 
   if (!user) {
