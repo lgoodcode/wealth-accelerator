@@ -13,6 +13,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: body.message }, { status: 400 });
   }
 
+  console.log('Webhook received:', body);
+
   const { webhook_code, item_id } = body;
 
   switch (webhook_code) {
