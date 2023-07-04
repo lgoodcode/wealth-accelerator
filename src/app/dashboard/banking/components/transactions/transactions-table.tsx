@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useState, useCallback } from 'react';
+import { useSetAtom } from 'jotai';
 import { useQuery } from '@tanstack/react-query';
 import { captureException } from '@sentry/nextjs';
 import {
@@ -21,7 +21,7 @@ import {
 import { SUPABASE_QUERY_LIMIT } from '@/config/app';
 import { cn } from '@/lib/utils/cn';
 import { supabase } from '@/lib/supabase/client';
-import { selectedInstitutionAtom, updateModeAtom } from '@/lib/atoms/institutions';
+import { updateModeAtom } from '@/lib/atoms/institutions';
 import { ClientError } from '@/components/client-error';
 import { Loading } from '@/components/loading';
 import {
@@ -43,15 +43,8 @@ import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTrans
 import { handleClientSyncTransactionsError } from '@/lib/plaid/transactions/handleClientSyncTransactionsError';
 import { ClientInstitution } from '@/lib/plaid/types/institutions';
 
-const syncTransactions = async (
-  item: ClientInstitution | null,
-  setUpdateMode: (updateMode: boolean) => void
-) => {
-  if (!item) {
-    return;
-  }
-
-  console.log('useSyncTransactions');
+const syncTransactions = async (item: ClientInstitution) => {
+  console.log('syncTransactions');
 
   const syncError = await clientSyncTransactions(item.item_id);
 
@@ -59,7 +52,7 @@ const syncTransactions = async (
     handleClientSyncTransactionsError(syncError, item.name);
 
     if (syncError.plaid?.isCredentialError) {
-      setUpdateMode(true);
+      return false;
     }
   }
 
@@ -74,6 +67,8 @@ const syncTransactions = async (
       </div>
     </Toast>
   );
+
+  return true;
 };
 
 /**
@@ -83,6 +78,7 @@ const syncTransactions = async (
  * **Note:** We need to make a sync request to ensure that we have all the transactions.
  */
 const getTransactions = async (item_id: string) => {
+  console.log('getTransactions');
   const transactions: TransactionWithAccountName[] = [];
   let offset = 0;
 
@@ -113,23 +109,34 @@ const getTransactions = async (item_id: string) => {
 };
 
 interface TransactionsTableProps {
-  item_id: string;
+  item: ClientInstitution;
 }
 
-export function TransactionsTable({ item_id }: TransactionsTableProps) {
+export function TransactionsTable({ item }: TransactionsTableProps) {
   // const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
-  const selectedInstitution = useAtomValue(selectedInstitutionAtom);
   const setUpdateMode = useSetAtom(updateModeAtom);
+
+  const handleGetTransactions = useCallback(async () => {
+    console.log('handleGetTransactions');
+    const synced = await syncTransactions(item);
+
+    if (!synced) {
+      setUpdateMode(true);
+    }
+
+    return await getTransactions(item.item_id);
+  }, [item, setUpdateMode]);
+
   const {
     isError,
     isLoading,
     data: transactions = [], // Use default value because initialData will be used and cached
   } = useQuery<TransactionWithAccountName[]>(
-    ['transactions', selectedInstitution?.item_id],
-    () => getTransactions(item_id),
+    ['transactions', item.item_id],
+    () => handleGetTransactions(),
     {
       staleTime: 1000 * 30, // Cache transactions, which may change often if it's a new account, every 30 seconds
     }
@@ -156,11 +163,6 @@ export function TransactionsTable({ item_id }: TransactionsTableProps) {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
-
-  useEffect(() => {
-    console.log('running');
-    syncTransactions(selectedInstitution, setUpdateMode);
-  }, [selectedInstitution, setUpdateMode]);
 
   if (isError) {
     return <ClientError />;

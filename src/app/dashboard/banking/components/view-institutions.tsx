@@ -45,7 +45,7 @@ export function ViewInstitutions() {
           <AccountsTable item_id={selectedInstitution.item_id} />
         </TabsContent>
         <TabsContent value={TabsValue.Transactions}>
-          <TransactionsTable item_id={selectedInstitution.item_id} />
+          <TransactionsTable item={selectedInstitution} />
         </TabsContent>
       </Tabs>
     </div>
