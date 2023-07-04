@@ -2,7 +2,7 @@ const testFunc = () => {
   throw new Error('test');
 };
 
-export default function DELETE() {
+export function DELETE() {
   testFunc();
 }
 
