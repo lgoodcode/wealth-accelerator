@@ -69,7 +69,7 @@ export const usePlaid = () => {
           </Toast>
         );
       } else {
-        toast(
+        toast.success(
           <Toast title="Connected institution">
             <div className="flex flex-col space-y-3">
               <span>

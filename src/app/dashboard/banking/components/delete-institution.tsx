@@ -39,6 +39,11 @@ export function DeleteInstitution({ open, onOpenChange, institution }: DeleteIns
 
     if (error) {
       console.error(error);
+      toast.error(
+        <span>
+          Failed to remove institution <span className="font-bold">{institution.name}</span>
+        </span>
+      );
     } else {
       toast.success(
         <span>
