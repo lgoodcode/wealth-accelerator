@@ -14,7 +14,7 @@ interface SyncInstitutionParams {
 
 export const GET = syncTransactions;
 
-export async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitutionParams) {
+async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitutionParams) {
   const user = await getUser();
 
   if (!user) {
