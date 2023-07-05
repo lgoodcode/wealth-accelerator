@@ -7,7 +7,6 @@ import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
 import type { DateRange } from 'react-day-picker';
 import type { TransactionWithAccountName, Category } from '@/lib/plaid/types/transactions';
-import { format } from 'date-fns';
 
 /**
  * NOTES
