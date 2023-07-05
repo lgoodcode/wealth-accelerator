@@ -21,7 +21,6 @@ export default async function BankingPage() {
     redirect('/login');
   }
 
-  // Get all institutions for the user
   const { error, data } = await supabase
     .from('plaid')
     .select('item_id, name, expiration, cursor')
