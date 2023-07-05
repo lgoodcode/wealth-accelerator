@@ -113,6 +113,8 @@ export const columns: ColumnDef<TransactionWithAccountName>[] = [
     accessorKey: 'date',
     header: ({ column }) => <ColumnHeader column={column} title="Date" />,
     cell: ({ row }) => {
+      console.log('original', row.getValue<string>('date'));
+      console.log('date', new Date(row.getValue<string>('date')));
       return (
         <div className="flex items-center">
           <span>{format(new Date(row.getValue<string>('date')), 'M/dd/yyyy')}</span>
