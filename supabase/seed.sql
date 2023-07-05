@@ -370,14 +370,14 @@ INSERT INTO plaid_filters (filter, category)
 VALUES
   ('TRANSFER', 'Transfer'::category_type),
   ('Deposit', 'Money-In'::category_type),
-  ('Square', 'Money-In'::category_type);
-  ('Bankcard', 'Money-In'::category_type);
-  ('Mobile Deposit', 'Money-In'::category_type);
-  ('Merchant', 'Money-In'::category_type);
-  ('ESQUIRE', 'Money-In'::category_type);
-  ('Stripe', 'Money-In'::category_type);
-  ('Venmo', 'Money-Out'::category_type);
-  ('Fullscript', 'Money-In'::category_type);
+  ('Square', 'Money-In'::category_type),
+  ('Bankcard', 'Money-In'::category_type),
+  ('Mobile Deposit', 'Money-In'::category_type),
+  ('Merchant', 'Money-In'::category_type),
+  ('ESQUIRE', 'Money-In'::category_type),
+  ('Stripe', 'Money-In'::category_type),
+  ('Venmo', 'Money-Out'::category_type),
+  ('Fullscript', 'Money-In'::category_type),
   ('Check', 'Money-Out'::category_type);
 
 
