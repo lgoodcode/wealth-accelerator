@@ -381,6 +381,7 @@ VALUES
   ('Check', 'Money-Out'::category_type);
 
 
+
 /**
  *
  *  FUNCTIONS
