@@ -1,5 +1,6 @@
 'use client';
 
+import { format } from 'date-fns';
 import type { ColumnDef } from '@tanstack/react-table';
 
 import { categoryOptions } from './column-options';
@@ -114,7 +115,7 @@ export const columns: ColumnDef<TransactionWithAccountName>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
-          <span>{new Date(row.getValue<string>('date')).toLocaleDateString()}</span>
+          <span>{format(new Date(row.getValue<string>('date')), 'M/dd/yyyy')}</span>
         </div>
       );
     },
