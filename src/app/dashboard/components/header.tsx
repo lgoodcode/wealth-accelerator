@@ -13,7 +13,7 @@ interface HeaderProps {
 
 export function Header({ user }: HeaderProps) {
   return (
-    <div className="flex flex-col md:flex shadow-md">
+    <div className="flex flex-col md:flex shadow-md dark:shadow-white-md">
       <div className="border-b">
         <div className="relative flex h-16 justify-between items-center px-4">
           <Link href="/dashboard/home" className="px-3">

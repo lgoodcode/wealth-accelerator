@@ -16,6 +16,10 @@ export const theme = {
       'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
     },
+    boxShadow: {
+      'white-md':
+        '0 4px 6px -1px rgba(255, 255, 255, 0.1), 0 2px 4px -2px rgba(255, 255, 255, 0.1)',
+    },
     colors: {
       border: 'hsl(var(--border))',
       input: 'hsl(var(--input))',
