@@ -3,7 +3,7 @@
 import { useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 
-import { institutionsAtom } from '@/lib/atoms/institutions';
+import { institutionsAtom } from '@/lib/plaid/atoms';
 import { ManageInstitutions } from './manage-institutions';
 import { ViewInstitutions } from './view-institutions';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';

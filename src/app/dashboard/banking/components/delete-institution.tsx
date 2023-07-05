@@ -3,7 +3,7 @@ import { useSetAtom } from 'jotai';
 import { toast } from 'react-toastify';
 
 import { fetcher } from '@/lib/utils/fetcher';
-import { deleteInstitutionAtom } from '@/lib/atoms/institutions';
+import { deleteInstitutionAtom } from '@/lib/plaid/atoms';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,

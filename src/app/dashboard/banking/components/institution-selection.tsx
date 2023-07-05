@@ -10,7 +10,7 @@ import {
   institutionsAtom,
   selectedInstitutionAtom,
   setSelectedInstitutionAtom,
-} from '@/lib/atoms/institutions';
+} from '@/lib/plaid/atoms';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {

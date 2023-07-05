@@ -1,10 +1,10 @@
 'use client';
 
-import { useAtom } from 'jotai';
+import { atom, useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { setUser as setSentryUser } from '@sentry/nextjs';
 
-import { userAtom } from '@/lib/atoms/users';
+const userAtom = atom<User | null>(null);
 
 interface UserProviderProps {
   user: User;

@@ -5,7 +5,7 @@ import { useAtomValue } from 'jotai';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
+import { selectedInstitutionAtom } from '@/lib/plaid/atoms';
 import {
   DropdownMenu,
   DropdownMenuContent,

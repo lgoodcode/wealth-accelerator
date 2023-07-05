@@ -12,7 +12,7 @@ import { MoreHorizontal, Pen } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
 import { supabase } from '@/lib/supabase/client';
-import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
+import { selectedInstitutionAtom } from '@/lib/plaid/atoms';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {

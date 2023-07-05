@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAtomValue } from 'jotai';
 
-import { selectedInstitutionAtom } from '@/lib/atoms/institutions';
+import { selectedInstitutionAtom } from '@/lib/plaid/atoms';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AccountsTable } from './accounts/accounts-table';
 import { TransactionsTable } from './transactions/transactions-table';

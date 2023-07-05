@@ -7,7 +7,7 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
 import { supabase } from '@/lib/supabase/client';
-import { updateInstitutionsAtom } from '@/lib/atoms/institutions';
+import { updateInstitutionsAtom } from '@/lib/plaid/atoms';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
