@@ -1,6 +1,6 @@
 'use client';
 
-import { useAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 
 import { institutionsAtom } from '@/lib/atoms/institutions';
@@ -13,7 +13,7 @@ interface InstitutionsProps {
 }
 
 export function Institutions({ institutions }: InstitutionsProps) {
-  const [institutionsData, setInstitutions] = useAtom(institutionsAtom);
+  const setInstitutions = useSetAtom(institutionsAtom);
 
   useEffect(() => {
     setInstitutions(institutions);
@@ -22,7 +22,7 @@ export function Institutions({ institutions }: InstitutionsProps) {
 
   return (
     <div className="flex flex-col">
-      <ManageInstitutions institutions={institutionsData} />
+      <ManageInstitutions />
       <ViewInstitutions />
     </div>
   );
