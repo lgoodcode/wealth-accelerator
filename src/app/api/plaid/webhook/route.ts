@@ -29,7 +29,7 @@ async function syncTransactionsWebhook(req: Request) {
 
         return NextResponse.json({ error: itemError.message }, { status: 500 });
       }
-
+      console.log('processing', item_id);
       const { error: syncError } = await serverSyncTransactions(item!, true);
       if (syncError) {
         console.error(syncError);
@@ -54,6 +54,6 @@ async function syncTransactionsWebhook(req: Request) {
     default:
       console.error(`Unhandled webhook type received: ${webhook_code}.`, item_id);
   }
-
+  console.log('success', item_id);
   return NextResponse.json({ success: true });
 }
