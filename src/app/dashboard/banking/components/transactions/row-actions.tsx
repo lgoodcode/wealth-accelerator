@@ -85,7 +85,7 @@ export function RowActions({ row }: RowActionsProps) {
   const selectedInstitution = useAtomValue(selectedInstitutionAtom);
   const form = useForm<UpdateTransactionType>({
     resolver: zodResolver(updateTransactionFormSchema),
-    defaultValues: {
+    values: {
       name: row.original.name,
       category: row.original.category,
     },
