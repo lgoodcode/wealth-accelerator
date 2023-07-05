@@ -36,11 +36,7 @@ const renameFormSchema = z.object({
 
 type RenameFormType = z.infer<typeof renameFormSchema>;
 
-const renameInstitution = async (institution: ClientInstitution | null, data: RenameFormType) => {
-  if (!institution) {
-    return false;
-  }
-
+const renameInstitution = async (institution: ClientInstitution, data: RenameFormType) => {
   const { error } = await supabase
     .from('plaid')
     .update({ name: data.name })
@@ -49,10 +45,10 @@ const renameInstitution = async (institution: ClientInstitution | null, data: Re
   if (error) {
     console.error(error);
     captureException(error);
-    return false;
+    return error;
   }
 
-  return true;
+  return null;
 };
 
 interface RenameInstitutionProps {
@@ -72,17 +68,19 @@ export function RenameInstitution({ open, onOpenChange, institution }: RenameIns
       return;
     }
 
-    const success = await renameInstitution(institution, data);
+    const error = await renameInstitution(institution, data);
 
-    if (success) {
+    if (error) {
+      console.error(error);
+      captureException(error);
+      toast.error('Failed to rename institution');
+    } else {
       toast.success('Institution renamed');
       updateInstitutions({
         ...institution,
         name: data.name,
       });
       onOpenChange(false);
-    } else {
-      toast.error('Failed to rename institution');
     }
   };
 
