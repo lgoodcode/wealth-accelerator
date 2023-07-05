@@ -43,13 +43,21 @@ export function RowActions({ row }: RowActionsProps) {
   const handleDeleteFilter = () => {
     deleteFilter(row.original.id)
       .then(() => {
-        toast.success('Filter updated');
+        toast.success(
+          <span>
+            Removed filter <span className="font-bold">{row.original.filter}</span>
+          </span>
+        );
         removeFilter(row.original.id);
       })
       .catch((error) => {
         console.error(error);
         captureException(error);
-        toast.error('Failed to update filter');
+        toast.error(
+          <span>
+            Failed to remove filter <span className="font-bold">{row.original.filter}</span>
+          </span>
+        );
       });
   };
 

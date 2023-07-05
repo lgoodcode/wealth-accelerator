@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetAtom } from 'jotai';
 import { useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -64,7 +64,6 @@ interface UpdateFilterProps {
 
 export function UpdateFilterModal({ open, onOpenChange, filter }: UpdateFilterProps) {
   const queryClient = useQueryClient();
-  const [isLoading, setIsLoading] = useState(false);
   const setFilters = useSetAtom(setFiltersAtom);
   const form = useForm<UpdateFilterFormType>({
     resolver: zodResolver(updateFilterFormSchema),
@@ -74,12 +73,9 @@ export function UpdateFilterModal({ open, onOpenChange, filter }: UpdateFilterPr
   });
 
   const handleUpdate = async (data: UpdateFilterFormType) => {
-    setIsLoading(true);
-
     updateFilter(filter.id, data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {
-        toast.success('Filter updated');
         setFilters({
           ...filter,
           category: data.category,
@@ -90,9 +86,12 @@ export function UpdateFilterModal({ open, onOpenChange, filter }: UpdateFilterPr
       .catch((error) => {
         console.error(error);
         captureException(error);
-        toast.error('Failed to update filter');
-      })
-      .finally(() => setIsLoading(false));
+        toast.error(
+          <span>
+            Failed to remove filter <span className="font-bold">{filter.filter}</span>
+          </span>
+        );
+      });
   };
 
   useEffect(() => {
@@ -139,10 +138,18 @@ export function UpdateFilterModal({ open, onOpenChange, filter }: UpdateFilterPr
           </form>
         </Form>
         <DialogFooter>
-          <Button variant="secondary" disabled={isLoading} onClick={() => onOpenChange(false)}>
+          <Button
+            variant="secondary"
+            disabled={form.formState.isSubmitting}
+            onClick={() => onOpenChange(false)}
+          >
             Cancel
           </Button>
-          <Button type="submit" loading={isLoading} onClick={form.handleSubmit(handleUpdate)}>
+          <Button
+            type="submit"
+            loading={form.formState.isSubmitting}
+            onClick={form.handleSubmit(handleUpdate)}
+          >
             Save
           </Button>
         </DialogFooter>

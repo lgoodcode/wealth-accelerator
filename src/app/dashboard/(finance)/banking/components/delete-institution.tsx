@@ -31,7 +31,7 @@ interface DeleteInstitutionProps {
 }
 
 export function DeleteInstitution({ open, onOpenChange, institution }: DeleteInstitutionProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const removeInstitution = useSetAtom(removeInstitutionAtom);
 
   const handleDelete = async () => {
@@ -39,7 +39,7 @@ export function DeleteInstitution({ open, onOpenChange, institution }: DeleteIns
       return;
     }
 
-    setIsLoading(true);
+    setIsDeleting(true);
 
     deleteInstitution(institution.item_id)
       .then(() => {
@@ -60,7 +60,7 @@ export function DeleteInstitution({ open, onOpenChange, institution }: DeleteIns
           </span>
         );
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => setIsDeleting(false));
   };
 
   return (
@@ -74,8 +74,8 @@ export function DeleteInstitution({ open, onOpenChange, institution }: DeleteIns
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
-          <Button variant="destructive" onClick={handleDelete} loading={isLoading}>
+          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <Button variant="destructive" onClick={handleDelete} loading={isDeleting}>
             Delete
           </Button>
         </AlertDialogFooter>

@@ -64,7 +64,6 @@ const createFilter = async (filter: Pick<Filter, 'filter' | 'category'>) => {
 
 export function AddFilterButton() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const setFilters = useSetAtom(setFiltersAtom);
   const queryClient = useQueryClient();
   const form = useForm<CreateFilterFormType>({
@@ -72,12 +71,9 @@ export function AddFilterButton() {
   });
 
   const handleCreate = (data: CreateFilterFormType) => {
-    setIsLoading(true);
-
     createFilter(data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then((filter) => {
-        toast.success('Filter created');
         setFilters(filter);
         queryClient.invalidateQueries({ queryKey: ['transactions'] });
         setIsOpen(false);
@@ -86,8 +82,7 @@ export function AddFilterButton() {
         console.error(error);
         captureException(error);
         toast.error('Failed to create filter');
-      })
-      .finally(() => setIsLoading(false));
+      });
   };
 
   useEffect(() => {
@@ -153,10 +148,18 @@ export function AddFilterButton() {
             </form>
           </Form>
           <DialogFooter>
-            <Button variant="secondary" disabled={isLoading} onClick={() => setIsOpen(false)}>
+            <Button
+              variant="secondary"
+              disabled={form.formState.isSubmitting}
+              onClick={() => setIsOpen(false)}
+            >
               Cancel
             </Button>
-            <Button type="submit" loading={isLoading} onClick={form.handleSubmit(handleCreate)}>
+            <Button
+              type="submit"
+              loading={form.formState.isSubmitting}
+              onClick={form.handleSubmit(handleCreate)}
+            >
               Save
             </Button>
           </DialogFooter>

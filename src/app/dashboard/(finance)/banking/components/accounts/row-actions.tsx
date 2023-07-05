@@ -126,7 +126,6 @@ export function RowActions({ row }: RowActionsProps) {
         }
         return oldAccounts;
       });
-      toast.success('Account updated');
     },
     onSettled: handleCloseUpdateDialog,
   });
