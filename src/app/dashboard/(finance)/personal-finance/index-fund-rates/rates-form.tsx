@@ -16,6 +16,17 @@ import { RatesFormSchema, type RatesFormSchemaType } from '../schema';
 
 const NUM_RATE_YEARS = 60;
 
+const updateRates = async (user_id: string, data: RatesFormSchemaType) => {
+  const { error } = await supabase
+    .from('personal_finance')
+    .update({ rates: data.rates })
+    .eq('user_id', user_id);
+
+  if (error) {
+    throw error;
+  }
+};
+
 // Override the type for the start_date because Supabase returns a string.
 interface RatesFormProps {
   user: User;
@@ -23,28 +34,26 @@ interface RatesFormProps {
 }
 
 export function RatesForm({ user, initialValues }: RatesFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<RatesFormSchemaType>({
     resolver: zodResolver(RatesFormSchema(NUM_RATE_YEARS)),
     defaultValues: initialValues,
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [allRates, setAllRates] = useState<number>();
 
-  const onSubmit = async ({ rates }: RatesFormSchemaType) => {
-    const { error } = await supabase
-      .from('personal_finance')
-      .update({ rates })
-      .eq('user_id', user.id);
+  const onSubmit = async (data: RatesFormSchemaType) => {
+    setIsSubmitting(true);
 
-    if (error) {
-      console.error(error);
-      captureException(error);
-      toast.error('Uh oh! Something went wrong. Please try again.');
-    } else {
-      toast.success('Your information has been saved');
-    }
-
-    setIsSubmitting(false);
+    updateRates(user.id, data)
+      .then(() => {
+        toast.success('Your information has been saved');
+      })
+      .catch((error) => {
+        console.error(error);
+        captureException(error);
+        toast.error('Uh oh! Something went wrong. Please try again.');
+      })
+      .finally(() => setIsSubmitting(false));
   };
 
   return (

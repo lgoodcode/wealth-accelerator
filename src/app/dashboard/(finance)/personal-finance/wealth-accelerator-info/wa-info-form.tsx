@@ -20,6 +20,20 @@ import {
 } from '@/components/ui/form';
 import { WaInfoFormSchema, type WaInfoFormSchemaType } from '../schema';
 
+const updateWaInfo = async (user_id: string, data: WaInfoFormSchemaType) => {
+  const { error } = await supabase
+    .from('personal_finance')
+    .update({
+      ...data,
+      start_date: data.start_date.toUTCString(),
+    })
+    .eq('user_id', user_id);
+
+  if (error) {
+    throw error;
+  }
+};
+
 // Override the type for the start_date because Supabase returns a string.
 interface WaInfoFormProps {
   user: User;
@@ -29,6 +43,7 @@ interface WaInfoFormProps {
 }
 
 export function WaInfoForm({ user, initialValues }: WaInfoFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<WaInfoFormSchemaType>({
     resolver: zodResolver(WaInfoFormSchema),
     defaultValues: {
@@ -36,28 +51,20 @@ export function WaInfoForm({ user, initialValues }: WaInfoFormProps) {
       start_date: initialValues?.start_date ? new Date(initialValues.start_date) : undefined,
     },
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit = async (formData: WaInfoFormSchemaType) => {
+  const onSubmit = async (data: WaInfoFormSchemaType) => {
     setIsSubmitting(true);
 
-    const { error } = await supabase
-      .from('personal_finance')
-      .update({
-        ...formData,
-        start_date: formData.start_date.toUTCString(),
+    updateWaInfo(user.id, data)
+      .then(() => {
+        toast.success('Your information has been saved');
       })
-      .eq('user_id', user.id);
-
-    if (error) {
-      console.error(error);
-      captureException(error);
-      toast.error('Uh oh! Something went wrong. Please try again.');
-    } else {
-      toast.success('Your information has been saved');
-    }
-
-    setIsSubmitting(false);
+      .catch((error) => {
+        console.error(error);
+        captureException(error);
+        toast.error('Uh oh! Something went wrong. Please try again.');
+      })
+      .finally(() => setIsSubmitting(false));
   };
 
   return (
