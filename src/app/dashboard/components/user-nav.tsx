@@ -35,8 +35,8 @@ export function UserNav({ user }: UserNavProps) {
   // On logout, clear the Sentry user context and redirect to the login page.
   const logout = async () => {
     setSentryUser(null);
-    supabase.auth.signOut();
-    router.push('/login');
+    await supabase.auth.signOut();
+    router.refresh();
   };
 
   return (

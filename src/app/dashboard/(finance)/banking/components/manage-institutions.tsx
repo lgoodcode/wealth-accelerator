@@ -43,6 +43,7 @@ export function ManageInstitutions() {
 
       <div className="flex h-20 w-full justify-start lg:justify-end items-center space-x-2">
         <InstitutionSelection />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="icon" variant="ghost" disabled={!selectedInstitution}>
