@@ -59,8 +59,8 @@ export function DeleteInstitution({ open, onOpenChange, institution }: DeleteIns
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This institution and all the data associated with it will
-            be deleted.
+            This action cannot be undone. <span className="font-bold">{institution?.name}</span> and
+            all the data associated with it will be deleted.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
