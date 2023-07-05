@@ -116,10 +116,6 @@ export function RowActions({ row }: RowActionsProps) {
     },
     onSuccess: (updatedAccount) => {
       queryClient.setQueryData<Account[]>(['accounts', row.original.item_id], (oldAccounts) => {
-        // console.log('updatedAccount', updatedAccount);
-        // console.log('row.original', row.original);
-        // console.log('oldAccounts', oldAccounts);
-
         if (oldAccounts) {
           return oldAccounts.map((account) => {
             if (account.account_id === updatedAccount.account_id) {
