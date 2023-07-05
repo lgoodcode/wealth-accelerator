@@ -1,3 +1,3 @@
-export async function TransactionsFilteringPage() {
+export default function TransactionsFilteringPage() {
   return <></>;
 }
