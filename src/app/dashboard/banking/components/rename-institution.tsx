@@ -45,10 +45,8 @@ const renameInstitution = async (institution: ClientInstitution, data: RenameFor
   if (error) {
     console.error(error);
     captureException(error);
-    return error;
+    throw error;
   }
-
-  return null;
 };
 
 interface RenameInstitutionProps {
@@ -68,20 +66,20 @@ export function RenameInstitution({ open, onOpenChange, institution }: RenameIns
       return;
     }
 
-    const error = await renameInstitution(institution, data);
-
-    if (error) {
-      console.error(error);
-      captureException(error);
-      toast.error('Failed to rename institution');
-    } else {
-      toast.success('Institution renamed');
-      updateInstitutions({
-        ...institution,
-        name: data.name,
+    renameInstitution(institution, data)
+      .then(() => {
+        toast.success('Institution renamed');
+        updateInstitutions({
+          ...institution,
+          name: data.name,
+        });
+        onOpenChange(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        captureException(error);
+        toast.error('Failed to rename institution');
       });
-      onOpenChange(false);
-    }
   };
 
   useEffect(() => {

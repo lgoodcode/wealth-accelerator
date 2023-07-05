@@ -21,7 +21,7 @@ const deleteInstitution = async (item_id: string) => {
     method: 'DELETE',
   });
 
-  return error || null;
+  throw error;
 };
 
 interface DeleteInstitutionProps {
@@ -41,27 +41,26 @@ export function DeleteInstitution({ open, onOpenChange, institution }: DeleteIns
 
     setIsLoading(true);
 
-    const error = await deleteInstitution(institution.item_id);
+    deleteInstitution(institution.item_id)
+      .then(() => {
+        toast.success(
+          <span>
+            Institution <span className="font-bold">{institution.name}</span> has been removed
+          </span>
+        );
 
-    if (error) {
-      console.error(error);
-      toast.error(
-        <span>
-          Failed to remove institution <span className="font-bold">{institution.name}</span>
-        </span>
-      );
-    } else {
-      toast.success(
-        <span>
-          Institution <span className="font-bold">{institution.name}</span> has been removed
-        </span>
-      );
-
-      onOpenChange(false);
-      removeInstitution(institution.item_id);
-    }
-
-    setIsLoading(false);
+        onOpenChange(false);
+        removeInstitution(institution.item_id);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(
+          <span>
+            Failed to remove institution <span className="font-bold">{institution.name}</span>
+          </span>
+        );
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
