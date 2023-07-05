@@ -24,7 +24,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter accounts..."
+          placeholder="Filter transactions..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
           className="h-9 w-[150px] lg:w-[250px]"
