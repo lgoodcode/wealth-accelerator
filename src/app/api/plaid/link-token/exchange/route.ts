@@ -4,7 +4,10 @@ import { NextResponse } from 'next/server';
 import { getUser } from '@/lib/supabase/server/getUser';
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { plaidClient } from '@/lib/plaid/config';
-import type { ExchangeLinkTokenBody } from '@/lib/plaid/types/link-token';
+import type {
+  ExchangeLinkTokenBody,
+  ExchangeLinkTokenResponse,
+} from '@/lib/plaid/types/link-token';
 
 export const POST = exchangeLinkToken;
 
@@ -54,16 +57,21 @@ async function exchangeLinkToken(req: Request) {
           0
         );
 
-    // Store the institution in the database
-    const { error } = await supabase.from('plaid').insert({
-      item_id,
-      user_id: user.id,
-      name: count > 0 ? `${institution_name} (${count})` : institution_name,
-      expiration,
-      access_token,
-    });
+    // Store the institution in the database and select it
+    const { error: insertInstitutionError, data: item } = await supabase
+      .from('plaid')
+      .insert({
+        item_id,
+        user_id: user.id,
+        name: count > 0 ? `${institution_name} (${count})` : institution_name,
+        expiration,
+        access_token,
+      })
+      .select('item_id, name, cursor, expiration')
+      .single();
 
-    if (error) {
+    if (insertInstitutionError ?? !item) {
+      const error = insertInstitutionError || new Error('No data returned from insert');
       console.error(error);
       captureException(error);
       return NextResponse.json({ error: 'Error storing institution' }, { status: 500 });
@@ -86,7 +94,7 @@ async function exchangeLinkToken(req: Request) {
       }
     }
 
-    return NextResponse.json({ item_id });
+    return NextResponse.json<ExchangeLinkTokenResponse>({ item });
   } catch (error) {
     console.error(error);
     captureException(error);

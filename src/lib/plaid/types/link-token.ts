@@ -1,4 +1,5 @@
 import type { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
+import type { ClientInstitution } from './institutions';
 
 export type CreateLinkTokenResponse = {
   link_token: string;
@@ -10,5 +11,5 @@ export type ExchangeLinkTokenBody = {
 };
 
 export type ExchangeLinkTokenResponse = {
-  item_id: string;
+  item: ClientInstitution;
 };

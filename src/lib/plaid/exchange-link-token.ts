@@ -19,6 +19,6 @@ export const exchangeLinkToken = async ({ public_token, metadata }: ExchangeLink
 
   return {
     error: null,
-    data,
+    data: data.item,
   };
 };

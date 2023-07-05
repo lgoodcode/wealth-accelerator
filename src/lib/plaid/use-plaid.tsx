@@ -1,4 +1,3 @@
-import { useRouter } from 'next/navigation';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import {
@@ -15,24 +14,31 @@ import { createLinkToken } from '@/lib/plaid/create-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
 import { displaySyncError } from '@/lib/plaid/transactions/displaySyncError';
-import { updateModeAtom, isInsItemIdSyncingOrLoadingAtom } from '@/lib/atoms/institutions';
+import {
+  updateModeAtom,
+  addInstitutionAtom,
+  isInsItemIdSyncingOrLoadingAtom,
+} from '@/lib/atoms/institutions';
 import { Toast } from '@/components/ui/toast';
 
 export const usePlaid = () => {
-  const router = useRouter();
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
   const [updateMode, setUpdateMode] = useAtom(updateModeAtom);
   const setIsInsItemIdSyncingOrLoading = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
+  const addInstitution = useSetAtom(addInstitutionAtom);
 
   // On successful link, exchange the public token for an access token
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token, metadata) => {
-      const { error: tokenError, data } = await exchangeLinkToken({ public_token, metadata });
+      const { error: tokenError, data: institution } = await exchangeLinkToken({
+        public_token,
+        metadata,
+      });
       const institutionName = metadata.institution?.name ?? 'Unknown institution';
 
-      if (tokenError || !data) {
-        console.error(tokenError);
+      if (tokenError || !institution) {
+        console.error(tokenError ?? new Error('No data returned from exchangeLinkToken'));
         toast.error(
           <Toast title="Syncing transactions">
             Failed to connect <span className="font-bold">{institutionName}</span>
@@ -41,16 +47,18 @@ export const usePlaid = () => {
         return;
       }
 
+      // Add the institution to the list
+      addInstitution(institution);
+
       toast(
         <Toast title="Connected institution">
           Connected <span className="font-bold">{institutionName}</span>
         </Toast>
       );
 
-      router.refresh();
-      setIsInsItemIdSyncingOrLoading(data.item_id);
+      setIsInsItemIdSyncingOrLoading(institution.item_id);
 
-      const syncError = await clientSyncTransactions(data.item_id);
+      const syncError = await clientSyncTransactions(institution.item_id);
 
       if (syncError) {
         displaySyncError(syncError, metadata.institution?.name ?? 'Unknown institution');
@@ -78,7 +86,7 @@ export const usePlaid = () => {
 
       setIsInsItemIdSyncingOrLoading(null);
     },
-    [router, setIsInsItemIdSyncingOrLoading, setUpdateMode]
+    [addInstitution, setIsInsItemIdSyncingOrLoading, setUpdateMode]
   );
 
   const onEvent = useCallback<PlaidLinkOnEvent>((eventName, metadata) => {
