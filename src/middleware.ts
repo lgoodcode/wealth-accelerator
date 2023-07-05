@@ -30,7 +30,13 @@ export async function middleware(req: NextRequest) {
 
   if (error) {
     console.error('Middleware error', error);
-    captureException(error);
+    captureException(error, {
+      user: {
+        id: session?.user.id,
+        email: session?.user.email,
+        username: session?.user.user_metadata?.name,
+      },
+    });
   }
 
   // If there is an error or there's no session, redirect to login page for all pages except auth pages
