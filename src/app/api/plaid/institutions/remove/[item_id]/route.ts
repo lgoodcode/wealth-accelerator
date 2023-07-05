@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
 import { getUser } from '@/lib/supabase/server/getUser';
+import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { plaidClient } from '@/lib/plaid/config';
 import { getItemFromItemId } from '@/lib/plaid/getItemFromItemId';
 
@@ -11,7 +12,9 @@ interface RemoveInstitutionParams {
   };
 }
 
-export async function DELETE(_: Request, { params: { item_id } }: RemoveInstitutionParams) {
+export const DELETE = deleteInstitution;
+
+async function deleteInstitution(_: Request, { params: { item_id } }: RemoveInstitutionParams) {
   const user = await getUser();
 
   if (!user) {
@@ -20,13 +23,25 @@ export async function DELETE(_: Request, { params: { item_id } }: RemoveInstitut
 
   // Verify the parameters
   if (!item_id) {
-    return NextResponse.json({ error: 'Missing access_token' }, { status: 400 });
+    return NextResponse.json({ error: 'Missing item_id' }, { status: 400 });
   }
 
-  const item = await getItemFromItemId(item_id);
+  const supabase = createSupabase();
+  const { error: itemError, data: item } = await getItemFromItemId(item_id);
 
-  if (!item) {
+  if (itemError) {
+    console.error(itemError);
+    captureException(itemError);
     return NextResponse.json({ error: 'Failed to retrieve item' }, { status: 500 });
+  }
+
+  // Remove the item from the database
+  const { error: supabaseError } = await supabase.from('plaid').delete().eq('item_id', item_id);
+
+  if (supabaseError) {
+    console.error(supabaseError);
+    captureException(supabaseError);
+    return NextResponse.json({ error: 'Failed to remove item' }, { status: 500 });
   }
 
   // Revoke the access token

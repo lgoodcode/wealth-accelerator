@@ -13,7 +13,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 47.4% 11.2%;
 
-    --card: 0 0% 99%;
+    --card: 0 0% 98%;
     --card-foreground: 222.2 47.4% 11.2%;
 
     --border: 214.3 31.8% 91.4%;
@@ -123,11 +123,13 @@ input[type='number'] {
 }
 
 .Toastify__toast-theme--dark.Toastify__toast--error {
-  background-color: #5e1111 !important;
+  background-color: hsl(var(--card)) !important;
+  /* background-color: #5e1111 !important; */
 }
 
 .Toastify__toast-theme--dark.Toastify__toast--success {
-  background-color: #0c3b16 !important;
+  background-color: hsl(var(--card)) !important;
+  /* background-color: #0c3b16 !important; */
 }
 
 .Toastify__toast-container {

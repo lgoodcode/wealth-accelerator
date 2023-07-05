@@ -1,5 +1,9 @@
 'use client';
 
+import { useSetAtom } from 'jotai';
+import { useEffect } from 'react';
+
+import { institutionsAtom } from '@/lib/atoms/institutions';
 import { ManageInstitutions } from './manage-institutions';
 import { ViewInstitutions } from './view-institutions';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
@@ -9,9 +13,16 @@ interface InstitutionsProps {
 }
 
 export function Institutions({ institutions }: InstitutionsProps) {
+  const setInstitutions = useSetAtom(institutionsAtom);
+
+  useEffect(() => {
+    setInstitutions(institutions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="flex flex-col">
-      <ManageInstitutions institutions={institutions} />
+      <ManageInstitutions />
       <ViewInstitutions />
     </div>
   );

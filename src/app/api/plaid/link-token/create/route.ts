@@ -5,7 +5,9 @@ import { getUser } from '@/lib/supabase/server/getUser';
 import { plaidClient, createLinkTokenRequest } from '@/lib/plaid/config';
 import type { CreateLinkTokenResponse } from '@/lib/plaid/types/link-token';
 
-export async function GET() {
+export const GET = createLinkToken;
+
+async function createLinkToken() {
   const user = await getUser();
 
   if (!user) {
@@ -16,9 +18,9 @@ export async function GET() {
     const response = await plaidClient.linkTokenCreate(createLinkTokenRequest(user.id));
     const { link_token } = response.data;
     return NextResponse.json<CreateLinkTokenResponse>({ link_token });
-  } catch (err) {
-    console.error(err);
-    captureException(err);
+  } catch (error) {
+    console.error(error);
+    captureException(error);
     return NextResponse.json({ error: 'Failed to create link token' }, { status: 500 });
   }
 }

@@ -13,8 +13,10 @@
     "typecheck": "tsc --noEmit",
     "pre-deploy": "node ./src/scripts/pre-deploy.js",
     "analyze": "cross-env ANALYZE=true next build",
+    "supabase:serve": "supabase functions serve --env-file ./supabase/functions/.env.local",
     "supabase:genTypes": "supabase gen types typescript --local > ./src/lib/supabase/database.ts",
-    "supabase:reset": "supabase stop && supabase start && npm run genTypes"
+    "supabase:reset": "supabase stop && supabase start && npm run genTypes",
+    "git:reset": "git stash && git checkout main && git pull && git branch -D work && git checkout -b work && git push -uf origin work && git stash pop"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.1.0",
@@ -44,7 +46,7 @@
     "jotai": "^2.2.1",
     "jwt-decode": "^3.1.2",
     "lucide-react": "^0.242.0",
-    "next": "^13.4.6",
+    "next": "^13.4.8",
     "next-themes": "^0.2.1",
     "plaid": "^14.1.0",
     "react": "18.2.0",

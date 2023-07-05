@@ -1,6 +1,7 @@
-type SuccessResponse<T> = { data: T; error: null };
-type ErrorResponse = { data: null; error: string };
-type FetcherResults<T> = Promise<SuccessResponse<T> | ErrorResponse>;
+type FetcherResults<T, E = Error> = {
+  error: E | null;
+  data: T | null;
+};
 
 /**
  * Utility function that wraps the fetch API and returns the data or error.
@@ -8,7 +9,10 @@ type FetcherResults<T> = Promise<SuccessResponse<T> | ErrorResponse>;
  * This is a generic function that can be used for any API call. It by default
  * sets the content type to JSON.
  */
-export const fetcher = async <T = any>(url: string, options?: RequestInit): FetcherResults<T> => {
+export const fetcher = async <T = any, E = Error>(
+  url: string,
+  options?: RequestInit
+): Promise<FetcherResults<T, E>> => {
   const OPTIONS: RequestInit = {
     ...options,
     headers: {
@@ -21,38 +25,27 @@ export const fetcher = async <T = any>(url: string, options?: RequestInit): Fetc
     const res = await fetch(url, OPTIONS);
 
     if (res.ok) {
-      const data = await res.json();
-      return { error: null, data };
-    } else {
-      if (res.status === 404) {
-        return {
-          error: 'Not found',
-          data: null,
-        };
-      } else if (res.headers.get('Content-Type')?.includes('application/json')) {
-        const data = await res.json();
+      const json = await res.json();
 
-        if (data.error) {
-          return {
-            error: data.error,
-            data: null,
-          };
-        }
+      if ('error' in json) {
         return {
-          error: null,
-          data: data,
-        };
-      } else {
-        return {
-          error: await res.text(),
+          error: json.error as E,
           data: null,
         };
       }
+      return {
+        error: null,
+        data: json as T,
+      };
+    } else {
+      return {
+        error: (await res.json()) as E,
+        data: null,
+      };
     }
-  } catch (_err) {
-    const error = _err as Error;
+  } catch (error) {
     return {
-      error: error.message || 'Failed to fetch',
+      error: error as E,
       data: null,
     };
   }

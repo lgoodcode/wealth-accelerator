@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { useAtomValue } from 'jotai';
 
@@ -14,7 +16,6 @@ enum TabsValue {
 export function ViewInstitutions() {
   const selectedInstitution = useAtomValue(selectedInstitutionAtom);
   const [selectedTab, setSelectedTab] = useState<TabsValue>(TabsValue.Accounts);
-
   // Reset the selected tab when the selected institution changes
   // and fetch the institution data for the selected institution, if any
   useEffect(() => {
@@ -46,7 +47,7 @@ export function ViewInstitutions() {
           <AccountsTable item_id={selectedInstitution.item_id} />
         </TabsContent>
         <TabsContent value={TabsValue.Transactions}>
-          <TransactionsTable item_id={selectedInstitution.item_id} />
+          <TransactionsTable item={selectedInstitution} />
         </TabsContent>
       </Tabs>
     </div>

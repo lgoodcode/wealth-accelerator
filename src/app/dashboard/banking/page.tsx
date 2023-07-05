@@ -26,13 +26,14 @@ export default async function BankingPage() {
     .from('plaid')
     .select('item_id, name, expiration, cursor')
     .eq('user_id', user.id);
-  const institutionData: ClientInstitution[] = data ?? [];
 
   if (error) {
     console.error(error);
     captureException(error);
     return <PageError />;
   }
+
+  const institutions: ClientInstitution[] = data ?? [];
 
   return (
     <div className="p-8">
@@ -43,7 +44,7 @@ export default async function BankingPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <Institutions institutions={institutionData} />
+      <Institutions institutions={institutions} />
     </div>
   );
 }

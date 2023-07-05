@@ -23,6 +23,11 @@ When adding a new theme or customizing, do the following:
 2. Update the `tailwind.config.js` file with the new colors
 3. Update variants in the `toast.tsx` and `button.tsx` files
 
+### Supabase Database
+
+By default, a Supabase project will limit queries to `1000` records. This can be changed in the
+`Settings` tab of the project.
+
 ### Supabase RLS
 
 Here is a typical RLS that is created:

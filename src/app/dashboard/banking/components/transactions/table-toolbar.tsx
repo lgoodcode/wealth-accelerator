@@ -19,12 +19,12 @@ interface TableToolbarProps {
 export function TableToolbar({ table }: TableToolbarProps) {
   const isFiltered =
     table.getPreFilteredRowModel().rows.length > table.getFilteredRowModel().rows.length;
-  console.log('filter', table.getColumn('date')?.getFilterValue());
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter accounts..."
+          placeholder="Filter transactions..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
           className="h-9 w-[150px] lg:w-[250px]"
