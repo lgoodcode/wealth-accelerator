@@ -1,4 +1,4 @@
-import { captureException } from '@sentry/nextjs';
+import { captureException, setUser } from '@sentry/nextjs';
 import { cookies } from 'next/headers';
 
 import { createSupabase } from './createSupabase';
@@ -33,6 +33,13 @@ export const getUser = async (): Promise<User | null> => {
   if (error || !user) {
     return null;
   }
+
+  // Ensure the user is set in Sentry for error reporting purposes for all server components and API routes
+  setUser({
+    id: user.id,
+    email: user.email,
+    username: user.name,
+  });
 
   return user;
 };

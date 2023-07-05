@@ -304,6 +304,9 @@ CREATE TABLE plaid_filters (
 
 ALTER TABLE public.plaid_filters ENABLE ROW LEVEL SECURITY;
 
+-- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
+-- to make sure the user is an admin
+
 CREATE POLICY "Admin can view plaid filters data" ON public.plaid_filters
   FOR SELECT
   TO authenticated
@@ -360,9 +363,22 @@ $$ LANGUAGE plpgsql;
 DROP TRIGGER IF EXISTS on_update_or_insert_filter_update_transaction_categories ON public.plaid_filters;
 CREATE TRIGGER on_update_or_insert_filter_update_transaction_categories
 AFTER INSERT OR UPDATE ON plaid_filters
-  FOR EACH ROW
-    EXECUTE FUNCTION update_transaction_categories();
+  EXECUTE FUNCTION update_transaction_categories();
 
+-- Initial filters
+INSERT INTO plaid_filters (filter, category)
+VALUES
+  ('TRANSFER', 'Transfer'::category_type),
+  ('Deposit', 'Money-In'::category_type),
+  ('Square', 'Money-In'::category_type),
+  ('Bankcard', 'Money-In'::category_type),
+  ('Mobile Deposit', 'Money-In'::category_type),
+  ('Merchant', 'Money-In'::category_type),
+  ('ESQUIRE', 'Money-In'::category_type),
+  ('Stripe', 'Money-In'::category_type),
+  ('Venmo', 'Money-Out'::category_type),
+  ('Fullscript', 'Money-In'::category_type),
+  ('Check', 'Money-Out'::category_type);
 
 
 /**
