@@ -34,7 +34,7 @@ export const updateInstitutionsAtom = atom(
   }
 );
 
-export const deleteInstitutionAtom = atom(null, (get, set, itemId: string) => {
+export const removeInstitutionAtom = atom(null, (get, set, itemId: string) => {
   const array = get(institutionsAtom);
   const newArray = array.filter((institution) => institution.item_id !== itemId);
   set(institutionsAtom, newArray);
