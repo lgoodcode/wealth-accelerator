@@ -47,36 +47,35 @@ export const usePlaid = () => {
         return;
       }
 
-      // Add the institution to the list
+      // Add the institution to the list and make the initial transactions sync
+      // to get the last 30 days of transactions and to allow Plaid to send the webhooks
+      // for the rest of the transactions
       addInstitution(institution);
-
-      toast(
-        <Toast title="Connected institution">
-          Connected <span className="font-bold">{institutionName}</span>
-        </Toast>
-      );
-
       setIsInsItemIdSyncingOrLoading(institution.item_id);
 
       const syncError = await clientSyncTransactions(institution.item_id);
-
+      // If there is a sync error, display it and if it's a credential error, set update mode
+      // and display a simple toast that the institution was connected
       if (syncError) {
         displaySyncError(syncError, metadata.institution?.name ?? 'Unknown institution');
 
         if (syncError.plaid?.isCredentialError) {
           setUpdateMode(true);
         }
+
+        toast(
+          <Toast title="Connected institution">
+            Connected <span className="font-bold">{institutionName}</span>
+          </Toast>
+        );
       } else {
         toast(
-          <Toast title="Syncing transactions">
+          <Toast title="Connected institution">
             <div className="flex flex-col space-y-3">
               <span>
-                Transactions are now being synced for{' '}
-                <span className="font-bold">
-                  {<span className="font-bold">{institutionName}</span>}
-                </span>
-                . The last 30 days of transactions are available to be viewed while the rest are
-                being retrieved.
+                <span className="font-bold">{institutionName}</span> is now connected. Transactions
+                are now being synced and the last 30 days of transactions are available to be viewed
+                while the rest are being retrieved.
               </span>
               <span className="font-extrabold">NOTE: This may take a few minutes.</span>
             </div>

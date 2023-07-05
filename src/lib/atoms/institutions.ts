@@ -38,6 +38,9 @@ export const deleteInstitutionAtom = atom(null, (get, set, itemId: string) => {
   const array = get(institutionsAtom);
   const newArray = array.filter((institution) => institution.item_id !== itemId);
   set(institutionsAtom, newArray);
+
+  // Reset the selectedInstitutionIndexAtom
+  set(selectedInstitutionIndexAtom, null);
 });
 
 // This atom stores the index of the selected institution
