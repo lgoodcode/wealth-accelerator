@@ -31,6 +31,11 @@ export const usePlaid = () => {
   // On successful link, exchange the public token for an access token
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token, metadata) => {
+      // Don't need to exchange the token if it's in update mode - the access token has not changed
+      if (updateMode) {
+        return;
+      }
+
       const { error: tokenError, data: institution } = await exchangeLinkToken({
         public_token,
         metadata,
@@ -85,7 +90,7 @@ export const usePlaid = () => {
 
       setIsInsItemIdSyncingOrLoading(null);
     },
-    [addInstitution, setIsInsItemIdSyncingOrLoading, setUpdateMode]
+    [addInstitution, setIsInsItemIdSyncingOrLoading, setUpdateMode, updateMode]
   );
 
   const onEvent = useCallback<PlaidLinkOnEvent>((eventName, metadata) => {
@@ -110,9 +115,10 @@ export const usePlaid = () => {
       // and reset the selection if the user wants to add a new institution
       // or click a different institution
       if (updateMode && metadata.status === 'requires_credentials') {
-        setUpdateMode(false);
         setLinkToken(null);
       }
+
+      setUpdateMode(false);
     },
     [setUpdateMode, updateMode]
   );
