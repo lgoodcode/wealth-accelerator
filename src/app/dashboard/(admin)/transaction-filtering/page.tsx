@@ -2,18 +2,27 @@ import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
+import { getUser } from '@/lib/supabase/server/getUser';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { Filters } from './components/filters';
 import type { Filter } from '@/lib/plaid/types/transactions';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'Transactions Filtering',
 };
 
 export default async function TransactionFilteringPage() {
-  const supabase = createSupabase();
+  const user = await getUser();
 
+  if (!user) {
+    redirect('/login');
+  } else if (user.role !== 'admin') {
+    redirect('/dashboard');
+  }
+
+  const supabase = createSupabase();
   const { error, data } = await supabase.from('plaid_filters').select('*');
 
   if (error) {

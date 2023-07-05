@@ -7,7 +7,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
 import { supabase } from '@/lib/supabase/client';
-import { useUser } from '@/hooks/use-user';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { NumberInput } from '@/components/ui/number-input';
@@ -23,13 +22,13 @@ import { WaInfoFormSchema, type WaInfoFormSchemaType } from '../schema';
 
 // Override the type for the start_date because Supabase returns a string.
 interface WaInfoFormProps {
+  user: User;
   initialValues?: Omit<WaInfoFormSchemaType, 'start_date'> & {
     start_date: Date | string;
   };
 }
 
-export function WaInfoForm({ initialValues }: WaInfoFormProps) {
-  const user = useUser();
+export function WaInfoForm({ user, initialValues }: WaInfoFormProps) {
   const form = useForm<WaInfoFormSchemaType>({
     resolver: zodResolver(WaInfoFormSchema),
     defaultValues: {
@@ -48,7 +47,7 @@ export function WaInfoForm({ initialValues }: WaInfoFormProps) {
         ...formData,
         start_date: formData.start_date.toUTCString(),
       })
-      .eq('user_id', user!.id);
+      .eq('user_id', user.id);
 
     if (error) {
       console.error(error);

@@ -8,13 +8,15 @@ import { PageError } from '@/components/page-error';
 import { WaInfoForm } from './wa-info-form';
 
 export default async function WealthAcceleratorInfoPage() {
-  const supabase = createSupabase();
   const user = await getUser();
 
   if (!user) {
     redirect('/login');
+  } else if (user.role !== 'admin') {
+    redirect('/dashboard');
   }
 
+  const supabase = createSupabase();
   const { error, data } = await supabase
     .from('personal_finance')
     .select('*')
@@ -38,7 +40,7 @@ export default async function WealthAcceleratorInfoPage() {
       </div>
       <Separator />
       <div className="max-w-xl">
-        <WaInfoForm initialValues={data} />
+        <WaInfoForm user={user} initialValues={data} />
       </div>
     </div>
   );

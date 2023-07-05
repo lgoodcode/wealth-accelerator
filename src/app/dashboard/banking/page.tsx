@@ -14,13 +14,13 @@ export const metadata: Metadata = {
 };
 
 export default async function BankingPage() {
-  const supabase = createSupabase();
   const user = await getUser();
 
   if (!user) {
     redirect('/login');
   }
 
+  const supabase = createSupabase();
   const { error, data } = await supabase
     .from('plaid')
     .select('item_id, name, expiration, cursor')

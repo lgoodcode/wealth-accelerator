@@ -39,7 +39,7 @@ export default async function IndexFundRatesPage() {
       </div>
       <Separator />
       <div className="max-w-xl">
-        <RatesForm initialValues={data} />
+        <RatesForm user={user} initialValues={data} />
       </div>
     </div>
   );

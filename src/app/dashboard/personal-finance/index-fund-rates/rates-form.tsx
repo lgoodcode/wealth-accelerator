@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import { Copy } from 'lucide-react';
 
 import { supabase } from '@/lib/supabase/client';
-import { useUser } from '@/hooks/use-user';
 import { Button } from '@/components/ui/button';
 import { NumberInput } from '@/components/ui/number-input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,11 +18,11 @@ const NUM_RATE_YEARS = 60;
 
 // Override the type for the start_date because Supabase returns a string.
 interface RatesFormProps {
+  user: User;
   initialValues?: RatesFormSchemaType;
 }
 
-export function RatesForm({ initialValues }: RatesFormProps) {
-  const user = useUser();
+export function RatesForm({ user, initialValues }: RatesFormProps) {
   const form = useForm<RatesFormSchemaType>({
     resolver: zodResolver(RatesFormSchema(NUM_RATE_YEARS)),
     defaultValues: initialValues,
@@ -35,7 +34,7 @@ export function RatesForm({ initialValues }: RatesFormProps) {
     const { error } = await supabase
       .from('personal_finance')
       .update({ rates })
-      .eq('user_id', user!.id);
+      .eq('user_id', user.id);
 
     if (error) {
       console.error(error);
