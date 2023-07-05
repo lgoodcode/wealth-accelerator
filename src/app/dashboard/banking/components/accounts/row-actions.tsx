@@ -87,7 +87,7 @@ export function RowActions({ row }: RowActionsProps) {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const form = useForm<UpdateAccountType>({
     resolver: zodResolver(updateAccountFormSchema),
-    defaultValues: {
+    values: {
       name: row.original.name,
       type: row.original.type,
       enabled: row.original.enabled,
@@ -116,6 +116,10 @@ export function RowActions({ row }: RowActionsProps) {
     },
     onSuccess: (updatedAccount) => {
       queryClient.setQueryData<Account[]>(['accounts', row.original.item_id], (oldAccounts) => {
+        // console.log('updatedAccount', updatedAccount);
+        // console.log('row.original', row.original);
+        // console.log('oldAccounts', oldAccounts);
+
         if (oldAccounts) {
           return oldAccounts.map((account) => {
             if (account.account_id === updatedAccount.account_id) {
@@ -197,19 +201,22 @@ export function RowActions({ row }: RowActionsProps) {
               <FormField
                 control={form.control}
                 name="enabled"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Enabled</FormLabel>
-                    <FormControl>
-                      <Checkbox
-                        className="w-6 h-6"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  console.log('field', field);
+                  return (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Enabled</FormLabel>
+                      <FormControl>
+                        <Checkbox
+                          className="w-6 h-6"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
             </form>
           </Form>
