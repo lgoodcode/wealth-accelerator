@@ -34,9 +34,11 @@ export function ManageInstitutions() {
   return (
     <div className="flex flex-col lg:flex-row w-full items-center justify-start">
       <div className="w-full mr-auto py-4">
-        <h2 className="text-3xl capitalize font-medium tracking-tighter">
-          {selectedInstitution?.name ?? 'Select an institution'}
-        </h2>
+        {selectedInstitution && (
+          <h2 className="text-3xl capitalize font-medium tracking-tighter">
+            {selectedInstitution?.name ?? 'Select an institution'}
+          </h2>
+        )}
       </div>
 
       <div className="flex h-20 w-full justify-start lg:justify-end items-center space-x-2">
