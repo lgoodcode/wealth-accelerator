@@ -196,22 +196,19 @@ export function RowActions({ row }: RowActionsProps) {
               <FormField
                 control={form.control}
                 name="enabled"
-                render={({ field }) => {
-                  console.log('field', field);
-                  return (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Enabled</FormLabel>
-                      <FormControl>
-                        <Checkbox
-                          className="w-6 h-6"
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Enabled</FormLabel>
+                    <FormControl>
+                      <Checkbox
+                        className="w-6 h-6"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </form>
           </Form>
