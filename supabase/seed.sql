@@ -363,8 +363,7 @@ $$ LANGUAGE plpgsql;
 DROP TRIGGER IF EXISTS on_update_or_insert_filter_update_transaction_categories ON public.plaid_filters;
 CREATE TRIGGER on_update_or_insert_filter_update_transaction_categories
 AFTER INSERT OR UPDATE ON plaid_filters
-  FOR EACH ROW
-    EXECUTE FUNCTION update_transaction_categories();
+  EXECUTE FUNCTION update_transaction_categories();
 
 -- Initial filters
 INSERT INTO plaid_filters (filter, category)
