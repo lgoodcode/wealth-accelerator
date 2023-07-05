@@ -1,6 +1,5 @@
 'use client';
 
-import { format } from 'date-fns';
 import type { ColumnDef } from '@tanstack/react-table';
 
 import { categoryOptions } from './column-options';
@@ -8,6 +7,7 @@ import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
 import type { DateRange } from 'react-day-picker';
 import type { TransactionWithAccountName, Category } from '@/lib/plaid/types/transactions';
+import { format } from 'date-fns';
 
 /**
  * NOTES
@@ -113,11 +113,9 @@ export const columns: ColumnDef<TransactionWithAccountName>[] = [
     accessorKey: 'date',
     header: ({ column }) => <ColumnHeader column={column} title="Date" />,
     cell: ({ row }) => {
-      console.log('original', row.getValue<string>('date'));
-      console.log('date', new Date(row.getValue<string>('date')));
       return (
         <div className="flex items-center">
-          <span>{format(new Date(row.getValue<string>('date')), 'M/dd/yyyy')}</span>
+          <span>{new Date(row.getValue<string>('date')).toLocaleDateString()}</span>
         </div>
       );
     },
