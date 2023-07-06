@@ -21,6 +21,7 @@ export interface Database {
           tax_bracket: number
           tax_bracket_future: number
           user_id: string
+          ytd_collections: number
         }
         Insert: {
           id?: number
@@ -33,6 +34,7 @@ export interface Database {
           tax_bracket?: number
           tax_bracket_future?: number
           user_id: string
+          ytd_collections?: number
         }
         Update: {
           id?: number
@@ -45,6 +47,7 @@ export interface Database {
           tax_bracket?: number
           tax_bracket_future?: number
           user_id?: string
+          ytd_collections?: number
         }
       }
       plaid: {

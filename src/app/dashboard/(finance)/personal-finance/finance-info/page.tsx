@@ -5,9 +5,9 @@ import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { getUser } from '@/lib/supabase/server/getUser';
 import { Separator } from '@/components/ui/separator';
 import { PageError } from '@/components/page-error';
-import { WaInfoForm } from './wa-info-form';
+import { FinanceInfoForm } from './finance-info-form';
 
-export default async function WealthAcceleratorInfoPage() {
+export default async function FinanceInfoPage() {
   const user = await getUser();
 
   if (!user) {
@@ -33,14 +33,15 @@ export default async function WealthAcceleratorInfoPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h3 className="text-lg font-medium">Wealth Accelerator Information</h3>
+        <h3 className="text-lg font-medium">Finance Information</h3>
         <p className="text-sm text-muted-foreground">
-          Manage information used in calculations for your finances for the Wealth Accelerator.
+          Manage information used in calculations for your finances for the Wealth Accelerator and
+          Creative Cash Flow.
         </p>
       </div>
       <Separator />
       <div className="max-w-xl">
-        <WaInfoForm user={user} initialValues={data} />
+        <FinanceInfoForm user={user} initialValues={data} />
       </div>
     </div>
   );

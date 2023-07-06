@@ -19,8 +19,9 @@ const nextConfig = {
         permanent: true,
       },
       {
+        // Make sure this is in sync with the /dashboard/personal-finance/layout routes
         source: '/dashboard/personal-finance',
-        destination: '/dashboard/personal-finance/wealth-accelerator-info',
+        destination: '/dashboard/personal-finance/finance-info',
         permanent: false,
       },
     ];

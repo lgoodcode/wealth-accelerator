@@ -17,9 +17,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { WaInfoFormSchema, type WaInfoFormSchemaType } from '../schema';
+import { FinanceInfoSchema, type FinanceInfoSchemaType as FinanceInfoSchemaType } from '../schema';
 
-const updateWaInfo = async (user_id: string, data: WaInfoFormSchemaType) => {
+const updateFinanceInfo = async (user_id: string, data: FinanceInfoSchemaType) => {
   const { error } = await supabase
     .from('personal_finance')
     .update({
@@ -34,24 +34,24 @@ const updateWaInfo = async (user_id: string, data: WaInfoFormSchemaType) => {
 };
 
 // Override the type for the start_date because Supabase returns a string.
-interface WaInfoFormProps {
+interface FinanceInfoFormProps {
   user: User;
-  initialValues?: Omit<WaInfoFormSchemaType, 'start_date'> & {
+  initialValues?: Omit<FinanceInfoSchemaType, 'start_date'> & {
     start_date: Date | string;
   };
 }
 
-export function WaInfoForm({ user, initialValues }: WaInfoFormProps) {
-  const form = useForm<WaInfoFormSchemaType>({
-    resolver: zodResolver(WaInfoFormSchema),
+export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
+  const form = useForm<FinanceInfoSchemaType>({
+    resolver: zodResolver(FinanceInfoSchema),
     defaultValues: {
       ...initialValues,
       start_date: initialValues?.start_date ? new Date(initialValues.start_date) : undefined,
     },
   });
 
-  const onSubmit = async (data: WaInfoFormSchemaType) => {
-    updateWaInfo(user.id, data)
+  const onSubmit = async (data: FinanceInfoSchemaType) => {
+    updateFinanceInfo(user.id, data)
       .then(() => {
         toast.success('Your information has been saved');
       })
@@ -196,6 +196,28 @@ export function WaInfoForm({ user, initialValues }: WaInfoFormProps) {
               />
               <FormDescription>
                 The amount of money you want to deposit into your life insurance policy.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="ytd_collections"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>
+                Year to Date Collections
+                <span className="ml-1 text-muted-foreground">(dollars)</span>
+              </FormLabel>
+              <NumberInput
+                placeholder="$25,000"
+                prefix="$"
+                value={field.value}
+                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+              />
+              <FormDescription>
+                The amount of money you want you have that is not included in the transactions.
               </FormDescription>
               <FormMessage />
             </FormItem>
