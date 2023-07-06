@@ -6,9 +6,10 @@ import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { getUser } from '@/lib/supabase/server/getUser';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
-import { Content } from './components/content';
+import { Calculate } from './components/calculate';
 
 import { Transaction } from '@/lib/plaid/types/transactions';
+import { Results } from './components/results';
 
 export const metadata: Metadata = {
   title: 'Creative Cash Flow',
@@ -40,7 +41,7 @@ export default async function CreativeCashFlowPage() {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-8 space-y-6">
       <div className="space-y-1">
         <h2 className="text-3xl font-bold">Creative Cash Flow</h2>
         <p className="text-muted-foreground">
@@ -48,7 +49,8 @@ export default async function CreativeCashFlowPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <Content transactions={transactions} />
+      <Calculate transactions={transactions} />
+      <Results />
     </div>
   );
 }

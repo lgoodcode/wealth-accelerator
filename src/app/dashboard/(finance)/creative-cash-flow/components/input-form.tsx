@@ -210,7 +210,7 @@ export function InputForm({ transactions }: InputsFormProps) {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>
-                  Premium Deposit
+                  Optimal Savings Strategy
                   <span className="ml-1 text-muted-foreground">(dollars)</span>
                 </FormLabel>
                 <NumberInput

@@ -19,14 +19,15 @@ export type CreativeCashFlowManagementArgs = CreativeCashFlowManagementInputs & 
 
 export type CreativeCashFlowManagementResult = {
   collections: number;
-  lifestyleExpenses: number;
-  lifestyleExpensesTax: number;
-  businessProfitBeforeTax: number;
-  businessOverhead: number;
-  taxAccount: number;
+  lifestyle_expenses: number;
+  lifestyle_expenses_tax: number;
+  business_profit_before_tax: number;
+  business_overhead: number;
+  /** tax on business profit */
+  tax_account: number;
   WAA: number;
-  weeklyTrend: number[];
-  monthlyTrend: number[];
-  yearlyTrend: number[];
-  yearToDate: number;
+  weekly_trend: number[];
+  monthly_trend: number[];
+  yearly_trend: number[];
+  year_to_date: number;
 };
