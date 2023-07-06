@@ -151,7 +151,7 @@ export function WaInfoForm({ user, initialValues }: WaInfoFormProps) {
             <FormItem className="flex flex-col">
               <FormLabel>
                 Tax Bracket
-                <span className="ml-1 text-muted-foreground">(percentage)</span>
+                <span className="ml-1 text-muted-foreground">(%)</span>
               </FormLabel>
               <NumberInput
                 placeholder="25%"
@@ -171,7 +171,7 @@ export function WaInfoForm({ user, initialValues }: WaInfoFormProps) {
             <FormItem className="flex flex-col">
               <FormLabel>
                 Future Tax Bracket
-                <span className="ml-1 text-muted-foreground">(percentage)</span>
+                <span className="ml-1 text-muted-foreground">(%)</span>
               </FormLabel>
               <NumberInput
                 placeholder="30%"

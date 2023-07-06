@@ -62,7 +62,7 @@ export function RatesForm({ user, initialValues }: RatesFormProps) {
         <div className="flex flex-row items-end">
           <FormItem className="flex flex-col w-full">
             <FormLabel>
-              Set All Rates <span className="ml-1 text-muted-foreground">(percentage)</span>
+              Set All Rates <span className="ml-1 text-muted-foreground">(%)</span>
             </FormLabel>
             <NumberInput
               placeholder="Set All Rates"
@@ -94,7 +94,7 @@ export function RatesForm({ user, initialValues }: RatesFormProps) {
                     <FormItem className="flex flex-col">
                       <FormLabel>
                         {`Year ${i + 1}`}
-                        <span className="ml-1 text-muted-foreground">(percentage)</span>
+                        <span className="ml-1 text-muted-foreground">(%)</span>
                       </FormLabel>
                       <NumberInput
                         placeholder={`Rate For Year ${i + 1}`}
