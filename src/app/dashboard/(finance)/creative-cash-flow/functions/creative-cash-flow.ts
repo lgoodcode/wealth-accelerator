@@ -1,5 +1,3 @@
-import { differenceInMilliseconds, getMilliseconds } from 'date-fns';
-
 import type { CreativeCashFlowManagementArgs, CreativeCashFlowManagementResult } from '../types';
 
 const MONTH_LENGTH = 30;
@@ -40,10 +38,14 @@ export function creativeCashFlowManagement({
   const busi = [];
   const life = [];
 
+  console.log({
+    business_transactions,
+    personal_transactions,
+  });
   console.group('collections');
 
   for (const transaction of business_transactions) {
-    const transaction_time = getMilliseconds(new Date(transaction.date));
+    const transaction_time = new Date(transaction.date).getTime();
 
     if (
       transaction_time >= start_time &&
@@ -79,7 +81,7 @@ export function creativeCashFlowManagement({
   business_overhead = Math.max(business_overhead, 0);
 
   for (const transaction of personal_transactions) {
-    const transaction_time = getMilliseconds(new Date(transaction.date));
+    const transaction_time = new Date(transaction.date).getTime();
 
     if (
       transaction_time >= start_time &&
@@ -115,7 +117,7 @@ export function creativeCashFlowManagement({
       continue;
     }
 
-    const diff_in_days = Math.abs(differenceInMilliseconds(new Date(transaction.date), new Date()));
+    const diff_in_days = Math.abs(new Date(transaction.date).getTime() - Date.now());
 
     if (diff_in_days <= MONTH_LENGTH * 3 && transaction.category === 'Money-In') {
       monthly_trend[2] -= transaction.amount;

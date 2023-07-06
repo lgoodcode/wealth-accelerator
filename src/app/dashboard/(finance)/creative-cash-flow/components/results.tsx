@@ -90,7 +90,10 @@ export function Results() {
           <CardContent className="pt-4">
             <CountUp
               className="text-2xl"
-              {...createCountUpProps(results.business_profit_before_tax)}
+              {...createCountUpProps(
+                results.business_profit_before_tax,
+                ANIMATION_DURATIONS.row2.delay
+              )}
             />
           </CardContent>
         </Card>
@@ -107,7 +110,10 @@ export function Results() {
             <CardDescription>{labels.lifestyle_expenses.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
-            <CountUp className="text-2xl" {...createCountUpProps(results.lifestyle_expenses)} />
+            <CountUp
+              className="text-2xl"
+              {...createCountUpProps(results.lifestyle_expenses, ANIMATION_DURATIONS.row2.delay)}
+            />
           </CardContent>
         </Card>
       </motion.div>
@@ -123,7 +129,13 @@ export function Results() {
             <CardDescription>{labels.lifestyle_expenses_tax.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
-            <CountUp className="text-2xl" {...createCountUpProps(results.lifestyle_expenses_tax)} />
+            <CountUp
+              className="text-2xl"
+              {...createCountUpProps(
+                results.lifestyle_expenses_tax,
+                ANIMATION_DURATIONS.row2.delay
+              )}
+            />
           </CardContent>
         </Card>
       </motion.div>
@@ -139,7 +151,10 @@ export function Results() {
             <CardDescription>{labels.tax_on_business_profit.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
-            <CountUp className="text-2xl" {...createCountUpProps(results.tax_account)} />
+            <CountUp
+              className="text-2xl"
+              {...createCountUpProps(results.tax_account, ANIMATION_DURATIONS.row3.delay)}
+            />
           </CardContent>
         </Card>
       </motion.div>
@@ -155,7 +170,10 @@ export function Results() {
             <CardDescription>{labels.business_overhead.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
-            <CountUp className="text-2xl" {...createCountUpProps(results.business_overhead)} />
+            <CountUp
+              className="text-2xl"
+              {...createCountUpProps(results.business_overhead, ANIMATION_DURATIONS.row3.delay)}
+            />
           </CardContent>
         </Card>
       </motion.div>
@@ -187,7 +205,7 @@ export function Results() {
                     <CountUp
                       {...createCountUpProps(
                         results.monthly_trend[0],
-                        ANIMATION_DURATIONS.row4.delay
+                        ANIMATION_DURATIONS.row3.delay
                       )}
                     />
                   </TableCell>
@@ -195,7 +213,7 @@ export function Results() {
                     <CountUp
                       {...createCountUpProps(
                         results.weekly_trend[0],
-                        ANIMATION_DURATIONS.row4.delay
+                        ANIMATION_DURATIONS.row3.delay
                       )}
                     />
                   </TableCell>
@@ -203,7 +221,7 @@ export function Results() {
                     <CountUp
                       {...createCountUpProps(
                         results.yearly_trend[0],
-                        ANIMATION_DURATIONS.row4.delay
+                        ANIMATION_DURATIONS.row3.delay
                       )}
                     />
                   </TableCell>
@@ -214,7 +232,7 @@ export function Results() {
                     <CountUp
                       {...createCountUpProps(
                         results.monthly_trend[1],
-                        ANIMATION_DURATIONS.row4.delay
+                        ANIMATION_DURATIONS.row3.delay
                       )}
                     />
                   </TableCell>
@@ -222,7 +240,7 @@ export function Results() {
                     <CountUp
                       {...createCountUpProps(
                         results.weekly_trend[1],
-                        ANIMATION_DURATIONS.row4.delay
+                        ANIMATION_DURATIONS.row3.delay
                       )}
                     />
                   </TableCell>
@@ -230,7 +248,7 @@ export function Results() {
                     <CountUp
                       {...createCountUpProps(
                         results.yearly_trend[1],
-                        ANIMATION_DURATIONS.row4.delay
+                        ANIMATION_DURATIONS.row3.delay
                       )}
                     />
                   </TableCell>
@@ -241,7 +259,7 @@ export function Results() {
                     <CountUp
                       {...createCountUpProps(
                         results.monthly_trend[2],
-                        ANIMATION_DURATIONS.row4.delay
+                        ANIMATION_DURATIONS.row3.delay
                       )}
                     />
                   </TableCell>
@@ -249,7 +267,7 @@ export function Results() {
                     <CountUp
                       {...createCountUpProps(
                         results.weekly_trend[2],
-                        ANIMATION_DURATIONS.row4.delay
+                        ANIMATION_DURATIONS.row3.delay
                       )}
                     />
                   </TableCell>
@@ -257,7 +275,7 @@ export function Results() {
                     <CountUp
                       {...createCountUpProps(
                         results.yearly_trend[2],
-                        ANIMATION_DURATIONS.row4.delay
+                        ANIMATION_DURATIONS.row3.delay
                       )}
                     />
                   </TableCell>
@@ -279,7 +297,10 @@ export function Results() {
             <CardDescription>{labels.WAA.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
-            <CountUp className="text-2xl" {...createCountUpProps(results.WAA)} />
+            <CountUp
+              className="text-2xl"
+              {...createCountUpProps(results.WAA, ANIMATION_DURATIONS.row4.delay)}
+            />
           </CardContent>
         </Card>
       </motion.div>
@@ -295,7 +316,10 @@ export function Results() {
             <CardDescription>{labels.collections.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
-            <CountUp className="text-2xl" {...createCountUpProps(results.collections)} />
+            <CountUp
+              className="text-2xl"
+              {...createCountUpProps(results.collections, ANIMATION_DURATIONS.row4.delay)}
+            />
           </CardContent>
         </Card>
       </motion.div>
