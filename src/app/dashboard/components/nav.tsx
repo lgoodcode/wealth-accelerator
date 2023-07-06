@@ -64,11 +64,13 @@ export function Nav({ className, isAdmin }: NavProps) {
           <NavigationMenuTrigger>General</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {generalRoutes.map((route) => (
-                <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
-                  {route.description}
-                </ListItem>
-              ))}
+              {generalRoutes.map((route) =>
+                route.disabled ? null : (
+                  <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
+                    {route.description}
+                  </ListItem>
+                )
+              )}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -77,11 +79,13 @@ export function Nav({ className, isAdmin }: NavProps) {
           <NavigationMenuTrigger>Finance</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {financeRoutes.map((route) => (
-                <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
-                  {route.description}
-                </ListItem>
-              ))}
+              {financeRoutes.map((route) =>
+                route.disabled ? null : (
+                  <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
+                    {route.description}
+                  </ListItem>
+                )
+              )}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -91,11 +95,18 @@ export function Nav({ className, isAdmin }: NavProps) {
             <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                {adminRoutes.map((route) => (
-                  <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
-                    {route.description}
-                  </ListItem>
-                ))}
+                {adminRoutes.map((route) =>
+                  route.disabled ? null : (
+                    <ListItem
+                      key={route.path}
+                      title={route.name}
+                      href={route.path}
+                      Icon={route.Icon}
+                    >
+                      {route.description}
+                    </ListItem>
+                  )
+                )}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>

@@ -14,6 +14,7 @@ export const financeRoutes: Route[] = [
     path: '/dashboard/debt',
     Icon: Banknote,
     description: 'Mmanage debt information such as credit cards, loans, and mortgages.',
+    disabled: true,
   },
   {
     name: 'Banking',
@@ -32,5 +33,6 @@ export const financeRoutes: Route[] = [
     path: '/dashboard/creative-cash-flow-records',
     Icon: Album,
     description: 'View and manage records saved of your creative cash flow information.',
+    disabled: true,
   },
 ];

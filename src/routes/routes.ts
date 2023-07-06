@@ -5,6 +5,7 @@ export type Route = {
   path: `/${string}`;
   Icon: LucideIcon;
   description?: string;
+  disabled?: boolean;
 };
 
 const BASE_PATH = '/dashboard';
