@@ -34,16 +34,13 @@ interface RatesFormProps {
 }
 
 export function RatesForm({ user, initialValues }: RatesFormProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [allRates, setAllRates] = useState<number>();
   const form = useForm<RatesFormSchemaType>({
     resolver: zodResolver(RatesFormSchema(NUM_RATE_YEARS)),
     defaultValues: initialValues,
   });
-  const [allRates, setAllRates] = useState<number>();
 
   const onSubmit = async (data: RatesFormSchemaType) => {
-    setIsSubmitting(true);
-
     updateRates(user.id, data)
       .then(() => {
         toast.success('Your information has been saved');
@@ -52,8 +49,7 @@ export function RatesForm({ user, initialValues }: RatesFormProps) {
         console.error(error);
         captureException(error);
         toast.error('Uh oh! Something went wrong. Please try again.');
-      })
-      .finally(() => setIsSubmitting(false));
+      });
   };
 
   return (
@@ -111,7 +107,7 @@ export function RatesForm({ user, initialValues }: RatesFormProps) {
           </CardContent>
         </Card>
 
-        <Button type="submit" loading={isSubmitting}>
+        <Button type="submit" loading={form.formState.isSubmitting}>
           Save changes
         </Button>
       </form>

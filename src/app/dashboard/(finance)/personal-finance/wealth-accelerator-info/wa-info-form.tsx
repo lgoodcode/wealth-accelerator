@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { captureException } from '@sentry/nextjs';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -43,7 +42,6 @@ interface WaInfoFormProps {
 }
 
 export function WaInfoForm({ user, initialValues }: WaInfoFormProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<WaInfoFormSchemaType>({
     resolver: zodResolver(WaInfoFormSchema),
     defaultValues: {
@@ -53,8 +51,6 @@ export function WaInfoForm({ user, initialValues }: WaInfoFormProps) {
   });
 
   const onSubmit = async (data: WaInfoFormSchemaType) => {
-    setIsSubmitting(true);
-
     updateWaInfo(user.id, data)
       .then(() => {
         toast.success('Your information has been saved');
@@ -63,8 +59,7 @@ export function WaInfoForm({ user, initialValues }: WaInfoFormProps) {
         console.error(error);
         captureException(error);
         toast.error('Uh oh! Something went wrong. Please try again.');
-      })
-      .finally(() => setIsSubmitting(false));
+      });
   };
 
   return (
@@ -206,7 +201,7 @@ export function WaInfoForm({ user, initialValues }: WaInfoFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" loading={isSubmitting}>
+        <Button type="submit" loading={form.formState.isSubmitting}>
           Save changes
         </Button>
       </form>
