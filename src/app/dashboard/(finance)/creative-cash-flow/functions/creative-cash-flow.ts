@@ -1,50 +1,41 @@
 import { differenceInMilliseconds, getMilliseconds } from 'date-fns';
 
-import type { Transaction } from '@/lib/plaid/types/transactions';
+import type { CreativeCashFlowManagementArgs, CreativeCashFlowManagementResult } from '../types';
 
 const MONTH_LENGTH = 30;
 const DAYS_IN_WEEK = 7;
 const DAYS_IN_YEAR = 365;
 
-export type CreativeCashFlowManagementArgs = {
-  businessTransactions: Transaction[];
-  personalTransactions: Transaction[];
-  startDate: Date;
-  endDate: Date;
-  allOtherIncome: number;
-  payrollAndDistributions: number;
-  /** The rate is given as a whole number and needs to be divided by 100 */
-  lifestyleExpensesTaxRate: number;
-  /** The rate is given as a whole number and needs to be divided by 100 */
-  taxAccountRate: number;
-};
-
-export type CreativeCashFlowManagementResult = ReturnType<typeof creativeCashFlowManagement>;
-
 export function creativeCashFlowManagement({
-  businessTransactions,
-  personalTransactions,
-  startDate,
-  endDate,
-  allOtherIncome,
-  payrollAndDistributions,
-  lifestyleExpensesTaxRate,
-  taxAccountRate,
-}: CreativeCashFlowManagementArgs) {
+  business_transactions,
+  personal_transactions,
+  start_date,
+  end_date,
+  all_other_income,
+  payroll_and_distributions,
+  lifestyle_expenses_tax_rate,
+  tax_account_rate,
+}: CreativeCashFlowManagementArgs): CreativeCashFlowManagementResult {
+  lifestyle_expenses_tax_rate /= 100;
+  tax_account_rate /= 100;
+
   // Verify the tax rates are decimal values.
-  if (lifestyleExpensesTaxRate > 1 || taxAccountRate > 1) {
+  if (lifestyle_expenses_tax_rate > 1 || tax_account_rate > 1) {
     throw new Error('The tax rates must be decimal values.');
-  } else if (!(startDate instanceof Date)) {
-    throw new Error('startDate is not a valid date');
-  } else if (!(endDate instanceof Date)) {
-    throw new Error('endDate is not a valid date');
+  } else if (!start_date) {
+    throw new Error('start_date is not defined');
+  } else if (!(start_date instanceof Date)) {
+    throw new Error('start_date is not a valid date');
+  } else if (!end_date) {
+    throw new Error('end_date is not defined');
+  } else {
   }
 
-  const startTime = startDate.setHours(0, 0, 0, 0);
-  const endTime = endDate.setHours(23, 59, 59, 999);
+  const startTime = start_date.setHours(0, 0, 0, 0);
+  const endTime = end_date.setHours(23, 59, 59, 999);
 
-  let collections = allOtherIncome;
-  let businessOverhead = -payrollAndDistributions;
+  let collections = all_other_income;
+  let businessOverhead = -payroll_and_distributions;
   let lifestyleExpenses = 0;
   const col = [];
   const busi = [];
@@ -52,7 +43,7 @@ export function creativeCashFlowManagement({
 
   console.group('collections');
   // Calculates collections and businessOverhead from the business account(s).
-  for (const transaction of businessTransactions) {
+  for (const transaction of business_transactions) {
     const transactionTime = getMilliseconds(new Date(transaction.date));
 
     // If the transaction occurred during the specified date range, include it in collections OR businessOverhead.
@@ -91,7 +82,7 @@ export function creativeCashFlowManagement({
   businessOverhead = Math.max(businessOverhead, 0);
 
   // Calculates lifestyleExpenses from the personal account(s).
-  for (const transaction of personalTransactions) {
+  for (const transaction of personal_transactions) {
     const transactionTime = getMilliseconds(new Date(transaction.date));
 
     // If the transaction occured during the specified date range AND it is positive,
@@ -114,11 +105,11 @@ export function creativeCashFlowManagement({
   console.log('lifestyleExpenses', life);
   console.groupEnd();
 
-  const lifestyleExpensesTax = lifestyleExpenses * lifestyleExpensesTaxRate;
+  const lifestyleExpensesTax = lifestyleExpenses * lifestyle_expenses_tax_rate;
   const businessProfitBeforeTax =
     collections - businessOverhead - lifestyleExpenses - lifestyleExpensesTax;
   // If businessProfitBeforeTax is negative, set the tax to 0 otherwise, calculate the taxAccount
-  const taxAccount = businessProfitBeforeTax > 0 ? businessProfitBeforeTax * taxAccountRate : 0;
+  const taxAccount = businessProfitBeforeTax > 0 ? businessProfitBeforeTax * tax_account_rate : 0;
   // If the business profit is negative then the WAA is 10% of the collections otherwise it is the
   // difference between collections and businessOverhead and lifestyleExpenses + taxes
   const WAA = businessProfitBeforeTax > 0 ? businessProfitBeforeTax - taxAccount : collections / 10;
@@ -126,7 +117,7 @@ export function creativeCashFlowManagement({
   const currentYear = new Date().getFullYear();
   let yearToDate = 0;
 
-  for (const transaction of businessTransactions) {
+  for (const transaction of business_transactions) {
     if (transaction.category === 'Transfer') {
       continue;
     }

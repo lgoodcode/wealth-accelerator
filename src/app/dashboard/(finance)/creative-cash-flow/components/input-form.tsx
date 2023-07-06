@@ -1,10 +1,10 @@
 'use client';
 
 import { z } from 'zod';
+import { useEffect } from 'react';
+import { useAtom, useSetAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { captureException } from '@sentry/nextjs';
-import { toast } from 'react-toastify';
 
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
@@ -17,6 +17,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { creativeCashFlowManagement } from '../functions/creative-cash-flow';
+import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom, isInputsOpenAtom } from '../atoms';
+import { Transaction } from '@/lib/plaid/types/transactions';
 
 export const inputsFormSchema = z
   .object({
@@ -29,7 +32,7 @@ export const inputsFormSchema = z
     all_other_income: z.number({
       required_error: 'Enter a number.',
     }),
-    payroll_and_distributiosn: z.number({
+    payroll_and_distributions: z.number({
       required_error: 'Enter a number.',
     }),
     lifestyle_expenses_tax_rate: z
@@ -55,21 +58,43 @@ export const inputsFormSchema = z
 
 export type InputsFormSchemaType = z.infer<typeof inputsFormSchema>;
 
-export function InputForm() {
+interface InputsFormProps {
+  transactions: {
+    business: Transaction[];
+    personal: Transaction[];
+  };
+}
+
+export function InputForm({ transactions }: InputsFormProps) {
+  const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
+  const [creativeCashFlowInputs, setCreativeCashFlowInputs] = useAtom(creativeCashFlowInputsAtom);
+  const setCreativeCashFlowResults = useSetAtom(creativeCashFlowResultAtom);
   const form = useForm<InputsFormSchemaType>({
     resolver: zodResolver(inputsFormSchema),
-    defaultValues: {
-      all_other_income: 0,
-      payroll_and_distributiosn: 0,
-      lifestyle_expenses_tax_rate: 0,
-      tax_account_rate: 25,
-      optimal_savings_strategy: 0,
-    },
+    defaultValues: creativeCashFlowInputs,
   });
+  // Watch the values of the form to update the inputs atom when the form changes
+  const watchValues = form.watch();
 
+  // Calculate the results
   const onSubmit = async (data: InputsFormSchemaType) => {
-    console.log(data);
+    setCreativeCashFlowInputs(data);
+
+    const result = creativeCashFlowManagement({
+      ...data,
+      business_transactions: transactions.business,
+      personal_transactions: transactions.personal,
+    });
+
+    setCreativeCashFlowResults(result);
+    setIsInputsOpen(false);
   };
+
+  // Update the inputs when the inputs accordion is opening or closing
+  useEffect(() => {
+    setCreativeCashFlowInputs(watchValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInputsOpen]);
 
   return (
     <div className="p-6">
@@ -122,7 +147,7 @@ export function InputForm() {
           />
           <FormField
             control={form.control}
-            name="payroll_and_distributiosn"
+            name="payroll_and_distributions"
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>
@@ -200,7 +225,8 @@ export function InputForm() {
             )}
           />
           <div className="flex justify-end">
-            <Button type="submit" loading={form.formState.isSubmitting}>
+            <Button type="submit">
+              {/* <Button type="submit" loading={form.formState.isSubmitting}> */}
               Calculate
             </Button>
           </div>

@@ -6,14 +6,9 @@ import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { getUser } from '@/lib/supabase/server/getUser';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
-import { InputForm } from './components/input-form';
 import { Content } from './components/content';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+
+import { Transaction } from '@/lib/plaid/types/transactions';
 
 export const metadata: Metadata = {
   title: 'Creative Cash Flow',
@@ -28,15 +23,21 @@ export default async function CreativeCashFlowPage() {
 
   // Get all of the users transactions data split
   const supabase = createSupabase();
-  const { error, data } = await supabase.rpc('get_transactions_by_user_id', {
+  const { error: transactionsError, data } = await supabase.rpc('get_transactions_by_user_id', {
     arg_user_id: user.id,
   });
 
-  if (error) {
+  if (transactionsError || !data) {
+    const error = transactionsError || new Error('No data returned');
     console.error(error);
     captureException(error);
     return <PageError />;
   }
+
+  const transactions = data as {
+    business: Transaction[];
+    personal: Transaction[];
+  };
 
   return (
     <div className="p-8">
@@ -47,24 +48,7 @@ export default async function CreativeCashFlowPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <>
-        <div className="flex mt-6 w-full justify-center">
-          <div className="w-[640px]">
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="item-1">
-                <AccordionTrigger>Inputs</AccordionTrigger>
-                <AccordionContent>
-                  <InputForm />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        </div>
-
-        <div>
-          <Content data={data} />
-        </div>
-      </>
+      <Content transactions={transactions} />
     </div>
   );
 }
