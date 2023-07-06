@@ -22,7 +22,7 @@ export default async function CreativeCashFlowPage() {
     redirect('/login');
   }
 
-  // Get all of the users transactions data split
+  // Get all of the users transactions data split into business and personal
   const supabase = createSupabase();
   const { error: transactionsError, data } = await supabase.rpc('get_transactions_by_user_id', {
     arg_user_id: user.id,

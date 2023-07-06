@@ -33,6 +33,5 @@ export const financeRoutes: Route[] = [
     path: '/dashboard/creative-cash-flow-records',
     Icon: Album,
     description: 'View and manage records saved of your creative cash flow information.',
-    disabled: true,
   },
 ];

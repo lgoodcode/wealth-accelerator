@@ -185,8 +185,8 @@ export function Results() {
       >
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">{labels.business_overhead.title}</CardTitle>
-            <CardDescription>{labels.business_overhead.description}</CardDescription>
+            <CardTitle className="text-2xl">{labels.trends.title}</CardTitle>
+            <CardDescription>{labels.trends.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <Table>
