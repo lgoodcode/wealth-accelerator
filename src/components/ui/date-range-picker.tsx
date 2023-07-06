@@ -16,6 +16,7 @@ interface CalendarDateRangePickerProps
   from?: Date;
   to?: Date;
   onSelect?: (dateRange: DateRange | undefined) => void;
+  onOpenChange?: (isOpen: boolean) => void;
 }
 
 export function CalendarDateRangePicker({
@@ -24,12 +25,33 @@ export function CalendarDateRangePicker({
   from,
   to,
   onSelect,
+  onOpenChange,
 }: CalendarDateRangePickerProps) {
   const date = selected ?? { from, to };
+  const [isOpen, setIsOpen] = React.useState(false);
+  const isRangeSelected = date.from && date.to;
+
+  const handleSelect = (selectedRange: DateRange | undefined) => {
+    if (selectedRange) {
+      const { from: newFrom, to: newTo } = selectedRange;
+      if (isRangeSelected && newFrom && !newTo) {
+        // Keep the existing "from" date and update the "to" date
+        onSelect?.({ from: date.from, to: newFrom });
+      } else {
+        onSelect?.(selectedRange);
+      }
+      setIsOpen(!isRangeSelected || newTo !== undefined); // Close the Popover when the second date is selected
+    }
+  };
+
+  const handleOpenChange = (newIsOpen: boolean) => {
+    setIsOpen(newIsOpen);
+    onOpenChange?.(newIsOpen);
+  };
 
   return (
     <div className={cn('grid gap-2', className)}>
-      <Popover>
+      <Popover open={isOpen} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button
             id="date"
@@ -60,7 +82,7 @@ export function CalendarDateRangePicker({
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={onSelect}
+            onSelect={handleSelect}
             numberOfMonths={2}
           />
         </PopoverContent>

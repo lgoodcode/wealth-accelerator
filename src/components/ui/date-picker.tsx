@@ -15,6 +15,7 @@ interface DatePickerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSel
   variant?: Variant;
   onSelect?: (date: Date | undefined) => void;
   calendarProps?: DayPickerSingleProps;
+  onOpenChange?: (isOpen: boolean) => void;
 }
 
 export function DatePicker({
@@ -24,10 +25,23 @@ export function DatePicker({
   calendarProps,
   placeholder = 'Select a date',
   variant = 'outline',
+  onOpenChange,
   ...props
 }: DatePickerProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleSelect = (selectedDate: Date | undefined) => {
+    onSelect?.(selectedDate);
+    setIsOpen(false); // Close the Popover when a date is selected
+  };
+
+  const handleOpenChange = (newIsOpen: boolean) => {
+    setIsOpen(newIsOpen);
+    onOpenChange?.(newIsOpen);
+  };
+
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant={variant}
@@ -46,7 +60,7 @@ export function DatePicker({
         <Calendar
           mode="single"
           selected={date}
-          onSelect={onSelect}
+          onSelect={handleSelect}
           initialFocus
           {...calendarProps}
         />
