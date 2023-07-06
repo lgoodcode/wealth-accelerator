@@ -177,9 +177,15 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: number[]
       }
-      get_accounts_and_transactions: {
+      get_transactions_by_account_ids: {
         Args: {
-          ins_item_id: string
+          account_ids: string[]
+        }
+        Returns: Json
+      }
+      get_transactions_by_user_id: {
+        Args: {
+          arg_user_id: string
         }
         Returns: Json
       }

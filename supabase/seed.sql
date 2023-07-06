@@ -424,3 +424,69 @@ BEGIN
             limit_val;
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
+
+
+
+-- Retrieves all transactions for all accounts for the user except for transactions
+-- from accounts that are disabled and returns them in a JSON object with the
+-- following structure:
+-- {
+--   "personal": Transaction[],
+--   "business": Transaction[]
+-- }
+CREATE OR REPLACE FUNCTION public.get_transactions_by_user_id(arg_user_id uuid)
+RETURNS JSON AS $$
+DECLARE
+  personal_transactions JSON;
+  business_transactions JSON;
+BEGIN
+  SELECT COALESCE(
+    json_agg(
+      json_build_object(
+        'id', pt.id,
+        'item_id', pt.item_id,
+        'name', pt.name,
+        'amount', pt.amount,
+        'category', pt.category,
+        'date', pt.date
+      )
+    ),
+    '[]'::JSON
+  ) INTO personal_transactions
+  FROM plaid_transactions pt
+    INNER JOIN plaid_accounts pa ON pt.account_id = pa.account_id
+    INNER JOIN plaid p ON p.item_id = pa.item_id
+    INNER JOIN users u ON u.id = p.user_id
+  WHERE
+    pa.type = 'personal' AND
+    u.id = arg_user_id AND
+    pa.enabled = true;
+
+  SELECT COALESCE(
+    json_agg(
+      json_build_object(
+        'id', pt.id,
+        'item_id', pt.item_id,
+        'name', pt.name,
+        'amount', pt.amount,
+        'category', pt.category,
+        'date', pt.date
+      )
+    ),
+    '[]'::JSON
+  ) INTO business_transactions
+  FROM plaid_transactions pt
+    INNER JOIN plaid_accounts pa ON pt.account_id = pa.account_id
+    INNER JOIN plaid p ON p.item_id = pa.item_id
+    INNER JOIN users u ON u.id = p.user_id
+  WHERE
+    pa.type = 'business' AND
+    u.id = arg_user_id AND
+    pa.enabled = true;
+
+  RETURN json_build_object(
+    'personal', personal_transactions,
+    'business', business_transactions
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
