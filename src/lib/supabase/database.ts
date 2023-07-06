@@ -9,6 +9,91 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      creative_cash_flow_inputs: {
+        Row: {
+          all_other_income: number
+          created: string
+          end_date: string
+          id: number
+          lifestyle_expenses_tax_rate: number
+          optimal_savings_strategy: number
+          payroll_and_distributions: number
+          start_date: string
+          tax_account_rate: number
+          user_id: string
+        }
+        Insert: {
+          all_other_income: number
+          created?: string
+          end_date: string
+          id?: number
+          lifestyle_expenses_tax_rate: number
+          optimal_savings_strategy: number
+          payroll_and_distributions: number
+          start_date: string
+          tax_account_rate: number
+          user_id: string
+        }
+        Update: {
+          all_other_income?: number
+          created?: string
+          end_date?: string
+          id?: number
+          lifestyle_expenses_tax_rate?: number
+          optimal_savings_strategy?: number
+          payroll_and_distributions?: number
+          start_date?: string
+          tax_account_rate?: number
+          user_id?: string
+        }
+      }
+      creative_cash_flow_results: {
+        Row: {
+          business_overhead: number
+          business_profit_before_tax: number
+          collections: number
+          id: number
+          lifestyle_expenses: number
+          lifestyle_expenses_tax: number
+          monthly_trend: number[]
+          tax_account: number
+          user_id: string
+          waa: number
+          weekly_trend: number[]
+          year_to_date: number
+          yearly_trend: number[]
+        }
+        Insert: {
+          business_overhead: number
+          business_profit_before_tax: number
+          collections: number
+          id?: number
+          lifestyle_expenses: number
+          lifestyle_expenses_tax: number
+          monthly_trend: number[]
+          tax_account: number
+          user_id: string
+          waa: number
+          weekly_trend: number[]
+          year_to_date: number
+          yearly_trend: number[]
+        }
+        Update: {
+          business_overhead?: number
+          business_profit_before_tax?: number
+          collections?: number
+          id?: number
+          lifestyle_expenses?: number
+          lifestyle_expenses_tax?: number
+          monthly_trend?: number[]
+          tax_account?: number
+          user_id?: string
+          waa?: number
+          weekly_trend?: number[]
+          year_to_date?: number
+          yearly_trend?: number[]
+        }
+      }
       personal_finance: {
         Row: {
           id: number

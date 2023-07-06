@@ -49,7 +49,7 @@ export default async function CreativeCashFlowPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <Calculate transactions={transactions} />
+      <Calculate userId={user.id} transactions={transactions} />
       <Results />
     </div>
   );

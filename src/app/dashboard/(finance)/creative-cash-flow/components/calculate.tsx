@@ -1,14 +1,17 @@
 'use client';
 
-import { useAtom, useSetAtom } from 'jotai';
+import { useState } from 'react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { toast } from 'react-toastify';
 import { Share2 } from 'lucide-react';
 
 import {
-  resetCreativeCashFlowInputsAtom,
-  creativeCashFlowResultAtom,
   isInputsOpenAtom,
+  creativeCashFlowInputsAtom,
+  creativeCashFlowResultAtom,
+  resetCreativeCashFlowInputsAtom,
 } from '../atoms';
+import { supabase } from '@/lib/supabase/client';
 import {
   Accordion,
   AccordionContent,
@@ -18,22 +21,84 @@ import {
 import { Button } from '@/components/ui/button';
 import { InputForm } from './input-form';
 import type { Transaction } from '@/lib/plaid/types/transactions';
+import type { CreativeCashFlowManagementInputs, CreativeCashFlowManagementResult } from '../types';
+import { captureException } from '@sentry/nextjs';
 
 interface ContentProps {
+  userId: string;
   transactions: {
     business: Transaction[];
     personal: Transaction[];
   };
 }
 
-const handleShare = () => {
-  toast.success('An email has been sent to the advisors with the results');
+const saveRecord = async (
+  user_id: string,
+  inputs: CreativeCashFlowManagementInputs,
+  results: CreativeCashFlowManagementResult
+) => {
+  const { error: inputsError } = await supabase
+    .from('creative_cash_flow_inputs')
+    .insert({
+      user_id,
+      ...inputs,
+      start_date: inputs.start_date!.toUTCString(),
+      end_date: inputs.end_date!.toUTCString(),
+    })
+    .eq('user_id', user_id);
+
+  if (inputsError) {
+    throw inputsError;
+  }
+
+  const { error: resultsError } = await supabase
+    .from('creative_cash_flow_results')
+    .insert({
+      user_id,
+      ...results,
+    })
+    .eq('user_id', user_id);
+
+  if (resultsError) {
+    throw resultsError;
+  }
 };
 
-export function Calculate({ transactions }: ContentProps) {
+export function Calculate({ userId, transactions }: ContentProps) {
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
+  const creativeCashFlowInputs = useAtomValue(creativeCashFlowInputsAtom);
   const [results, setResults] = useAtom(creativeCashFlowResultAtom);
   const resetCreativeCashFlowInput = useSetAtom(resetCreativeCashFlowInputsAtom);
+
+  const handleSave = () => {
+    if (!results) {
+      return;
+    }
+
+    setIsSaving(true);
+
+    saveRecord(userId, creativeCashFlowInputs, results)
+      .then(() => {
+        setIsSaved(true);
+        toast.success(
+          'The Creative Cash Flow record has been saved and can be shared with the advisors'
+        );
+      })
+      .catch((error) => {
+        console.error(error);
+        captureException(error);
+        toast.error('Failed to save the Creative Cash Flow record. Please try again.');
+      })
+      .finally(() => setIsSaving(false));
+  };
+
+  const handleShare = () => {
+    setIsSharing(true);
+    toast.success('An email has been sent to the advisors with the results');
+  };
 
   const handleReset = () => {
     setIsInputsOpen(false);
@@ -62,8 +127,10 @@ export function Calculate({ transactions }: ContentProps) {
       </div>
 
       <div className="flex h-14 items-center gap-4 ml-4">
-        <Button disabled={!results}>Save</Button>
-        <Button disabled={!results} onClick={handleShare}>
+        <Button disabled={!results} loading={isSaving} onClick={handleSave}>
+          Save
+        </Button>
+        <Button disabled={!results || !isSaved} loading={isSharing} onClick={handleShare}>
           <Share2 className="h-5 w-5 mr-2" />
           Share
         </Button>
