@@ -419,7 +419,6 @@ CREATE POLICY "Can delete own CCF inputs" ON public.creative_cash_flow_inputs
 
 
 
-
 /**
  * creative_cash_flow_results table
  */
@@ -429,10 +428,10 @@ CREATE TABLE creative_cash_flow_results (
   collections decimal(10,2) NOT NULL,
   lifestyle_expenses decimal(10,2) NOT NULL,
   lifestyle_expenses_tax decimal(10,2) NOT NULL,
-  business_checking_account_before_tax decimal(10,2) NOT NULL,
+  business_profit_before_tax decimal(10,2) NOT NULL,
   business_overhead decimal(10,2) NOT NULL,
   tax_account decimal(10,2) NOT NULL,
-  waa_after_tax decimal(10,2) NOT NULL,
+  waa decimal(10,2) NOT NULL,
   weekly_trend decimal(10,2)[] NOT NULL,
   monthly_trend decimal(10,2)[] NOT NULL,
   yearly_trend decimal(10,2)[] NOT NULL,

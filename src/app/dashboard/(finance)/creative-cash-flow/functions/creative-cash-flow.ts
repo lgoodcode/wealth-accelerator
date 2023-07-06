@@ -106,7 +106,7 @@ export function creativeCashFlowManagement({
     collections - business_overhead - lifestyle_expenses - lifestyle_expenses_tax;
   const tax_account =
     business_profit_before_tax > 0 ? business_profit_before_tax * tax_account_rate : 0;
-  const WAA =
+  const waa =
     business_profit_before_tax > 0 ? business_profit_before_tax - tax_account : collections / 10;
   const monthly_trend = [0, 0, 0];
   const current_year = new Date().getFullYear();
@@ -154,7 +154,7 @@ export function creativeCashFlowManagement({
     business_profit_before_tax,
     business_overhead,
     tax_account,
-    WAA,
+    waa: waa,
     weekly_trend,
     monthly_trend,
     yearly_trend,

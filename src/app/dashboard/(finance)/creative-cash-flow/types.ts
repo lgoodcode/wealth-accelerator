@@ -25,7 +25,7 @@ export type CreativeCashFlowManagementResult = {
   business_overhead: number;
   /** tax on business profit */
   tax_account: number;
-  WAA: number;
+  waa: number;
   weekly_trend: number[];
   monthly_trend: number[];
   yearly_trend: number[];

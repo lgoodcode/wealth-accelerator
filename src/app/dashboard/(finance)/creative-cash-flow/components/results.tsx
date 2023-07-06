@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import type { CountUpProps } from 'react-countup/build/CountUp';
 
-import { labels } from '../labels';
+import { resultsLabels } from '../labels';
 import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../atoms';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -65,8 +65,10 @@ export function Results() {
       >
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">{labels.optimal_savings_strategy.title}</CardTitle>
-            <CardDescription>{labels.optimal_savings_strategy.description}</CardDescription>
+            <CardTitle className="text-2xl">
+              {resultsLabels.optimal_savings_strategy.title}
+            </CardTitle>
+            <CardDescription>{resultsLabels.optimal_savings_strategy.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -84,8 +86,12 @@ export function Results() {
       >
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">{labels.business_profit_before_tax.title}</CardTitle>
-            <CardDescription>{labels.business_profit_before_tax.description}</CardDescription>
+            <CardTitle className="text-2xl">
+              {resultsLabels.business_profit_before_tax.title}
+            </CardTitle>
+            <CardDescription>
+              {resultsLabels.business_profit_before_tax.description}
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -106,8 +112,8 @@ export function Results() {
       >
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">{labels.lifestyle_expenses.title}</CardTitle>
-            <CardDescription>{labels.lifestyle_expenses.description}</CardDescription>
+            <CardTitle className="text-2xl">{resultsLabels.lifestyle_expenses.title}</CardTitle>
+            <CardDescription>{resultsLabels.lifestyle_expenses.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -125,8 +131,8 @@ export function Results() {
       >
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">{labels.lifestyle_expenses_tax.title}</CardTitle>
-            <CardDescription>{labels.lifestyle_expenses_tax.description}</CardDescription>
+            <CardTitle className="text-2xl">{resultsLabels.lifestyle_expenses_tax.title}</CardTitle>
+            <CardDescription>{resultsLabels.lifestyle_expenses_tax.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -147,8 +153,8 @@ export function Results() {
       >
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">{labels.tax_on_business_profit.title}</CardTitle>
-            <CardDescription>{labels.tax_on_business_profit.description}</CardDescription>
+            <CardTitle className="text-2xl">{resultsLabels.tax_on_business_profit.title}</CardTitle>
+            <CardDescription>{resultsLabels.tax_on_business_profit.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -166,8 +172,8 @@ export function Results() {
       >
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">{labels.business_overhead.title}</CardTitle>
-            <CardDescription>{labels.business_overhead.description}</CardDescription>
+            <CardTitle className="text-2xl">{resultsLabels.business_overhead.title}</CardTitle>
+            <CardDescription>{resultsLabels.business_overhead.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -185,8 +191,8 @@ export function Results() {
       >
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">{labels.trends.title}</CardTitle>
-            <CardDescription>{labels.trends.description}</CardDescription>
+            <CardTitle className="text-2xl">{resultsLabels.trends.title}</CardTitle>
+            <CardDescription>{resultsLabels.trends.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <Table>
@@ -293,13 +299,13 @@ export function Results() {
       >
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">{labels.WAA.title}</CardTitle>
-            <CardDescription>{labels.WAA.description}</CardDescription>
+            <CardTitle className="text-2xl">{resultsLabels.waa.title}</CardTitle>
+            <CardDescription>{resultsLabels.waa.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
               className="text-2xl"
-              {...createCountUpProps(results.WAA, ANIMATION_DURATIONS.row4.delay)}
+              {...createCountUpProps(results.waa, ANIMATION_DURATIONS.row4.delay)}
             />
           </CardContent>
         </Card>
@@ -312,8 +318,8 @@ export function Results() {
       >
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">{labels.collections.title}</CardTitle>
-            <CardDescription>{labels.collections.description}</CardDescription>
+            <CardTitle className="text-2xl">{resultsLabels.collections.title}</CardTitle>
+            <CardDescription>{resultsLabels.collections.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp

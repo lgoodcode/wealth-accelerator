@@ -1,10 +1,14 @@
 'use client';
 
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { toast } from 'react-toastify';
 import { Share2 } from 'lucide-react';
 
-import { creativeCashFlowResultAtom, isInputsOpenAtom } from '../atoms';
+import {
+  resetCreativeCashFlowInputsAtom,
+  creativeCashFlowResultAtom,
+  isInputsOpenAtom,
+} from '../atoms';
 import {
   Accordion,
   AccordionContent,
@@ -28,7 +32,14 @@ const handleShare = () => {
 
 export function Calculate({ transactions }: ContentProps) {
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
-  const results = useAtomValue(creativeCashFlowResultAtom);
+  const [results, setResults] = useAtom(creativeCashFlowResultAtom);
+  const resetCreativeCashFlowInput = useSetAtom(resetCreativeCashFlowInputsAtom);
+
+  const handleReset = () => {
+    setIsInputsOpen(false);
+    setResults(null);
+    resetCreativeCashFlowInput();
+  };
 
   return (
     <div className="inline-flex w-full justify-center">
@@ -55,6 +66,9 @@ export function Calculate({ transactions }: ContentProps) {
         <Button disabled={!results} onClick={handleShare}>
           <Share2 className="h-5 w-5 mr-2" />
           Share
+        </Button>
+        <Button variant="ghost" disabled={!results} onClick={handleReset}>
+          Reset
         </Button>
       </div>
     </div>

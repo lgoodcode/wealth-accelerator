@@ -6,6 +6,7 @@ import { useAtom, useSetAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { inputLabels } from '../labels';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { NumberInput } from '@/components/ui/number-input';
@@ -105,9 +106,9 @@ export function InputForm({ transactions }: InputsFormProps) {
             name="start_date"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Start Date</FormLabel>
+                <FormLabel>{inputLabels.start_date.title}</FormLabel>
                 <DatePicker className="w-full" date={field.value} onSelect={field.onChange} />
-                <FormDescription>The day you want to start your strategy.</FormDescription>
+                <FormDescription>{inputLabels.start_date.description}</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -117,9 +118,9 @@ export function InputForm({ transactions }: InputsFormProps) {
             name="end_date"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>End Date</FormLabel>
+                <FormLabel>{inputLabels.end_date.title}</FormLabel>
                 <DatePicker className="w-full" date={field.value} onSelect={field.onChange} />
-                <FormDescription>The day you want to end your strategy.</FormDescription>
+                <FormDescription>{inputLabels.end_date.description}</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -130,7 +131,8 @@ export function InputForm({ transactions }: InputsFormProps) {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>
-                  All Other Income<span className="ml-1 text-muted-foreground">(dollars)</span>
+                  {inputLabels.all_other_income.title}
+                  <span className="ml-1 text-muted-foreground">(dollars)</span>
                 </FormLabel>
                 <NumberInput
                   placeholder="$30,000"
@@ -138,9 +140,7 @@ export function InputForm({ transactions }: InputsFormProps) {
                   value={field.value}
                   onValueChange={(value) => field.onChange(parseInt(value || '0'))}
                 />
-                <FormDescription>
-                  Any additional income that is not included from the transactions.
-                </FormDescription>
+                <FormDescription>{inputLabels.all_other_income.description}</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -151,7 +151,7 @@ export function InputForm({ transactions }: InputsFormProps) {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>
-                  Payroll and Distributions to Self
+                  {inputLabels.payroll_and_distributions.title}
                   <span className="ml-1 text-muted-foreground">(dollars)</span>
                 </FormLabel>
                 <NumberInput
@@ -160,6 +160,9 @@ export function InputForm({ transactions }: InputsFormProps) {
                   value={field.value}
                   onValueChange={(value) => field.onChange(parseInt(value || '0'))}
                 />
+                <FormDescription>
+                  {inputLabels.payroll_and_distributions.description}
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -170,7 +173,7 @@ export function InputForm({ transactions }: InputsFormProps) {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>
-                  Lifestyle Expenses Tax Rate
+                  {inputLabels.lifestyle_expenses_tax_rate.title}
                   <span className="ml-1 text-muted-foreground">(%)</span>
                 </FormLabel>
                 <NumberInput
@@ -179,7 +182,9 @@ export function InputForm({ transactions }: InputsFormProps) {
                   value={field.value}
                   onValueChange={(value) => field.onChange(parseInt(value || '0'))}
                 />
-                <FormDescription>The tax rate of purchases.</FormDescription>
+                <FormDescription>
+                  {inputLabels.lifestyle_expenses_tax_rate.description}
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -190,7 +195,7 @@ export function InputForm({ transactions }: InputsFormProps) {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>
-                  Tax Account Rate
+                  {inputLabels.tax_account_rate.title}
                   <span className="ml-1 text-muted-foreground">(%)</span>
                 </FormLabel>
                 <NumberInput
@@ -199,7 +204,7 @@ export function InputForm({ transactions }: InputsFormProps) {
                   value={field.value}
                   onValueChange={(value) => field.onChange(parseInt(value || '0'))}
                 />
-                <FormDescription>The tax rate on business purchases.</FormDescription>
+                <FormDescription>{inputLabels.tax_account_rate.description}</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -210,7 +215,7 @@ export function InputForm({ transactions }: InputsFormProps) {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>
-                  Optimal Savings Strategy
+                  {inputLabels.optimal_savings_strategy.title}
                   <span className="ml-1 text-muted-foreground">(dollars)</span>
                 </FormLabel>
                 <NumberInput
@@ -219,7 +224,9 @@ export function InputForm({ transactions }: InputsFormProps) {
                   value={field.value}
                   onValueChange={(value) => field.onChange(parseInt(value || '0'))}
                 />
-                <FormDescription>The amount of money you want to achieve.</FormDescription>
+                <FormDescription>
+                  {inputLabels.optimal_savings_strategy.description}
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
