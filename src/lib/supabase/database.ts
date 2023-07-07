@@ -265,6 +265,19 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: number[]
       }
+      get_ccf_records: {
+        Args: Record<PropertyKey, never>
+        Returns: Json[]
+      }
+      get_creative_cash_flow_records: {
+        Args: {
+          arg_user_id: string
+        }
+        Returns: {
+          inputs: Json
+          results: Json
+        }[]
+      }
       get_transactions_by_account_ids: {
         Args: {
           account_ids: string[]
@@ -292,6 +305,15 @@ export interface Database {
           category: Database["public"]["Enums"]["category_type"]
           date: string
           account: string
+        }[]
+      }
+      get_user_cash_flow_data: {
+        Args: {
+          arg_user_id: string
+        }
+        Returns: {
+          inputs: Json
+          results: Json
         }[]
       }
     }

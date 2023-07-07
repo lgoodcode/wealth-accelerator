@@ -30,10 +30,6 @@ export const inputLabels = {
 };
 
 export const resultsLabels = {
-  optimal_savings_strategy: {
-    title: 'Optimal Savings Strategy',
-    description: 'The amount of money you want to achieve.',
-  },
   business_profit_before_tax: {
     title: 'Business Profit Before Tax',
     description: 'The amount of profit your business made before tax.',

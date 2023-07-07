@@ -31,3 +31,14 @@ export type CreativeCashFlowManagementResult = {
   yearly_trend: number[];
   year_to_date: number;
 };
+
+export type CreativeCashFlowRecord = {
+  inputs: CreativeCashFlowManagementInputs & {
+    id: string;
+    start_date: string;
+    end_date: string;
+  };
+  results: CreativeCashFlowManagementResult & {
+    id: string;
+  };
+};

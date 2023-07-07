@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import type { CountUpProps } from 'react-countup/build/CountUp';
 
-import { resultsLabels } from '../labels';
+import { inputLabels, resultsLabels } from '../../labels';
 import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../atoms';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -65,10 +65,8 @@ export function Results() {
       >
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">
-              {resultsLabels.optimal_savings_strategy.title}
-            </CardTitle>
-            <CardDescription>{resultsLabels.optimal_savings_strategy.description}</CardDescription>
+            <CardTitle className="text-2xl">{inputLabels.optimal_savings_strategy.title}</CardTitle>
+            <CardDescription>{inputLabels.optimal_savings_strategy.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp

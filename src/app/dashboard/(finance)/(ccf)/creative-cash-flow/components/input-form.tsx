@@ -6,7 +6,7 @@ import { useAtom, useSetAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { inputLabels } from '../labels';
+import { inputLabels } from '../../labels';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { NumberInput } from '@/components/ui/number-input';

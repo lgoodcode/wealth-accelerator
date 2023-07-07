@@ -21,7 +21,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { InputForm } from './input-form';
 import type { Transaction } from '@/lib/plaid/types/transactions';
-import type { CreativeCashFlowManagementInputs, CreativeCashFlowManagementResult } from '../types';
+import type {
+  CreativeCashFlowManagementInputs,
+  CreativeCashFlowManagementResult,
+} from '../../types';
 import { captureException } from '@sentry/nextjs';
 
 interface ContentProps {
