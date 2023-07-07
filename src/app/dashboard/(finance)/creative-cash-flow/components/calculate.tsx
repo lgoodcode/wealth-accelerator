@@ -11,6 +11,7 @@ import {
   resetCreativeCashFlowInputsAtom,
 } from '../atoms';
 import { supabase } from '@/lib/supabase/client';
+import { generateUUID } from '@/lib/utils/uuid';
 import {
   Accordion,
   AccordionContent,
@@ -36,9 +37,11 @@ const saveRecord = async (
   inputs: CreativeCashFlowManagementInputs,
   results: CreativeCashFlowManagementResult
 ) => {
+  const id = generateUUID();
   const { error: inputsError } = await supabase
     .from('creative_cash_flow_inputs')
     .insert({
+      id,
       user_id,
       ...inputs,
       start_date: inputs.start_date!.toUTCString(),
@@ -53,6 +56,7 @@ const saveRecord = async (
   const { error: resultsError } = await supabase
     .from('creative_cash_flow_results')
     .insert({
+      id,
       user_id,
       ...results,
     })

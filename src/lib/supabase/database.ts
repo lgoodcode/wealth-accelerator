@@ -14,7 +14,7 @@ export interface Database {
           all_other_income: number
           created: string
           end_date: string
-          id: number
+          id: string
           lifestyle_expenses_tax_rate: number
           optimal_savings_strategy: number
           payroll_and_distributions: number
@@ -26,7 +26,7 @@ export interface Database {
           all_other_income: number
           created?: string
           end_date: string
-          id?: number
+          id: string
           lifestyle_expenses_tax_rate: number
           optimal_savings_strategy: number
           payroll_and_distributions: number
@@ -38,7 +38,7 @@ export interface Database {
           all_other_income?: number
           created?: string
           end_date?: string
-          id?: number
+          id?: string
           lifestyle_expenses_tax_rate?: number
           optimal_savings_strategy?: number
           payroll_and_distributions?: number
@@ -52,7 +52,7 @@ export interface Database {
           business_overhead: number
           business_profit_before_tax: number
           collections: number
-          id: number
+          id: string
           lifestyle_expenses: number
           lifestyle_expenses_tax: number
           monthly_trend: number[]
@@ -67,7 +67,7 @@ export interface Database {
           business_overhead: number
           business_profit_before_tax: number
           collections: number
-          id?: number
+          id: string
           lifestyle_expenses: number
           lifestyle_expenses_tax: number
           monthly_trend: number[]
@@ -82,7 +82,7 @@ export interface Database {
           business_overhead?: number
           business_profit_before_tax?: number
           collections?: number
-          id?: number
+          id?: string
           lifestyle_expenses?: number
           lifestyle_expenses_tax?: number
           monthly_trend?: number[]
