@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { toast } from 'react-toastify';
-import { Share2 } from 'lucide-react';
 
 import {
   isInputsOpenAtom,
@@ -66,8 +65,6 @@ const saveRecord = async (
 
 export function Calculate({ userId, transactions }: ContentProps) {
   const [isSaving, setIsSaving] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-  const [isSharing, setIsSharing] = useState(false);
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
   const creativeCashFlowInputs = useAtomValue(creativeCashFlowInputsAtom);
   const [results, setResults] = useAtom(creativeCashFlowResultAtom);
@@ -82,7 +79,6 @@ export function Calculate({ userId, transactions }: ContentProps) {
 
     saveRecord(userId, creativeCashFlowInputs, results)
       .then(() => {
-        setIsSaved(true);
         toast.success(
           'The Creative Cash Flow record has been saved and can be shared with the advisors'
         );
@@ -93,11 +89,6 @@ export function Calculate({ userId, transactions }: ContentProps) {
         toast.error('Failed to save the Creative Cash Flow record. Please try again.');
       })
       .finally(() => setIsSaving(false));
-  };
-
-  const handleShare = () => {
-    setIsSharing(true);
-    toast.success('An email has been sent to the advisors with the results');
   };
 
   const handleReset = () => {
@@ -127,16 +118,16 @@ export function Calculate({ userId, transactions }: ContentProps) {
       </div>
 
       <div className="flex h-14 items-center gap-4 ml-4">
-        <Button disabled={!results} loading={isSaving} onClick={handleSave}>
-          Save
-        </Button>
-        <Button disabled={!results || !isSaved} loading={isSharing} onClick={handleShare}>
-          <Share2 className="h-5 w-5 mr-2" />
-          Share
-        </Button>
-        <Button variant="ghost" disabled={!results} onClick={handleReset}>
-          Reset
-        </Button>
+        {results && (
+          <>
+            <Button disabled={!results} loading={isSaving} onClick={handleSave}>
+              Save
+            </Button>
+            <Button variant="outline" disabled={!results} onClick={handleReset}>
+              Reset
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );
