@@ -14,8 +14,8 @@ export type SidebarNavItem = {
 
 const sidebarNavItems: SidebarNavItem[] = [
   {
-    title: 'Wealth Accelerator Info',
-    relativePath: '/wealth-accelerator-info',
+    title: 'Finance Info',
+    relativePath: '/finance-info',
   },
   {
     title: 'Index Fund Rates',

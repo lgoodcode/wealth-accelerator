@@ -19,7 +19,9 @@ export function Header({ user }: HeaderProps) {
           <Link href="/dashboard/home" className="px-3">
             <Image src="/img/title-logo.png" alt="logo" width={132} height={36} />
           </Link>
+
           <Nav className="mx-4" isAdmin={user.role === 'admin'} />
+
           <div className="flex items-center space-x-4">
             <ThemeToggle />
             <UserNav user={user} />

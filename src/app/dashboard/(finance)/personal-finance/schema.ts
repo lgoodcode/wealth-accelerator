@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const WaInfoFormSchema = z.object({
+export const FinanceInfoSchema = z.object({
   start_date: z.date({
     required_error: 'Select a date.',
   }),
@@ -38,6 +38,9 @@ export const WaInfoFormSchema = z.object({
       required_error: 'Enter the amount',
     })
     .min(1, 'Enter an amount greater than 0'),
+  ytd_collections: z.number({
+    required_error: 'Enter the amount',
+  }),
 });
 
 export const RatesFormSchema = (numOfYears: number) =>
@@ -54,5 +57,5 @@ export const RatesFormSchema = (numOfYears: number) =>
       .length(numOfYears, `Enter ${numOfYears} rates`),
   });
 
-export type WaInfoFormSchemaType = z.infer<typeof WaInfoFormSchema>;
+export type FinanceInfoSchemaType = z.infer<typeof FinanceInfoSchema>;
 export type RatesFormSchemaType = z.infer<ReturnType<typeof RatesFormSchema>>;

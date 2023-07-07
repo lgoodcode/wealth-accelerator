@@ -8,6 +8,7 @@ export const generalRoutes: Route[] = [
     path: '/statistics',
     Icon: LineChart,
     description: 'View statistics of your finances and the Wealth Accelerator.',
+    disabled: true,
   },
 
   {
@@ -15,6 +16,7 @@ export const generalRoutes: Route[] = [
     path: '/insurance-policy',
     Icon: Shield,
     description: 'View insurance policies.',
+    disabled: true,
   },
 
   {
@@ -22,5 +24,6 @@ export const generalRoutes: Route[] = [
     path: '/glossary',
     Icon: BookOpen,
     description: 'View vocabulary and their definitions used in the app.',
+    disabled: true,
   },
 ];
