@@ -66,4 +66,8 @@ export const resultsLabels = {
     title: 'Trends',
     description: 'Description for trends.',
   },
+  year_to_date: {
+    title: 'Year to Date',
+    description: 'Description for year to date.',
+  },
 };

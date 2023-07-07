@@ -194,7 +194,7 @@ export function Results() {
             <CardTitle className="text-2xl">{resultsLabels.trends.title}</CardTitle>
             <CardDescription>{resultsLabels.trends.description}</CardDescription>
           </CardHeader>
-          <CardContent className="pt-4">
+          <CardContent className="pt-4 space-y-4">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -288,6 +288,19 @@ export function Results() {
                 </TableRow>
               </TableBody>
             </Table>
+
+            <div>
+              <CardHeader className="space-y-1 px-0">
+                <CardTitle className="text-2xl">{resultsLabels.year_to_date.title}</CardTitle>
+                <CardDescription>{resultsLabels.year_to_date.description}</CardDescription>
+              </CardHeader>
+              <div className="pt-4">
+                <CountUp
+                  className="text-2xl"
+                  {...createCountUpProps(results.year_to_date, ANIMATION_DURATIONS.row3.delay)}
+                />
+              </div>
+            </div>
           </CardContent>
         </Card>
       </motion.div>
