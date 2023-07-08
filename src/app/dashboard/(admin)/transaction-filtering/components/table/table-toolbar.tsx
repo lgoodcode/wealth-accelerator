@@ -45,6 +45,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
           </Button>
         )}
       </div>
+
       <AddFilterButton />
     </div>
   );
