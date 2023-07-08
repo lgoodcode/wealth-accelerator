@@ -62,7 +62,7 @@ interface UpdateFilterProps {
   filter: Filter;
 }
 
-export function UpdateFilterModal({ open, onOpenChange, filter }: UpdateFilterProps) {
+export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterProps) {
   const queryClient = useQueryClient();
   const setFilters = useSetAtom(setFiltersAtom);
   const form = useForm<UpdateFilterFormType>({

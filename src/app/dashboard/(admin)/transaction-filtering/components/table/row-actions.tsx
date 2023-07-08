@@ -17,7 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { UpdateFilterModal } from '../update-filter-modal';
+import { UpdateFilterDialog } from '../update-filter-dialog';
 import { type Filter } from '@/lib/plaid/types/transactions';
 
 const deleteFilter = async (id: number) => {
@@ -83,7 +83,7 @@ export function RowActions({ row }: RowActionsProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <UpdateFilterModal
+      <UpdateFilterDialog
         open={showUpdateDialog}
         onOpenChange={handleUpdateDialogOpenChange}
         filter={row.original}
