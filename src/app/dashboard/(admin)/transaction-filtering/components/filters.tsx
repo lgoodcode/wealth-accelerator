@@ -1,6 +1,6 @@
 'use client';
 
-import { useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 
 import { filtersAtom } from '../atoms';
@@ -12,7 +12,7 @@ interface FiltersProps {
 }
 
 export function Filters({ filtersData }: FiltersProps) {
-  const setFilters = useSetAtom(filtersAtom);
+  const [filters, setFilters] = useAtom(filtersAtom);
 
   useEffect(() => {
     setFilters(filtersData);
@@ -20,7 +20,7 @@ export function Filters({ filtersData }: FiltersProps) {
 
   return (
     <div className="flex justify-center">
-      <FiltersTable filters={filtersData} />
+      <FiltersTable filters={filters} />
     </div>
   );
 }
