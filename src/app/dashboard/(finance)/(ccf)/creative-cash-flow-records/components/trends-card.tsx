@@ -1,3 +1,4 @@
+import { dollarFormatter } from '@/lib/utils/dollarFormatter';
 import { resultsLabels } from '../../labels';
 import {
   Table,
@@ -34,21 +35,21 @@ export function TrendsCard({ record }: TrendsCardProps) {
           <TableBody className="text-lg">
             <TableRow>
               <TableCell>30 Days</TableCell>
-              <TableCell>${record.results.monthly_trend[0]}</TableCell>
-              <TableCell>${record.results.weekly_trend[0]}</TableCell>
-              <TableCell>${record.results.yearly_trend[0]}</TableCell>
+              <TableCell>{dollarFormatter(record.results.monthly_trend[0])}</TableCell>
+              <TableCell>{dollarFormatter(record.results.weekly_trend[0])}</TableCell>
+              <TableCell>{dollarFormatter(record.results.yearly_trend[0])}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>60 Days</TableCell>
-              <TableCell>${record.results.monthly_trend[1]}</TableCell>
-              <TableCell>${record.results.weekly_trend[1]}</TableCell>
-              <TableCell>${record.results.yearly_trend[1]}</TableCell>
+              <TableCell>{dollarFormatter(record.results.monthly_trend[1])}</TableCell>
+              <TableCell>{dollarFormatter(record.results.weekly_trend[1])}</TableCell>
+              <TableCell>{dollarFormatter(record.results.yearly_trend[1])}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>90 Days</TableCell>
-              <TableCell>${record.results.monthly_trend[2]}</TableCell>
-              <TableCell>${record.results.weekly_trend[2]}</TableCell>
-              <TableCell>${record.results.yearly_trend[2]}</TableCell>
+              <TableCell>{dollarFormatter(record.results.monthly_trend[2])}</TableCell>
+              <TableCell>{dollarFormatter(record.results.weekly_trend[2])}</TableCell>
+              <TableCell>{dollarFormatter(record.results.yearly_trend[2])}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

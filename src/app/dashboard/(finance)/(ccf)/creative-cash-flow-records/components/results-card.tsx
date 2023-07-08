@@ -1,5 +1,6 @@
-import { resultsLabels } from '../../labels';
+import { dollarFormatter } from '@/lib/utils/dollarFormatter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { resultsLabels } from '../../labels';
 import type { CreativeCashFlowRecord } from '../../types';
 
 interface InputsCardProps {
@@ -16,35 +17,35 @@ export function ResultsCard({ record }: InputsCardProps) {
         <div className="space-y-2 text-lg">
           <div className="flex py-4 justify-between border-b">
             <span>{resultsLabels.business_profit_before_tax.title}</span>
-            <span>${record.results.business_profit_before_tax}</span>
+            <span>{dollarFormatter(record.results.business_profit_before_tax)}</span>
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{resultsLabels.lifestyle_expenses.title}</span>
-            <span>${record.results.lifestyle_expenses}</span>
+            <span>{dollarFormatter(record.results.lifestyle_expenses)}</span>
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{resultsLabels.lifestyle_expenses_tax.title}</span>
-            <span>${record.results.lifestyle_expenses_tax}</span>
+            <span>{dollarFormatter(record.results.lifestyle_expenses_tax)}</span>
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{resultsLabels.tax_on_business_profit.title}</span>
-            <span>${record.results.tax_account}</span>
+            <span>{dollarFormatter(record.results.tax_account)}</span>
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{resultsLabels.business_overhead.title}</span>
-            <span>${record.results.business_overhead}</span>
+            <span>{dollarFormatter(record.results.business_overhead)}</span>
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{resultsLabels.waa.title}</span>
-            <span>${record.results.waa}</span>
+            <span>{dollarFormatter(record.results.waa)}</span>
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{resultsLabels.collections.title}</span>
-            <span>${record.results.collections}</span>
+            <span>{dollarFormatter(record.results.collections)}</span>
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{resultsLabels.year_to_date.title}</span>
-            <span>${record.results.year_to_date}</span>
+            <span>{dollarFormatter(record.results.year_to_date)}</span>
           </div>
         </div>
       </CardContent>

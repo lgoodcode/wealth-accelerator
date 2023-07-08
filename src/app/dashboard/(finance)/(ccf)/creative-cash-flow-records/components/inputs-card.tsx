@@ -1,7 +1,8 @@
 import { format } from 'date-fns';
 
-import { inputLabels } from '../../labels';
+import { dollarFormatter } from '@/lib/utils/dollarFormatter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { inputLabels } from '../../labels';
 import type { CreativeCashFlowRecord } from '../../types';
 
 interface ResultsCardProps {
@@ -26,11 +27,11 @@ export function InputsCard({ record }: ResultsCardProps) {
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{inputLabels.all_other_income.title}</span>
-            <span>${record.inputs.all_other_income}</span>
+            <span>{dollarFormatter(record.inputs.all_other_income)}</span>
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{inputLabels.payroll_and_distributions.title}</span>
-            <span>${record.inputs.payroll_and_distributions}</span>
+            <span>{dollarFormatter(record.inputs.payroll_and_distributions)}</span>
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{inputLabels.lifestyle_expenses_tax_rate.title}</span>
@@ -42,7 +43,7 @@ export function InputsCard({ record }: ResultsCardProps) {
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{inputLabels.optimal_savings_strategy.title}</span>
-            <span>${record.inputs.optimal_savings_strategy}</span>
+            <span>{dollarFormatter(record.inputs.optimal_savings_strategy)}</span>
           </div>
         </div>
       </CardContent>
