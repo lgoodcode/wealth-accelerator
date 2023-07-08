@@ -54,7 +54,9 @@ export default async function SharedCreativeCashFlowRecordPage({
   return (
     <div className="p-8 space-y-6">
       <div className="space-y-1">
-        <h2 className="text-3xl font-bold">{name}&apos;s Shared Creative Cash Flow Record</h2>
+        <h2 className="text-3xl font-bold">
+          {name ? `${name}'s ` : ''}Shared Creative Cash Flow Record
+        </h2>
         <p className="text-muted-foreground">Viewing a shared record.</p>
       </div>
       <Separator className="mt-6" />
