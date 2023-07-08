@@ -24,7 +24,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
         <Input
           placeholder="Filter filters..."
           value={(table.getColumn('filter')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
+          onChange={(event) => table.getColumn('filter')?.setFilterValue(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
         {table.getColumn('category') && (
