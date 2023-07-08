@@ -29,9 +29,9 @@ import {
 import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
+import { useTransactions } from '../../use-transactions';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
-import { useTransactions } from '../useTransactions';
 
 interface TransactionsTableProps {
   item: ClientInstitution;

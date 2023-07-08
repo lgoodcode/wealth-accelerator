@@ -30,7 +30,7 @@ import {
 import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
-import { useAccounts } from '../useAccounts';
+import { useAccounts } from '../../use-accounts';
 import type { Account } from '@/lib/plaid/types/institutions';
 
 interface AccountsTableProps {
