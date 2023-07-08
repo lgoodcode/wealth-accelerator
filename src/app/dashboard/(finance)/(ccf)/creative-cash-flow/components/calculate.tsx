@@ -9,7 +9,7 @@ import {
   creativeCashFlowInputsAtom,
   creativeCashFlowResultAtom,
   resetCreativeCashFlowInputsAtom,
-} from '../atoms';
+} from '../../atoms';
 import { supabase } from '@/lib/supabase/client';
 import { generateUUID } from '@/lib/utils/uuid';
 import {

@@ -17,7 +17,7 @@ export function Header({ user }: HeaderProps) {
       <div className="border-b">
         <div className="relative flex h-16 justify-between items-center px-4">
           <Link href="/dashboard/home" className="px-3">
-            <Image src="/img/title-logo.png" alt="logo" width={132} height={36} />
+            <Image src="/img/logo-318x85.png" alt="logo" width={132} height={36} />
           </Link>
 
           <Nav className="mx-4" isAdmin={user.role === 'admin'} />

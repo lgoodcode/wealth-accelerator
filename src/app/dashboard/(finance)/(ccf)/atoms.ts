@@ -1,6 +1,10 @@
 import { atom } from 'jotai';
 
-import type { CreativeCashFlowManagementInputs, CreativeCashFlowManagementResult } from './types';
+import type {
+  CreativeCashFlowManagementInputs,
+  CreativeCashFlowManagementResult,
+  CreativeCashFlowRecord,
+} from './types';
 
 export const isInputsOpenAtom = atom(false);
 
@@ -21,3 +25,14 @@ export const resetCreativeCashFlowInputsAtom = atom(null, (_, set) => {
 });
 
 export const creativeCashFlowResultAtom = atom<CreativeCashFlowManagementResult | null>(null);
+
+export const creativeCashFlowRecordsAtom = atom<CreativeCashFlowRecord[]>([]);
+
+export const removeCreativeCashFlowRecordAtom = atom(null, (get, set, id: string) => {
+  const records = get(creativeCashFlowRecordsAtom);
+  const index = records.findIndex((record) => record.inputs.id === id);
+  if (index > -1) {
+    records.splice(index, 1);
+    set(creativeCashFlowRecordsAtom, records);
+  }
+});

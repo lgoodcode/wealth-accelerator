@@ -6,7 +6,7 @@ import CountUp from 'react-countup';
 import type { CountUpProps } from 'react-countup/build/CountUp';
 
 import { inputLabels, resultsLabels } from '../../labels';
-import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../atoms';
+import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../../atoms';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,

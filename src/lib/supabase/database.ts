@@ -261,6 +261,12 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      delete_creative_cash_flow_record: {
+        Args: {
+          record_id: string
+        }
+        Returns: undefined
+      }
       generate_rates: {
         Args: Record<PropertyKey, never>
         Returns: number[]

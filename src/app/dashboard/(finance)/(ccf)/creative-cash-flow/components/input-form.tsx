@@ -19,7 +19,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { creativeCashFlowManagement } from '../functions/creative-cash-flow';
-import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom, isInputsOpenAtom } from '../atoms';
+import {
+  creativeCashFlowInputsAtom,
+  creativeCashFlowResultAtom,
+  isInputsOpenAtom,
+} from '../../atoms';
 import { Transaction } from '@/lib/plaid/types/transactions';
 
 export const inputsFormSchema = z

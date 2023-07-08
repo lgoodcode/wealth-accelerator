@@ -1,7 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import { useCallback, useEffect, useState } from 'react';
+import { useAtom } from 'jotai';
 import { format } from 'date-fns';
+import { Trash } from 'lucide-react';
 
 import {
   Accordion,
@@ -9,18 +12,40 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
+import { Loading } from '@/components/loading';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { creativeCashFlowRecordsAtom } from '../../atoms';
 import { InputsCard } from './inputs-card';
 import { ResultsCard } from './results-card';
 import { TrendsCard } from './trends-card';
+import { ShareRecordButton } from './share-record-button';
+import { DeleteRecord } from './delete-record';
 import type { CreativeCashFlowRecord } from '../../types';
 
 interface RecordsProps {
-  records: CreativeCashFlowRecord[];
+  recordsData: CreativeCashFlowRecord[];
 }
 
-export function Records({ records }: RecordsProps) {
+export function Records({ recordsData }: RecordsProps) {
+  const [isMounted, setIsMounted] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [records, setRecords] = useAtom(creativeCashFlowRecordsAtom);
+
+  const handleDeleteDialogOpenChange = useCallback((open?: boolean) => {
+    setShowDeleteDialog((prev) => (open ? open : !prev));
+  }, []);
+
+  useEffect(() => {
+    setIsMounted(true);
+    setRecords(recordsData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!isMounted) {
+    return <Loading />;
+  }
+
   if (!records.length) {
     return (
       <div className="flex justify-center text-center">
@@ -57,8 +82,18 @@ export function Records({ records }: RecordsProps) {
                 <TrendsCard record={record} />
               </div>
 
-              <div className="flex justify-end p-6 pt-8 pb-0">
-                <Button variant="destructive">Delete</Button>
+              <div className="flex justify-end pt-8 gap-4">
+                <ShareRecordButton record={record} />
+                <Button variant="destructive" onClick={() => setShowDeleteDialog(true)}>
+                  <Trash size={20} className="mr-2" />
+                  Delete
+                </Button>
+
+                <DeleteRecord
+                  open={showDeleteDialog}
+                  onOpenChange={handleDeleteDialogOpenChange}
+                  record={record}
+                />
               </div>
             </AccordionContent>
           </AccordionItem>

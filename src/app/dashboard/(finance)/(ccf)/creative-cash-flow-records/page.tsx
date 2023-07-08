@@ -42,7 +42,7 @@ export default async function CreativeCashFlowRecordsPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <Records records={records} />
+      <Records recordsData={records} />
     </div>
   );
 }
