@@ -295,6 +295,15 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: Json[]
       }
+      get_creative_cash_flow_record: {
+        Args: {
+          record_id: string
+        }
+        Returns: {
+          inputs: Json
+          results: Json
+        }[]
+      }
       get_creative_cash_flow_records: {
         Args: {
           arg_user_id: string

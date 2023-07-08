@@ -668,6 +668,42 @@ LANGUAGE plpgsql SECURITY definer;
 
 
 
+-- Function that retrieves s specific creative cash flow record in a JSON object
+-- with the following structure:
+-- {
+--   "inputs": CreativeCashFlowInputs,
+--   "results": CreativeCashFlowResults
+-- }
+CREATE OR REPLACE FUNCTION get_creative_cash_flow_record(record_id uuid)
+RETURNS TABLE(inputs jsonb, results jsonb) AS
+$BODY$
+BEGIN
+    RETURN QUERY
+        SELECT
+            jsonb_strip_nulls(to_jsonb(t1)) AS inputs,
+            jsonb_strip_nulls(to_jsonb(t2)) AS results
+        FROM (
+            SELECT id, created, start_date, end_date, all_other_income,
+            payroll_and_distributions, lifestyle_expenses_tax_rate,
+            tax_account_rate, optimal_savings_strategy
+            FROM creative_cash_flow_inputs
+            WHERE id = record_id
+        ) AS t1
+        JOIN (
+            SELECT id, collections, lifestyle_expenses, lifestyle_expenses_tax,
+            business_profit_before_tax, business_overhead, tax_account, waa,
+            weekly_trend, monthly_trend, yearly_trend, year_to_date
+            FROM creative_cash_flow_results
+            WHERE id = record_id
+        ) AS t2
+        ON t1.id = t2.id
+        ORDER BY t1.created DESC;
+END;
+$BODY$
+LANGUAGE plpgsql SECURITY definer;
+
+
+
 -- Removes a creative cash flow record
 CREATE OR REPLACE FUNCTION public.delete_creative_cash_flow_record(record_id uuid)
 RETURNS VOID AS
