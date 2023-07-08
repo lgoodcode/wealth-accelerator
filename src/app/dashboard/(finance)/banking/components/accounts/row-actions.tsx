@@ -94,11 +94,6 @@ export function RowActions({ row }: RowActionsProps) {
     },
   });
 
-  const handleCloseUpdateDialog = useCallback(() => {
-    form.reset();
-    setShowUpdateDialog(false);
-  }, [form]);
-
   const handleUpdateDialogOpenChange = useCallback(
     (open: boolean) => {
       form.reset();
@@ -127,7 +122,7 @@ export function RowActions({ row }: RowActionsProps) {
         return oldAccounts;
       });
     },
-    onSettled: handleCloseUpdateDialog,
+    onSettled: () => handleUpdateDialogOpenChange(false),
   });
 
   const onSubmitUpdate = useCallback((data: UpdateAccountType) => mutate(data), [mutate]);
@@ -213,7 +208,11 @@ export function RowActions({ row }: RowActionsProps) {
             </form>
           </Form>
           <DialogFooter>
-            <Button variant="secondary" disabled={isLoading} onClick={handleCloseUpdateDialog}>
+            <Button
+              variant="secondary"
+              disabled={isLoading}
+              onClick={() => handleUpdateDialogOpenChange(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" loading={isLoading} onClick={form.handleSubmit(onSubmitUpdate)}>
