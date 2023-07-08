@@ -83,9 +83,7 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
         handleUpdateDialogOpenChange(false);
       })
       .catch((error) => {
-        if (process.env.NODE_ENV === 'development') {
-          console.error(error);
-        }
+        console.error(error);
         captureException(error);
         toast.error('Error updating notifier');
       })

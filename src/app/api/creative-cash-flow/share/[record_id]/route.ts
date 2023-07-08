@@ -3,6 +3,7 @@ import { captureException } from '@sentry/nextjs';
 
 import { getUser } from '@/lib/supabase/server/getUser';
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
+import type { Notifier } from '@/app/dashboard/(admin)/creative-cash-flow-notifications/types';
 
 export const GET = ShareCreativeCashFlowRecord;
 
@@ -24,34 +25,34 @@ type SMTP2GoResponseSuccess = {
 
 type SMTP2GoResponse = SMTP2GoResponseError | SMTP2GoResponseSuccess;
 
-type EmailBody = {
-  record_id: string;
-  name: string;
-  email: string;
-};
+type NotifierToSend = Pick<Notifier, 'name' | 'email'>;
 
-const EMAIL_SENDER = 'ChiroWealth <noreplay@mail.chirowealth.com>';
+const SMTP2GO_URL = 'https://api.smtp2go.com/v3/email/send';
+const EMAIL_SENDER = 'ChiroWealth <noreply@mail.chirowealth.com>';
 const CCF_RECORD_TEMPLATE = 'share_ccf_record';
 
-const createEmailBody = (body: EmailBody) => {
+const createEmailBody = (record_id: string, sharerName: string, notifiers: NotifierToSend[]) => {
   return JSON.stringify({
     api_key: process.env.SMPT2GO_API_KEY,
-    to: [`${body.name} <${body.email}>`],
+    to: notifiers.map((notifier) => `${notifier.name} <${notifier.email}>`),
     sender: EMAIL_SENDER,
     template_id: CCF_RECORD_TEMPLATE,
     template_data: {
-      user: body.name,
-      record_id: body.record_id,
+      name: sharerName,
+      record_id: record_id,
     },
   });
 };
 
-const sendEmail = async (body: EmailBody): Promise<SMTP2GoResponseSuccess> => {
-  console.log('sendEmail', createEmailBody(body));
-  const response = await fetch('https://api.smtp2go.com/v3/email/send', {
+const sendEmail = async (
+  record_id: string,
+  sharerName: string,
+  notifiers: NotifierToSend[]
+): Promise<SMTP2GoResponseSuccess> => {
+  const response = await fetch(SMTP2GO_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: createEmailBody(body),
+    body: createEmailBody(record_id, sharerName, notifiers),
   });
 
   const res = (await response.json()) as SMTP2GoResponse;
@@ -70,28 +71,30 @@ interface ShareCreativeCashFlowRecordParams {
 }
 
 async function ShareCreativeCashFlowRecord(
-  req: Request,
+  _: Request,
   { params: { record_id } }: ShareCreativeCashFlowRecordParams
 ) {
-  // const user = await getUser();
+  const user = await getUser();
 
-  // if (!user) {
-  //   return NextResponse.json({ error: 'No user found' }, { status: 401 });
-  // }
+  if (!user) {
+    return NextResponse.json({ error: 'No user' }, { status: 400 });
+  }
 
-  const supabase = createSupabase();
-  const { error, data } = await supabase.from('creative_cash_flow_notifiers').select('email');
+  const supabase = createSupabase(true);
+  const { error: notifiersError, data } = await supabase
+    .from('creative_cash_flow_notifiers')
+    .select('name, email')
+    .eq('enabled', true);
+
+  if (notifiersError || !data) {
+    const error = notifiersError || new Error('No notifiers found');
+    captureException(error);
+    return NextResponse.json({ error: 'No notifiers found' }, { status: 500 });
+  }
 
   try {
-    const response = await sendEmail({
-      record_id,
-      // name: user.name,
-      // email: user.email,
-      name: 'name',
-      email: 'email',
-    });
+    await sendEmail(record_id, user.name, data);
 
-    if (response.data) console.log(response);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error(error);

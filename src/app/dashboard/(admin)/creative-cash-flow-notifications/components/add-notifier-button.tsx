@@ -80,7 +80,7 @@ export function AddNotifierButton() {
     <>
       <Button className="h-8 px-2 lg:px-3" onClick={() => setIsOpen(true)}>
         <PlusCircle className="mr-2 h-4 w-4" />
-        Add filter
+        Add notifier
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
