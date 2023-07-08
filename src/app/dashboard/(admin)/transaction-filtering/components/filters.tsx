@@ -16,7 +16,6 @@ export function Filters({ filters }: FiltersProps) {
 
   useEffect(() => {
     setFilters(filters);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

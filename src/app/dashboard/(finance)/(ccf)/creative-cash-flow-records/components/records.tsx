@@ -39,7 +39,6 @@ export function Records({ recordsData }: RecordsProps) {
   useEffect(() => {
     setIsMounted(true);
     setRecords(recordsData);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!isMounted) {

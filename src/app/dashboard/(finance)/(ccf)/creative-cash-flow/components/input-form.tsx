@@ -98,7 +98,6 @@ export function InputForm({ transactions }: InputsFormProps) {
   // Update the inputs when the inputs accordion is opening or closing
   useEffect(() => {
     setCreativeCashFlowInputs(watchValues);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInputsOpen]);
 
   return (
