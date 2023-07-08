@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
@@ -7,7 +8,6 @@ import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { Filters } from './components/filters';
 import type { Filter } from '@/lib/plaid/types/transactions';
-import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'Transactions Filtering',
