@@ -8,8 +8,9 @@ type TypeOption = {
 };
 
 type EnabledOption = {
-  icon: LucideIcon;
+  label: string;
   value: 'true' | 'false';
+  icon: LucideIcon;
 };
 
 export const typeOptions: TypeOption[] = [
@@ -25,11 +26,13 @@ export const typeOptions: TypeOption[] = [
 
 export const enabledOptions: EnabledOption[] = [
   {
-    icon: Check,
+    label: 'Enabled',
     value: 'true',
+    icon: Check,
   },
   {
-    icon: X,
+    label: 'Disabled',
     value: 'false',
+    icon: X,
   },
 ];
