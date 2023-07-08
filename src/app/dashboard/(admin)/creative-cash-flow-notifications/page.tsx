@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
@@ -5,8 +6,8 @@ import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { getUser } from '@/lib/supabase/server/getUser';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
-import type { Filter } from '@/lib/plaid/types/transactions';
-import { redirect } from 'next/navigation';
+import { Notifiers } from './components/notifiers';
+import type { Notifier } from './types';
 
 export const metadata: Metadata = {
   title: 'CCF Notifications',
@@ -21,16 +22,16 @@ export default async function CreativeCashFlowNotificationsPage() {
     redirect('/dashboard');
   }
 
-  // const supabase = createSupabase();
-  // const { error, data } = await supabase.from('plaid_filters').select('*');
+  const supabase = createSupabase();
+  const { error, data } = await supabase.from('creative_cash_flow_notifiers').select('*');
 
-  // if (error) {
-  //   console.error(error);
-  //   captureException(error);
-  //   return <PageError />;
-  // }
+  if (error) {
+    console.error(error);
+    captureException(error);
+    return <PageError />;
+  }
 
-  // const filters: Filter[] = (data as Filter[]) ?? [];
+  const notifiers = (data ?? []) as Notifier[];
 
   return (
     <div className="p-8">
@@ -41,6 +42,7 @@ export default async function CreativeCashFlowNotificationsPage() {
         </p>
       </div>
       <Separator className="mt-6" />
+      <Notifiers notifiersData={notifiers} />
     </div>
   );
 }
