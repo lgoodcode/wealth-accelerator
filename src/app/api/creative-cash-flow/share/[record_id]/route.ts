@@ -44,15 +44,11 @@ const createEmailBody = (record_id: string, sharerName: string, notifiers: Notif
   });
 };
 
-const sendEmail = async (
-  record_id: string,
-  sharerName: string,
-  notifiers: NotifierToSend[]
-): Promise<SMTP2GoResponseSuccess> => {
+const sendEmail = async (emailBody: string): Promise<SMTP2GoResponseSuccess> => {
   const response = await fetch(SMTP2GO_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: createEmailBody(record_id, sharerName, notifiers),
+    body: emailBody,
   });
 
   const res = (await response.json()) as SMTP2GoResponse;
@@ -92,13 +88,17 @@ async function ShareCreativeCashFlowRecord(
     return NextResponse.json({ error: 'No notifiers found' }, { status: 500 });
   }
 
+  const emailBody = createEmailBody(record_id, user.name, data);
   try {
-    await sendEmail(record_id, user.name, data);
-
+    await sendEmail(emailBody);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error(error);
-    captureException(error);
+    captureException(error, {
+      extra: {
+        emailBody,
+      },
+    });
     return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
   }
 }
