@@ -60,7 +60,7 @@ export function FiltersTable() {
   });
 
   return (
-    <div className="space-y-4 mt-8">
+    <div className="space-y-4 mt-8 w-full lg:w-[1024px]">
       <TableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
@@ -87,7 +87,6 @@ export function FiltersTable() {
                     <TableCell
                       key={cell.id}
                       className={cn({
-                        'w-[40%]': i === 0,
                         'w-[10%]': i === arr.length - 1,
                       })}
                     >

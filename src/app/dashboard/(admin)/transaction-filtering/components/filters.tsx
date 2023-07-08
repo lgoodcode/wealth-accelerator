@@ -19,7 +19,7 @@ export function Filters({ filters }: FiltersProps) {
   }, []);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex justify-center">
       <FiltersTable />
     </div>
   );
