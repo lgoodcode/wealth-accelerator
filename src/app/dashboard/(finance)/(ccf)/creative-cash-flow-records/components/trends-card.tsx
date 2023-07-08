@@ -58,7 +58,7 @@ export function TrendsCard({ record }: TrendsCardProps) {
             <CardTitle className="text-2xl">{resultsLabels.year_to_date.title}</CardTitle>
             <CardDescription>{resultsLabels.year_to_date.description}</CardDescription>
           </CardHeader>
-          <div className="pt-4 text-2xl">${record.results.year_to_date}</div>
+          <div className="pt-4 text-2xl">{dollarFormatter(record.results.year_to_date)}</div>
         </div>
       </CardContent>
     </Card>
