@@ -47,7 +47,7 @@ export interface Database {
           user_id?: string
         }
       }
-      creative_cash_flow_notifications: {
+      creative_cash_flow_notifiers: {
         Row: {
           email: string
           enabled: boolean
