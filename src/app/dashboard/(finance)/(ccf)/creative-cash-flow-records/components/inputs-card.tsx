@@ -10,7 +10,7 @@ interface ResultsCardProps {
 
 export function InputsCard({ record }: ResultsCardProps) {
   return (
-    <Card className="flex flex-col max-w-lg w-full min-w-[280px]">
+    <Card className="flex flex-col max-w-[500px] w-full min-w-[280px]">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">Inputs</CardTitle>
       </CardHeader>

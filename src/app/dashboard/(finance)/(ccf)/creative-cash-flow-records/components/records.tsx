@@ -63,41 +63,39 @@ export function Records({ recordsData }: RecordsProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <Accordion type="single" collapsible className="w-full space-y-6">
       {records.map((record) => (
-        <Accordion key={record.inputs.id} type="single" collapsible className="w-full">
-          <AccordionItem value={record.inputs.id}>
-            <AccordionTrigger className="text-xl pl-6 py-8">
-              {format(new Date(record.inputs.start_date), 'LLL dd, y') +
-                ' - ' +
-                format(new Date(record.inputs.end_date), 'LLL dd, y')}
-            </AccordionTrigger>
-            <AccordionContent className="p-6">
-              <div className="flex flex-row justify-center w-full gap-8 flex-wrap">
-                <InputsCard record={record} />
+        <AccordionItem key={record.inputs.id} value={record.inputs.id}>
+          <AccordionTrigger className="text-xl pl-6 py-8">
+            {format(new Date(record.inputs.start_date), 'LLL dd, y') +
+              ' - ' +
+              format(new Date(record.inputs.end_date), 'LLL dd, y')}
+          </AccordionTrigger>
+          <AccordionContent className="p-6">
+            <div className="flex flex-row justify-center w-full gap-8 flex-wrap">
+              <InputsCard record={record} />
 
-                <ResultsCard record={record} />
+              <ResultsCard record={record} />
 
-                <TrendsCard record={record} />
-              </div>
+              <TrendsCard record={record} />
+            </div>
 
-              <div className="flex justify-end pt-8 gap-4">
-                <ShareRecordButton record={record} />
-                <Button variant="destructive" onClick={() => setShowDeleteDialog(true)}>
-                  <Trash size={20} className="mr-2" />
-                  Delete
-                </Button>
+            <div className="flex justify-end pt-8 gap-4">
+              <ShareRecordButton record={record} />
+              <Button variant="destructive" onClick={() => setShowDeleteDialog(true)}>
+                <Trash size={20} className="mr-2" />
+                Delete
+              </Button>
 
-                <DeleteRecord
-                  open={showDeleteDialog}
-                  onOpenChange={handleDeleteDialogOpenChange}
-                  record={record}
-                />
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+              <DeleteRecord
+                open={showDeleteDialog}
+                onOpenChange={handleDeleteDialogOpenChange}
+                record={record}
+              />
+            </div>
+          </AccordionContent>
+        </AccordionItem>
       ))}
-    </div>
+    </Accordion>
   );
 }

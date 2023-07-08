@@ -16,7 +16,7 @@ interface TrendsCardProps {
 
 export function TrendsCard({ record }: TrendsCardProps) {
   return (
-    <Card className="flex flex-col max-w-lg w-full min-w-[280px]">
+    <Card className="flex flex-col max-w-[500px] w-full min-w-[280px]">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">{resultsLabels.trends.title}</CardTitle>
         <CardDescription>{resultsLabels.trends.description}</CardDescription>
