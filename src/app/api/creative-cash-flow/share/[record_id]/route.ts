@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
 import { getUser } from '@/lib/supabase/server/getUser';
+import { createSupabase } from '@/lib/supabase/server/createSupabase';
 
 export const GET = ShareCreativeCashFlowRecord;
 
@@ -77,6 +78,9 @@ async function ShareCreativeCashFlowRecord(
   // if (!user) {
   //   return NextResponse.json({ error: 'No user found' }, { status: 401 });
   // }
+
+  const supabase = createSupabase();
+  const { error, data } = await supabase.from('creative_cash_flow_notifiers').select('email');
 
   try {
     const response = await sendEmail({

@@ -52,16 +52,19 @@ export interface Database {
           email: string
           enabled: boolean
           id: number
+          name: string
         }
         Insert: {
           email: string
           enabled?: boolean
           id?: number
+          name: string
         }
         Update: {
           email?: string
           enabled?: boolean
           id?: number
+          name?: string
         }
       }
       creative_cash_flow_results: {

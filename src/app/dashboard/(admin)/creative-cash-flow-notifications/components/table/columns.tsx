@@ -18,17 +18,33 @@ import type { Notifier } from '../../types';
 
 export const columns: ColumnDef<Notifier>[] = [
   {
+    accessorKey: 'name',
+    header: ({ column }) => <ColumnHeader column={column} title="Name" />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center">
+          <span>{row.getValue<string>('name')}</span>
+        </div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      const valueToCompare = row.getValue<string>(id).toLowerCase();
+      return valueToCompare.includes(value.toLowerCase());
+    },
+  },
+  {
     accessorKey: 'email',
     header: ({ column }) => <ColumnHeader column={column} title="Email" />,
     cell: ({ row }) => {
       return (
-        <div className="flex w-[100px] items-center">
+        <div className="flex items-center">
           <span>{row.getValue<string>('email')}</span>
         </div>
       );
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+      const valueToCompare = row.getValue<string>(id).toLowerCase();
+      return valueToCompare.includes(value.toLowerCase());
     },
   },
   {

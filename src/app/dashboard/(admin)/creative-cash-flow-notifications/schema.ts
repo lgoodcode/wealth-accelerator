@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
 export const updateNotifierFormSchema = z.object({
+  name: z.string({
+    required_error: 'Please enter a name for the notifier.',
+  }),
   email: z
     .string({
       required_error: 'Please enter an email for the notifier.',

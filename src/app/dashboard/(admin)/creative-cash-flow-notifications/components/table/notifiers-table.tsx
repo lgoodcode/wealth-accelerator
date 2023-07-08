@@ -86,7 +86,6 @@ export function NotifiersTable({ notifiers }: NotifiersTableProps) {
                       <TableCell
                         key={cell.id}
                         className={cn({
-                          'w-[70%]': i === 0,
                           'w-[10%]': i === arr.length - 1,
                         })}
                       >

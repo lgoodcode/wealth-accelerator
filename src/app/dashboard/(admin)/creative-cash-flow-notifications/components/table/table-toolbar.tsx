@@ -23,8 +23,15 @@ export function TableToolbar({ table }: TableToolbarProps) {
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Filter notifiers..."
-          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
+          value={
+            (table.getColumn('name')?.getFilterValue() as string) ||
+            (table.getColumn('email')?.getFilterValue() as string) ||
+            ''
+          }
+          onChange={(event) => {
+            table.getColumn('name')?.setFilterValue(event.target.value);
+            table.getColumn('email')?.setFilterValue(event.target.value);
+          }}
           className="h-8 w-[150px] lg:w-[250px]"
         />
         {table.getColumn('enabled') && (

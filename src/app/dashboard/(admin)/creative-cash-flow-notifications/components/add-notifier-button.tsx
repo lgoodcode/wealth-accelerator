@@ -30,10 +30,13 @@ import {
 import { updateNotifierFormSchema, type UpdateNotifiersType } from '../schema';
 import type { Notifier } from '../types';
 
-const createNotifier = async (notifier: Pick<Notifier, 'email' | 'enabled'>) => {
+const createNotifier = async (notifier: Pick<Notifier, 'name' | 'email' | 'enabled'>) => {
   const { error: insertError, data: newNotifier } = await supabase
     .from('creative_cash_flow_notifiers')
-    .insert(notifier)
+    .insert({
+      ...notifier,
+      email: notifier.email.toLowerCase(),
+    })
     .select('*')
     .single();
 
@@ -90,6 +93,19 @@ export function AddNotifierButton() {
           </DialogHeader>
           <Form {...form}>
             <form className="space-y-4" onSubmit={form.handleSubmit(handleCreate)}>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="email"

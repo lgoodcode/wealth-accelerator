@@ -33,7 +33,8 @@ const updateNotifier = async (id: number, data: UpdateNotifiersType) => {
   const { error, data: updatedNotifer } = await supabase
     .from('creative_cash_flow_notifiers')
     .update({
-      email: data.email,
+      name: data.name,
+      email: data.email.toLowerCase(),
       enabled: data.enabled,
     })
     .eq('id', id)
@@ -59,7 +60,8 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
   const form = useForm<UpdateNotifiersType>({
     resolver: zodResolver(updateNotifierFormSchema),
     values: {
-      email: notifier.email,
+      name: notifier.name,
+      email: notifier.email.toLowerCase(),
       enabled: notifier.enabled,
     },
   });
@@ -81,7 +83,9 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
         handleUpdateDialogOpenChange(false);
       })
       .catch((error) => {
-        console.error(error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error(error);
+        }
         captureException(error);
         toast.error('Error updating notifier');
       })
@@ -96,6 +100,19 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(handleUpdate)}>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"
