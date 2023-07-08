@@ -47,6 +47,23 @@ export interface Database {
           user_id?: string
         }
       }
+      creative_cash_flow_notifications: {
+        Row: {
+          email: string
+          enabled: boolean
+          id: number
+        }
+        Insert: {
+          email: string
+          enabled?: boolean
+          id?: number
+        }
+        Update: {
+          email?: string
+          enabled?: boolean
+          id?: number
+        }
+      }
       creative_cash_flow_results: {
         Row: {
           business_overhead: number
