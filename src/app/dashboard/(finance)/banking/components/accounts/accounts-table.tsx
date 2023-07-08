@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { captureException } from '@sentry/nextjs';
+
 import {
   ColumnFiltersState,
   SortingState,
@@ -18,7 +17,6 @@ import {
 } from '@tanstack/react-table';
 
 import { cn } from '@/lib/utils/cn';
-import { supabase } from '@/lib/supabase/client';
 import { ClientError } from '@/components/client-error';
 import { Loading } from '@/components/loading';
 import {
@@ -32,18 +30,8 @@ import {
 import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
+import { useAccounts } from '../useAccounts';
 import type { Account } from '@/lib/plaid/types/institutions';
-
-const getAccounts = async (item_id: string) => {
-  const { error, data } = await supabase.from('plaid_accounts').select('*').eq('item_id', item_id);
-
-  if (error) {
-    console.error(error);
-    captureException(error);
-  }
-
-  return (data ?? []) as Account[];
-};
 
 interface AccountsTableProps {
   item_id: string;
@@ -54,13 +42,7 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
-  const {
-    isError,
-    isLoading,
-    data: accounts = [], // Use default value because initialData will be used and cached
-  } = useQuery<Account[]>(['accounts', item_id], () => getAccounts(item_id), {
-    staleTime: 1000 * 60 * 60 * 24, // Cache accounts for a day on client
-  });
+  const { isError, isLoading, accounts } = useAccounts(item_id);
 
   const table = useReactTable<Account>({
     data: accounts,
