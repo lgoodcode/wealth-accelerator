@@ -1,3 +1,5 @@
+import { Check, X, type LucideIcon } from 'lucide-react';
+
 import type { AccountType } from '@/lib/plaid/types/institutions';
 
 type TypeOption = {
@@ -6,7 +8,7 @@ type TypeOption = {
 };
 
 type EnabledOption = {
-  label: string;
+  icon: LucideIcon;
   value: 'true' | 'false';
 };
 
@@ -23,11 +25,11 @@ export const typeOptions: TypeOption[] = [
 
 export const enabledOptions: EnabledOption[] = [
   {
-    label: 'Enabled',
+    icon: Check,
     value: 'true',
   },
   {
-    label: 'Disabled',
+    icon: X,
     value: 'false',
   },
 ];
