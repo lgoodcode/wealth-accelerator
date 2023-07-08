@@ -8,19 +8,19 @@ import type { Filter } from '@/lib/plaid/types/transactions';
 import { FiltersTable } from './table/filters-table';
 
 interface FiltersProps {
-  filters: Filter[];
+  filtersData: Filter[];
 }
 
-export function Filters({ filters }: FiltersProps) {
+export function Filters({ filtersData }: FiltersProps) {
   const setFilters = useSetAtom(filtersAtom);
 
   useEffect(() => {
-    setFilters(filters);
+    setFilters(filtersData);
   }, []);
 
   return (
     <div className="flex justify-center">
-      <FiltersTable />
+      <FiltersTable filters={filtersData} />
     </div>
   );
 }

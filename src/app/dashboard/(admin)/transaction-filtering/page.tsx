@@ -31,7 +31,7 @@ export default async function TransactionFilteringPage() {
     return <PageError />;
   }
 
-  const filters: Filter[] = (data as Filter[]) ?? [];
+  const filters = (data ?? []) as Filter[];
 
   return (
     <div className="p-8">
@@ -42,7 +42,7 @@ export default async function TransactionFilteringPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <Filters filters={filters} />
+      <Filters filtersData={filters} />
     </div>
   );
 }

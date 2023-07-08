@@ -28,11 +28,12 @@ import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
 import type { Filter } from '@/lib/plaid/types/transactions';
-import { useAtomValue } from 'jotai';
-import { filtersAtom } from '../../atoms';
 
-export function FiltersTable() {
-  const filters = useAtomValue(filtersAtom);
+interface FiltersTableProps {
+  filters: Filter[];
+}
+
+export function FiltersTable({ filters }: FiltersTableProps) {
   // const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
