@@ -74,7 +74,7 @@ export const useTransactions = (item: ClientInstitution) => {
   const {
     isError,
     isLoading,
-    data: transactions = [], // Use default value because initialData will be used and cached
+    data: transactions,
   } = useQuery<TransactionWithAccountName[]>(
     ['transactions', item.item_id],
     () => handleGetTransactions(),
