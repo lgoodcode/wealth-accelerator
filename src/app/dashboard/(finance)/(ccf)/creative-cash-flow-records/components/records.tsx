@@ -12,7 +12,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Loading } from '@/components/loading';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { creativeCashFlowRecordsAtom } from '../../atoms';
@@ -28,7 +27,6 @@ interface RecordsProps {
 }
 
 export function Records({ recordsData }: RecordsProps) {
-  const [isMounted, setIsMounted] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [records, setRecords] = useAtom(creativeCashFlowRecordsAtom);
 
@@ -37,13 +35,8 @@ export function Records({ recordsData }: RecordsProps) {
   }, []);
 
   useEffect(() => {
-    setIsMounted(true);
     setRecords(recordsData);
   }, []);
-
-  if (!isMounted) {
-    return <Loading />;
-  }
 
   if (!records.length) {
     return (

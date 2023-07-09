@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
 import {
@@ -9,9 +10,8 @@ import {
   creativeCashFlowInputsAtom,
   creativeCashFlowResultAtom,
   resetCreativeCashFlowInputsAtom,
+  addCreativeCashFlowRecordAtom,
 } from '../../atoms';
-import { supabase } from '@/lib/supabase/client';
-import { generateUUID } from '@/lib/utils/uuid';
 import {
   Accordion,
   AccordionContent,
@@ -20,12 +20,8 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { InputForm } from './input-form';
+import { useSaveRecord } from '../use-save-record';
 import type { Transaction } from '@/lib/plaid/types/transactions';
-import type {
-  CreativeCashFlowManagementInputs,
-  CreativeCashFlowManagementResult,
-} from '../../types';
-import { captureException } from '@sentry/nextjs';
 
 interface ContentProps {
   userId: string;
@@ -35,47 +31,14 @@ interface ContentProps {
   };
 }
 
-const saveRecord = async (
-  user_id: string,
-  inputs: CreativeCashFlowManagementInputs,
-  results: CreativeCashFlowManagementResult
-) => {
-  const id = generateUUID();
-  const { error: inputsError } = await supabase
-    .from('creative_cash_flow_inputs')
-    .insert({
-      id,
-      user_id,
-      ...inputs,
-      start_date: inputs.start_date!.toUTCString(),
-      end_date: inputs.end_date!.toUTCString(),
-    })
-    .eq('user_id', user_id);
-
-  if (inputsError) {
-    throw inputsError;
-  }
-
-  const { error: resultsError } = await supabase
-    .from('creative_cash_flow_results')
-    .insert({
-      id,
-      user_id,
-      ...results,
-    })
-    .eq('user_id', user_id);
-
-  if (resultsError) {
-    throw resultsError;
-  }
-};
-
 export function Calculate({ userId, transactions }: ContentProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
   const creativeCashFlowInputs = useAtomValue(creativeCashFlowInputsAtom);
   const [results, setResults] = useAtom(creativeCashFlowResultAtom);
   const resetCreativeCashFlowInput = useSetAtom(resetCreativeCashFlowInputsAtom);
+  const addCreativeCashFlowRecord = useSetAtom(addCreativeCashFlowRecordAtom);
+  const saveRecord = useSaveRecord();
 
   const handleSave = () => {
     if (!results) {
@@ -85,7 +48,8 @@ export function Calculate({ userId, transactions }: ContentProps) {
     setIsSaving(true);
 
     saveRecord(userId, creativeCashFlowInputs, results)
-      .then(() => {
+      .then((record) => {
+        addCreativeCashFlowRecord(record);
         toast.success(
           'The Creative Cash Flow record has been saved and can be shared with the advisors'
         );

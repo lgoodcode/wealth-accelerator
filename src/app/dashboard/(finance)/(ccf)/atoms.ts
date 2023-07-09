@@ -28,6 +28,14 @@ export const creativeCashFlowResultAtom = atom<CreativeCashFlowManagementResult 
 
 export const creativeCashFlowRecordsAtom = atom<CreativeCashFlowRecord[]>([]);
 
+export const addCreativeCashFlowRecordAtom = atom(
+  null,
+  (get, set, record: CreativeCashFlowRecord) => {
+    const records = get(creativeCashFlowRecordsAtom);
+    set(creativeCashFlowRecordsAtom, [...records, record]);
+  }
+);
+
 export const removeCreativeCashFlowRecordAtom = atom(null, (get, set, id: string) => {
   const records = get(creativeCashFlowRecordsAtom);
   const index = records.findIndex((record) => record.inputs.id === id);

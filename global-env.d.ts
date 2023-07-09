@@ -1,4 +1,7 @@
 export declare global {
+  /** The error code when attempting to query Supabase with `single()` and no rows were returned */
+  export const PG_NO_ROWS_RETURNED = 'PGRST116';
+
   declare namespace NodeJS {
     export interface ProcessEnv {
       NEXT_PUBLIC_SUPABASE_URL: string;

@@ -4,11 +4,13 @@ import type { Metadata } from 'next';
 
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { getUser } from '@/lib/supabase/server/getUser';
+import { isUUID } from '@/lib/utils/isUUID';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { InputsCard } from '../components/inputs-card';
 import { ResultsCard } from '../components/results-card';
 import { TrendsCard } from '../components/trends-card';
+import { NoRecordCard } from './no-record-card';
 import type { CreativeCashFlowRecord } from '../../types';
 
 export const metadata: Metadata = {
@@ -34,6 +36,9 @@ export default async function SharedCreativeCashFlowRecordPage({
     redirect('/login');
   } else if (user.role !== 'admin') {
     redirect('/dashboard');
+    // If invalid UUID is passed, don't request the record and display the no record card
+  } else if (!isUUID(record_id)) {
+    return <NoRecordCard record_id={record_id} />;
   }
 
   const supabase = createSupabase();
@@ -44,9 +49,14 @@ export default async function SharedCreativeCashFlowRecordPage({
     .single();
 
   if (error) {
-    console.error(error);
-    captureException(error);
-    return <PageError />;
+    // If no records returned, display the no record card
+    if (error.code === PG_NO_ROWS_RETURNED) {
+      return <NoRecordCard record_id={record_id} />;
+    } else {
+      console.error(error);
+      captureException(error);
+      return <PageError />;
+    }
   }
 
   const record = data as unknown as CreativeCashFlowRecord;
