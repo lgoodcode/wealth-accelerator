@@ -21,7 +21,7 @@ export default async function CreativeCashFlowRecordsPage() {
   }
 
   const supabase = createSupabase();
-  const { error, data = [] } = await supabase.rpc('get_creative_cash_flow_records', {
+  const { error, data } = await supabase.rpc('get_creative_cash_flow_records', {
     arg_user_id: user.id,
   });
 

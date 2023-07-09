@@ -43,7 +43,7 @@ const getTransactions = async (item_id: string) => {
   let offset = 0;
 
   while (true) {
-    const { error, data = [] } = await supabase.rpc('get_transactions_with_account_name', {
+    const { error, data } = await supabase.rpc('get_transactions_with_account_name', {
       ins_item_id: item_id,
       offset_val: offset,
       limit_val: SUPABASE_QUERY_LIMIT,
