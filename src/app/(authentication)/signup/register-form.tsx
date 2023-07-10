@@ -69,7 +69,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: FormType) => {
     setServerMessage(null);
 
-    const { error } = await supabase.auth.signUp({
+    const { error, data } = await supabase.auth.signUp({
       email: data.email.toLowerCase(),
       password: data.password,
       options: {
@@ -77,6 +77,8 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
         emailRedirectTo: `${location.origin}/api/auth/callback`,
       },
     });
+
+    console.log({ error, data });
 
     if (error) {
       console.error(error);
