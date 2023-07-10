@@ -13,13 +13,17 @@ export async function middleware(req: NextRequest) {
   const isAuthPage = authPagesRegex.test(req.nextUrl.pathname);
   const supabase = createMiddlewareClient<Database>({ req, res });
   const token = parseAuthCookie(req.cookies);
+  const loginRedirectUrl = new URL(`${req.nextUrl.origin}/login`);
+  // Set the redirect_to query param to the current path
+  loginRedirectUrl.searchParams.set('redirect_to', req.nextUrl.pathname);
+
   // If the auth token isn't valid (none or expired), redirect to login page
   // for all pages except auth pages
   if (!token) {
     if (isAuthPage) {
       return res;
     }
-    return NextResponse.redirect(new URL(`${req.nextUrl.origin}/login`));
+    return NextResponse.redirect(loginRedirectUrl);
   }
 
   // Refresh session to prevent expiration
@@ -39,12 +43,24 @@ export async function middleware(req: NextRequest) {
     });
   }
 
+  const dashboardHomeRedirectUrl = new URL(`${req.nextUrl.origin}/dashboard/home`);
+  dashboardHomeRedirectUrl.searchParams.set('redirect_to', req.nextUrl.pathname);
+
   // If there is an error or there's no session, redirect to login page for all pages except auth pages
   if ((error || !session) && !isAuthPage) {
-    return NextResponse.redirect(new URL(`${req.nextUrl.origin}/login`));
+    return NextResponse.redirect(loginRedirectUrl);
   } else if (session && isLoginPage) {
     // If there is a session and user is visiting the login page, redirect to dashboard home
-    return NextResponse.redirect(new URL(`${req.nextUrl.origin}/dashboard/home`));
+    return NextResponse.redirect(dashboardHomeRedirectUrl);
+  }
+
+  // Check if the path is an admin path and if the user is an admin
+  const isAdminPath = req.nextUrl.pathname.startsWith('/dashboard/admin');
+  const isAdmin = session?.user.role === 'admin';
+
+  // If the path is an admin path and the user is not an admin, redirect to dashboard home
+  if (isAdminPath && !isAdmin) {
+    return NextResponse.redirect(dashboardHomeRedirectUrl);
   }
 
   return res;
