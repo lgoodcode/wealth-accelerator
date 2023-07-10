@@ -7,7 +7,11 @@ import type { Account } from '@/lib/plaid/types/institutions';
 const CACHE_ACCOUNTS_FOR = 1000 * 60 * 60 * 24; // 1 day
 
 const getAccounts = async (item_id: string) => {
-  const { error, data } = await supabase.from('plaid_accounts').select('*').eq('item_id', item_id);
+  const { error, data } = await supabase
+    .from('plaid_accounts')
+    .select('*')
+    .eq('item_id', item_id)
+    .order('account_id', { ascending: true });
 
   if (error) {
     console.error(error);
