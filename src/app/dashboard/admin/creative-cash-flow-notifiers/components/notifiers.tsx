@@ -18,5 +18,9 @@ export function Notifiers({ notifiersData }: NotifiersProps) {
     setNotifiers(notifiersData);
   }, []);
 
-  return <NotifiersTable notifiers={notifiers} />;
+  return (
+    <div className="flex justify-center">
+      <NotifiersTable notifiers={notifiers} />
+    </div>
+  );
 }
