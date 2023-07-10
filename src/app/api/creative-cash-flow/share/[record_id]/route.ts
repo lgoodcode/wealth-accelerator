@@ -3,7 +3,7 @@ import { captureException } from '@sentry/nextjs';
 
 import { getUser } from '@/lib/supabase/server/getUser';
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
-import type { Notifier } from '@/app/dashboard/(admin)/creative-cash-flow-notifications/types';
+import type { Notifier } from '@/app/dashboard/admin/creative-cash-flow-notifications/types';
 
 export const GET = ShareCreativeCashFlowRecord;
 
