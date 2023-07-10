@@ -29,11 +29,6 @@ const nextConfig = {
         destination: '/dashboard/creative-cash-flow/calculate',
         permanent: true,
       },
-      {
-        source: '/dashboard/creative-cash-flow-records/:path*',
-        destination: '/dashboard/creative-cash-flow/records/:path*',
-        permanent: false,
-      },
     ];
   },
   rewrites: async () => {
@@ -44,7 +39,7 @@ const nextConfig = {
         // If in CI, use a placeholder URL
         destination: process.env.CI
           ? '/sentry'
-          : `https://${process.env.SENTRY_DSN.split('@')[1].split('/')[0]}/:path*`,
+          : `https://${process.env.NEXT_PUBLIC_SENTRY_DSN.split('@')[1].split('/')[0]}/:path*`,
       },
     ];
   },
