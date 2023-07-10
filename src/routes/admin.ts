@@ -15,7 +15,6 @@ export const adminRoutes: Route[] = [
     Icon: Users,
     description:
       'Manage users of the application. Create, update, and delete users. Manage user insurance policies.',
-    disabled: true,
   },
   {
     name: 'Creative Cash Flow Notifications',
