@@ -50,7 +50,7 @@ export function TablePagination({ table }: TablePaginationProps) {
             <SelectTrigger className="h-8 w-[70px]">
               <SelectValue placeholder={paginationSize} />
             </SelectTrigger>
-            <SelectContent side="top">
+            <SelectContent side="bottom">
               {[10, 20, 30, 40, 50].map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
