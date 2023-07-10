@@ -62,9 +62,7 @@ export function AddFilterButton() {
   };
 
   useEffect(() => {
-    if (isOpen) {
-      form.reset();
-    }
+    form.reset();
   }, [form, isOpen]);
 
   return (

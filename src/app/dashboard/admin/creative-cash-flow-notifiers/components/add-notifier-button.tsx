@@ -54,9 +54,7 @@ export function AddNotifierButton() {
   };
 
   useEffect(() => {
-    if (isOpen) {
-      form.reset();
-    }
+    form.reset();
   }, [form, isOpen]);
 
   return (
