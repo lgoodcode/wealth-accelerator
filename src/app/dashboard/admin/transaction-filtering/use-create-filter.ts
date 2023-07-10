@@ -5,7 +5,10 @@ export const useCreateFilter = () => {
   return async (filter: Pick<Filter, 'filter' | 'category'>) => {
     const { error: insertError, data: newFilter } = await supabase
       .from('plaid_filters')
-      .insert(filter)
+      .insert({
+        ...filter,
+        filter: filter.filter.toLowerCase(),
+      })
       .select('*')
       .single();
 

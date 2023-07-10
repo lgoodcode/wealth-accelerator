@@ -369,17 +369,17 @@ AFTER INSERT OR UPDATE ON plaid_filters
 -- Initial filters
 INSERT INTO plaid_filters (filter, category)
 VALUES
-  ('TRANSFER', 'Transfer'::category_type),
-  ('Deposit', 'Money-In'::category_type),
-  ('Square', 'Money-In'::category_type),
-  ('Bankcard', 'Money-In'::category_type),
-  ('Mobile Deposit', 'Money-In'::category_type),
-  ('Merchant', 'Money-In'::category_type),
-  ('ESQUIRE', 'Money-In'::category_type),
-  ('Stripe', 'Money-In'::category_type),
-  ('Venmo', 'Money-Out'::category_type),
-  ('Fullscript', 'Money-In'::category_type),
-  ('Check', 'Money-Out'::category_type);
+  ('transfer', 'Transfer'::category_type),
+  ('deposit', 'Money-In'::category_type),
+  ('square', 'Money-In'::category_type),
+  ('bankcard', 'Money-In'::category_type),
+  ('mobile deposit', 'Money-In'::category_type),
+  ('merchant', 'Money-In'::category_type),
+  ('esquire', 'Money-In'::category_type),
+  ('stripe', 'Money-In'::category_type),
+  ('venmo', 'Money-Out'::category_type),
+  ('fullscript', 'Money-In'::category_type),
+  ('check', 'Money-Out'::category_type);
 
 
 

@@ -22,7 +22,7 @@ export function Filters({ filtersData }: FiltersProps) {
 
   return (
     <div className="flex justify-center">
-      <FiltersTable filters={filtersData} />
+      <FiltersTable filters={filters} />
     </div>
   );
 }
