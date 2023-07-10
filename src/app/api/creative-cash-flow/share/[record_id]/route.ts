@@ -27,7 +27,7 @@ type SMTP2GoResponse = SMTP2GoResponseError | SMTP2GoResponseSuccess;
 
 type NotifierToSend = Pick<Notifier, 'name' | 'email'>;
 
-const SMTP2GO_URL = process.env.SMPT2GO_API_URL;
+const SMTP2GO_URL = process.env.SMTP2GO_API_URL;
 const EMAIL_SENDER = process.env.EMAIL_SENDER;
 const CCF_RECORD_TEMPLATE = process.env.CCF_RECORD_TEMPLATE;
 
