@@ -54,15 +54,6 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(dashboardHomeRedirectUrl);
   }
 
-  // Check if the path is an admin path and if the user is an admin
-  const isAdminPath = req.nextUrl.pathname.startsWith('/dashboard/admin');
-  const isAdmin = session?.user.role === 'admin';
-
-  // If the path is an admin path and the user is not an admin, redirect to dashboard home
-  if (isAdminPath && !isAdmin) {
-    return NextResponse.redirect(dashboardHomeRedirectUrl);
-  }
-
   return res;
 }
 

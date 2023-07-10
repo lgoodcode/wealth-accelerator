@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: 'Creative Cash Flow',
 };
 
-export default async function CreativeCashFlowPage() {
+export default async function CreativeCashFlowCalculatePage() {
   const user = await getUser();
 
   if (!user) {

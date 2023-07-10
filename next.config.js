@@ -24,6 +24,11 @@ const nextConfig = {
         destination: '/dashboard/personal-finance/finance-info',
         permanent: false,
       },
+      {
+        source: '/dashboard/creative-cash-flow',
+        destination: '/dashboard/creative-cash-flow/calculate',
+        permanent: true,
+      },
     ];
   },
   rewrites: async () => {

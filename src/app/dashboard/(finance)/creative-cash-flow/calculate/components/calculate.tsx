@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { captureException } from '@sentry/nextjs';
@@ -32,6 +33,7 @@ interface ContentProps {
 }
 
 export function Calculate({ userId, transactions }: ContentProps) {
+  const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
   const creativeCashFlowInputs = useAtomValue(creativeCashFlowInputsAtom);
@@ -53,6 +55,7 @@ export function Calculate({ userId, transactions }: ContentProps) {
         toast.success(
           'The Creative Cash Flow record has been saved and can be shared with the advisors'
         );
+        router.refresh(); // Need to refresh so that the records page is updated
       })
       .catch((error) => {
         console.error(error);
