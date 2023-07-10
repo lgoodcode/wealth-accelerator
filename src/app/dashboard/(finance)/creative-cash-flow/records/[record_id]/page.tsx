@@ -50,7 +50,7 @@ export default async function SharedCreativeCashFlowRecordPage({
 
   if (error) {
     // If no records returned, display the no record card
-    if (error.code === PG_NO_ROWS_RETURNED) {
+    if (error.code === 'PGRST116') {
       return <NoRecordCard record_id={record_id} />;
     } else {
       console.error(error);
