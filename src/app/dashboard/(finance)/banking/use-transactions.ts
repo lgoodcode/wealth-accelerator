@@ -74,7 +74,7 @@ export const useTransactions = (item: ClientInstitution) => {
   const {
     isError,
     isLoading,
-    data: transactions,
+    data: transactions = [],
   } = useQuery<TransactionWithAccountName[]>(
     ['transactions', item.item_id],
     () => handleGetTransactions(),

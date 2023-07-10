@@ -21,7 +21,7 @@ export const useAccounts = (item_id: string) => {
   const {
     isError,
     isLoading,
-    data: accounts,
+    data: accounts = [],
   } = useQuery<Account[]>(['accounts', item_id], () => getAccounts(item_id), {
     staleTime: CACHE_ACCOUNTS_FOR,
   });
