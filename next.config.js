@@ -31,7 +31,7 @@ const nextConfig = {
       },
       {
         source: '/dashboard/creative-cash-flow-records/:path*',
-        destination: '/dashboard/creative-cash/records/:path*',
+        destination: '/dashboard/creative-cash-flow/records/:path*',
         permanent: false,
       },
     ];

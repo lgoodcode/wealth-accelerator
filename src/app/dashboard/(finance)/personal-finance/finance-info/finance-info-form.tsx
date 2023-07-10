@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
-import { supabase } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { NumberInput } from '@/components/ui/number-input';
@@ -17,21 +16,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useUpdateFinanceInfo } from '../use-update-finance-info';
 import { FinanceInfoSchema, type FinanceInfoSchemaType as FinanceInfoSchemaType } from '../schema';
-
-const updateFinanceInfo = async (user_id: string, data: FinanceInfoSchemaType) => {
-  const { error } = await supabase
-    .from('personal_finance')
-    .update({
-      ...data,
-      start_date: data.start_date.toUTCString(),
-    })
-    .eq('user_id', user_id);
-
-  if (error) {
-    throw error;
-  }
-};
 
 // Override the type for the start_date because Supabase returns a string.
 interface FinanceInfoFormProps {
@@ -42,6 +28,7 @@ interface FinanceInfoFormProps {
 }
 
 export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
+  const updateFinanceInfo = useUpdateFinanceInfo();
   const form = useForm<FinanceInfoSchemaType>({
     resolver: zodResolver(FinanceInfoSchema),
     defaultValues: {

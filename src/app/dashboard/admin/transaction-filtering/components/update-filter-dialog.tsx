@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { useEffect } from 'react';
 import { useSetAtom } from 'jotai';
 import { useQueryClient } from '@tanstack/react-query';
@@ -7,8 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
+import { useUpdateFilter } from '../use-update-filter';
+import { updateFilterFormSchema, type UpdateFilterFormType } from '../schemas';
 import { setFiltersAtom } from '../atoms';
-import { supabase } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -35,27 +35,6 @@ import {
 } from '@/components/ui/form';
 import { Category, type Filter } from '@/lib/plaid/types/transactions';
 
-const updateFilterFormSchema = z.object({
-  category: z.nativeEnum(Category, {
-    required_error: 'Please select a category for this filter.',
-  }),
-});
-
-type UpdateFilterFormType = z.infer<typeof updateFilterFormSchema>;
-
-const updateFilter = async (id: number, data: UpdateFilterFormType) => {
-  const { error } = await supabase
-    .from('plaid_filters')
-    .update({ category: data.category })
-    .eq('id', id)
-    .select('*')
-    .single();
-
-  if (error) {
-    throw error;
-  }
-};
-
 interface UpdateFilterProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
@@ -63,6 +42,7 @@ interface UpdateFilterProps {
 }
 
 export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterProps) {
+  const updateFilter = useUpdateFilter();
   const queryClient = useQueryClient();
   const setFilters = useSetAtom(setFiltersAtom);
   const form = useForm<UpdateFilterFormType>({

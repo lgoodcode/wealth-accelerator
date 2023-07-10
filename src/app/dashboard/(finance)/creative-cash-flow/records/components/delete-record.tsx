@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useSetAtom } from 'jotai';
 import { toast } from 'react-toastify';
 
-import { supabase } from '@/lib/supabase/client';
+import { useDeleteRecord } from '../use-delete-record';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -18,15 +18,6 @@ import {
 import { removeCreativeCashFlowRecordAtom } from '../../atoms';
 import type { CreativeCashFlowRecord } from '../../types';
 
-const deleteRecord = async (id: string) => {
-  const { error } = await supabase.rpc('delete_creative_cash_flow_record', {
-    record_id: id,
-  });
-  if (error) {
-    throw error;
-  }
-};
-
 interface DeleteRecordProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
@@ -34,6 +25,7 @@ interface DeleteRecordProps {
 }
 
 export function DeleteRecord({ open, onOpenChange, record }: DeleteRecordProps) {
+  const deleteRecord = useDeleteRecord();
   const [isDeleting, setIsDeleting] = useState(false);
   const removeRecord = useSetAtom(removeCreativeCashFlowRecordAtom);
 

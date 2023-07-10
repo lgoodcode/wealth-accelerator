@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { useState, useEffect } from 'react';
 import { useSetAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
@@ -8,8 +7,9 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
+import { useCreateFilter } from '../use-create-filter';
+import { createFilterFormSchema, type CreateFilterFormType } from '../schemas';
 import { setFiltersAtom } from '../atoms';
-import { supabase } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -35,34 +35,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Category, type Filter } from '@/lib/plaid/types/transactions';
-
-const createFilterFormSchema = z.object({
-  filter: z.string({
-    required_error: 'Please enter a filter for this filter.',
-  }),
-  category: z.nativeEnum(Category, {
-    required_error: 'Please select a category for this filter.',
-  }),
-});
-
-type CreateFilterFormType = z.infer<typeof createFilterFormSchema>;
-
-const createFilter = async (filter: Pick<Filter, 'filter' | 'category'>) => {
-  const { error: insertError, data: newFilter } = await supabase
-    .from('plaid_filters')
-    .insert(filter)
-    .select('*')
-    .single();
-
-  if (insertError || !newFilter) {
-    throw insertError || new Error('Failed to insert filter');
-  }
-
-  return newFilter as Filter;
-};
+import { Category } from '@/lib/plaid/types/transactions';
 
 export function AddFilterButton() {
+  const createFilter = useCreateFilter();
   const [isOpen, setIsOpen] = useState(false);
   const setFilters = useSetAtom(setFiltersAtom);
   const queryClient = useQueryClient();

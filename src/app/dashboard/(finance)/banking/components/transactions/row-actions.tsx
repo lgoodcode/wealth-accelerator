@@ -1,6 +1,5 @@
 'use client';
 
-import { z } from 'zod';
 import { useState, useCallback } from 'react';
 import { useAtomValue } from 'jotai';
 import { captureException } from '@sentry/nextjs';
@@ -11,7 +10,6 @@ import { toast } from 'react-toastify';
 import { MoreHorizontal, Pen } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
-import { supabase } from '@/lib/supabase/client';
 import { selectedInstitutionAtom } from '@/lib/plaid/atoms';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -44,42 +42,16 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useUpdateTransaction } from '../../use-update-transaction';
+import { updateTransactionFormSchema, type UpdateTransactionType } from '../../schemas';
 import { Category, type TransactionWithAccountName } from '@/lib/plaid/types/transactions';
-
-const updateTransactionFormSchema = z.object({
-  name: z.string({
-    required_error: 'Please enter a name for this transaction.',
-  }),
-  category: z.nativeEnum(Category, {
-    required_error: 'Please select a category for this tranasction.',
-  }),
-});
-
-type UpdateTransactionType = z.infer<typeof updateTransactionFormSchema>;
-
-const updateTransaction = async (transaction_id: string, data: UpdateTransactionType) => {
-  const { error, data: updatedTransaction } = await supabase
-    .from('plaid_transactions')
-    .update({
-      name: data.name,
-      category: data.category,
-    })
-    .eq('id', transaction_id)
-    .select('*')
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return updatedTransaction as TransactionWithAccountName;
-};
 
 interface RowActionsProps {
   row: Row<TransactionWithAccountName>;
 }
 
 export function RowActions({ row }: RowActionsProps) {
+  const updateTransaction = useUpdateTransaction();
   const queryClient = useQueryClient();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const selectedInstitution = useAtomValue(selectedInstitutionAtom);

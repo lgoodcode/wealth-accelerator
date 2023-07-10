@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
+import { useUpdateNotifier } from '../use-update-notifier';
 import { updateNotifiersAtom } from '../atoms';
-import { supabase } from '@/lib/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -29,25 +29,6 @@ import {
 import { updateNotifierFormSchema, type UpdateNotifiersType } from '../schema';
 import type { Notifier } from '../types';
 
-const updateNotifier = async (id: number, data: UpdateNotifiersType) => {
-  const { error, data: updatedNotifer } = await supabase
-    .from('creative_cash_flow_notifiers')
-    .update({
-      name: data.name,
-      email: data.email.toLowerCase(),
-      enabled: data.enabled,
-    })
-    .eq('id', id)
-    .select('*')
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return updatedNotifer as Notifier;
-};
-
 interface UpdateNotifierDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -55,6 +36,7 @@ interface UpdateNotifierDialogProps {
 }
 
 export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNotifierDialogProps) {
+  const updateNotifier = useUpdateNotifier();
   const [isUpdating, setIsUpdating] = useState(false);
   const updateNotifiers = useSetAtom(updateNotifiersAtom);
   const form = useForm<UpdateNotifiersType>({

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useSetAtom } from 'jotai';
 import { toast } from 'react-toastify';
 
-import { fetcher } from '@/lib/utils/fetcher';
 import { removeInstitutionAtom } from '@/lib/plaid/atoms';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,15 +13,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { useDeleteInstitution } from '../use-delete-institution';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
-
-const deleteInstitution = async (item_id: string) => {
-  const { error } = await fetcher(`/api/plaid/institutions/remove/${item_id}`, {
-    method: 'DELETE',
-  });
-
-  throw error;
-};
 
 interface DeleteInstitutionProps {
   open: boolean;
@@ -31,6 +23,7 @@ interface DeleteInstitutionProps {
 }
 
 export function DeleteInstitution({ open, onOpenChange, institution }: DeleteInstitutionProps) {
+  const deleteInstitution = useDeleteInstitution();
   const [isDeleting, setIsDeleting] = useState(false);
   const removeInstitution = useSetAtom(removeInstitutionAtom);
 

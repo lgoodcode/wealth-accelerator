@@ -6,8 +6,8 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
+import { useCreateNotifier } from '../use-create-notifier';
 import { addNotifierAtom } from '../atoms';
-import { supabase } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -28,26 +28,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { updateNotifierFormSchema, type UpdateNotifiersType } from '../schema';
-import type { Notifier } from '../types';
-
-const createNotifier = async (notifier: Pick<Notifier, 'name' | 'email' | 'enabled'>) => {
-  const { error: insertError, data: newNotifier } = await supabase
-    .from('creative_cash_flow_notifiers')
-    .insert({
-      ...notifier,
-      email: notifier.email.toLowerCase(),
-    })
-    .select('*')
-    .single();
-
-  if (insertError || !newNotifier) {
-    throw insertError || new Error('Failed to insert notifier');
-  }
-
-  return newNotifier as Notifier;
-};
 
 export function AddNotifierButton() {
+  const createNotifier = useCreateNotifier();
   const [isOpen, setIsOpen] = useState(false);
   const addNotifier = useSetAtom(addNotifierAtom);
   const form = useForm<UpdateNotifiersType>({
