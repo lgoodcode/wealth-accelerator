@@ -28,8 +28,8 @@ export function creativeCashFlowManagement({
     throw new Error('end_date is not defined');
   }
 
-  const start_time = start_date.setHours(0, 0, 0, 0);
-  const end_time = end_date.setHours(23, 59, 59, 999);
+  const start_time = start_date.getTime();
+  const end_time = end_date.getTime();
 
   let collections = all_other_income;
   let business_overhead = -payroll_and_distributions;
