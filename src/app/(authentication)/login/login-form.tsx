@@ -3,11 +3,9 @@
 import { z } from 'zod';
 import Link from 'next/link';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useLogin } from './use-login';
 
 const formSchema = z.object({
   email: z.string().nonempty('Please enter your email').email(),
@@ -28,7 +27,7 @@ const formSchema = z.object({
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
-  const router = useRouter();
+  const login = useLogin();
   const [serverError, setServerError] = useState('');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,19 +40,10 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setServerError('');
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email: data.email,
-      password: data.password,
-    });
-
-    if (error) {
+    await login(data).catch((error) => {
       console.error(error);
       setServerError(error.message);
-      return;
-    }
-
-    router.refresh();
-    router.push('/dashboard/home');
+    });
   };
 
   return (
@@ -102,7 +92,6 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
           <Button
             type="submit"
             loading={form.formState.isSubmitting}
-            disabled={form.formState.isSubmitting}
             // override default spinner color for light theme
             spinner={{ className: 'border-white border-b-primary' }}
           >

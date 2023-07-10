@@ -14,7 +14,7 @@ export interface Database {
           all_other_income: number
           created: string
           end_date: string
-          id: number
+          id: string
           lifestyle_expenses_tax_rate: number
           optimal_savings_strategy: number
           payroll_and_distributions: number
@@ -26,7 +26,7 @@ export interface Database {
           all_other_income: number
           created?: string
           end_date: string
-          id?: number
+          id: string
           lifestyle_expenses_tax_rate: number
           optimal_savings_strategy: number
           payroll_and_distributions: number
@@ -38,7 +38,7 @@ export interface Database {
           all_other_income?: number
           created?: string
           end_date?: string
-          id?: number
+          id?: string
           lifestyle_expenses_tax_rate?: number
           optimal_savings_strategy?: number
           payroll_and_distributions?: number
@@ -47,12 +47,32 @@ export interface Database {
           user_id?: string
         }
       }
+      creative_cash_flow_notifiers: {
+        Row: {
+          email: string
+          enabled: boolean
+          id: number
+          name: string
+        }
+        Insert: {
+          email: string
+          enabled?: boolean
+          id?: number
+          name: string
+        }
+        Update: {
+          email?: string
+          enabled?: boolean
+          id?: number
+          name?: string
+        }
+      }
       creative_cash_flow_results: {
         Row: {
           business_overhead: number
           business_profit_before_tax: number
           collections: number
-          id: number
+          id: string
           lifestyle_expenses: number
           lifestyle_expenses_tax: number
           monthly_trend: number[]
@@ -67,7 +87,7 @@ export interface Database {
           business_overhead: number
           business_profit_before_tax: number
           collections: number
-          id?: number
+          id: string
           lifestyle_expenses: number
           lifestyle_expenses_tax: number
           monthly_trend: number[]
@@ -82,7 +102,7 @@ export interface Database {
           business_overhead?: number
           business_profit_before_tax?: number
           collections?: number
-          id?: number
+          id?: string
           lifestyle_expenses?: number
           lifestyle_expenses_tax?: number
           monthly_trend?: number[]
@@ -261,9 +281,37 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      delete_creative_cash_flow_record: {
+        Args: {
+          record_id: string
+        }
+        Returns: undefined
+      }
       generate_rates: {
         Args: Record<PropertyKey, never>
         Returns: number[]
+      }
+      get_ccf_records: {
+        Args: Record<PropertyKey, never>
+        Returns: Json[]
+      }
+      get_creative_cash_flow_record: {
+        Args: {
+          record_id: string
+        }
+        Returns: {
+          inputs: Json
+          results: Json
+        }[]
+      }
+      get_creative_cash_flow_records: {
+        Args: {
+          arg_user_id: string
+        }
+        Returns: {
+          inputs: Json
+          results: Json
+        }[]
       }
       get_transactions_by_account_ids: {
         Args: {
@@ -292,6 +340,15 @@ export interface Database {
           category: Database["public"]["Enums"]["category_type"]
           date: string
           account: string
+        }[]
+      }
+      get_user_cash_flow_data: {
+        Args: {
+          arg_user_id: string
+        }
+        Returns: {
+          inputs: Json
+          results: Json
         }[]
       }
     }

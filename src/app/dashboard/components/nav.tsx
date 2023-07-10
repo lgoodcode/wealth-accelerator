@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { LucideIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
-
 import { generalRoutes, financeRoutes, adminRoutes, exampleRoutes } from '@/routes';
 import {
   NavigationMenu,
@@ -40,7 +39,7 @@ const ListItem = forwardRef<React.ElementRef<'a'>, ListItemProps>(
                 <Icon className="w-6 h-6" />
               </div>
               <div className="space-y-2">
-                <div className="text-sm font-semibold leading-none">{title}</div>
+                <div className="text-sm font-semibold leading-5">{title}</div>
                 <p className="text-sm leading-snug text-muted-foreground">{children}</p>
               </div>
             </div>

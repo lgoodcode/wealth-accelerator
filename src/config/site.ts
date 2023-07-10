@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   ],
   icons: {
     icon: '/favicon.ico',
-    shortcut: '/img/logo.png',
-    apple: '/img/logo.png',
+    shortcut: '/img/icon.png',
+    apple: '/img/icon.png',
   },
   openGraph: {
     type: 'website',
@@ -27,13 +27,13 @@ export const metadata: Metadata = {
     siteName: 'Wealth Accelerator',
     images: [
       {
-        url: '/img/title-logo.png',
+        url: '/img/logo-318x85.png',
         width: 318,
         height: 85,
         alt: 'ChiroWealth logo with text',
       },
       {
-        url: '/img/logo.png',
+        url: '/img/icon.png',
         width: 64,
         height: 52,
         alt: 'logo',

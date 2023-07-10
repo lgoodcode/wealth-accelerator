@@ -1,6 +1,5 @@
 'use client';
 
-import { z } from 'zod';
 import { useState, useCallback } from 'react';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { captureException } from '@sentry/nextjs';
@@ -10,7 +9,6 @@ import { toast } from 'react-toastify';
 import { MoreHorizontal, Pen } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
-import { supabase } from '@/lib/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -43,46 +41,16 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useUpdateAccount } from '../../use-aupdate-account';
+import { updateAccountFormSchema, type UpdateAccountType } from '../../schemas';
 import type { Account } from '@/lib/plaid/types/institutions';
-
-const updateAccountFormSchema = z.object({
-  name: z.string({
-    required_error: 'Please enter a name for this account.',
-  }),
-  type: z.enum(['personal', 'business'], {
-    required_error: 'Please select a type for this account.',
-  }),
-  enabled: z.boolean({
-    required_error: 'Please select whether this account is enabled or not.',
-  }),
-});
-
-type UpdateAccountType = z.infer<typeof updateAccountFormSchema>;
-
-const updateAccount = async (account_id: string, data: UpdateAccountType) => {
-  const { error, data: updatedAccount } = await supabase
-    .from('plaid_accounts')
-    .update({
-      name: data.name,
-      type: data.type,
-      enabled: data.enabled,
-    })
-    .eq('account_id', account_id)
-    .select('*')
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return updatedAccount as Account;
-};
 
 interface RowActionsProps {
   row: Row<Account>;
 }
 
 export function RowActions({ row }: RowActionsProps) {
+  const updateAccount = useUpdateAccount();
   const queryClient = useQueryClient();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const form = useForm<UpdateAccountType>({
@@ -93,11 +61,6 @@ export function RowActions({ row }: RowActionsProps) {
       enabled: row.original.enabled,
     },
   });
-
-  const handleCloseUpdateDialog = useCallback(() => {
-    form.reset();
-    setShowUpdateDialog(false);
-  }, [form]);
 
   const handleUpdateDialogOpenChange = useCallback(
     (open: boolean) => {
@@ -127,7 +90,7 @@ export function RowActions({ row }: RowActionsProps) {
         return oldAccounts;
       });
     },
-    onSettled: handleCloseUpdateDialog,
+    onSettled: () => handleUpdateDialogOpenChange(false),
   });
 
   const onSubmitUpdate = useCallback((data: UpdateAccountType) => mutate(data), [mutate]);
@@ -213,7 +176,11 @@ export function RowActions({ row }: RowActionsProps) {
             </form>
           </Form>
           <DialogFooter>
-            <Button variant="secondary" disabled={isLoading} onClick={handleCloseUpdateDialog}>
+            <Button
+              variant="secondary"
+              disabled={isLoading}
+              onClick={() => handleUpdateDialogOpenChange(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" loading={isLoading} onClick={form.handleSubmit(onSubmitUpdate)}>

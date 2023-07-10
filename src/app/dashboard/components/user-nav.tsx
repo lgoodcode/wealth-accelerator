@@ -36,6 +36,7 @@ export function UserNav({ user }: UserNavProps) {
   const logout = async () => {
     setSentryUser(null);
     await supabase.auth.signOut();
+    router.push('/login');
     router.refresh();
   };
 

@@ -13,6 +13,7 @@ const requiredEnvVars = [
   'PLAID_VERSION',
   'PLAID_REDIRECT_URI',
   'PLAID_WEBHOOK_URI',
+  'SMTP2GO_API_KEY',
 ];
 
 // Skip checking environment variables if in local development or running on CI

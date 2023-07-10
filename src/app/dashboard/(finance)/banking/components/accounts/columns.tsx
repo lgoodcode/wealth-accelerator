@@ -81,10 +81,8 @@ export const columns: ColumnDef<Account>[] = [
     accessorKey: 'enabled',
     header: ({ column }) => <ColumnHeader column={column} title="Enabled" />,
     cell: ({ row }) => {
-      const enabledValue = row.getValue<boolean>('enabled');
-      const enabled = enabledOptions.find(
-        (option) => option.value === (enabledValue ? 'true' : 'false')
-      );
+      const isEnabled = row.getValue<boolean>('enabled') ? 'true' : 'false';
+      const enabled = enabledOptions.find((option) => option.value === isEnabled);
 
       if (!enabled) {
         return null;
@@ -92,7 +90,7 @@ export const columns: ColumnDef<Account>[] = [
 
       return (
         <div className="flex items-center">
-          <span>{enabled.label}</span>
+          <enabled.icon className="ml-4" />
         </div>
       );
     },

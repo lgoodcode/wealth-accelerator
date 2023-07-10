@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useSignUp } from './use-signup';
 
 const formSchema = z.object({
   name: z
@@ -43,7 +43,7 @@ const formSchema = z.object({
     }),
 });
 
-type FormType = z.infer<typeof formSchema>;
+export type FormType = z.infer<typeof formSchema>;
 
 type ServerMessage = {
   type: 'error' | 'success';
@@ -53,6 +53,7 @@ type ServerMessage = {
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function RegisterForm({ className, ...props }: UserAuthFormProps) {
+  const signUp = useSignUp();
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -66,27 +67,20 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: FormType) => {
     setServerMessage(null);
 
-    const { error } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-      options: {
-        data: { name: data.name },
-        emailRedirectTo: `${location.origin}/api/auth/callback`,
-      },
-    });
-
-    if (error) {
-      console.error(error);
-      setServerMessage({
-        type: 'error',
-        message: error.message,
+    await signUp(data)
+      .then(() => {
+        setServerMessage({
+          type: 'success',
+          message: 'Check your email for the confirmation link',
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        setServerMessage({
+          type: 'error',
+          message: error.message,
+        });
       });
-    } else {
-      setServerMessage({
-        type: 'success',
-        message: 'Check your email for the confirmation link',
-      });
-    }
   };
 
   return (
@@ -156,7 +150,6 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
           <Button
             type="submit"
             loading={form.formState.isSubmitting}
-            disabled={form.formState.isSubmitting}
             // override default spinner color for light theme
             spinner={{ className: 'border-white border-b-primary' }}
           >

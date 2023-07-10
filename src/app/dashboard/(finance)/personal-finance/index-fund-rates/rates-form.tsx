@@ -7,25 +7,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 import { Copy } from 'lucide-react';
 
-import { supabase } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { NumberInput } from '@/components/ui/number-input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useUpdateRates } from '../use-update-rates';
 import { RatesFormSchema, type RatesFormSchemaType } from '../schema';
 
 const NUM_RATE_YEARS = 60;
-
-const updateRates = async (user_id: string, data: RatesFormSchemaType) => {
-  const { error } = await supabase
-    .from('personal_finance')
-    .update({ rates: data.rates })
-    .eq('user_id', user_id);
-
-  if (error) {
-    throw error;
-  }
-};
 
 // Override the type for the start_date because Supabase returns a string.
 interface RatesFormProps {
@@ -34,6 +23,7 @@ interface RatesFormProps {
 }
 
 export function RatesForm({ user, initialValues }: RatesFormProps) {
+  const updateRates = useUpdateRates();
   const [allRates, setAllRates] = useState<number>();
   const form = useForm<RatesFormSchemaType>({
     resolver: zodResolver(RatesFormSchema(NUM_RATE_YEARS)),
@@ -41,7 +31,7 @@ export function RatesForm({ user, initialValues }: RatesFormProps) {
   });
 
   const onSubmit = async (data: RatesFormSchemaType) => {
-    updateRates(user.id, data)
+    await updateRates(user.id, data)
       .then(() => {
         toast.success('Your information has been saved');
       })

@@ -11,7 +11,7 @@
     "prefer-const": "error",
     // Ignore prop-types because we are using TypeScript
     "react/prop-types": "off",
-    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/exhaustive-deps": "off",
     // Don't need React to be in scope because it is global
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-explicit-any": "off",

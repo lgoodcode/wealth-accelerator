@@ -127,7 +127,7 @@ const CommandItem = React.forwardRef<
     {...props}
   >
     <span
-      className={cn('flex flex-row', {
+      className={cn('flex flex-row items-center', {
         'opacity-50': disabled || loading,
       })}
     >
