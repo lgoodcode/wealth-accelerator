@@ -13,10 +13,10 @@ interface ShareRecordButtonProps {
 export function ShareRecordButton({ record }: ShareRecordButtonProps) {
   const shareRecord = useShareRecord();
   const [isSharing, setIsSharing] = useState(false);
-  const handleShare = () => {
+  const handleShare = async () => {
     setIsSharing(true);
 
-    shareRecord(record.inputs.id)
+    await shareRecord(record.inputs.id)
       .then(() => {
         toast.success('An email has been sent to all advisors');
       })

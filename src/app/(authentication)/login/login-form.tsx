@@ -40,7 +40,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setServerError('');
 
-    login(data).catch((error) => {
+    await login(data).catch((error) => {
       console.error(error);
       setServerError(error.message);
     });

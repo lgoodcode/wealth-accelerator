@@ -46,8 +46,8 @@ export function AddFilterButton() {
     resolver: zodResolver(createFilterFormSchema),
   });
 
-  const handleCreate = (data: CreateFilterFormType) => {
-    createFilter(data)
+  const handleCreate = async (data: CreateFilterFormType) => {
+    await createFilter(data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then((filter) => {
         setFilters(filter);

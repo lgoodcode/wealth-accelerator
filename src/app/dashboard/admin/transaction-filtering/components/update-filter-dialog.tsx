@@ -53,7 +53,7 @@ export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterP
   });
 
   const handleUpdate = async (data: UpdateFilterFormType) => {
-    updateFilter(filter.id, data)
+    await updateFilter(filter.id, data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {
         setFilters({

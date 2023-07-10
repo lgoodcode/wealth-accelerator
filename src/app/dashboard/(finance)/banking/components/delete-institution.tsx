@@ -34,7 +34,7 @@ export function DeleteInstitution({ open, onOpenChange, institution }: DeleteIns
 
     setIsDeleting(true);
 
-    deleteInstitution(institution.item_id)
+    await deleteInstitution(institution.item_id)
       .then(() => {
         toast.success(
           <span>

@@ -59,7 +59,7 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
   const handleUpdate = async (data: UpdateNotifiersType) => {
     setIsUpdating(true);
 
-    updateNotifier(notifier.id, data)
+    await updateNotifier(notifier.id, data)
       .then((updatedNotifier) => {
         updateNotifiers(updatedNotifier);
         handleUpdateDialogOpenChange(false);

@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 import { MoreHorizontal, Pen, Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
-import { supabase } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -17,30 +16,24 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { removeNotifierAtom } from '../../atoms';
+import { useDeleteNotifier } from '../../use-delete-notifier';
 import { UpdateNotifierDialog } from '../update-notifier-dialog';
 import type { Notifier } from '../../types';
-
-const deleteNotifier = async (id: number) => {
-  const { error } = await supabase.from('creative_cash_flow_notifiers').delete().eq('id', id);
-
-  if (error) {
-    throw error;
-  }
-};
 
 interface RowActionsProps {
   row: Row<Notifier>;
 }
 
 export function RowActions({ row }: RowActionsProps) {
+  const deleteNotifier = useDeleteNotifier();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const removeNotifer = useSetAtom(removeNotifierAtom);
   const handleUpdateDialogOpenChange = useCallback((open?: boolean) => {
     setShowUpdateDialog((prev) => (open ? open : !prev));
   }, []);
 
-  const handleDelete = useCallback(() => {
-    deleteNotifier(row.original.id)
+  const handleDelete = useCallback(async () => {
+    await deleteNotifier(row.original.id)
       .then(() => {
         removeNotifer(row.original.id);
       })

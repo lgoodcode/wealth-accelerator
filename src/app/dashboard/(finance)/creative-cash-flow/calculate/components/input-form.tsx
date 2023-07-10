@@ -45,7 +45,7 @@ export function InputForm({ transactions }: InputsFormProps) {
   const watchValues = form.watch();
 
   // Calculate the results
-  const onSubmit = async (data: InputsFormSchemaType) => {
+  const onSubmit = (data: InputsFormSchemaType) => {
     setCreativeCashFlowInputs(data);
 
     const result = creativeCashFlowManagement({

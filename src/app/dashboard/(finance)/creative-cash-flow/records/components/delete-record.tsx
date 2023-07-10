@@ -32,7 +32,7 @@ export function DeleteRecord({ open, onOpenChange, record }: DeleteRecordProps) 
   const handleDelete = async () => {
     setIsDeleting(true);
 
-    deleteRecord(record.inputs.id)
+    await deleteRecord(record.inputs.id)
       .then(() => {
         toast.success('Successfully removed record');
         onOpenChange(false);

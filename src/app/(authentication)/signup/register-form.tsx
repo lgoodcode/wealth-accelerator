@@ -67,7 +67,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: FormType) => {
     setServerMessage(null);
 
-    signUp(data)
+    await signUp(data)
       .then(() => {
         setServerMessage({
           type: 'success',

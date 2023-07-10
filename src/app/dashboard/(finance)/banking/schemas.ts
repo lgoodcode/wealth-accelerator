@@ -8,6 +8,20 @@ export const renameFormSchema = z.object({
   }),
 });
 
+export const updateAccountFormSchema = z.object({
+  name: z.string({
+    required_error: 'Please enter a name for this account.',
+  }),
+  type: z.enum(['personal', 'business'], {
+    required_error: 'Please select a type for this account.',
+  }),
+  enabled: z.boolean({
+    required_error: 'Please select whether this account is enabled or not.',
+  }),
+});
+
+export type UpdateAccountType = z.infer<typeof updateAccountFormSchema>;
+
 export type RenameFormType = z.infer<typeof renameFormSchema>;
 
 export const updateTransactionFormSchema = z.object({

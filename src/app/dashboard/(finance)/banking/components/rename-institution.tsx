@@ -46,7 +46,7 @@ export function RenameInstitution({ open, onOpenChange, institution }: RenameIns
       return;
     }
 
-    renameInstitution(institution, data)
+    await renameInstitution(institution, data)
       .then(() => {
         toast.success('Institution renamed');
         updateInstitutions({

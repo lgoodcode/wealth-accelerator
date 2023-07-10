@@ -31,7 +31,7 @@ export function RatesForm({ user, initialValues }: RatesFormProps) {
   });
 
   const onSubmit = async (data: RatesFormSchemaType) => {
-    updateRates(user.id, data)
+    await updateRates(user.id, data)
       .then(() => {
         toast.success('Your information has been saved');
       })

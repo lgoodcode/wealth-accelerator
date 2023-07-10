@@ -42,14 +42,14 @@ export function Calculate({ userId, transactions }: ContentProps) {
   const addCreativeCashFlowRecord = useSetAtom(addCreativeCashFlowRecordAtom);
   const saveRecord = useSaveRecord();
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!results) {
       return;
     }
 
     setIsSaving(true);
 
-    saveRecord(userId, creativeCashFlowInputs, results)
+    await saveRecord(userId, creativeCashFlowInputs, results)
       .then((record) => {
         addCreativeCashFlowRecord(record);
         toast.success(

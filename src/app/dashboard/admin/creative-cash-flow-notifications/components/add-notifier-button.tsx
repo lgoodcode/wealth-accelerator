@@ -40,8 +40,8 @@ export function AddNotifierButton() {
     },
   });
 
-  const handleCreate = (data: UpdateNotifiersType) => {
-    createNotifier(data)
+  const handleCreate = async (data: UpdateNotifiersType) => {
+    await createNotifier(data)
       .then((notifier) => {
         addNotifier(notifier);
         setIsOpen(false);

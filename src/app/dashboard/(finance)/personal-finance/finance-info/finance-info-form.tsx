@@ -38,7 +38,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
   });
 
   const onSubmit = async (data: FinanceInfoSchemaType) => {
-    updateFinanceInfo(user.id, data)
+    await updateFinanceInfo(user.id, data)
       .then(() => {
         toast.success('Your information has been saved');
       })
