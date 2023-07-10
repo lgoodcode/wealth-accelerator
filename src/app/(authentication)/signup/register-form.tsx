@@ -52,8 +52,10 @@ type ServerMessage = {
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
+import { supabase } from '@/lib/supabase/client';
+
 export function RegisterForm({ className, ...props }: UserAuthFormProps) {
-  const signUp = useSignUp();
+  // const signUp = useSignUp();
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -67,20 +69,28 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: FormType) => {
     setServerMessage(null);
 
-    await signUp(data)
-      .then(() => {
-        setServerMessage({
-          type: 'success',
-          message: 'Check your email for the confirmation link',
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-        setServerMessage({
-          type: 'error',
-          message: error.message,
-        });
+    const { error } = await supabase.auth.signUp({
+      email: data.email.toLowerCase(),
+      password: data.password,
+      options: {
+        data: { name: data.name },
+        emailRedirectTo: `${location.origin}/api/auth/callback`,
+      },
+    });
+
+    if (error) {
+      console.error(error);
+      setServerMessage({
+        type: 'error',
+        message: error.message,
       });
+      return;
+    }
+
+    setServerMessage({
+      type: 'success',
+      message: 'Check your email for the confirmation link',
+    });
   };
 
   return (
