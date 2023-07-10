@@ -15,12 +15,14 @@ export function Filters({ filtersData }: FiltersProps) {
   const [filters, setFilters] = useAtom(filtersAtom);
 
   useEffect(() => {
-    setFilters(filtersData);
-  }, []);
+    if (!filters) {
+      setFilters(filtersData);
+    }
+  }, [filtersData]);
 
   return (
     <div className="flex justify-center">
-      <FiltersTable filters={filters} />
+      <FiltersTable filters={filtersData} />
     </div>
   );
 }
