@@ -27,9 +27,9 @@ type SMTP2GoResponse = SMTP2GoResponseError | SMTP2GoResponseSuccess;
 
 type NotifierToSend = Pick<Notifier, 'name' | 'email'>;
 
-const SMTP2GO_URL = 'https://api.smtp2go.com/v3/email/send';
-const EMAIL_SENDER = 'ChiroWealth <noreply@mail.chirowealth.com>';
-const CCF_RECORD_TEMPLATE = 'share_ccf_record';
+const SMTP2GO_URL = process.env.SMPT2GO_API_URL;
+const EMAIL_SENDER = process.env.EMAIL_SENDER;
+const CCF_RECORD_TEMPLATE = process.env.CCF_RECORD_TEMPLATE;
 
 const createEmailBody = (record_id: string, sharerName: string, notifiers: NotifierToSend[]) => {
   return JSON.stringify({

@@ -16,6 +16,9 @@ export declare global {
       PLAID_REDIRECT_URI: string;
       PLAID_WEBHOOK_URI: string;
       SMPT2GO_API_KEY: string;
+      SMPT2GO_API_URL: string;
+      EMAIL_SENDER: string;
+      CCF_RECORD_TEMPLATE: string;
     }
   }
 
