@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
+import { Users } from './components/users';
 
 export const metadata: Metadata = {
   title: 'Manage Users',
@@ -28,6 +29,7 @@ export default async function ManageUsersPage() {
         <p className="text-muted-foreground">View, create, update, and delete users.</p>
       </div>
       <Separator className="mt-6" />
+      <Users usersData={users} />
     </div>
   );
 }
