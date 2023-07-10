@@ -13,7 +13,10 @@ export const metadata: Metadata = {
 
 export default async function CreativeCashFlowNotificationsPage() {
   const supabase = createSupabase();
-  const { error, data } = await supabase.from('creative_cash_flow_notifiers').select('*');
+  const { error, data } = await supabase
+    .from('creative_cash_flow_notifiers')
+    .select('*')
+    .order('id', { ascending: true });
 
   if (error) {
     console.error(error);
@@ -26,7 +29,7 @@ export default async function CreativeCashFlowNotificationsPage() {
   return (
     <div className="p-8">
       <div className="space-y-1">
-        <h2 className="text-3xl font-bold">Creative Cash Flow Notifications</h2>
+        <h2 className="text-3xl font-bold">Creative Cash Flow Notifiers</h2>
         <p className="text-muted-foreground">
           Manage the emails that will be notified when a user shares a Creative Cash Flow Record.
         </p>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { notifiersAtom } from '../atoms';
 import { NotifiersTable } from './table/notifiers-table';
@@ -12,11 +12,16 @@ interface NotifiersProps {
 }
 
 export function Notifiers({ notifiersData }: NotifiersProps) {
+  const [isMounted, setIsMounted] = useState(false);
   const [notifiers, setNotifiers] = useAtom(notifiersAtom);
 
   useEffect(() => {
-    setNotifiers(notifiersData);
-  }, []);
+    console.log('useEffect');
+    if (!isMounted) {
+      console.log('set');
+      setNotifiers(notifiersData);
+    }
+  }, [isMounted]);
 
   return <NotifiersTable notifiers={notifiers} />;
 }

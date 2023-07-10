@@ -30,16 +30,17 @@ import { TablePagination } from './table-pagination';
 import type { Notifier } from '../../types';
 
 interface NotifiersTableProps {
-  notifiers: Notifier[];
+  notifiers: Notifier[] | null;
 }
 
 export function NotifiersTable({ notifiers }: NotifiersTableProps) {
+  console.log('notifiers', notifiers);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable<Notifier>({
-    data: notifiers,
+    data: notifiers || [],
     columns,
     state: {
       sorting,
