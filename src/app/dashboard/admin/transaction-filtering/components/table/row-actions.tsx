@@ -8,7 +8,6 @@ import { MoreHorizontal, Pen, Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
 import { removeFilterAtom } from '../../atoms';
-import { supabase } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -17,22 +16,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useDeleteFilter } from '../../use-delete-filter';
 import { UpdateFilterDialog } from '../update-filter-dialog';
 import { type Filter } from '@/lib/plaid/types/transactions';
-
-const deleteFilter = async (id: number) => {
-  const { error } = await supabase.from('plaid_filters').delete().eq('id', id);
-
-  if (error) {
-    throw error;
-  }
-};
 
 interface RowActionsProps {
   row: Row<Filter>;
 }
 
 export function RowActions({ row }: RowActionsProps) {
+  const deleteFilter = useDeleteFilter();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const removeFilter = useSetAtom(removeFilterAtom);
 
