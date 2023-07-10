@@ -69,7 +69,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: FormType) => {
     setServerMessage(null);
 
-    const { error, data } = await supabase.auth.signUp({
+    const { error, data: res } = await supabase.auth.signUp({
       email: data.email.toLowerCase(),
       password: data.password,
       options: {
@@ -78,7 +78,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
       },
     });
 
-    console.log({ error, data });
+    console.log({ error, res });
 
     if (error) {
       console.error(error);
