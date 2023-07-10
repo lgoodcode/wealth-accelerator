@@ -9,7 +9,7 @@ import { PlusCircle } from 'lucide-react';
 
 import { useCreateFilter } from '../use-create-filter';
 import { createFilterFormSchema, type CreateFilterFormType } from '../schemas';
-import { setFiltersAtom } from '../atoms';
+import { addFilterAtom } from '../atoms';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -40,7 +40,7 @@ import { Category } from '@/lib/plaid/types/transactions';
 export function AddFilterButton() {
   const createFilter = useCreateFilter();
   const [isOpen, setIsOpen] = useState(false);
-  const setFilters = useSetAtom(setFiltersAtom);
+  const addFilter = useSetAtom(addFilterAtom);
   const queryClient = useQueryClient();
   const form = useForm<CreateFilterFormType>({
     resolver: zodResolver(createFilterFormSchema),
@@ -50,7 +50,7 @@ export function AddFilterButton() {
     await createFilter(data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then((filter) => {
-        setFilters(filter);
+        addFilter(filter);
         queryClient.invalidateQueries({ queryKey: ['transactions'] });
         setIsOpen(false);
       })

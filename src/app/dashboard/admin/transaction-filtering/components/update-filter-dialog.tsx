@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 
 import { useUpdateFilter } from '../use-update-filter';
 import { updateFilterFormSchema, type UpdateFilterFormType } from '../schemas';
-import { setFiltersAtom } from '../atoms';
+import { updateFilterAtom } from '../atoms';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -44,7 +44,7 @@ interface UpdateFilterProps {
 export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterProps) {
   const updateFilter = useUpdateFilter();
   const queryClient = useQueryClient();
-  const setFilters = useSetAtom(setFiltersAtom);
+  const updateFilterAtomSetter = useSetAtom(updateFilterAtom);
   const form = useForm<UpdateFilterFormType>({
     resolver: zodResolver(updateFilterFormSchema),
     values: {
@@ -56,7 +56,7 @@ export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterP
     await updateFilter(filter.id, data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {
-        setFilters({
+        updateFilterAtomSetter({
           ...filter,
           category: data.category,
         });

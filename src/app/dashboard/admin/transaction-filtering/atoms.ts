@@ -6,45 +6,50 @@ export const isUpdateDialogOpenAtom = atom(false);
 
 export const filtersAtom = atom<Filter[] | null>(null);
 
-export const setFiltersAtom = atom(null, (get, set, updatedFilter: Filter) => {
-  const filters = get(filtersAtom);
-  let updated = false;
-
-  if (!filters) {
-    set(filtersAtom, [updatedFilter]);
-    return;
-  }
-
-  const newFilters = filters.map((filter) => {
-    if (filter.id === updatedFilter.id) {
-      updated = true;
-      return updatedFilter;
+export const addFilterAtom = atom(null, (_get, set, newFilter: Filter) => {
+  set(filtersAtom, (filters) => {
+    if (!filters) {
+      return [newFilter];
     }
-    return filter;
+
+    return [...filters, newFilter];
   });
-
-  if (!updated) {
-    newFilters.push(updatedFilter);
-  }
-
-  set(filtersAtom, newFilters);
 });
 
-export const removeFilterAtom = atom(null, (get, set, id: number) => {
-  const filters = get(filtersAtom);
+export const updateFilterAtom = atom(null, (_get, set, updatedFilter: Filter) => {
+  set(filtersAtom, (filters) => {
+    if (!filters) {
+      throw new Error('Filters do not exist');
+    }
 
-  if (!filters) {
-    throw new Error('Filters do not exist');
-  }
+    const index = filters.findIndex((filter) => filter.id === updatedFilter.id);
 
-  const index = filters.findIndex((filter) => filter.id === id);
+    if (index === -1) {
+      throw new Error('Filter does not exist');
+    }
 
-  if (index !== -1) {
-    // Filter exists, remove it
+    const newFilters = [...filters];
+    newFilters[index] = updatedFilter;
+
+    return newFilters;
+  });
+});
+
+export const removeFilterAtom = atom(null, (_get, set, id: number) => {
+  set(filtersAtom, (filters) => {
+    if (!filters) {
+      throw new Error('Filters do not exist');
+    }
+
+    const index = filters.findIndex((filter) => filter.id === id);
+
+    if (index === -1) {
+      throw new Error('Filter does not exist');
+    }
+
     const newFilters = [...filters];
     newFilters.splice(index, 1);
-    set(filtersAtom, newFilters);
-  } else {
-    throw new Error('Filter does not exist');
-  }
+
+    return newFilters;
+  });
 });
