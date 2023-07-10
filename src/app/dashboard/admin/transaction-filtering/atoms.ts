@@ -8,17 +8,21 @@ export const filtersAtom = atom<Filter[]>([]);
 
 export const setFiltersAtom = atom(null, (get, set, updatedFilter: Filter) => {
   const filters = get(filtersAtom);
-  const index = filters.findIndex((filter) => filter.id === updatedFilter.id);
+  let updated = false;
 
-  if (index !== -1) {
-    // Filter exists, update it
-    const newFilters = [...filters];
-    newFilters[index] = updatedFilter;
-    set(filtersAtom, newFilters);
-  } else {
-    // Filter does not exist, add it to the array
-    set(filtersAtom, [...filters, updatedFilter]);
+  const newFilters = filters.map((filter) => {
+    if (filter.id === updatedFilter.id) {
+      updated = true;
+      return updatedFilter;
+    }
+    return filter;
+  });
+
+  if (!updated) {
+    newFilters.push(updatedFilter);
   }
+
+  set(filtersAtom, newFilters);
 });
 
 export const removeFilterAtom = atom(null, (get, set, id: number) => {
