@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: 'CCF Notifications',
 };
 
-export default async function CreativeCashFlowNotificationsPage() {
+export default async function CreativeCashFlowNotifiersPage() {
   const supabase = createSupabase();
   const { error, data } = await supabase
     .from('creative_cash_flow_notifiers')

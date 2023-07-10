@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
 import { useCreateNotifier } from '../use-create-notifier';
-import { addNotifierAtom } from '../atoms';
+import { addNotifierAtom, hasNotifierAtom } from '../atoms';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -32,6 +32,7 @@ import { notifierFormSchema, type NotifierFormType } from '../schema';
 export function AddNotifierButton() {
   const createNotifier = useCreateNotifier();
   const [isOpen, setIsOpen] = useState(false);
+  const hasNotifer = useSetAtom(hasNotifierAtom);
   const addNotifier = useSetAtom(addNotifierAtom);
   const form = useForm<NotifierFormType>({
     resolver: zodResolver(notifierFormSchema),
@@ -43,6 +44,15 @@ export function AddNotifierButton() {
   });
 
   const handleCreate = async (data: NotifierFormType) => {
+    // Check if the email is already in use
+    if (hasNotifer(data.email)) {
+      form.setError('email', {
+        type: 'manual',
+        message: 'Email is already in use',
+      });
+      return;
+    }
+
     await createNotifier(data)
       .then((notifier) => {
         addNotifier(notifier);

@@ -14,6 +14,17 @@ export const addNotifierAtom = atom(null, (_get, set, notifier: Notifier) => {
   });
 });
 
+// Takes a Notifier and checks if the email is already in the list of notifiers and returns a boolean
+export const hasNotifierAtom = atom(null, (get, _set, email: string) => {
+  const notifiers = get(notifiersAtom) as Notifier[] | null;
+
+  if (!notifiers) {
+    return false;
+  }
+
+  return notifiers.some((n) => n.email === email);
+});
+
 export const updateNotifierAtom = atom(null, (_get, set, updatedNotifier: Notifier) => {
   set(notifiersAtom, (notifiers) => {
     if (!notifiers) {
