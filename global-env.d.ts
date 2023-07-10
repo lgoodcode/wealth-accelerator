@@ -5,7 +5,6 @@ export declare global {
       NEXT_PUBLIC_SUPABASE_ANON_KEY: string;
       SUPABASE_SERVICE_ROLE_KEY: string;
       SUPABASE_PROJECT_ID: string;
-      SENTRY_DSN: string;
       NEXT_PUBLIC_SENTRY_DSN: string;
       PLAID_ENV: string;
       PLAID_CLIENT_NAME: string;
