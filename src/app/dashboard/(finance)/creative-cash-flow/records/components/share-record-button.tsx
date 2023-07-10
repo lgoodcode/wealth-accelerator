@@ -2,23 +2,16 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Share2 } from 'lucide-react';
 
-import { fetcher } from '@/lib/utils/fetcher';
+import { useShareRecord } from '../use-share-record';
 import { Button } from '@/components/ui/button';
 import type { CreativeCashFlowRecord } from '../../types';
-
-const shareRecord = async (record_id: string) => {
-  const { error } = await fetcher(`/api/creative-cash-flow/share/${record_id}`);
-
-  if (error && error.message !== 'No notifiers found') {
-    throw error;
-  }
-};
 
 interface ShareRecordButtonProps {
   record: CreativeCashFlowRecord;
 }
 
 export function ShareRecordButton({ record }: ShareRecordButtonProps) {
+  const shareRecord = useShareRecord();
   const [isSharing, setIsSharing] = useState(false);
   const handleShare = () => {
     setIsSharing(true);
