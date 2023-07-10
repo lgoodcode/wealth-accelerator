@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
 import { useUpdateNotifier } from '../use-update-notifier';
-import { updateNotifiersAtom } from '../atoms';
+import { updateNotifierAtom } from '../atoms';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -26,7 +26,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { updateNotifierFormSchema, type UpdateNotifiersType } from '../schema';
+import { notifierFormSchema, type NotifierFormType } from '../schema';
 import type { Notifier } from '../types';
 
 interface UpdateNotifierDialogProps {
@@ -38,9 +38,9 @@ interface UpdateNotifierDialogProps {
 export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNotifierDialogProps) {
   const updateNotifier = useUpdateNotifier();
   const [isUpdating, setIsUpdating] = useState(false);
-  const updateNotifiers = useSetAtom(updateNotifiersAtom);
-  const form = useForm<UpdateNotifiersType>({
-    resolver: zodResolver(updateNotifierFormSchema),
+  const updateNotifiers = useSetAtom(updateNotifierAtom);
+  const form = useForm<NotifierFormType>({
+    resolver: zodResolver(notifierFormSchema),
     values: {
       name: notifier.name,
       email: notifier.email.toLowerCase(),
@@ -56,7 +56,7 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
     [form]
   );
 
-  const handleUpdate = async (data: UpdateNotifiersType) => {
+  const handleUpdate = async (data: NotifierFormType) => {
     setIsUpdating(true);
 
     await updateNotifier(notifier.id, data)

@@ -5,7 +5,6 @@ import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { Notifiers } from './components/notifiers';
-import type { Notifier } from './types';
 
 export const metadata: Metadata = {
   title: 'CCF Notifications',
@@ -24,8 +23,6 @@ export default async function CreativeCashFlowNotificationsPage() {
     return <PageError />;
   }
 
-  const notifiers = (data ?? []) as Notifier[];
-
   return (
     <div className="p-8">
       <div className="space-y-1">
@@ -35,7 +32,7 @@ export default async function CreativeCashFlowNotificationsPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <Notifiers notifiersData={notifiers} />
+      <Notifiers notifiersData={data} />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const updateNotifierFormSchema = z.object({
+export const notifierFormSchema = z.object({
   name: z.string({
     required_error: 'Please enter a name for the notifier.',
   }),
@@ -14,4 +14,4 @@ export const updateNotifierFormSchema = z.object({
   }),
 });
 
-export type UpdateNotifiersType = z.infer<typeof updateNotifierFormSchema>;
+export type NotifierFormType = z.infer<typeof notifierFormSchema>;

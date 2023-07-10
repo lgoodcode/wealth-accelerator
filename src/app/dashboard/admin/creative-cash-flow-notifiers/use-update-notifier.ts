@@ -1,9 +1,9 @@
 import { supabase } from '@/lib/supabase/client';
-import type { UpdateNotifiersType } from './schema';
+import type { NotifierFormType } from './schema';
 import type { Notifier } from './types';
 
 export const useUpdateNotifier = () => {
-  return async (id: number, data: UpdateNotifiersType) => {
+  return async (id: number, data: NotifierFormType) => {
     const { error, data: updatedNotifer } = await supabase
       .from('creative_cash_flow_notifiers')
       .update({

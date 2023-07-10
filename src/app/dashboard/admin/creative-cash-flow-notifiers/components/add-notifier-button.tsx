@@ -27,26 +27,36 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { updateNotifierFormSchema, type UpdateNotifiersType } from '../schema';
+import { notifierFormSchema, type NotifierFormType } from '../schema';
 
 export function AddNotifierButton() {
   const createNotifier = useCreateNotifier();
   const [isOpen, setIsOpen] = useState(false);
   const addNotifier = useSetAtom(addNotifierAtom);
-  const form = useForm<UpdateNotifiersType>({
-    resolver: zodResolver(updateNotifierFormSchema),
+  const form = useForm<NotifierFormType>({
+    resolver: zodResolver(notifierFormSchema),
     defaultValues: {
+      name: '',
+      email: '',
       enabled: true,
     },
   });
 
-  const handleCreate = async (data: UpdateNotifiersType) => {
+  const handleCreate = async (data: NotifierFormType) => {
     await createNotifier(data)
       .then((notifier) => {
         addNotifier(notifier);
         setIsOpen(false);
       })
       .catch((error) => {
+        if (error.code && error.code === '23505') {
+          form.setError('email', {
+            type: 'manual',
+            message: 'Email is already in use',
+          });
+          return;
+        }
+
         console.error(error);
         captureException(error);
         toast.error('Failed to create notifier');
@@ -73,7 +83,7 @@ export function AddNotifierButton() {
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
-            <form className="space-y-4" onSubmit={form.handleSubmit(handleCreate)}>
+            <form className="space-y-4" onSubmit={form.handleSubmit(createNotifier)}>
               <FormField
                 control={form.control}
                 name="name"
@@ -108,9 +118,12 @@ export function AddNotifierButton() {
                     <FormLabel>Enabled</FormLabel>
                     <FormControl>
                       <Checkbox
+                        name={field.name}
                         className="w-6 h-6"
+                        ref={field.ref}
                         checked={field.value}
                         onCheckedChange={field.onChange}
+                        onBlur={field.onBlur}
                       />
                     </FormControl>
                     <FormMessage />
