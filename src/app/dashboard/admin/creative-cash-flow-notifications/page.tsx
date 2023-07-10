@@ -1,9 +1,7 @@
-import { redirect } from 'next/navigation';
 import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
-import { getUser } from '@/lib/supabase/server/getUser';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { Notifiers } from './components/notifiers';
@@ -14,14 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default async function CreativeCashFlowNotificationsPage() {
-  const user = await getUser();
-
-  if (!user) {
-    redirect('/login');
-  } else if (user.role !== 'admin') {
-    redirect('/dashboard');
-  }
-
   const supabase = createSupabase();
   const { error, data } = await supabase.from('creative_cash_flow_notifiers').select('*');
 
