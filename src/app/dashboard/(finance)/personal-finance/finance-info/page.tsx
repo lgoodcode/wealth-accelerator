@@ -1,22 +1,13 @@
-import { redirect } from 'next/navigation';
 import { captureException } from '@sentry/nextjs';
 
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { getUser } from '@/lib/supabase/server/getUser';
-import { isAdmin } from '@/lib/utils/isAdmin';
 import { Separator } from '@/components/ui/separator';
 import { PageError } from '@/components/page-error';
 import { FinanceInfoForm } from './finance-info-form';
 
 export default async function FinanceInfoPage() {
-  const user = await getUser();
-
-  if (!user) {
-    redirect('/login');
-  } else if (!isAdmin(user)) {
-    redirect('/dashboard');
-  }
-
+  const user = (await getUser()) as User;
   const supabase = createSupabase();
   const { error, data } = await supabase
     .from('personal_finance')

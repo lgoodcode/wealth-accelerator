@@ -8,11 +8,9 @@ interface AdminLayoutProps {
 }
 
 export default async function AdminLayout({ children }: AdminLayoutProps) {
-  const user = await getUser();
+  const user = (await getUser()) as User;
 
-  if (!user) {
-    redirect('/login');
-  } else if (!isAdmin(user)) {
+  if (!isAdmin(user)) {
     redirect('/dashboard');
   }
 

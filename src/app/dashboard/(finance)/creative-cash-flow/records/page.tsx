@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
@@ -14,12 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CreativeCashFlowRecordsPage() {
-  const user = await getUser();
-
-  if (!user) {
-    redirect('/login');
-  }
-
+  const user = (await getUser()) as User;
   const supabase = createSupabase();
   const { error, data } = await supabase.rpc('get_creative_cash_flow_records', {
     arg_user_id: user.id,
