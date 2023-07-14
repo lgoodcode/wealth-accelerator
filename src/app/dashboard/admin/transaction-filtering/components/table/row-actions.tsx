@@ -66,7 +66,7 @@ export function RowActions({ row }: RowActionsProps) {
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem onClick={() => setShowUpdateDialog(true)}>
             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Update
+            Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={handleDeleteFilter} className="text-red-600 font-medium">
