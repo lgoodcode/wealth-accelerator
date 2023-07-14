@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { inputLabels } from '../../labels';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
-import { NumberInput } from '@/components/ui/number-input';
+import { CurrencyInput } from '@/components/ui/currency-input';
 import {
   Form,
   FormDescription,
@@ -100,7 +100,7 @@ export function InputForm({ transactions }: InputsFormProps) {
                   {inputLabels.all_other_income.title}
                   <span className="ml-1 text-muted-foreground">(dollars)</span>
                 </FormLabel>
-                <NumberInput
+                <CurrencyInput
                   placeholder="$30,000"
                   prefix="$"
                   value={field.value}
@@ -120,7 +120,7 @@ export function InputForm({ transactions }: InputsFormProps) {
                   {inputLabels.payroll_and_distributions.title}
                   <span className="ml-1 text-muted-foreground">(dollars)</span>
                 </FormLabel>
-                <NumberInput
+                <CurrencyInput
                   placeholder="$100,000"
                   prefix="$"
                   value={field.value}
@@ -142,7 +142,7 @@ export function InputForm({ transactions }: InputsFormProps) {
                   {inputLabels.lifestyle_expenses_tax_rate.title}
                   <span className="ml-1 text-muted-foreground">(%)</span>
                 </FormLabel>
-                <NumberInput
+                <CurrencyInput
                   placeholder="25%"
                   suffix="%"
                   value={field.value}
@@ -164,7 +164,7 @@ export function InputForm({ transactions }: InputsFormProps) {
                   {inputLabels.tax_account_rate.title}
                   <span className="ml-1 text-muted-foreground">(%)</span>
                 </FormLabel>
-                <NumberInput
+                <CurrencyInput
                   placeholder="30%"
                   suffix="%"
                   value={field.value}
@@ -184,7 +184,7 @@ export function InputForm({ transactions }: InputsFormProps) {
                   {inputLabels.optimal_savings_strategy.title}
                   <span className="ml-1 text-muted-foreground">(dollars)</span>
                 </FormLabel>
-                <NumberInput
+                <CurrencyInput
                   placeholder="$50,000"
                   prefix="$"
                   value={field.value}

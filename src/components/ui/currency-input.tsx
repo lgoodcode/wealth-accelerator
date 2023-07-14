@@ -1,12 +1,13 @@
 import { forwardRef } from 'react';
-import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field';
+import { default as Input } from 'react-currency-input-field';
+import type { CurrencyInputProps } from 'react-currency-input-field';
 
 import { cn } from '@/lib/utils/cn';
 
-export const NumberInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
+export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
   ({ className, ...props }, ref) => {
     return (
-      <CurrencyInput
+      <Input
         ref={ref}
         disableAbbreviations={true}
         className={cn(
@@ -18,4 +19,4 @@ export const NumberInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
     );
   }
 );
-NumberInput.displayName = 'NumberInput';
+CurrencyInput.displayName = 'CurrencyInput';

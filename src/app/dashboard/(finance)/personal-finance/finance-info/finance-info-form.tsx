@@ -6,8 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { DatePicker } from '@/components/ui/date-picker';
-import { NumberInput } from '@/components/ui/number-input';
+import { CurrencyInput } from '@/components/ui/currency-input';
 import {
   Form,
   FormDescription,
@@ -74,10 +75,11 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
               <FormLabel>
                 Stop Invest <span className="ml-1 text-muted-foreground">(year)</span>
               </FormLabel>
-              <NumberInput
+              <Input
+                type="number"
                 placeholder="10"
                 value={field.value}
-                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                onChange={(e) => field.onChange(parseInt(e.target.value))}
               />
               <FormDescription>The number of years that you want to invest for.</FormDescription>
               <FormMessage />
@@ -92,10 +94,11 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
               <FormLabel>
                 Start Withdrawl<span className="ml-1 text-muted-foreground">(year)</span>
               </FormLabel>
-              <NumberInput
+              <Input
+                type="number"
                 placeholder="15"
                 value={field.value}
-                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                onChange={(e) => field.onChange(parseInt(e.target.value))}
               />
               <FormDescription>
                 The number of years to wait after stopped investing.
@@ -113,7 +116,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                 Money Needed To Live
                 <span className="ml-1 text-muted-foreground">(dollars)</span>
               </FormLabel>
-              <NumberInput
+              <CurrencyInput
                 placeholder="$100,000"
                 prefix="$"
                 value={field.value}
@@ -135,7 +138,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                 Tax Bracket
                 <span className="ml-1 text-muted-foreground">(%)</span>
               </FormLabel>
-              <NumberInput
+              <CurrencyInput
                 placeholder="25%"
                 suffix="%"
                 value={field.value}
@@ -155,7 +158,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                 Future Tax Bracket
                 <span className="ml-1 text-muted-foreground">(%)</span>
               </FormLabel>
-              <NumberInput
+              <CurrencyInput
                 placeholder="30%"
                 suffix="%"
                 value={field.value}
@@ -175,7 +178,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                 Premium Deposit
                 <span className="ml-1 text-muted-foreground">(dollars)</span>
               </FormLabel>
-              <NumberInput
+              <CurrencyInput
                 placeholder="$50,000"
                 prefix="$"
                 value={field.value}
@@ -197,7 +200,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                 Year to Date Collections
                 <span className="ml-1 text-muted-foreground">(dollars)</span>
               </FormLabel>
-              <NumberInput
+              <CurrencyInput
                 placeholder="$25,000"
                 prefix="$"
                 value={field.value}
