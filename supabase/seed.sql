@@ -77,7 +77,8 @@ CREATE TRIGGER on_auth_user_created
 
 -- Function that generates the rates array of 60 smallints with a default value of 7
 -- and divide the value by 100 when displaying/using it
-CREATE OR REPLACE FUNCTION generate_rates() RETURNS decimal(5,2)[] AS $$
+CREATE OR REPLACE FUNCTION generate_rates()
+RETURNS decimal(5,2)[] AS $$
 BEGIN
     RETURN ARRAY(SELECT 7::decimal(5,2) FROM generate_series(1, 60));
 END
