@@ -1,6 +1,6 @@
 'use client';
 
-import { useLogin } from '@/hooks/use-login';
+// import { useLogin } from '@/hooks/use-login';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 interface UserLoginItemProps {
@@ -8,7 +8,7 @@ interface UserLoginItemProps {
 }
 
 export const UserLoginItem = ({ user }: UserLoginItemProps) => {
-  const login = useLogin();
+  // const login = useLogin();
 
   return (
     <DropdownMenuItem>
