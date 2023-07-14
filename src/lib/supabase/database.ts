@@ -113,7 +113,7 @@ export interface Database {
           amount: number;
           description: string;
           id: number;
-          interest_rate: number;
+          interest: number;
           months_remaining: number;
           payment: number;
           user_id: string;
@@ -122,7 +122,7 @@ export interface Database {
           amount: number;
           description: string;
           id?: number;
-          interest_rate: number;
+          interest: number;
           months_remaining: number;
           payment: number;
           user_id: string;
@@ -131,7 +131,7 @@ export interface Database {
           amount?: number;
           description?: string;
           id?: number;
-          interest_rate?: number;
+          interest?: number;
           months_remaining?: number;
           payment?: number;
           user_id?: string;
@@ -229,17 +229,17 @@ export interface Database {
       };
       plaid_filters: {
         Row: {
-          category: Database['public']['Enums']['category_type'];
+          category: Database['public']['Enums']['category'];
           filter: string;
           id: number;
         };
         Insert: {
-          category: Database['public']['Enums']['category_type'];
+          category: Database['public']['Enums']['category'];
           filter: string;
           id?: number;
         };
         Update: {
-          category?: Database['public']['Enums']['category_type'];
+          category?: Database['public']['Enums']['category'];
           filter?: string;
           id?: number;
         };
@@ -248,7 +248,7 @@ export interface Database {
         Row: {
           account_id: string;
           amount: number;
-          category: Database['public']['Enums']['category_type'];
+          category: Database['public']['Enums']['category'];
           date: string;
           id: string;
           item_id: string;
@@ -257,7 +257,7 @@ export interface Database {
         Insert: {
           account_id: string;
           amount: number;
-          category: Database['public']['Enums']['category_type'];
+          category: Database['public']['Enums']['category'];
           date: string;
           id: string;
           item_id: string;
@@ -266,7 +266,7 @@ export interface Database {
         Update: {
           account_id?: string;
           amount?: number;
-          category?: Database['public']['Enums']['category_type'];
+          category?: Database['public']['Enums']['category'];
           date?: string;
           id?: string;
           item_id?: string;
@@ -314,10 +314,6 @@ export interface Database {
         Args: Record<PropertyKey, never>;
         Returns: number[];
       };
-      get_ccf_records: {
-        Args: Record<PropertyKey, never>;
-        Returns: Json[];
-      };
       get_creative_cash_flow_record: {
         Args: {
           record_id: string;
@@ -335,12 +331,6 @@ export interface Database {
           inputs: Json;
           results: Json;
         }[];
-      };
-      get_transactions_by_account_ids: {
-        Args: {
-          account_ids: string[];
-        };
-        Returns: Json;
       };
       get_transactions_by_user_id: {
         Args: {
@@ -360,18 +350,9 @@ export interface Database {
           account_id: string;
           name: string;
           amount: number;
-          category: Database['public']['Enums']['category_type'];
+          category: Database['public']['Enums']['category'];
           date: string;
           account: string;
-        }[];
-      };
-      get_user_cash_flow_data: {
-        Args: {
-          arg_user_id: string;
-        };
-        Returns: {
-          inputs: Json;
-          results: Json;
         }[];
       };
       is_admin: {
@@ -380,33 +361,18 @@ export interface Database {
         };
         Returns: boolean;
       };
-      is_own_plaid_account:
-        | {
-            Args: {
-              user_id: string;
-            };
-            Returns: boolean;
-          }
-        | {
-            Args: Record<PropertyKey, never>;
-            Returns: boolean;
-          };
-      is_own_plaid_transaction:
-        | {
-            Args: {
-              user_id: string;
-            };
-            Returns: boolean;
-          }
-        | {
-            Args: Record<PropertyKey, never>;
-            Returns: boolean;
-          };
+      is_own_plaid_account: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+      is_own_plaid_transaction: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
     };
     Enums: {
       account_type: 'personal' | 'business';
-      category_type: 'Transfer' | 'Money-In' | 'Money-Out';
-      role_type: 'user' | 'admin';
+      category: 'Transfer' | 'Money-In' | 'Money-Out';
       user_role: 'USER' | 'ADMIN';
     };
     CompositeTypes: {

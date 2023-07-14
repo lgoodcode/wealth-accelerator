@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { Debts } from './components/debts';
 
 export const metadata: Metadata = {
-  title: 'Debt',
+  title: 'Debts',
 };
 
 export default async function DebtPage() {
@@ -23,9 +23,9 @@ export default async function DebtPage() {
   return (
     <div className="p-8">
       <div className="space-y-1">
-        <h2 className="text-3xl font-bold">Transactions Filtering</h2>
+        <h2 className="text-3xl font-bold">Debts</h2>
         <p className="text-muted-foreground">
-          Manage filters used to categorize transactions when received from Plaid.
+          Manage debt information such as credit cards, loans, and mortgages.
         </p>
       </div>
       <Separator className="mt-6" />

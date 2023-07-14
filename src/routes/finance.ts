@@ -10,10 +10,10 @@ export const financeRoutes: Route[] = [
     description: 'Manage personal finance information used in various features of the app.',
   },
   {
-    name: 'Debt',
-    path: '/dashboard/debt',
+    name: 'Debts',
+    path: '/dashboard/debts',
     Icon: Banknote,
-    description: 'Mmanage debt information such as credit cards, loans, and mortgages.',
+    description: 'Manage debt information such as credit cards, loans, and mortgages.',
   },
   {
     name: 'Banking',

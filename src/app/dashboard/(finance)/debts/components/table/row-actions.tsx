@@ -72,11 +72,11 @@ export function RowActions({ row }: RowActionsProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* <UpdateFilterDialog
+      <UpdateFilterDialog
         open={showUpdateDialog}
         onOpenChange={handleUpdateDialogOpenChange}
         filter={row.original}
-      /> */}
+      />
     </>
   );
 }

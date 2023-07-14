@@ -6,6 +6,16 @@ export const isUpdateDialogOpenAtom = atom(false);
 
 export const filtersAtom = atom<Filter[] | null>(null);
 
+export const hasFilterAtom = atom(null, (get, _set, filter: string) => {
+  const filters = get(filtersAtom);
+
+  if (!filters) {
+    return false;
+  }
+
+  return filters.some((f) => f.filter === filter);
+});
+
 export const addFilterAtom = atom(null, (_get, set, newFilter: Filter) => {
   set(filtersAtom, (filters) => {
     if (!filters) {

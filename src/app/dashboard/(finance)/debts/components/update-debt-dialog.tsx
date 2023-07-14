@@ -5,8 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
-import { useUpdateFilter } from '../use-update-filter';
-import { updateFilterFormSchema, type UpdateFilterFormType } from '../schemas';
+import { useUpdateDebt } from '../use-update-debt';
+import { debtFormSchema, type DebtFormType } from '../schemas';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -40,16 +40,16 @@ interface UpdateFilterProps {
 }
 
 export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterProps) {
-  const updateFilter = useUpdateFilter();
+  const updateFilter = useUpdateDebt();
   const queryClient = useQueryClient();
-  const form = useForm<UpdateFilterFormType>({
-    resolver: zodResolver(updateFilterFormSchema),
+  const form = useForm<DebtFormType>({
+    resolver: zodResolver(debtFormSchema),
     values: {
       category: filter.category,
     },
   });
 
-  const handleUpdate = async (data: UpdateFilterFormType) => {
+  const handleUpdate = async (data: DebtFormType) => {
     await updateFilter(filter.id, data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAtomValue } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
 import { useCreateFilter } from '../use-create-filter';
-import { filtersAtom } from '../atoms';
+import { hasFilterAtom } from '../atoms';
 import { createFilterFormSchema, type CreateFilterFormType } from '../schemas';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -41,7 +41,7 @@ export function AddFilterButton() {
   const createFilter = useCreateFilter();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
-  const filters = useAtomValue(filtersAtom);
+  const hasFilter = useSetAtom(hasFilterAtom);
   const form = useForm<CreateFilterFormType>({
     resolver: zodResolver(createFilterFormSchema),
     resetOptions: {
@@ -50,8 +50,7 @@ export function AddFilterButton() {
   });
 
   const handleCreate = async (data: CreateFilterFormType) => {
-    // Check if the filter already exists
-    if (filters?.some((filter) => filter.filter === data.filter)) {
+    if (hasFilter(data.filter)) {
       toast.error(
         <span>
           Filter <span className="font-bold">{data.filter}</span> already exists

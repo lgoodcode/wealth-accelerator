@@ -4,6 +4,6 @@ export type Debt = {
   description: string;
   amount: number;
   payment: number;
-  interest_rate: number;
+  interest: number;
   months_remaining: number;
 };

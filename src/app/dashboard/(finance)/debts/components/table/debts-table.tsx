@@ -88,6 +88,7 @@ export function DebtsTable({ debts }: DebtsTableProps) {
                     <TableCell
                       key={cell.id}
                       className={cn({
+                        'w-[35%]': i === 0,
                         'w-[10%]': i === arr.length - 1,
                       })}
                     >

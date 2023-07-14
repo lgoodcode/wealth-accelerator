@@ -6,6 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
 import type { Debt } from '@/lib/types/debts';
+import { dollarFormatter } from '@/lib/utils/dollarFormatter';
 
 /**
  * NOTES
@@ -17,27 +18,27 @@ import type { Debt } from '@/lib/types/debts';
  */
 
 export const columns: ColumnDef<Debt>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  // {
+  //   id: 'select',
+  //   enableSorting: false,
+  //   enableHiding: false,
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={table.getIsAllPageRowsSelected()}
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //       className="translate-y-[2px]"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //       className="translate-y-[2px]"
+  //     />
+  //   ),
+  // },
   {
     accessorKey: 'description',
     enableHiding: false,
@@ -58,7 +59,7 @@ export const columns: ColumnDef<Debt>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
-          <span>{row.getValue<number>('amount')}</span>
+          <span>{dollarFormatter(row.getValue<number>('amount'))}</span>
         </div>
       );
     },
@@ -72,7 +73,7 @@ export const columns: ColumnDef<Debt>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
-          <span>{row.getValue<number>('payment')}</span>
+          <span>{dollarFormatter(row.getValue<number>('payment'))}</span>
         </div>
       );
     },
@@ -81,12 +82,12 @@ export const columns: ColumnDef<Debt>[] = [
     },
   },
   {
-    accessorKey: 'interest_rate',
+    accessorKey: 'interest',
     header: ({ column }) => <ColumnHeader column={column} title="Interest" />,
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
-          <span>{row.getValue<number>('interest_rate')}</span>
+          <span>{row.getValue<number>('interest').toFixed(2)}%</span>
         </div>
       );
     },
