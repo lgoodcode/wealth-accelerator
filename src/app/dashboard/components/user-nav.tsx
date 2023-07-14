@@ -17,14 +17,16 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 interface UserNavProps {
-  user: User;
+  user: User | null;
 }
 
 export function UserNav({ user }: UserNavProps) {
   const router = useRouter();
   // If the user only has one name, use the first two letters of that name as the profile letters.
   // Otherwise, use the first letter of the first and last name.
-  const profileLetters = user.name.includes(' ')
+  const profileLetters = !user
+    ? ''
+    : user.name.includes(' ')
     ? user.name
         .split(' ')
         .slice(0, 2)
@@ -53,8 +55,8 @@ export function UserNav({ user }: UserNavProps) {
       <DropdownMenuContent className="w-64" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-2">
-            <p className="font-medium leading-none">{user.name}</p>
-            <p className="text-sm leading-none truncate text-muted-foreground">{user.email}</p>
+            <p className="font-medium leading-none">{user?.name}</p>
+            <p className="text-sm leading-none truncate text-muted-foreground">{user?.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

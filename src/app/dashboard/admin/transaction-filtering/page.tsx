@@ -13,7 +13,10 @@ export const metadata: Metadata = {
 
 export default async function TransactionFilteringPage() {
   const supabase = createSupabase();
-  const { error, data } = await supabase.from('plaid_filters').select('*');
+  const { error, data } = await supabase
+    .from('plaid_filters')
+    .select('*')
+    .order('id', { ascending: true });
 
   if (error) {
     console.error(error);

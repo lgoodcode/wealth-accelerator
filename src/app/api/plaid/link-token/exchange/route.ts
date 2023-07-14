@@ -11,14 +11,14 @@ import type {
 
 export const POST = exchangeLinkToken;
 
-async function exchangeLinkToken(req: Request) {
+async function exchangeLinkToken(request: Request) {
   const user = await getUser();
 
   if (!user) {
     return NextResponse.json({ error: 'No user found' }, { status: 401 });
   }
 
-  const body = await req.json().catch((err) => err);
+  const body = await request.json().catch((err) => err);
 
   if (!body) {
     return NextResponse.json({ error: 'Invalid body' }, { status: 400 });

@@ -21,8 +21,6 @@ export declare global {
     }
   }
 
-  export type Role = 'user' | 'admin';
-
   /** Supabase user */
   export type User = {
     id: string;

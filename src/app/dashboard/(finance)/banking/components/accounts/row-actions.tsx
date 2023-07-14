@@ -41,7 +41,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useUpdateAccount } from '../../use-aupdate-account';
+import { useUpdateAccount } from '../../use-update-account';
 import { updateAccountFormSchema, type UpdateAccountType } from '../../schemas';
 import type { Account } from '@/lib/plaid/types/institutions';
 

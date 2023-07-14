@@ -4,33 +4,52 @@ import { Filter } from '@/lib/plaid/types/transactions';
 
 export const isUpdateDialogOpenAtom = atom(false);
 
-export const filtersAtom = atom<Filter[]>([]);
+export const filtersAtom = atom<Filter[] | null>(null);
 
-export const setFiltersAtom = atom(null, (get, set, updatedFilter: Filter) => {
-  const filters = get(filtersAtom);
-  const index = filters.findIndex((filter) => filter.id === updatedFilter.id);
+export const addFilterAtom = atom(null, (_get, set, newFilter: Filter) => {
+  set(filtersAtom, (filters) => {
+    if (!filters) {
+      return [newFilter];
+    }
 
-  if (index !== -1) {
-    // Filter exists, update it
-    const newFilters = [...filters];
-    newFilters[index] = updatedFilter;
-    set(filtersAtom, newFilters);
-  } else {
-    // Filter does not exist, add it to the array
-    set(filtersAtom, [...filters, updatedFilter]);
-  }
+    return [...filters, newFilter];
+  });
 });
 
-export const removeFilterAtom = atom(null, (get, set, id: number) => {
-  const filters = get(filtersAtom);
-  const index = filters.findIndex((filter) => filter.id === id);
+export const updateFilterAtom = atom(null, (_get, set, updatedFilter: Filter) => {
+  set(filtersAtom, (filters) => {
+    if (!filters) {
+      throw new Error('filtersAtom is not initialized');
+    }
 
-  if (index !== -1) {
-    // Filter exists, remove it
+    const index = filters.findIndex((filter) => filter.id === updatedFilter.id);
+
+    if (index === -1) {
+      throw new Error('Filter does not exist');
+    }
+
+    const newFilters = [...filters];
+    newFilters[index] = updatedFilter;
+
+    return newFilters;
+  });
+});
+
+export const removeFilterAtom = atom(null, (_get, set, id: number) => {
+  set(filtersAtom, (filters) => {
+    if (!filters) {
+      throw new Error('filtersAtom is not initialized');
+    }
+
+    const index = filters.findIndex((filter) => filter.id === id);
+
+    if (index === -1) {
+      throw new Error('Filter does not exist');
+    }
+
     const newFilters = [...filters];
     newFilters.splice(index, 1);
-    set(filtersAtom, newFilters);
-  } else {
-    throw new Error('Filter does not exist');
-  }
+
+    return newFilters;
+  });
 });

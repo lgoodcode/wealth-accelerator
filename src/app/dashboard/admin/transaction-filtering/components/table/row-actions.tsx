@@ -2,13 +2,10 @@
 
 import { useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
-import { useSetAtom } from 'jotai';
 import { captureException } from '@sentry/nextjs';
 import { MoreHorizontal, Pen, Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
-import { removeFilterAtom } from '../../atoms';
-import { supabase } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -17,38 +14,30 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useDeleteFilter } from '../../use-delete-filter';
 import { UpdateFilterDialog } from '../update-filter-dialog';
 import { type Filter } from '@/lib/plaid/types/transactions';
-
-const deleteFilter = async (id: number) => {
-  const { error } = await supabase.from('plaid_filters').delete().eq('id', id);
-
-  if (error) {
-    throw error;
-  }
-};
 
 interface RowActionsProps {
   row: Row<Filter>;
 }
 
 export function RowActions({ row }: RowActionsProps) {
+  const deleteFilter = useDeleteFilter();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-  const removeFilter = useSetAtom(removeFilterAtom);
 
   const handleUpdateDialogOpenChange = useCallback((open?: boolean) => {
-    setShowUpdateDialog((prev) => (open ? open : !prev));
+    setShowUpdateDialog((prev) => open ?? !prev);
   }, []);
 
-  const handleDeleteFilter = () => {
-    deleteFilter(row.original.id)
+  const handleDeleteFilter = async () => {
+    await deleteFilter(row.original.id)
       .then(() => {
         toast.success(
           <span>
             Removed filter <span className="font-bold">{row.original.filter}</span>
           </span>
         );
-        removeFilter(row.original.id);
       })
       .catch((error) => {
         console.error(error);
@@ -73,7 +62,7 @@ export function RowActions({ row }: RowActionsProps) {
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem onClick={() => setShowUpdateDialog(true)}>
             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Update
+            Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={handleDeleteFilter} className="text-red-600 font-medium">

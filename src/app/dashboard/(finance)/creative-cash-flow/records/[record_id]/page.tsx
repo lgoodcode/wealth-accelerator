@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { getUser } from '@/lib/supabase/server/getUser';
 import { isUUID } from '@/lib/utils/isUUID';
+import { isAdmin } from '@/lib/utils/isAdmin';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { InputsCard } from '../components/inputs-card';
@@ -34,7 +35,7 @@ export default async function SharedCreativeCashFlowRecordPage({
 
   if (!user) {
     redirect('/login');
-  } else if (user.role !== 'admin') {
+  } else if (!isAdmin(user)) {
     redirect('/dashboard');
     // If invalid UUID is passed, don't request the record and display the no record card
   } else if (!isUUID(record_id)) {

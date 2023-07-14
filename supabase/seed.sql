@@ -6,31 +6,46 @@
  * It is linked to the auth.users table via the id column.
  */
 
-DROP TYPE IF EXISTS role_type CASCADE;
-CREATE TYPE role_type AS enum ('user', 'admin');
+DROP TYPE IF EXISTS user_role CASCADE;
+CREATE TYPE user_role AS enum ('USER', 'ADMIN');
 
 DROP TABLE IF EXISTS public.users CASCADE;
 CREATE TABLE users (
-  id uuid PRIMARY KEY NOT NULL REFERENCES auth.users,
+  id uuid PRIMARY KEY NOT NULL REFERENCES auth.users(id),
   name text NOT NULL,
-  role role_type NOT NULL DEFAULT 'user'::role_type,
+  role user_role NOT NULL DEFAULT 'USER'::user_role,
   email text UNIQUE NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   updated_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
+CREATE OR REPLACE FUNCTION is_admin(user_id UUID)
+RETURNS BOOL AS $$
+BEGIN
+  PERFORM
+  FROM public.users
+  WHERE id = user_id AND role = 'ADMIN'::user_role;
+  RETURN FOUND;
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Can view own user data" ON users
+CREATE POLICY "Can view their own data and admins can view all user data" ON public.users
   FOR SELECT
   TO authenticated
-  USING (auth.uid() = id);
+  USING (auth.uid() = id OR is_admin(auth.uid()));
 
-CREATE POLICY "Can update own user data" ON users
+CREATE POLICY "Can update own user data or admins can update all users data" ON public.users
   FOR UPDATE
   TO authenticated
-  USING (auth.uid() = id)
-  WITH CHECK (auth.uid() = id AND role = users.role);
+  USING (auth.uid() = id OR is_admin(auth.uid()))
+  WITH CHECK ((auth.uid() = id AND role = users.role) OR is_admin(auth.uid()));
+
+CREATE POLICY "Admins can delete users" ON public.users
+  FOR DELETE
+  TO authenticated
+  USING (is_admin(auth.uid()));
 
 -- Function that creates a user in our users table when a new user is created in auth.users
 CREATE OR REPLACE FUNCTION handle_new_user()
@@ -176,50 +191,38 @@ CREATE TABLE plaid_accounts (
   enabled boolean NOT NULL DEFAULT true
 );
 
-ALTER TABLE public.plaid_accounts ENABLE ROW LEVEL SECURITY;
-
 -- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
+CREATE OR REPLACE FUNCTION is_own_plaid_account()
+RETURNS BOOL AS $$
+BEGIN
+  PERFORM
+  FROM plaid as p
+  WHERE p.item_id = item_id AND p.user_id = auth.uid();
+  RETURN FOUND;
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER TABLE public.plaid_accounts ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Can view own plaid accounts data" ON public.plaid_accounts
   FOR SELECT
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_accounts.item_id AND plaid.user_id = auth.uid()
-    )
-  );
+  USING (is_own_plaid_account());
 
 CREATE POLICY "Can insert own plaid accounts" ON public.plaid_accounts
   FOR INSERT
   TO authenticated
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_accounts.item_id AND plaid.user_id = auth.uid()
-    )
-  );
+  WITH CHECK (is_own_plaid_account());
 
 CREATE POLICY "Can update own plaid accounts data" ON public.plaid_accounts
   FOR UPDATE
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_accounts.item_id AND plaid.user_id = auth.uid()
-    )
-  )
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_accounts.item_id AND plaid.user_id = auth.uid()
-    )
-  );
+  USING (is_own_plaid_account());
 
 CREATE POLICY "Can delete own plaid accounts" ON public.plaid_accounts
   FOR DELETE
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_accounts.item_id AND plaid.user_id = auth.uid()
-    )
-  );
+  USING (is_own_plaid_account());
 
 
 
@@ -229,8 +232,8 @@ CREATE POLICY "Can delete own plaid accounts" ON public.plaid_accounts
  * This table contains the user's transactions for each account.
  */
 
-DROP TYPE IF EXISTS category_type CASCADE;
-CREATE TYPE category_type AS ENUM ('Transfer', 'Money-In', 'Money-Out');
+DROP TYPE IF EXISTS category CASCADE;
+CREATE TYPE category AS ENUM ('Transfer', 'Money-In', 'Money-Out');
 
 DROP TABLE IF EXISTS plaid_transactions CASCADE;
 CREATE TABLE plaid_transactions (
@@ -239,54 +242,42 @@ CREATE TABLE plaid_transactions (
   account_id text NOT NULL REFERENCES plaid_accounts(account_id) ON DELETE CASCADE,
   name text NOT NULL,
   amount decimal(10,2) NOT NULL,
-  category category_type NOT NULL,
+  category category NOT NULL,
   date timestamp with time zone NOT NULL
 );
 
-ALTER TABLE public.plaid_transactions ENABLE ROW LEVEL SECURITY;
-
 -- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
+CREATE OR REPLACE FUNCTION is_own_plaid_transaction()
+RETURNS BOOL AS $$
+BEGIN
+  PERFORM
+  FROM plaid as p
+  WHERE p.item_id = item_id AND p.user_id = auth.uid();
+  RETURN FOUND;
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER TABLE public.plaid_transactions ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Can view own plaid transactions data" ON public.plaid_transactions
   FOR SELECT
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_transactions.item_id AND plaid.user_id = auth.uid()
-    )
-  );
+  USING (is_own_plaid_transaction());
 
 CREATE POLICY "Can insert own plaid transactions" ON public.plaid_transactions
   FOR INSERT
   TO authenticated
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_transactions.item_id AND plaid.user_id = auth.uid()
-    )
-  );
+  WITH CHECK (is_own_plaid_transaction());
 
 CREATE POLICY "Can update own plaid transactions data" ON public.plaid_transactions
   FOR UPDATE
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_transactions.item_id AND plaid.user_id = auth.uid()
-    )
-  )
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_transactions.item_id AND plaid.user_id = auth.uid()
-    )
-  );
+  USING (is_own_plaid_transaction());
 
 CREATE POLICY "Can delete own plaid transactions" ON public.plaid_transactions
   FOR DELETE
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM plaid WHERE plaid.item_id = plaid_transactions.item_id AND plaid.user_id = auth.uid()
-    )
-  );
+  USING (is_own_plaid_transaction());
 
 
 
@@ -300,54 +291,30 @@ DROP TABLE IF EXISTS plaid_filters CASCADE;
 CREATE TABLE plaid_filters (
   id int PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
   filter text NOT NULL,
-  category category_type NOT NULL
+  category category NOT NULL
 );
 
 ALTER TABLE public.plaid_filters ENABLE ROW LEVEL SECURITY;
 
--- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
--- to make sure the user is an admin
-
 CREATE POLICY "Admin can view plaid filters data" ON public.plaid_filters
   FOR SELECT
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE public.users.id = auth.uid() AND public.users.role = 'admin'
-    )
-  );
+  USING (is_admin(auth.uid()));
 
 CREATE POLICY "Admin can insert plaid filters" ON public.plaid_filters
   FOR INSERT
   TO authenticated
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE public.users.id = auth.uid() AND public.users.role = 'admin'
-    )
-  );
+  WITH CHECK (is_admin(auth.uid()));
 
 CREATE POLICY "Admin can update plaid filters data" ON public.plaid_filters
   FOR UPDATE
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE public.users.id = auth.uid() AND public.users.role = 'admin'
-    )
-  )
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE public.users.id = auth.uid() AND public.users.role = 'admin'
-    )
-  );
+  USING (is_admin(auth.uid()));
 
 CREATE POLICY "Admin can delete plaid filters" ON public.plaid_filters
   FOR DELETE
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE public.users.id = auth.uid() AND public.users.role = 'admin'
-    )
-  );
+  USING (is_admin(auth.uid()));
 
 -- Function that updates the transactions table with the category from the new or updated filter
 CREATE OR REPLACE FUNCTION update_transaction_categories()
@@ -369,17 +336,17 @@ AFTER INSERT OR UPDATE ON plaid_filters
 -- Initial filters
 INSERT INTO plaid_filters (filter, category)
 VALUES
-  ('TRANSFER', 'Transfer'::category_type),
-  ('Deposit', 'Money-In'::category_type),
-  ('Square', 'Money-In'::category_type),
-  ('Bankcard', 'Money-In'::category_type),
-  ('Mobile Deposit', 'Money-In'::category_type),
-  ('Merchant', 'Money-In'::category_type),
-  ('ESQUIRE', 'Money-In'::category_type),
-  ('Stripe', 'Money-In'::category_type),
-  ('Venmo', 'Money-Out'::category_type),
-  ('Fullscript', 'Money-In'::category_type),
-  ('Check', 'Money-Out'::category_type);
+  ('transfer', 'Transfer'::category),
+  ('deposit', 'Money-In'::category),
+  ('square', 'Money-In'::category),
+  ('bankcard', 'Money-In'::category),
+  ('mobile deposit', 'Money-In'::category),
+  ('merchant', 'Money-In'::category),
+  ('esquire', 'Money-In'::category),
+  ('stripe', 'Money-In'::category),
+  ('venmo', 'Money-Out'::category),
+  ('fullscript', 'Money-In'::category),
+  ('check', 'Money-Out'::category);
 
 
 
@@ -468,7 +435,7 @@ DROP TABLE IF EXISTS creative_cash_flow_notifiers CASCADE;
 CREATE TABLE creative_cash_flow_notifiers (
   id int PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
   name text NOT NULL,
-  email text NOT NULL,
+  email text UNIQUE NOT NULL,
   enabled boolean NOT NULL DEFAULT true
 );
 
@@ -480,43 +447,22 @@ ALTER TABLE public.creative_cash_flow_notifiers ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Admin can view plaid creative_cash_flow_notifiers data" ON public.creative_cash_flow_notifiers
   FOR SELECT
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE public.users.id = auth.uid() AND public.users.role = 'admin'
-    )
-  );
+  USING (is_admin(auth.uid()));
 
 CREATE POLICY "Admin can insert plaid creative_cash_flow_notifiers" ON public.creative_cash_flow_notifiers
   FOR INSERT
   TO authenticated
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE public.users.id = auth.uid() AND public.users.role = 'admin'
-    )
-  );
+  WITH CHECK (is_admin(auth.uid()));
 
 CREATE POLICY "Admin can update plaid creative_cash_flow_notifiers data" ON public.creative_cash_flow_notifiers
   FOR UPDATE
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE public.users.id = auth.uid() AND public.users.role = 'admin'
-    )
-  )
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE public.users.id = auth.uid() AND public.users.role = 'admin'
-    )
-  );
+  USING (is_admin(auth.uid()));
 
 CREATE POLICY "Admin can delete plaid creative_cash_flow_notifiers" ON public.creative_cash_flow_notifiers
   FOR DELETE
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE public.users.id = auth.uid() AND public.users.role = 'admin'
-    )
-  );
+  USING (is_admin(auth.uid()));
 
 
 
@@ -533,7 +479,7 @@ RETURNS TABLE (
     account_id text,
     name text,
     amount decimal(10,2),
-    category category_type,
+    category category,
     date timestamp with time zone,
     account text
 ) AS $$

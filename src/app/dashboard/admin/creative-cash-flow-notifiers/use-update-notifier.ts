@@ -1,9 +1,13 @@
+import { useSetAtom } from 'jotai';
+
 import { supabase } from '@/lib/supabase/client';
-import type { UpdateNotifiersType } from './schema';
-import type { Notifier } from './types';
+import { updateNotifierAtom } from './atoms';
+import type { NotifierFormType } from './schema';
 
 export const useUpdateNotifier = () => {
-  return async (id: number, data: UpdateNotifiersType) => {
+  const updateNotifiers = useSetAtom(updateNotifierAtom);
+
+  return async (id: number, data: NotifierFormType) => {
     const { error, data: updatedNotifer } = await supabase
       .from('creative_cash_flow_notifiers')
       .update({
@@ -19,6 +23,6 @@ export const useUpdateNotifier = () => {
       throw error;
     }
 
-    return updatedNotifer as Notifier;
+    updateNotifiers(updatedNotifer);
   };
 };

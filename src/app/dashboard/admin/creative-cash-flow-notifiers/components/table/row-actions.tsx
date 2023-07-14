@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useSetAtom } from 'jotai';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { MoreHorizontal, Pen, Trash } from 'lucide-react';
@@ -15,7 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { removeNotifierAtom } from '../../atoms';
 import { useDeleteNotifier } from '../../use-delete-notifier';
 import { UpdateNotifierDialog } from '../update-notifier-dialog';
 import type { Notifier } from '../../types';
@@ -27,21 +25,16 @@ interface RowActionsProps {
 export function RowActions({ row }: RowActionsProps) {
   const deleteNotifier = useDeleteNotifier();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-  const removeNotifer = useSetAtom(removeNotifierAtom);
   const handleUpdateDialogOpenChange = useCallback((open?: boolean) => {
-    setShowUpdateDialog((prev) => (open ? open : !prev));
+    setShowUpdateDialog((prev) => open ?? !prev);
   }, []);
 
   const handleDelete = useCallback(async () => {
-    await deleteNotifier(row.original.id)
-      .then(() => {
-        removeNotifer(row.original.id);
-      })
-      .catch((error) => {
-        console.error(error);
-        captureException(error);
-        toast.error('Failed to delete notifier');
-      });
+    await deleteNotifier(row.original.id).catch((error) => {
+      console.error(error);
+      captureException(error);
+      toast.error('Failed to delete notifier');
+    });
   }, [row.original.id]);
 
   return (

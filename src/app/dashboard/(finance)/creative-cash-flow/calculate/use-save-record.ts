@@ -1,5 +1,8 @@
+import { useSetAtom } from 'jotai';
+
 import { supabase } from '@/lib/supabase/client';
 import { generateUUID } from '@/lib/utils/uuid';
+import { addCreativeCashFlowRecordAtom } from '../atoms';
 import type {
   CreativeCashFlowManagementInputs,
   CreativeCashFlowManagementResult,
@@ -7,11 +10,13 @@ import type {
 } from '../types';
 
 export const useSaveRecord = () => {
+  const addRecord = useSetAtom(addCreativeCashFlowRecordAtom);
+
   return async (
     user_id: string,
     inputs: CreativeCashFlowManagementInputs,
     results: CreativeCashFlowManagementResult
-  ): Promise<CreativeCashFlowRecord> => {
+  ) => {
     const id = generateUUID();
     const { error: inputsError, data: newInputs } = await supabase
       .from('creative_cash_flow_inputs')
@@ -45,9 +50,11 @@ export const useSaveRecord = () => {
       throw resultsError;
     }
 
-    return {
+    const record = {
       inputs: newInputs,
       results: newResults,
     } as unknown as CreativeCashFlowRecord;
+
+    addRecord(record);
   };
 };

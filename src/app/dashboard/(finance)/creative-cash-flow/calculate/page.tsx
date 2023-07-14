@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
@@ -16,12 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CreativeCashFlowCalculatePage() {
-  const user = await getUser();
-
-  if (!user) {
-    redirect('/login');
-  }
-
+  const user = (await getUser()) as User;
   // Get all of the users transactions data split into business and personal
   const supabase = createSupabase();
   const { error: transactionsError, data } = await supabase.rpc('get_transactions_by_user_id', {

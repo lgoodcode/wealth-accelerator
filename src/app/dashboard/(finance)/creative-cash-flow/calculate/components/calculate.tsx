@@ -11,7 +11,6 @@ import {
   creativeCashFlowInputsAtom,
   creativeCashFlowResultAtom,
   resetCreativeCashFlowInputsAtom,
-  addCreativeCashFlowRecordAtom,
 } from '../../atoms';
 import {
   Accordion,
@@ -36,10 +35,9 @@ export function Calculate({ userId, transactions }: ContentProps) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
-  const creativeCashFlowInputs = useAtomValue(creativeCashFlowInputsAtom);
   const [results, setResults] = useAtom(creativeCashFlowResultAtom);
+  const creativeCashFlowInputs = useAtomValue(creativeCashFlowInputsAtom);
   const resetCreativeCashFlowInput = useSetAtom(resetCreativeCashFlowInputsAtom);
-  const addCreativeCashFlowRecord = useSetAtom(addCreativeCashFlowRecordAtom);
   const saveRecord = useSaveRecord();
 
   const handleSave = async () => {
@@ -50,8 +48,7 @@ export function Calculate({ userId, transactions }: ContentProps) {
     setIsSaving(true);
 
     await saveRecord(userId, creativeCashFlowInputs, results)
-      .then((record) => {
-        addCreativeCashFlowRecord(record);
+      .then(() => {
         toast.success(
           'The Creative Cash Flow record has been saved and can be shared with the advisors'
         );

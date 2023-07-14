@@ -24,11 +24,11 @@ export function ManageInstitutions() {
   const selectedInstitution = useAtomValue(selectedInstitutionAtom);
 
   const handleRenameDialogOpenChange = useCallback((open?: boolean) => {
-    setShowRenameDialog((prev) => (open ? open : !prev));
+    setShowRenameDialog((prev) => open ?? !prev);
   }, []);
 
   const handleDeleteDialogOpenChange = useCallback((open?: boolean) => {
-    setShowDeleteDialog((prev) => (open ? open : !prev));
+    setShowDeleteDialog((prev) => open ?? !prev);
   }, []);
 
   return (

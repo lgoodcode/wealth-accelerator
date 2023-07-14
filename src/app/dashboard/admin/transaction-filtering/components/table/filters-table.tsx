@@ -30,7 +30,7 @@ import { TablePagination } from './table-pagination';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
 interface FiltersTableProps {
-  filters: Filter[];
+  filters: Filter[] | null;
 }
 
 export function FiltersTable({ filters }: FiltersTableProps) {
@@ -39,7 +39,7 @@ export function FiltersTable({ filters }: FiltersTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable<Filter>({
-    data: filters,
+    data: filters || [],
     columns,
     state: {
       sorting,

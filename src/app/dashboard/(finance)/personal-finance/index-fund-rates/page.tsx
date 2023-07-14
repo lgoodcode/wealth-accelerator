@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { captureException } from '@sentry/nextjs';
 
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
@@ -8,13 +7,8 @@ import { PageError } from '@/components/page-error';
 import { RatesForm } from './rates-form';
 
 export default async function IndexFundRatesPage() {
+  const user = (await getUser()) as User;
   const supabase = createSupabase();
-  const user = await getUser();
-
-  if (!user) {
-    redirect('/login');
-  }
-
   const { error, data } = await supabase
     .from('personal_finance')
     .select('rates')
