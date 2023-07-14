@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
-import { registerUserFormSchema, type UserFormType } from '@/lib/userSchema';
+import { registerUserFormSchema, type RegisterUserFormType } from '@/lib/userSchema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -29,7 +29,7 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const signUp = useSignUp();
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
-  const form = useForm<UserFormType>({
+  const form = useForm<RegisterUserFormType>({
     resolver: zodResolver(registerUserFormSchema),
     defaultValues: {
       name: '',
@@ -38,7 +38,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
     },
   });
 
-  const onSubmit = async (data: UserFormType) => {
+  const onSubmit = async (data: RegisterUserFormType) => {
     setServerMessage(null);
 
     await signUp(data)

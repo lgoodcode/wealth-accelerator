@@ -26,10 +26,14 @@ export const registerUserFormSchema = z.object({
     }),
 });
 
-export type UserFormType = z.infer<typeof registerUserFormSchema>;
+export type RegisterUserFormType = z.infer<typeof registerUserFormSchema>;
 
-export const createUserFormSchema = registerUserFormSchema.extend({
-  role: z.nativeEnum(Role),
-});
+export const updateUserFormSchema = registerUserFormSchema
+  .omit({
+    password: true,
+  })
+  .extend({
+    role: z.nativeEnum(Role),
+  });
 
-export type CreateUserFormType = z.infer<typeof createUserFormSchema>;
+export type UpdateUserFormType = z.infer<typeof updateUserFormSchema>;

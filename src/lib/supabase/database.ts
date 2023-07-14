@@ -256,7 +256,7 @@ export interface Database {
           email: string
           id: string
           name: string
-          role: Database["public"]["Enums"]["role_type"]
+          role: Database["public"]["Enums"]["user_role"]
           updated_at: string
         }
         Insert: {
@@ -264,7 +264,7 @@ export interface Database {
           email: string
           id: string
           name: string
-          role?: Database["public"]["Enums"]["role_type"]
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
         }
         Update: {
@@ -272,7 +272,7 @@ export interface Database {
           email?: string
           id?: string
           name?: string
-          role?: Database["public"]["Enums"]["role_type"]
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
         }
       }
@@ -351,11 +351,40 @@ export interface Database {
           results: Json
         }[]
       }
+      is_admin: {
+        Args: {
+          user_id: string
+        }
+        Returns: boolean
+      }
+      is_own_plaid_account:
+        | {
+            Args: {
+              user_id: string
+            }
+            Returns: boolean
+          }
+        | {
+            Args: Record<PropertyKey, never>
+            Returns: boolean
+          }
+      is_own_plaid_transaction:
+        | {
+            Args: {
+              user_id: string
+            }
+            Returns: boolean
+          }
+        | {
+            Args: Record<PropertyKey, never>
+            Returns: boolean
+          }
     }
     Enums: {
       account_type: "personal" | "business"
       category_type: "Transfer" | "Money-In" | "Money-Out"
       role_type: "user" | "admin"
+      user_role: "USER" | "ADMIN"
     }
     CompositeTypes: {
       [_ in never]: never

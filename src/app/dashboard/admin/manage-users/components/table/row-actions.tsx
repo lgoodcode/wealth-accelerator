@@ -1,11 +1,10 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { toast } from 'react-toastify';
-import { captureException } from '@sentry/nextjs';
 import { MoreHorizontal, Pen, Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
+import { useUser } from '@/hooks/use-user';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,15 +13,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useUser } from '@/components/user-provider';
 import { DeleteUserDialog } from '../delete-user-dialog';
+import { UpdateUserDialog } from '../update-user-dialog';
 
 interface RowActionsProps {
   row: Row<User>;
 }
 
 export function RowActions({ row }: RowActionsProps) {
-  const user = useUser();
+  const user = useUser() as User;
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -51,7 +50,7 @@ export function RowActions({ row }: RowActionsProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onSelect={() => setShowDeleteDialog(true)}
-            disabled={user!.id === row.original.id}
+            disabled={user.id === row.original.id}
             className="text-red-600 font-medium"
           >
             <Trash className="mr-2 h-4 w-4" />
@@ -60,11 +59,12 @@ export function RowActions({ row }: RowActionsProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* <UpdateFilterDialog
+      <UpdateUserDialog
         open={showUpdateDialog}
         onOpenChange={handleUpdateDialogOpenChange}
-        filter={row.original}
-      /> */}
+        id={user!.id}
+        user={row.original}
+      />
 
       <DeleteUserDialog
         open={showDeleteDialog}

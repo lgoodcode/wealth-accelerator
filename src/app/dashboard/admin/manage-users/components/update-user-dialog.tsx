@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
-import { useSetAtom } from 'jotai';
-import { useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
-import { useUpdateFilter } from '../use-update-filter';
-import { updateFilterFormSchema, type UpdateFilterFormType } from '../schemas';
-import { setFiltersAtom } from '../atoms';
+import { updateUserFormSchema, type UpdateUserFormType } from '@/lib/userSchema';
+import { Role } from '@/lib/types';
+import { useUpdateUser } from '../use-update-user';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -33,34 +32,24 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Category, type Filter } from '@/lib/plaid/types/transactions';
 
-interface UpdateFilterProps {
+interface UpdateUserDialog {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
-  filter: Filter;
+  id: string;
+  user: User;
 }
 
-export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterProps) {
-  const updateFilter = useUpdateFilter();
-  const queryClient = useQueryClient();
-  const setFilters = useSetAtom(setFiltersAtom);
-  const form = useForm<UpdateFilterFormType>({
-    resolver: zodResolver(updateFilterFormSchema),
-    values: {
-      category: filter.category,
-    },
+export function UpdateUserDialog({ open, onOpenChange, id, user }: UpdateUserDialog) {
+  const updateUser = useUpdateUser();
+  const form = useForm<UpdateUserFormType>({
+    resolver: zodResolver(updateUserFormSchema),
+    values: user,
   });
 
-  const handleUpdate = async (data: UpdateFilterFormType) => {
-    await updateFilter(filter.id, data)
-      // Update the filters and invalidate the transactions query to force a refetch
+  const handleUpdate = async (data: UpdateUserFormType) => {
+    await updateUser(user.id, data, id === user.id)
       .then(() => {
-        setFilters({
-          ...filter,
-          category: data.category,
-        });
-        queryClient.invalidateQueries({ queryKey: ['transactions'] });
         onOpenChange(false);
       })
       .catch((error) => {
@@ -68,44 +57,72 @@ export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterP
         captureException(error);
         toast.error(
           <span>
-            Failed to remove filter <span className="font-bold">{filter.filter}</span>
+            Failed to update user <span className="font-bold">{user.name}</span>
           </span>
         );
       });
   };
 
   useEffect(() => {
-    if (open) {
-      form.reset();
-    }
+    form.reset();
   }, [open, form]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update filter</DialogTitle>
+          <DialogTitle>Update user</DialogTitle>
           <DialogDescription>
-            Update category for <span className="font-bold">{filter.filter}</span>
+            Update user details for <span className="font-bold">{user.name}</span>
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(handleUpdate)}>
             <FormField
               control={form.control}
-              name="category"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Input placeholder="John Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="you@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      disabled={id === user.id}
+                    >
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Category" />
                       </SelectTrigger>
                       <SelectContent>
-                        {Object.values(Category).map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {category}
+                        {Object.values(Role).map((role) => (
+                          <SelectItem key={role} value={role}>
+                            {role === Role.ADMIN ? 'Admin' : 'User'}
                           </SelectItem>
                         ))}
                       </SelectContent>

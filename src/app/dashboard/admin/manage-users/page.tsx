@@ -12,7 +12,10 @@ export const metadata: Metadata = {
 
 export default async function ManageUsersPage() {
   const supabase = createSupabase();
-  const { error, data } = await supabase.from('users').select('*').order('id', { ascending: true });
+  const { error, data } = await supabase
+    .from('users')
+    .select('*')
+    .order('created_at', { ascending: true });
 
   if (error) {
     console.error(error);

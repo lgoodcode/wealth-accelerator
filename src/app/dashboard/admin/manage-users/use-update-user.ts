@@ -1,17 +1,30 @@
-import { supabase } from '@/lib/supabase/client';
-import type { UpdateFilterFormType } from './schemas';
+import { useSetAtom } from 'jotai';
 
-export const useUpdateFilter = () => {
-  return async (id: number, data: UpdateFilterFormType) => {
-    const { error } = await supabase
-      .from('plaid_filters')
-      .update({ category: data.category })
+import { supabase } from '@/lib/supabase/client';
+import { updateUserAtom } from './atoms';
+import { updateUserAtom as updateGlobalUserAtom } from '@/lib/atoms';
+import type { UpdateUserFormType } from '@/lib/userSchema';
+
+export const useUpdateUser = () => {
+  const updateUser = useSetAtom(updateUserAtom);
+  const updateGlobalUser = useSetAtom(updateGlobalUserAtom);
+
+  return async (id: string, data: UpdateUserFormType, isCurrentUser: boolean) => {
+    const { error, data: user } = await supabase
+      .from('users')
+      .update({ ...data })
       .eq('id', id)
       .select('*')
       .single();
 
     if (error) {
       throw error;
+    }
+
+    updateUser(user);
+
+    if (isCurrentUser) {
+      updateGlobalUser(user);
     }
   };
 };
