@@ -1,8 +1,8 @@
 import { supabase } from '@/lib/supabase/client';
-import type { FormType } from './register-form';
+import type { RegisterUserFormType } from '@/lib/userSchema';
 
 export const useSignUp = () => {
-  return async (data: FormType) => {
+  return async (data: RegisterUserFormType) => {
     const { error } = await supabase.auth.signUp({
       email: data.email.toLowerCase(),
       password: data.password,
