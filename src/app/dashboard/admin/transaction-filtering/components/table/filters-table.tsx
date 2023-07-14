@@ -34,7 +34,6 @@ interface FiltersTableProps {
 }
 
 export function FiltersTable({ filters }: FiltersTableProps) {
-  // const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -44,11 +43,9 @@ export function FiltersTable({ filters }: FiltersTableProps) {
     state: {
       sorting,
       columnVisibility,
-      // rowSelection,
       columnFilters,
     },
-    // enableRowSelection: true,
-    // onRowSelectionChange: setRowSelection,
+    enableHiding: false,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
