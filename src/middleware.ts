@@ -7,15 +7,15 @@ import type { Database } from '@/lib/supabase/database';
 
 const authPagesRegex = /^\/(login|signup|forgot-password|reset-password)/;
 
-export async function middleware(req: NextRequest) {
+export async function middleware(request: NextRequest) {
   const res = NextResponse.next();
-  const isLoginPage = req.nextUrl.pathname === '/login';
-  const isAuthPage = authPagesRegex.test(req.nextUrl.pathname);
-  const supabase = createMiddlewareClient<Database>({ req, res });
-  const token = parseAuthCookie(req.cookies);
-  const loginRedirectUrl = new URL(`${req.nextUrl.origin}/login`);
+  const isLoginPage = request.nextUrl.pathname === '/login';
+  const isAuthPage = authPagesRegex.test(request.nextUrl.pathname);
+  const supabase = createMiddlewareClient<Database>({ req: request, res });
+  const token = parseAuthCookie(request.cookies);
+  const loginRedirectUrl = new URL(`${request.nextUrl.origin}/login`);
   // Set the redirect_to query param to the current path
-  loginRedirectUrl.searchParams.set('redirect_to', req.nextUrl.pathname);
+  loginRedirectUrl.searchParams.set('redirect_to', request.nextUrl.pathname);
 
   // If the auth token isn't valid (none or expired), redirect to login page
   // for all pages except auth pages
@@ -43,8 +43,8 @@ export async function middleware(req: NextRequest) {
     });
   }
 
-  const dashboardHomeRedirectUrl = new URL(`${req.nextUrl.origin}/dashboard/home`);
-  dashboardHomeRedirectUrl.searchParams.set('redirect_to', req.nextUrl.pathname);
+  const dashboardHomeRedirectUrl = new URL(`${request.nextUrl.origin}/dashboard/home`);
+  dashboardHomeRedirectUrl.searchParams.set('redirect_to', request.nextUrl.pathname);
 
   // If there is an error or there's no session, redirect to login page for all pages except auth pages
   if ((error || !session) && !isAuthPage) {

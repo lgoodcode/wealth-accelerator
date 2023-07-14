@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server';
 
 export const GET = exchangeCodeForSession;
 
-async function exchangeCodeForSession(req: Request) {
-  const requestURL = new URL(req.url);
+async function exchangeCodeForSession(request: Request) {
+  const requestURL = new URL(request.url);
   const code = requestURL.searchParams.get('code');
 
   if (code) {

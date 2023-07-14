@@ -5,8 +5,8 @@ import { serverSyncTransactions } from '@/lib/plaid/transactions/serverSyncTrans
 
 export const POST = syncTransactionsWebhook;
 
-async function syncTransactionsWebhook(req: Request) {
-  const body = await req.json().catch((err) => err);
+async function syncTransactionsWebhook(request: Request) {
+  const body = await request.json().catch((err) => err);
 
   if (!body) {
     return NextResponse.json({ error: 'Missing body' }, { status: 400 });
