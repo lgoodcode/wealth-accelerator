@@ -6,7 +6,8 @@ import { cn } from '@/lib/utils/cn';
 import { buttonVariants } from '@/components/ui/button';
 import type { SidebarNavItem } from '../layout';
 
-const PATH_NAME = '/dashboard/personal-finance';
+// Make sure this is in sync with the routes
+const PATH_NAME = '/dashboard/finance/finance-planning';
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   items: SidebarNavItem[];

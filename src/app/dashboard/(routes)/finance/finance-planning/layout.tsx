@@ -4,7 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarNav } from './components/sidebar-nav';
 
 export const metadata: Metadata = {
-  title: 'Personal Finance',
+  title: 'Finance Planning',
 };
 
 export type SidebarNavItem = {
@@ -27,11 +27,11 @@ interface PersonalFinanceLayoutProps {
   children: React.ReactNode;
 }
 
-export default function PersonalFinanceLayout({ children }: PersonalFinanceLayoutProps) {
+export default function FinancePlanningLayout({ children }: PersonalFinanceLayoutProps) {
   return (
     <div className="p-8">
       <div className="space-y-1">
-        <h2 className="text-3xl font-bold">Personal Finance</h2>
+        <h2 className="text-3xl font-bold">Finance Planning</h2>
         <p className="text-muted-foreground">
           Manage settings used in calculalations for your finances.
         </p>

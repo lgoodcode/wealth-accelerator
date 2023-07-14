@@ -2,7 +2,7 @@ import { metadata as siteMetadata } from '@/config/site';
 import { Inter } from '@/lib/fonts';
 import { cn } from '@/lib/utils/cn';
 import { TailwindIndicator } from '@/components/tailwind-indicator';
-import { AuthHelper } from '@/components/auth-helper';
+// import { AuthHelper } from '@/components/auth-helper';
 
 import '@/styles/globals.css';
 
