@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAtomValue } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,6 +8,7 @@ import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
 import { useCreateFilter } from '../use-create-filter';
+import { filtersAtom } from '../atoms';
 import { createFilterFormSchema, type CreateFilterFormType } from '../schemas';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,13 +39,27 @@ import { Category } from '@/lib/plaid/types/transactions';
 
 export function AddFilterButton() {
   const createFilter = useCreateFilter();
-  const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
+  const [isOpen, setIsOpen] = useState(false);
+  const filters = useAtomValue(filtersAtom);
   const form = useForm<CreateFilterFormType>({
     resolver: zodResolver(createFilterFormSchema),
+    resetOptions: {
+      keepValues: true,
+    },
   });
 
   const handleCreate = async (data: CreateFilterFormType) => {
+    // Check if the filter already exists
+    if (filters?.some((filter) => filter.filter === data.filter)) {
+      toast.error(
+        <span>
+          Filter <span className="font-bold">{data.filter}</span> already exists
+        </span>
+      );
+      return;
+    }
+
     await createFilter(data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {
@@ -51,6 +67,15 @@ export function AddFilterButton() {
         setIsOpen(false);
       })
       .catch((error) => {
+        if (error?.code === '23505') {
+          toast.error(
+            <span>
+              Filter <span className="font-bold">{data.filter}</span> already exists
+            </span>
+          );
+          return;
+        }
+
         console.error(error);
         captureException(error);
         toast.error('Failed to create filter');
@@ -72,8 +97,12 @@ export function AddFilterButton() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create filter</DialogTitle>
-            <DialogDescription>
-              Create a new filter to categorize transactions when received from Plaid.
+            <DialogDescription className="space-y-2">
+              <p>Create a new filter to categorize transactions when received from Plaid.</p>
+              <p>
+                <span className="font-bold">Note:</span> all the filters are case-insensitive and
+                will be formatted to lowercase.
+              </p>
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
