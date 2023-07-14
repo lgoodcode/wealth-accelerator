@@ -30,7 +30,7 @@ export function RowActions({ row }: RowActionsProps) {
   const removeFilter = useSetAtom(removeFilterAtom);
 
   const handleUpdateDialogOpenChange = useCallback((open?: boolean) => {
-    setShowUpdateDialog((prev) => (open ? open : !prev));
+    setShowUpdateDialog((prev) => open ?? !prev);
   }, []);
 
   const handleDeleteFilter = () => {

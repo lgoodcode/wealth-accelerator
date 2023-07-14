@@ -29,7 +29,7 @@ export function RowActions({ row }: RowActionsProps) {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const removeNotifer = useSetAtom(removeNotifierAtom);
   const handleUpdateDialogOpenChange = useCallback((open?: boolean) => {
-    setShowUpdateDialog((prev) => (open ? open : !prev));
+    setShowUpdateDialog((prev) => open ?? !prev);
   }, []);
 
   const handleDelete = useCallback(async () => {

@@ -1,3 +1,5 @@
+import { Role } from '@/lib/types';
+
 type RoleOption = {
   label: string;
   value: Role;
@@ -6,10 +8,10 @@ type RoleOption = {
 export const roleOptions: RoleOption[] = [
   {
     label: 'User',
-    value: 'user',
+    value: Role.USER,
   },
   {
     label: 'Admin',
-    value: 'admin',
+    value: Role.ADMIN,
   },
 ];

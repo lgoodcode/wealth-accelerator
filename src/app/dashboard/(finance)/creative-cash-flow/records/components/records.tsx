@@ -31,7 +31,7 @@ export function Records({ recordsData }: RecordsProps) {
   const [records, setRecords] = useAtom(creativeCashFlowRecordsAtom);
 
   const handleDeleteDialogOpenChange = useCallback((open?: boolean) => {
-    setShowDeleteDialog((prev) => (open ? open : !prev));
+    setShowDeleteDialog((prev) => open ?? !prev);
   }, []);
 
   useEffect(() => {
