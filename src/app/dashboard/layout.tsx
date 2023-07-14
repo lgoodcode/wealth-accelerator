@@ -43,7 +43,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
     >
       <UserProvider user={user}>
         <QueryProvider>
-          <Header user={user} />
+          <Header />
           {children}
         </QueryProvider>
         <ToastProvider />
