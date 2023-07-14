@@ -1,22 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
-import { useCreateFilter } from '../use-create-filter';
-import { createFilterFormSchema, type CreateFilterFormType } from '../schemas';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import {
   Dialog,
   DialogContent,
@@ -31,29 +21,28 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormDescription,
   FormMessage,
 } from '@/components/ui/form';
-import { Category } from '@/lib/plaid/types/transactions';
+import { useCreateDebt } from '../use-create-debt';
+import { debtFormSchema, DebtFormType } from '../schemas';
 
-export function AddFilterButton() {
-  const createFilter = useCreateFilter();
+export function AddDebtButton() {
+  const createDebt = useCreateDebt();
   const [isOpen, setIsOpen] = useState(false);
-  const queryClient = useQueryClient();
-  const form = useForm<CreateFilterFormType>({
-    resolver: zodResolver(createFilterFormSchema),
+  const form = useForm<DebtFormType>({
+    resolver: zodResolver(debtFormSchema),
   });
 
-  const handleCreate = async (data: CreateFilterFormType) => {
-    await createFilter(data)
-      // Update the filters and invalidate the transactions query to force a refetch
+  const handleCreate = async (data: DebtFormType) => {
+    await createDebt(data)
       .then(() => {
-        queryClient.invalidateQueries({ queryKey: ['transactions'] });
         setIsOpen(false);
       })
       .catch((error) => {
         console.error(error);
         captureException(error);
-        toast.error('Failed to create filter');
+        toast.error('Failed to create debt');
       });
   };
 
@@ -65,27 +54,25 @@ export function AddFilterButton() {
     <>
       <Button className="h-8 px-2 lg:px-3" onClick={() => setIsOpen(true)}>
         <PlusCircle className="mr-2 h-4 w-4" />
-        Add filter
+        Add debt
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create filter</DialogTitle>
-            <DialogDescription>
-              Create a new filter to categorize transactions when received from Plaid.
-            </DialogDescription>
+            <DialogTitle>Create debt</DialogTitle>
+            <DialogDescription>Create a new debt to manage.</DialogDescription>
           </DialogHeader>
           <Form {...form}>
             <form className="space-y-4" onSubmit={form.handleSubmit(handleCreate)}>
               <FormField
                 control={form.control}
-                name="filter"
+                name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Filter text</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Input placeholder="Filter text" {...field} />
+                      <Input placeholder="Mortgage" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -93,24 +80,91 @@ export function AddFilterButton() {
               />
               <FormField
                 control={form.control}
-                name="category"
+                name="amount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category</FormLabel>
+                    <FormLabel>
+                      Amount
+                      <span className="ml-1 text-muted-foreground">($)</span>
+                    </FormLabel>
                     <FormControl>
-                      <Select value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Object.values(Category).map((category) => (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Input
+                        type="number"
+                        placeholder="$5,000"
+                        prefix="$"
+                        value={field.value}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                      />
                     </FormControl>
+                    <FormDescription>The amount of money owed.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="payment"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Payment
+                      <span className="ml-1 text-muted-foreground">($)</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="$450"
+                        prefix="$"
+                        value={field.value}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormDescription>The monthly payment amount.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="interest"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Interest
+                      <span className="ml-1 text-muted-foreground">(%)</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="22.29%"
+                        value={field.value}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="months_remaining"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Months Remaining
+                      <span className="ml-1 text-muted-foreground">(months)</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="12"
+                        value={field.value}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      The number of months required to pay the principal within.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

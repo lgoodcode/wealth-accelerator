@@ -98,7 +98,7 @@ export function InputForm({ transactions }: InputsFormProps) {
               <FormItem className="flex flex-col">
                 <FormLabel>
                   {inputLabels.all_other_income.title}
-                  <span className="ml-1 text-muted-foreground">(dollars)</span>
+                  <span className="ml-1 text-muted-foreground">($)</span>
                 </FormLabel>
                 <CurrencyInput
                   placeholder="$30,000"
@@ -118,7 +118,7 @@ export function InputForm({ transactions }: InputsFormProps) {
               <FormItem className="flex flex-col">
                 <FormLabel>
                   {inputLabels.payroll_and_distributions.title}
-                  <span className="ml-1 text-muted-foreground">(dollars)</span>
+                  <span className="ml-1 text-muted-foreground">($)</span>
                 </FormLabel>
                 <CurrencyInput
                   placeholder="$100,000"
@@ -182,7 +182,7 @@ export function InputForm({ transactions }: InputsFormProps) {
               <FormItem className="flex flex-col">
                 <FormLabel>
                   {inputLabels.optimal_savings_strategy.title}
-                  <span className="ml-1 text-muted-foreground">(dollars)</span>
+                  <span className="ml-1 text-muted-foreground">($)</span>
                 </FormLabel>
                 <CurrencyInput
                   placeholder="$50,000"

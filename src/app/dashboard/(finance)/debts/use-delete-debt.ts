@@ -1,18 +1,18 @@
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
-import { removeFilterAtom } from './atoms';
+import { removeDebtAtom } from './atoms';
 
-export const useDeleteFilter = () => {
-  const removeFilter = useSetAtom(removeFilterAtom);
+export const useDeleteDebt = () => {
+  const removeDebt = useSetAtom(removeDebtAtom);
 
   return async (id: number) => {
-    const { error } = await supabase.from('plaid_filters').delete().eq('id', id);
+    const { error } = await supabase.from('debts').delete().eq('id', id);
 
     if (error) {
       throw error;
     }
 
-    removeFilter(id);
+    removeDebt(id);
   };
 };

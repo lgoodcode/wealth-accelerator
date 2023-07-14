@@ -114,7 +114,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
             <FormItem className="flex flex-col">
               <FormLabel>
                 Money Needed To Live
-                <span className="ml-1 text-muted-foreground">(dollars)</span>
+                <span className="ml-1 text-muted-foreground">($)</span>
               </FormLabel>
               <CurrencyInput
                 placeholder="$100,000"
@@ -176,7 +176,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
             <FormItem className="flex flex-col">
               <FormLabel>
                 Premium Deposit
-                <span className="ml-1 text-muted-foreground">(dollars)</span>
+                <span className="ml-1 text-muted-foreground">($)</span>
               </FormLabel>
               <CurrencyInput
                 placeholder="$50,000"
@@ -198,7 +198,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
             <FormItem className="flex flex-col">
               <FormLabel>
                 Year to Date Collections
-                <span className="ml-1 text-muted-foreground">(dollars)</span>
+                <span className="ml-1 text-muted-foreground">($)</span>
               </FormLabel>
               <CurrencyInput
                 placeholder="$25,000"

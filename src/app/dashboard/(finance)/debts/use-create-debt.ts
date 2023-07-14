@@ -1,26 +1,32 @@
 import { useSetAtom } from 'jotai';
 
+import { useUser } from '@/hooks/use-user';
 import { supabase } from '@/lib/supabase/client';
-import { addFilterAtom } from './atoms';
-import type { Filter } from '@/lib/plaid/types/transactions';
+import { addDebtAtom } from './atoms';
+import type { Debt } from '@/lib/types/debts';
 
-export const useCreateFilter = () => {
-  const addFilter = useSetAtom(addFilterAtom);
+export const useCreateDebt = () => {
+  const user = useUser();
+  const addDebt = useSetAtom(addDebtAtom);
 
-  return async (filter: Pick<Filter, 'filter' | 'category'>) => {
-    const { error: insertError, data: newFilter } = await supabase
-      .from('plaid_filters')
+  return async (debt: Omit<Debt, 'id' | 'user_id'>) => {
+    if (!user) {
+      throw new Error('User is not authenticated');
+    }
+
+    const { error: insertError, data: newDebt } = await supabase
+      .from('debts')
       .insert({
-        ...filter,
-        filter: filter.filter.toLowerCase(),
+        ...debt,
+        user_id: user.id,
       })
       .select('*')
       .single();
 
-    if (insertError || !newFilter) {
-      throw insertError || new Error('Failed to insert filter');
+    if (insertError || !newDebt) {
+      throw insertError || new Error('Failed to insert debt');
     }
 
-    addFilter(newFilter as Filter);
+    addDebt(newDebt);
   };
 };

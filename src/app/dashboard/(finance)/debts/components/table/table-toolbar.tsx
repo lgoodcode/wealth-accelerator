@@ -5,8 +5,8 @@ import { X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { FacetedFilter } from './faceted-filter';
-// import { AddFilterButton } from '../add-filter-button';
+// import { FacetedFilter } from './faceted-filter';
+import { AddDebtButton } from '../add-debt-button';
 import type { Debt } from '@/lib/types/debts';
 
 interface TableToolbarProps {
@@ -38,7 +38,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
         )}
       </div>
 
-      {/* <AddFilterButton /> */}
+      <AddDebtButton />
     </div>
   );
 }
