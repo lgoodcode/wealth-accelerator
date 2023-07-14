@@ -43,7 +43,6 @@ export function AddNotifierButton() {
   });
 
   const handleCreate = async (data: NotifierFormType) => {
-    // Check if the email is already in use
     if (hasNotifer(data.email)) {
       form.setError('email', {
         type: 'manual',

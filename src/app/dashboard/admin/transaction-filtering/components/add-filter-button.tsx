@@ -51,11 +51,10 @@ export function AddFilterButton() {
 
   const handleCreate = async (data: CreateFilterFormType) => {
     if (hasFilter(data.filter)) {
-      toast.error(
-        <span>
-          Filter <span className="font-bold">{data.filter}</span> already exists
-        </span>
-      );
+      form.setError('filter', {
+        type: 'manual',
+        message: 'Filter already exists',
+      });
       return;
     }
 

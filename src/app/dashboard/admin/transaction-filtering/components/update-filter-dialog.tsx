@@ -61,7 +61,7 @@ export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterP
         captureException(error);
         toast.error(
           <span>
-            Failed to remove filter <span className="font-bold">{filter.filter}</span>
+            Failed to update filter <span className="font-bold">{filter.filter}</span>
           </span>
         );
       });
