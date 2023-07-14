@@ -17,37 +17,8 @@ import type { Account, AccountType } from '@/lib/plaid/types/institutions';
  */
 
 export const columns: ColumnDef<Account>[] = [
-  // {
-  //   id: 'select',
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       checked={table.getIsAllPageRowsSelected()}
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //       className="translate-y-[2px]"
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //       className="translate-y-[2px]"
-  //     />
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
-  // {
-  //   accessorKey: 'id',
-  //   header: ({ column }) => <ColumnHeader column={column} title="Task" />,
-  //   cell: ({ row }) => <div className="w-[80px]">{row.getValue('id')}</div>,
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
   {
     accessorKey: 'name',
-    enableHiding: false,
     header: ({ column }) => <ColumnHeader column={column} title="Name" />,
     cell: ({ row }) => {
       return (

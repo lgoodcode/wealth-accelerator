@@ -38,7 +38,6 @@ interface AccountsTableProps {
 }
 
 export function AccountsTable({ item_id }: AccountsTableProps) {
-  // const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -50,11 +49,9 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
     state: {
       sorting,
       columnVisibility,
-      // rowSelection,
       columnFilters,
     },
-    // enableRowSelection: true,
-    // onRowSelectionChange: setRowSelection,
+    enableHiding: false,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
