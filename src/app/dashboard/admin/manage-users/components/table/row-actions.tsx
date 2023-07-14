@@ -13,8 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DeleteUserDialog } from '../delete-user-dialog';
 import { UpdateUserDialog } from '../update-user-dialog';
+import { DeleteUserDialog } from '../delete-user-dialog';
 
 interface RowActionsProps {
   row: Row<User>;

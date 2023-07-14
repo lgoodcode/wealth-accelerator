@@ -63,9 +63,7 @@ export function RenameInstitution({ open, onOpenChange, institution }: RenameIns
   };
 
   useEffect(() => {
-    if (open) {
-      form.reset();
-    }
+    form.reset();
   }, [open, form]);
 
   return (

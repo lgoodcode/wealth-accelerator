@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useSetAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,7 +8,6 @@ import { PlusCircle } from 'lucide-react';
 
 import { useCreateFilter } from '../use-create-filter';
 import { createFilterFormSchema, type CreateFilterFormType } from '../schemas';
-import { addFilterAtom } from '../atoms';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -40,7 +38,6 @@ import { Category } from '@/lib/plaid/types/transactions';
 export function AddFilterButton() {
   const createFilter = useCreateFilter();
   const [isOpen, setIsOpen] = useState(false);
-  const addFilter = useSetAtom(addFilterAtom);
   const queryClient = useQueryClient();
   const form = useForm<CreateFilterFormType>({
     resolver: zodResolver(createFilterFormSchema),
@@ -49,8 +46,7 @@ export function AddFilterButton() {
   const handleCreate = async (data: CreateFilterFormType) => {
     await createFilter(data)
       // Update the filters and invalidate the transactions query to force a refetch
-      .then((filter) => {
-        addFilter(filter);
+      .then(() => {
         queryClient.invalidateQueries({ queryKey: ['transactions'] });
         setIsOpen(false);
       })

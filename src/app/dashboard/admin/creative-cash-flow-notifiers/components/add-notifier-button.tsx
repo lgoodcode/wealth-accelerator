@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
 import { useCreateNotifier } from '../use-create-notifier';
-import { addNotifierAtom, hasNotifierAtom } from '../atoms';
+import { hasNotifierAtom } from '../atoms';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -33,7 +33,6 @@ export function AddNotifierButton() {
   const createNotifier = useCreateNotifier();
   const [isOpen, setIsOpen] = useState(false);
   const hasNotifer = useSetAtom(hasNotifierAtom);
-  const addNotifier = useSetAtom(addNotifierAtom);
   const form = useForm<NotifierFormType>({
     resolver: zodResolver(notifierFormSchema),
     defaultValues: {
@@ -54,8 +53,7 @@ export function AddNotifierButton() {
     }
 
     await createNotifier(data)
-      .then((notifier) => {
-        addNotifier(notifier);
+      .then(() => {
         setIsOpen(false);
       })
       .catch((error) => {

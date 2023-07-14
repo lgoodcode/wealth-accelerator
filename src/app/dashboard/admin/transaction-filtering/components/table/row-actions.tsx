@@ -2,12 +2,10 @@
 
 import { useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
-import { useSetAtom } from 'jotai';
 import { captureException } from '@sentry/nextjs';
 import { MoreHorizontal, Pen, Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
-import { removeFilterAtom } from '../../atoms';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -27,21 +25,19 @@ interface RowActionsProps {
 export function RowActions({ row }: RowActionsProps) {
   const deleteFilter = useDeleteFilter();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-  const removeFilter = useSetAtom(removeFilterAtom);
 
   const handleUpdateDialogOpenChange = useCallback((open?: boolean) => {
     setShowUpdateDialog((prev) => open ?? !prev);
   }, []);
 
-  const handleDeleteFilter = () => {
-    deleteFilter(row.original.id)
+  const handleDeleteFilter = async () => {
+    await deleteFilter(row.original.id)
       .then(() => {
         toast.success(
           <span>
             Removed filter <span className="font-bold">{row.original.filter}</span>
           </span>
         );
-        removeFilter(row.original.id);
       })
       .catch((error) => {
         console.error(error);

@@ -1,16 +1,13 @@
 import { useCallback, useState } from 'react';
-import { useSetAtom } from 'jotai';
 import { captureException } from '@sentry/nextjs';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
 import { useUpdateNotifier } from '../use-update-notifier';
-import { updateNotifierAtom } from '../atoms';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-
 import {
   Dialog,
   DialogContent,
@@ -38,7 +35,6 @@ interface UpdateNotifierDialogProps {
 export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNotifierDialogProps) {
   const updateNotifier = useUpdateNotifier();
   const [isUpdating, setIsUpdating] = useState(false);
-  const updateNotifiers = useSetAtom(updateNotifierAtom);
   const form = useForm<NotifierFormType>({
     resolver: zodResolver(notifierFormSchema),
     values: {
@@ -60,8 +56,7 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
     setIsUpdating(true);
 
     await updateNotifier(notifier.id, data)
-      .then((updatedNotifier) => {
-        updateNotifiers(updatedNotifier);
+      .then(() => {
         handleUpdateDialogOpenChange(false);
       })
       .catch((error) => {
