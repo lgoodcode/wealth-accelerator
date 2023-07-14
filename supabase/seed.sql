@@ -75,12 +75,12 @@ CREATE TRIGGER on_auth_user_created
  * peronal_finance table
  */
 
--- Function that generates the rates array of 60 smallints with a default value of 7
+-- Function that generates the rates array of 60 decimal(5,2)[] with a default value of 7
 -- and divide the value by 100 when displaying/using it
 CREATE OR REPLACE FUNCTION generate_rates()
 RETURNS decimal(5,2)[] AS $$
 BEGIN
-    RETURN ARRAY(SELECT 7::decimal(5,2) FROM generate_series(1, 60));
+  RETURN ARRAY(SELECT 7::decimal(5,2) FROM generate_series(1, 60));
 END
 $$ LANGUAGE plpgsql;
 
@@ -91,7 +91,7 @@ CREATE TABLE personal_finance (
   -- Strategy start date
   start_date timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   -- Index fund rates
-  rates decimal(5,2)[] NOT NULL DEFAULT generate_rates(), -- generates an array of 60 smallints with a default value of 7
+  rates decimal(5,2)[] NOT NULL DEFAULT generate_rates(), -- generates an array of 60 decimal(5,2)[] with a default value of 7
   -- Wealth accelerator
   stop_invest smallint NOT NULL DEFAULT 10,
   start_withdrawl smallint NOT NULL DEFAULT 20,
