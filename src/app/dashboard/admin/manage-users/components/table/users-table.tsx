@@ -29,15 +29,16 @@ import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
 
 interface UsersTableProps {
-  users: User[];
+  users: User[] | null;
 }
 
 export function UsersTable({ users }: UsersTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+
   const table = useReactTable<User>({
-    data: users,
+    data: users || [],
     columns,
     state: {
       sorting,

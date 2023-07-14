@@ -7,7 +7,7 @@ import { usersAtom } from '../atoms';
 import { UsersTable } from './table/users-table';
 
 interface FiltersProps {
-  usersData: User[];
+  usersData: User[] | null;
 }
 
 export function Users({ usersData }: FiltersProps) {

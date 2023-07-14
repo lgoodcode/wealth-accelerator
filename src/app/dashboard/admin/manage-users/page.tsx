@@ -11,16 +11,14 @@ export const metadata: Metadata = {
 };
 
 export default async function ManageUsersPage() {
-  const supabase = createSupabase(true);
-  const { error, data } = await supabase.from('users').select('*');
+  const supabase = createSupabase();
+  const { error, data } = await supabase.from('users').select('*').order('id', { ascending: true });
 
   if (error) {
     console.error(error);
     captureException(error);
     return <PageError />;
   }
-
-  const users = (data ?? []) as User[];
 
   return (
     <div className="p-8">
@@ -29,7 +27,9 @@ export default async function ManageUsersPage() {
         <p className="text-muted-foreground">View, create, update, and delete users.</p>
       </div>
       <Separator className="mt-6" />
-      <Users usersData={users} />
+      <div className="flex justify-center">
+        <Users usersData={data} />
+      </div>
     </div>
   );
 }

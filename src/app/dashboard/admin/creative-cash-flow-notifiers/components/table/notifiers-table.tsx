@@ -34,7 +34,6 @@ interface NotifiersTableProps {
 }
 
 export function NotifiersTable({ notifiers }: NotifiersTableProps) {
-  console.log('notifiers', notifiers);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);

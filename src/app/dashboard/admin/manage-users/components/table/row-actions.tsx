@@ -2,13 +2,10 @@
 
 import { useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
-import { useSetAtom } from 'jotai';
 import { captureException } from '@sentry/nextjs';
 import { MoreHorizontal, Pen, Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
-// import { removeFilterAtom } from '../../atoms';
-import { supabase } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -17,40 +14,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-// import { UpdateFilterDialog } from '../update-filter-dialog';
+import { useUser } from '@/components/user-provider';
+import { DeleteUserDialog } from '../delete-user-dialog';
 
 interface RowActionsProps {
   row: Row<User>;
 }
 
 export function RowActions({ row }: RowActionsProps) {
+  const user = useUser();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-  // const removeFilter = useSetAtom(removeFilterAtom);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleUpdateDialogOpenChange = useCallback((open?: boolean) => {
-    setShowUpdateDialog((prev) => (open ? open : !prev));
+    setShowUpdateDialog((prev) => open ?? !prev);
   }, []);
 
-  const handleDeleteFilter = () => {
-    // deleteFilter(row.original.id)
-    //   .then(() => {
-    //     toast.success(
-    //       <span>
-    //         Removed filter <span className="font-bold">{row.original.filter}</span>
-    //       </span>
-    //     );
-    //     removeFilter(row.original.id);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //     captureException(error);
-    //     toast.error(
-    //       <span>
-    //         Failed to remove filter <span className="font-bold">{row.original.filter}</span>
-    //       </span>
-    //     );
-    //   });
-  };
+  const handleDeleteDialogOpenChange = useCallback((open?: boolean) => {
+    setShowDeleteDialog((prev) => open ?? !prev);
+  }, []);
 
   return (
     <>
@@ -67,7 +49,11 @@ export function RowActions({ row }: RowActionsProps) {
             Update
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={handleDeleteFilter} className="text-red-600 font-medium">
+          <DropdownMenuItem
+            onSelect={() => setShowDeleteDialog(true)}
+            disabled={user!.id === row.original.id}
+            className="text-red-600 font-medium"
+          >
             <Trash className="mr-2 h-4 w-4" />
             Delete
           </DropdownMenuItem>
@@ -79,6 +65,13 @@ export function RowActions({ row }: RowActionsProps) {
         onOpenChange={handleUpdateDialogOpenChange}
         filter={row.original}
       /> */}
+
+      <DeleteUserDialog
+        open={showDeleteDialog}
+        onOpenChange={handleDeleteDialogOpenChange}
+        id={user!.id}
+        user={row.original}
+      />
     </>
   );
 }

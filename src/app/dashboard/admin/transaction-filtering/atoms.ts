@@ -19,7 +19,7 @@ export const addFilterAtom = atom(null, (_get, set, newFilter: Filter) => {
 export const updateFilterAtom = atom(null, (_get, set, updatedFilter: Filter) => {
   set(filtersAtom, (filters) => {
     if (!filters) {
-      throw new Error('Filters do not exist');
+      throw new Error('filtersAtom is not initialized');
     }
 
     const index = filters.findIndex((filter) => filter.id === updatedFilter.id);
@@ -38,7 +38,7 @@ export const updateFilterAtom = atom(null, (_get, set, updatedFilter: Filter) =>
 export const removeFilterAtom = atom(null, (_get, set, id: number) => {
   set(filtersAtom, (filters) => {
     if (!filters) {
-      throw new Error('Filters do not exist');
+      throw new Error('filtersAtom is not initialized');
     }
 
     const index = filters.findIndex((filter) => filter.id === id);

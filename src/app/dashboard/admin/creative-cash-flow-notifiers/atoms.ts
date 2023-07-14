@@ -28,7 +28,7 @@ export const hasNotifierAtom = atom(null, (get, _set, email: string) => {
 export const updateNotifierAtom = atom(null, (_get, set, updatedNotifier: Notifier) => {
   set(notifiersAtom, (notifiers) => {
     if (!notifiers) {
-      throw new Error('Notifiers do not exist');
+      throw new Error('notifiersAtom is not initialized');
     }
 
     const index = notifiers.findIndex((notifier) => notifier.id === updatedNotifier.id);
@@ -47,7 +47,7 @@ export const updateNotifierAtom = atom(null, (_get, set, updatedNotifier: Notifi
 export const removeNotifierAtom = atom(null, (_get, set, id: number) => {
   set(notifiersAtom, (notifiers) => {
     if (!notifiers) {
-      throw new Error('Notifiers do not exist');
+      throw new Error('notifiersAtom is not initialized');
     }
 
     return notifiers.filter((notifier) => notifier.id !== id);

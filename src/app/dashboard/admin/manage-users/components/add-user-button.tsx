@@ -7,9 +7,9 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
-import { useCreateFilter } from '../use-create-filter';
-import { createFilterFormSchema, type CreateFilterFormType } from '../schemas';
-import { setFiltersAtom } from '../atoms';
+// import { useCreateFilter } from '../use-create-filter';
+// import { createFilterFormSchema, type CreateFilterFormType } from '../schemas';
+// import { setFiltersAtom } from '../atoms';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -36,36 +36,33 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Category } from '@/lib/plaid/types/transactions';
+import { createUserFormSchema, type CreateUserFormType } from '@/lib/userSchema';
 
-export function AddFilterButton() {
-  const createFilter = useCreateFilter();
+export function AddUserButton() {
+  // const createFilter = useCreateFilter();
   const [isOpen, setIsOpen] = useState(false);
-  const setFilters = useSetAtom(setFiltersAtom);
-  const queryClient = useQueryClient();
-  const form = useForm<CreateFilterFormType>({
-    resolver: zodResolver(createFilterFormSchema),
+  const form = useForm<CreateUserFormType>({
+    resolver: zodResolver(createUserFormSchema),
   });
 
-  const handleCreate = async (data: CreateFilterFormType) => {
-    await createFilter(data)
-      // Update the filters and invalidate the transactions query to force a refetch
-      .then((filter) => {
-        setFilters(filter);
-        queryClient.invalidateQueries({ queryKey: ['transactions'] });
-        setIsOpen(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        captureException(error);
-        toast.error('Failed to create filter');
-      });
-  };
+  // const handleCreate = async (data: CreateFilterFormType) => {
+  //   await createFilter(data)
+  //     // Update the filters and invalidate the transactions query to force a refetch
+  //     .then((filter) => {
+  //       setFilters(filter);
+  //       queryClient.invalidateQueries({ queryKey: ['transactions'] });
+  //       setIsOpen(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       captureException(error);
+  //       toast.error('Failed to create filter');
+  //     });
+  // };
 
-  useEffect(() => {
-    if (isOpen) {
-      form.reset();
-    }
-  }, [form, isOpen]);
+  // useEffect(() => {
+  //     form.reset();
+  // }, [form, isOpen]);
 
   return (
     <>
@@ -82,7 +79,7 @@ export function AddFilterButton() {
               Create a new filter to categorize transactions when received from Plaid.
             </DialogDescription>
           </DialogHeader>
-          <Form {...form}>
+          {/* <Form {...form}>
             <form className="space-y-4" onSubmit={form.handleSubmit(handleCreate)}>
               <FormField
                 control={form.control}
@@ -122,7 +119,7 @@ export function AddFilterButton() {
                 )}
               />
             </form>
-          </Form>
+          </Form> */}
           <DialogFooter>
             <Button
               variant="secondary"
@@ -134,7 +131,7 @@ export function AddFilterButton() {
             <Button
               type="submit"
               loading={form.formState.isSubmitting}
-              onClick={form.handleSubmit(handleCreate)}
+              // onClick={form.handleSubmit(handleCreate)}
             >
               Save
             </Button>
