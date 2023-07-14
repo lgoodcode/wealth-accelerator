@@ -8,7 +8,16 @@ export const updateUserAtom = atom(null, (_get, set, user: User) => {
       throw new Error('usersAtom is not initialized');
     }
 
-    return users?.map((u) => (u.id === user.id ? user : u)) ?? null;
+    const index = users.findIndex((u) => u.id === user.id);
+
+    if (index === -1) {
+      throw new Error('User does not exist');
+    }
+
+    const newUsers = [...users];
+    newUsers[index] = user;
+
+    return newUsers;
   });
 });
 
@@ -18,6 +27,15 @@ export const removeUserAtom = atom(null, (_get, set, id: string) => {
       throw new Error('usersAtom is not initialized');
     }
 
-    return users?.filter((user) => user.id !== id) ?? null;
+    const index = users.findIndex((user) => user.id === id);
+
+    if (index === -1) {
+      throw new Error('User does not exist');
+    }
+
+    const newUsers = [...users];
+    newUsers.splice(index, 1);
+
+    return newUsers;
   });
 });
