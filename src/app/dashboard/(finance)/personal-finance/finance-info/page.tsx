@@ -3,6 +3,7 @@ import { captureException } from '@sentry/nextjs';
 
 import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { getUser } from '@/lib/supabase/server/getUser';
+import { isAdmin } from '@/lib/utils/isAdmin';
 import { Separator } from '@/components/ui/separator';
 import { PageError } from '@/components/page-error';
 import { FinanceInfoForm } from './finance-info-form';
@@ -12,7 +13,7 @@ export default async function FinanceInfoPage() {
 
   if (!user) {
     redirect('/login');
-  } else if (user.role !== 'admin') {
+  } else if (!isAdmin(user)) {
     redirect('/dashboard');
   }
 

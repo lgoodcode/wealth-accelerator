@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
+import { isAdmin } from '@/lib/utils/isAdmin';
 import { Nav } from './nav';
 import { ThemeToggle } from './theme-toggle';
 import { UserNav } from './user-nav';
@@ -20,7 +21,7 @@ export function Header({ user }: HeaderProps) {
             <Image src="/img/logo-318x85.png" alt="logo" width={132} height={36} />
           </Link>
 
-          <Nav className="mx-4" isAdmin={user.role === 'admin'} />
+          <Nav className="mx-4" isAdmin={isAdmin(user)} />
 
           <div className="flex items-center space-x-4">
             <ThemeToggle />

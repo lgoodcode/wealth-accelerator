@@ -3,9 +3,9 @@ import type { Metadata } from 'next';
 
 import { getUser } from '@/lib/supabase/server/getUser';
 import { ThemeProvider } from '@/components/theme-provider';
+import { UserProvider } from '@/components/user-provider';
 import { Header } from './components/header';
 import { QueryProvider } from './components/query-provider';
-import { UserProvider } from './components/user-provider';
 import { ToastProvider } from './components/toast-provider';
 
 export const metadata: Metadata = {

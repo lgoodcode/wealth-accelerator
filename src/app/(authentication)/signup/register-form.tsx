@@ -1,12 +1,12 @@
 'use client';
 
-import { z } from 'zod';
 import Link from 'next/link';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
+import { registerUserFormSchema, type UserFormType } from '@/lib/userSchema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -19,32 +19,6 @@ import {
 } from '@/components/ui/form';
 import { useSignUp } from './use-signup';
 
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, 'Your name must contain at least 2 characters')
-    .max(50, 'Name is too long'),
-  email: z.string().nonempty('Please enter your email').email(),
-  password: z
-    .string()
-    .min(8, 'Password must contain at least 8 characters')
-    .max(50, 'Password is too long')
-    .refine((value) => /[a-z]+/.test(value), {
-      message: 'Password must contain at least one lowercase letter',
-    })
-    .refine((value) => /[A-Z]+/.test(value), {
-      message: 'Password must contain at least one uppercase letter',
-    })
-    .refine((value) => /[0-9]+/.test(value), {
-      message: 'Password must contain at least one number',
-    })
-    .refine((value) => /[!@#$%&'*+/=?^_`{|}~-]+/.test(value), {
-      message: 'Password must contain at least one special character',
-    }),
-});
-
-export type FormType = z.infer<typeof formSchema>;
-
 type ServerMessage = {
   type: 'error' | 'success';
   message: string;
@@ -55,8 +29,8 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const signUp = useSignUp();
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
-  const form = useForm<FormType>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<UserFormType>({
+    resolver: zodResolver(registerUserFormSchema),
     defaultValues: {
       name: '',
       email: '',
@@ -64,7 +38,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
     },
   });
 
-  const onSubmit = async (data: FormType) => {
+  const onSubmit = async (data: UserFormType) => {
     setServerMessage(null);
 
     await signUp(data)
