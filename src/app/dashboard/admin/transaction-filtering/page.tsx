@@ -24,7 +24,7 @@ export default async function TransactionFilteringPage() {
     return <PageError />;
   }
 
-  const filters = (data ?? []) as Filter[];
+  const filters = (data as Filter[]) ?? null;
 
   return (
     <div className="p-8">
