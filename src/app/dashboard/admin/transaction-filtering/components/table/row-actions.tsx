@@ -1,9 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { toast } from 'react-toastify';
-import { captureException } from '@sentry/nextjs';
-import { MoreHorizontal, Pen, Trash } from 'lucide-react';
+import { MoreHorizontal, Pen } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
 import { Button } from '@/components/ui/button';
@@ -14,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useDeleteFilter } from '../../use-delete-filter';
+import { DeleteFilterMenuItem } from '../delete-filter-menu-item';
 import { UpdateFilterDialog } from '../update-filter-dialog';
 import { type Filter } from '@/lib/plaid/types/transactions';
 
@@ -23,32 +21,11 @@ interface RowActionsProps {
 }
 
 export function RowActions({ row }: RowActionsProps) {
-  const deleteFilter = useDeleteFilter();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
 
   const handleUpdateDialogOpenChange = useCallback((open?: boolean) => {
     setShowUpdateDialog((prev) => open ?? !prev);
   }, []);
-
-  const handleDeleteFilter = async () => {
-    await deleteFilter(row.original.id)
-      .then(() => {
-        toast.success(
-          <span>
-            Removed filter <span className="font-bold">{row.original.filter}</span>
-          </span>
-        );
-      })
-      .catch((error) => {
-        console.error(error);
-        captureException(error);
-        toast.error(
-          <span>
-            Failed to remove filter <span className="font-bold">{row.original.filter}</span>
-          </span>
-        );
-      });
-  };
 
   return (
     <>
@@ -65,10 +42,7 @@ export function RowActions({ row }: RowActionsProps) {
             Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={handleDeleteFilter} className="text-red-600 font-medium">
-            <Trash className="mr-2 h-4 w-4" />
-            Delete
-          </DropdownMenuItem>
+          <DeleteFilterMenuItem row={row} />
         </DropdownMenuContent>
       </DropdownMenu>
 
