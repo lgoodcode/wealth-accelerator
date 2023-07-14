@@ -8,13 +8,11 @@ import { toast } from 'react-toastify';
 import { Copy } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { NumberInput } from '@/components/ui/number-input';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useUpdateRates } from '../use-update-rates';
 import { RatesFormSchema, type RatesFormSchemaType } from '../schema';
-import { useAtom } from 'jotai';
-import { Input } from '@/components/ui/input';
 
 const NUM_RATE_YEARS = 60;
 
@@ -26,7 +24,7 @@ interface RatesFormProps {
 
 export function RatesForm({ user, rates }: RatesFormProps) {
   const updateRates = useUpdateRates();
-  const [allRates, setAllRates] = useState<string>();
+  const [allRates, setAllRates] = useState<number>();
   const form = useForm<RatesFormSchemaType>({
     resolver: zodResolver(RatesFormSchema(NUM_RATE_YEARS)),
     values: { rates: rates ?? [] },
@@ -54,11 +52,9 @@ export function RatesForm({ user, rates }: RatesFormProps) {
             </FormLabel>
             <Input
               type="number"
-              placeholder="Set All Rates"
-              min={-100}
-              max={100}
+              placeholder="7.25"
               value={allRates}
-              onChange={(e) => setAllRates(e.target.value)}
+              onChange={(e) => setAllRates(parseFloat(e.target.value))}
             />
           </FormItem>
           <Button
@@ -89,8 +85,6 @@ export function RatesForm({ user, rates }: RatesFormProps) {
                       </FormLabel>
                       <Input
                         type="number"
-                        min={-100}
-                        max={100}
                         placeholder={`Rate For Year ${i + 1}`}
                         value={field.value}
                         onChange={(e) => field.onChange(parseFloat(e.target.value))}
