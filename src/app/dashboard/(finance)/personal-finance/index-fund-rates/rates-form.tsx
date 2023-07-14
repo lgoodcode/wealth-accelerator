@@ -13,21 +13,23 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useUpdateRates } from '../use-update-rates';
 import { RatesFormSchema, type RatesFormSchemaType } from '../schema';
+import { useAtom } from 'jotai';
+import { Input } from '@/components/ui/input';
 
 const NUM_RATE_YEARS = 60;
 
 // Override the type for the start_date because Supabase returns a string.
 interface RatesFormProps {
   user: User;
-  initialValues?: RatesFormSchemaType;
+  rates: number[] | null;
 }
 
-export function RatesForm({ user, initialValues }: RatesFormProps) {
+export function RatesForm({ user, rates }: RatesFormProps) {
   const updateRates = useUpdateRates();
-  const [allRates, setAllRates] = useState<number>();
+  const [allRates, setAllRates] = useState<string>();
   const form = useForm<RatesFormSchemaType>({
     resolver: zodResolver(RatesFormSchema(NUM_RATE_YEARS)),
-    defaultValues: initialValues,
+    values: { rates: rates ?? [] },
   });
 
   const onSubmit = async (data: RatesFormSchemaType) => {
@@ -44,16 +46,19 @@ export function RatesForm({ user, initialValues }: RatesFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="flex flex-row items-end">
           <FormItem className="flex flex-col w-full">
             <FormLabel>
               Set All Rates <span className="ml-1 text-muted-foreground">(%)</span>
             </FormLabel>
-            <NumberInput
+            <Input
+              type="number"
               placeholder="Set All Rates"
+              min={-100}
+              max={100}
               value={allRates}
-              onChange={(e) => setAllRates(parseInt(e.target.value))}
+              onChange={(e) => setAllRates(e.target.value)}
             />
           </FormItem>
           <Button
@@ -82,11 +87,13 @@ export function RatesForm({ user, initialValues }: RatesFormProps) {
                         {`Year ${i + 1}`}
                         <span className="ml-1 text-muted-foreground">(%)</span>
                       </FormLabel>
-                      <NumberInput
+                      <Input
+                        type="number"
+                        min={-100}
+                        max={100}
                         placeholder={`Rate For Year ${i + 1}`}
-                        suffix="%"
                         value={field.value}
-                        onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
                       />
                       <FormMessage />
                     </FormItem>

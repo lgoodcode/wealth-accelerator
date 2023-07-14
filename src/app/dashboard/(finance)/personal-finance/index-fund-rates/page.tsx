@@ -4,7 +4,7 @@ import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { getUser } from '@/lib/supabase/server/getUser';
 import { Separator } from '@/components/ui/separator';
 import { PageError } from '@/components/page-error';
-import { RatesForm } from './rates-form';
+import { Rates } from './rates';
 
 export default async function IndexFundRatesPage() {
   const user = (await getUser()) as User;
@@ -33,7 +33,7 @@ export default async function IndexFundRatesPage() {
       </div>
       <Separator />
       <div className="max-w-xl">
-        <RatesForm user={user} initialValues={data} />
+        <Rates user={user} ratesData={data.rates} />
       </div>
     </div>
   );

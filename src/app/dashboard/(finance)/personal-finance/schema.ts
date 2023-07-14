@@ -51,8 +51,9 @@ export const RatesFormSchema = (numOfYears: number) =>
           .number({
             required_error: 'Enter a rate',
           })
-          .min(-1, 'Enter a non-negative percentage')
-          .max(101, 'Enter a valid percentage')
+          .refine((value) => /^-?\d+(\.\d+)?$/.test(value.toString()), {
+            message: 'Enter a valid decimal number',
+          })
       )
       .length(numOfYears, `Enter ${numOfYears} rates`),
   });

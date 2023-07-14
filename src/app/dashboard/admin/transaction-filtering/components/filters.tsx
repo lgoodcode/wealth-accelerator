@@ -8,7 +8,7 @@ import type { Filter } from '@/lib/plaid/types/transactions';
 import { FiltersTable } from './table/filters-table';
 
 interface FiltersProps {
-  filtersData: Filter[];
+  filtersData: Filter[] | null;
 }
 
 export function Filters({ filtersData }: FiltersProps) {
