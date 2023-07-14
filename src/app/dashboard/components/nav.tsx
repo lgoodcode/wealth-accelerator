@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { LucideIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
-import { generalRoutes, financeRoutes, adminRoutes, exampleRoutes } from '@/routes';
+import { financeRoutes, toolsRoutes, adminRoutes, exampleRoutes } from '@/routes';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -60,10 +60,10 @@ export function Nav({ className, isAdmin }: NavProps) {
     <NavigationMenu className={className}>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>General</NavigationMenuTrigger>
+          <NavigationMenuTrigger>Finance</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {generalRoutes.map((route) =>
+              {financeRoutes.map((route) =>
                 route.disabled ? null : (
                   <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
                     {route.description}
@@ -75,10 +75,10 @@ export function Nav({ className, isAdmin }: NavProps) {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Finance</NavigationMenuTrigger>
+          <NavigationMenuTrigger>Tools</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {financeRoutes.map((route) =>
+              {toolsRoutes.map((route) =>
                 route.disabled ? null : (
                   <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
                     {route.description}

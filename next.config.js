@@ -19,9 +19,9 @@ const nextConfig = {
         permanent: true,
       },
       {
-        // Make sure this is in sync with the /dashboard/personal-finance/layout routes
-        source: '/dashboard/personal-finance',
-        destination: '/dashboard/personal-finance/finance-info',
+        // Make sure this is in sync with the /dashboard/finance-planning/layout routes
+        source: '/dashboard/finance/finance-planning',
+        destination: '/dashboard/finance/finance-planning/finance-info',
         permanent: false,
       },
       {
