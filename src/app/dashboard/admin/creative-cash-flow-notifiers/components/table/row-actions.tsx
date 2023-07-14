@@ -1,9 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { captureException } from '@sentry/nextjs';
-import { toast } from 'react-toastify';
-import { MoreHorizontal, Pen, Trash } from 'lucide-react';
+import { MoreHorizontal, Pen } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
 import { Button } from '@/components/ui/button';
@@ -14,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useDeleteNotifier } from '../../use-delete-notifier';
+import { DeleteNotifierMenuItem } from '../delete-notifier-menu-item';
 import { UpdateNotifierDialog } from '../update-notifier-dialog';
 import type { Notifier } from '../../types';
 
@@ -23,19 +21,10 @@ interface RowActionsProps {
 }
 
 export function RowActions({ row }: RowActionsProps) {
-  const deleteNotifier = useDeleteNotifier();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const handleUpdateDialogOpenChange = useCallback((open?: boolean) => {
     setShowUpdateDialog((prev) => open ?? !prev);
   }, []);
-
-  const handleDelete = useCallback(async () => {
-    await deleteNotifier(row.original.id).catch((error) => {
-      console.error(error);
-      captureException(error);
-      toast.error('Failed to delete notifier');
-    });
-  }, [row.original.id]);
 
   return (
     <>
@@ -52,10 +41,7 @@ export function RowActions({ row }: RowActionsProps) {
             Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={handleDelete} className="text-red-600 font-medium">
-            <Trash className="mr-2 h-4 w-4" />
-            Delete
-          </DropdownMenuItem>
+          <DeleteNotifierMenuItem row={row} />
         </DropdownMenuContent>
       </DropdownMenu>
 

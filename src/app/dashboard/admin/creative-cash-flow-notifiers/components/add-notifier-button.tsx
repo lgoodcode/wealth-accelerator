@@ -57,7 +57,7 @@ export function AddNotifierButton() {
         setIsOpen(false);
       })
       .catch((error) => {
-        if (error.code && error.code === '23505') {
+        if (error?.code === '23505') {
           form.setError('email', {
             type: 'manual',
             message: 'Email is already in use',
