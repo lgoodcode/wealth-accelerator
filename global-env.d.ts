@@ -31,10 +31,5 @@ export declare global {
     updated_at: string;
   };
 
-  export type Decimal = {
-    label: string;
-    value: number;
-  };
-
   export type Variant = 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
 }
