@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { useSetAtom } from 'jotai';
 import { toast } from 'react-toastify';
 
-import { removeInstitutionAtom } from '@/lib/plaid/atoms';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -16,16 +14,19 @@ import {
 import { useDeleteInstitution } from '../use-delete-institution';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 
-interface DeleteInstitutionProps {
+interface DeleteInstitutionDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
   institution: ClientInstitution | null;
 }
 
-export function DeleteInstitution({ open, onOpenChange, institution }: DeleteInstitutionProps) {
+export function DeleteInstitutionDialog({
+  open,
+  onOpenChange,
+  institution,
+}: DeleteInstitutionDialogProps) {
   const deleteInstitution = useDeleteInstitution();
   const [isDeleting, setIsDeleting] = useState(false);
-  const removeInstitution = useSetAtom(removeInstitutionAtom);
 
   const handleDelete = async () => {
     if (!institution) {
@@ -43,7 +44,6 @@ export function DeleteInstitution({ open, onOpenChange, institution }: DeleteIns
         );
 
         onOpenChange(false);
-        removeInstitution(institution.item_id);
       })
       .catch((error) => {
         console.error(error);

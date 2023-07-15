@@ -1,11 +1,9 @@
 import { useEffect } from 'react';
-import { useSetAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
-import { updateInstitutionsAtom } from '@/lib/plaid/atoms';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,15 +26,18 @@ import { renameFormSchema, type RenameFormType } from '../schemas';
 import { useRenameInstitution } from '../use-rename-institution';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 
-interface RenameInstitutionProps {
+interface RenameInstitutionDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
   institution: ClientInstitution | null;
 }
 
-export function RenameInstitution({ open, onOpenChange, institution }: RenameInstitutionProps) {
+export function RenameInstitutionDialog({
+  open,
+  onOpenChange,
+  institution,
+}: RenameInstitutionDialogProps) {
   const renameInstitution = useRenameInstitution();
-  const updateInstitutions = useSetAtom(updateInstitutionsAtom);
   const form = useForm<RenameFormType>({
     resolver: zodResolver(renameFormSchema),
   });
@@ -49,10 +50,6 @@ export function RenameInstitution({ open, onOpenChange, institution }: RenameIns
     await renameInstitution(institution, data)
       .then(() => {
         toast.success('Institution renamed');
-        updateInstitutions({
-          ...institution,
-          name: data.name,
-        });
         onOpenChange(false);
       })
       .catch((error) => {
