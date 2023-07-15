@@ -25,8 +25,8 @@ const nextConfig = {
         permanent: false,
       },
       {
-        source: '/dashboard/creative-cash-flow',
-        destination: '/dashboard/creative-cash-flow/calculate',
+        source: '/dashboard/creative-cash-flow/:path*',
+        destination: '/dashboard/tools/creative-cash-flow/:path*',
         permanent: true,
       },
     ];
