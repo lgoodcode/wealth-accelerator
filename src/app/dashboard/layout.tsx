@@ -44,6 +44,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
       <UserProvider user={user}>
         <QueryProvider>
           <Header />
+          <div className="absolute -z-10 opacity-40 h-full w-full hidden dark:flex flex-col flex-grow bg-right-top bg-no-repeat bg-[url('/img/bg-gradient.svg')]" />
           {children}
         </QueryProvider>
         <ToastProvider />
