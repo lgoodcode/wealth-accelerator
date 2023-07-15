@@ -196,10 +196,10 @@ export function Results() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[120px]">Period</TableHead>
-                  <TableHead>Actual</TableHead>
-                  <TableHead>Weekly</TableHead>
-                  <TableHead>Annual</TableHead>
+                  <TableHead className="w-[120px] text-lg">Period</TableHead>
+                  <TableHead className="text-lg">Actual</TableHead>
+                  <TableHead className="text-lg">Weekly</TableHead>
+                  <TableHead className="text-lg">Annual</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="text-lg">

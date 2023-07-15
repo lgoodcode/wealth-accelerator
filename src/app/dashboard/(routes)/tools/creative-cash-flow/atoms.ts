@@ -26,21 +26,36 @@ export const resetCreativeCashFlowInputsAtom = atom(null, (_, set) => {
 
 export const creativeCashFlowResultAtom = atom<CreativeCashFlowManagementResult | null>(null);
 
-export const creativeCashFlowRecordsAtom = atom<CreativeCashFlowRecord[]>([]);
+export const creativeCashFlowRecordsAtom = atom<CreativeCashFlowRecord[] | null>(null);
 
 export const addCreativeCashFlowRecordAtom = atom(
   null,
-  (get, set, record: CreativeCashFlowRecord) => {
-    const records = get(creativeCashFlowRecordsAtom);
-    set(creativeCashFlowRecordsAtom, [...records, record]);
+  (_get, set, record: CreativeCashFlowRecord) => {
+    set(creativeCashFlowRecordsAtom, (records) => {
+      if (!records) {
+        return [record];
+      }
+
+      return [...records, record];
+    });
   }
 );
 
-export const removeCreativeCashFlowRecordAtom = atom(null, (get, set, id: string) => {
-  const records = get(creativeCashFlowRecordsAtom);
-  const index = records.findIndex((record) => record.inputs.id === id);
-  if (index > -1) {
-    records.splice(index, 1);
-    set(creativeCashFlowRecordsAtom, records);
-  }
+export const removeCreativeCashFlowRecordAtom = atom(null, (_get, set, id: string) => {
+  set(creativeCashFlowRecordsAtom, (records) => {
+    if (!records) {
+      throw new Error('creativeCashFlowRecordsAtom is not initialized');
+    }
+
+    const index = records.findIndex((record) => record.inputs.id === id);
+
+    if (index === -1) {
+      throw new Error('Record not found');
+    }
+
+    const newRecords = [...records];
+    newRecords.splice(index, 1);
+
+    return newRecords;
+  });
 });

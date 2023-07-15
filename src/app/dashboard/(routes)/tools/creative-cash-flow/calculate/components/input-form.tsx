@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { inputLabels } from '../../labels';
@@ -18,6 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { creativeCashFlowManagement } from '../functions/creative-cash-flow';
+import { getTotalWAA } from '../getTotalWAA';
 import {
   creativeCashFlowInputsAtom,
   creativeCashFlowResultAtom,
@@ -45,8 +47,18 @@ export function InputForm({ transactions, ytd_collections }: InputsFormProps) {
   // Watch the values of the form to update the inputs atom when the form changes
   const watchValues = form.watch();
 
-  // Calculate the results
+  // Get all the WAA from records before the end date and calculate the results
   const calculate = async (data: InputsFormSchemaType) => {
+    const total_waa = await getTotalWAA(data.start_date);
+
+    if (total_waa === null) {
+      toast.error(
+        <span>
+          There was an error calculating the <span className="font-bold">Total WAA</span>.
+        </span>
+      );
+    }
+
     setCreativeCashFlowInputs(data);
 
     const result = creativeCashFlowManagement({
@@ -56,7 +68,10 @@ export function InputForm({ transactions, ytd_collections }: InputsFormProps) {
       personal_transactions: transactions.personal,
     });
 
-    setCreativeCashFlowResults(result);
+    setCreativeCashFlowResults({
+      ...result,
+      total_waa: (total_waa || 0) + result.waa,
+    });
     setIsInputsOpen(false);
   };
 

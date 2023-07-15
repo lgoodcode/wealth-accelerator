@@ -687,3 +687,21 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql SECURITY definer;
+
+
+CREATE OR REPLACE FUNCTION total_waa_before_date(target_date timestamp with time zone)
+RETURNS decimal AS
+$$
+DECLARE
+    total_waa_sum decimal;
+BEGIN
+    SELECT SUM(cfr.waa)
+    INTO total_waa_sum
+    FROM creative_cash_flow_results cfr
+    JOIN creative_cash_flow_inputs cci ON cfr.id = cci.id
+    WHERE cci.end_date <= target_date;
+
+    RETURN total_waa_sum;
+END;
+$$
+LANGUAGE plpgsql;

@@ -14,7 +14,7 @@ export function creativeCashFlowManagement({
   payroll_and_distributions,
   lifestyle_expenses_tax_rate,
   tax_account_rate,
-}: CreativeCashFlowManagementArgs): CreativeCashFlowManagementResult {
+}: CreativeCashFlowManagementArgs): Omit<CreativeCashFlowManagementResult, 'total_waa'> {
   lifestyle_expenses_tax_rate /= 100;
   tax_account_rate /= 100;
 
@@ -156,7 +156,6 @@ export function creativeCashFlowManagement({
     business_overhead,
     tax_account,
     waa: waa,
-    total_waa: 0,
     weekly_trend,
     monthly_trend,
     yearly_trend,
