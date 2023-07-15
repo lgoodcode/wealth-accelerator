@@ -33,7 +33,7 @@ const CCF_RECORD_TEMPLATE = process.env.CCF_RECORD_TEMPLATE;
 
 const createEmailBody = (record_id: string, sharerName: string, notifiers: NotifierToSend[]) => {
   return JSON.stringify({
-    api_key: process.env.SMPT2GO_API_KEY,
+    api_key: process.env.SMTP2GO_API_KEY,
     to: notifiers.map((notifier) => `${notifier.name} <${notifier.email}>`),
     sender: EMAIL_SENDER,
     template_id: CCF_RECORD_TEMPLATE,
