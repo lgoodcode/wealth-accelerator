@@ -1,8 +1,7 @@
-import { useCallback, useEffect } from 'react';
-import { useAtomValue } from 'jotai';
+import { useEffect, useCallback } from 'react';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { captureException } from '@sentry/nextjs';
 import { useForm } from 'react-hook-form';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 import type { Row } from '@tanstack/react-table';
@@ -32,65 +31,53 @@ import {
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { selectedInstitutionAtom } from '@/lib/plaid/atoms';
-import { useUpdateTransaction } from '../../use-update-transaction';
-import { updateTransactionFormSchema, type UpdateTransactionType } from '../../schemas';
-import { Category, type TransactionWithAccountName } from '@/lib/plaid/types/transactions';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useUpdateAccount } from '../use-update-account';
+import { updateAccountFormSchema, type UpdateAccountType } from '../schemas';
+import type { Account } from '@/lib/plaid/types/institutions';
 
-interface UpdateTransactionDialogProps {
+interface UpdateAccountDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
-  row: Row<TransactionWithAccountName>;
+  row: Row<Account>;
 }
 
-export function UpdateTransactionDialog({ open, onOpenChange, row }: UpdateTransactionDialogProps) {
-  const updateTransaction = useUpdateTransaction();
+export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDialogProps) {
+  const updateAccount = useUpdateAccount();
   const queryClient = useQueryClient();
-  const selectedInstitution = useAtomValue(selectedInstitutionAtom);
-  const form = useForm<UpdateTransactionType>({
-    resolver: zodResolver(updateTransactionFormSchema),
+  const form = useForm<UpdateAccountType>({
+    resolver: zodResolver(updateAccountFormSchema),
     values: {
       name: row.original.name,
-      category: row.original.category,
+      type: row.original.type,
+      enabled: row.original.enabled,
     },
   });
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: (data: UpdateTransactionType) => updateTransaction(row.original.id, data),
+    mutationFn: (data: UpdateAccountType) => updateAccount(row.original.account_id, data),
     onError: (error) => {
       console.error(error);
       captureException(error);
-      toast.error('An error occurred while updating the transaction');
+      toast.error('An error occurred while updating the account');
     },
-    // On success, update the query cache
-    onSuccess: (updatedTransaction) => {
-      if (updatedTransaction) {
-        queryClient.setQueryData<TransactionWithAccountName[]>(
-          ['transactions', selectedInstitution?.item_id],
-          (oldTransactions) => {
-            if (oldTransactions) {
-              return oldTransactions.map((transaction) => {
-                if (transaction.id === updatedTransaction.id) {
-                  return {
-                    ...updatedTransaction,
-                    account: transaction.account,
-                  };
-                }
-                return transaction;
-              });
+    onSuccess: (updatedAccount) => {
+      queryClient.setQueryData<Account[]>(['accounts', row.original.item_id], (oldAccounts) => {
+        if (oldAccounts) {
+          return oldAccounts.map((account) => {
+            if (account.account_id === updatedAccount.account_id) {
+              return updatedAccount;
             }
-            return oldTransactions;
-          }
-        );
-        toast.success('Transaction updated');
-      } else {
-        toast.error('An error occurred while updating the transaction');
-      }
+            return account;
+          });
+        }
+        return oldAccounts;
+      });
     },
     onSettled: () => onOpenChange(false),
   });
 
-  const onSubmitUpdate = useCallback((data: UpdateTransactionType) => mutate(data), [mutate]);
+  const onSubmitUpdate = useCallback((data: UpdateAccountType) => mutate(data), [mutate]);
 
   useEffect(() => {
     form.reset();
@@ -100,7 +87,7 @@ export function UpdateTransactionDialog({ open, onOpenChange, row }: UpdateTrans
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update transaction</DialogTitle>
+          <DialogTitle>Update account</DialogTitle>
           <DialogDescription>
             Update information for <span className="font-bold">{row.original.name}</span>
           </DialogDescription>
@@ -114,7 +101,7 @@ export function UpdateTransactionDialog({ open, onOpenChange, row }: UpdateTrans
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Transaction name" {...field} />
+                    <Input placeholder="Account name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -122,23 +109,37 @@ export function UpdateTransactionDialog({ open, onOpenChange, row }: UpdateTrans
             />
             <FormField
               control={form.control}
-              name="category"
+              name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Type</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Category" />
+                        <SelectValue placeholder="Account type" />
                       </SelectTrigger>
                       <SelectContent>
-                        {Object.values(Category).map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {category}
-                          </SelectItem>
-                        ))}
+                        <SelectItem value="business">Business</SelectItem>
+                        <SelectItem value="personal">Personal</SelectItem>
                       </SelectContent>
                     </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="enabled"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Enabled</FormLabel>
+                  <FormControl>
+                    <Checkbox
+                      className="w-6 h-6"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

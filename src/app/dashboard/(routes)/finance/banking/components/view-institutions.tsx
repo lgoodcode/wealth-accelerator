@@ -5,7 +5,7 @@ import { useAtomValue } from 'jotai';
 
 import { selectedInstitutionAtom } from '@/lib/plaid/atoms';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AccountsTable } from './accounts/accounts-table';
+import { AccountsTable } from './accounts/table/accounts-table';
 import { TransactionsTable } from './transactions/table/transactions-table';
 
 enum TabsValue {
