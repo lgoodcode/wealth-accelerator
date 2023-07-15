@@ -24,14 +24,15 @@ import { useSaveRecord } from '../use-save-record';
 import type { Transaction } from '@/lib/plaid/types/transactions';
 
 interface ContentProps {
-  userId: string;
+  user_id: string;
   transactions: {
     business: Transaction[];
     personal: Transaction[];
   };
+  ytd_collections: number;
 }
 
-export function Calculate({ userId, transactions }: ContentProps) {
+export function Container({ user_id, transactions, ytd_collections }: ContentProps) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
@@ -40,6 +41,12 @@ export function Calculate({ userId, transactions }: ContentProps) {
   const resetCreativeCashFlowInput = useSetAtom(resetCreativeCashFlowInputsAtom);
   const saveRecord = useSaveRecord();
 
+  const handleReset = () => {
+    setIsInputsOpen(false);
+    setResults(null);
+    resetCreativeCashFlowInput();
+  };
+
   const handleSave = async () => {
     if (!results) {
       return;
@@ -47,12 +54,15 @@ export function Calculate({ userId, transactions }: ContentProps) {
 
     setIsSaving(true);
 
-    await saveRecord(userId, creativeCashFlowInputs, results)
-      .then(() => {
+    await saveRecord(user_id, creativeCashFlowInputs, results)
+      .then(async () => {
+        // Wait 1 second
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         toast.success(
           'The Creative Cash Flow record has been saved and can be shared with the advisors'
         );
-        router.refresh(); // Need to refresh so that the records page is updated
+        handleReset();
+        router.refresh(); // Need to refresh so that the records page and ytd_collections are updated
       })
       .catch((error) => {
         console.error(error);
@@ -60,12 +70,6 @@ export function Calculate({ userId, transactions }: ContentProps) {
         toast.error('Failed to save the Creative Cash Flow record. Please try again.');
       })
       .finally(() => setIsSaving(false));
-  };
-
-  const handleReset = () => {
-    setIsInputsOpen(false);
-    setResults(null);
-    resetCreativeCashFlowInput();
   };
 
   return (
@@ -82,7 +86,7 @@ export function Calculate({ userId, transactions }: ContentProps) {
               Inputs
             </AccordionTrigger>
             <AccordionContent>
-              <InputForm transactions={transactions} />
+              <InputForm transactions={transactions} ytd_collections={ytd_collections} />
             </AccordionContent>
           </AccordionItem>
         </Accordion>

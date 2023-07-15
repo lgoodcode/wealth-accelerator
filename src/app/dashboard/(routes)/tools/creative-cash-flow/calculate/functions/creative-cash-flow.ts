@@ -7,6 +7,7 @@ const DAYS_IN_YEAR = 365;
 export function creativeCashFlowManagement({
   business_transactions,
   personal_transactions,
+  ytd_collections,
   start_date,
   end_date,
   all_other_income,
@@ -155,9 +156,10 @@ export function creativeCashFlowManagement({
     business_overhead,
     tax_account,
     waa: waa,
+    total_waa: 0,
     weekly_trend,
     monthly_trend,
     yearly_trend,
-    year_to_date,
+    year_to_date: year_to_date + ytd_collections,
   };
 }

@@ -428,6 +428,7 @@ CREATE TABLE creative_cash_flow_results (
   business_overhead decimal(10,2) NOT NULL,
   tax_account decimal(10,2) NOT NULL,
   waa decimal(10,2) NOT NULL,
+  total_waa decimal(10,2) NOT NULL,
   weekly_trend decimal(10,2)[] NOT NULL,
   monthly_trend decimal(10,2)[] NOT NULL,
   yearly_trend decimal(10,2)[] NOT NULL,

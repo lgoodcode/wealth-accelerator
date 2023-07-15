@@ -31,9 +31,10 @@ interface InputsFormProps {
     business: Transaction[];
     personal: Transaction[];
   };
+  ytd_collections: number;
 }
 
-export function InputForm({ transactions }: InputsFormProps) {
+export function InputForm({ transactions, ytd_collections }: InputsFormProps) {
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
   const [creativeCashFlowInputs, setCreativeCashFlowInputs] = useAtom(creativeCashFlowInputsAtom);
   const setCreativeCashFlowResults = useSetAtom(creativeCashFlowResultAtom);
@@ -45,11 +46,12 @@ export function InputForm({ transactions }: InputsFormProps) {
   const watchValues = form.watch();
 
   // Calculate the results
-  const onSubmit = (data: InputsFormSchemaType) => {
+  const calculate = async (data: InputsFormSchemaType) => {
     setCreativeCashFlowInputs(data);
 
     const result = creativeCashFlowManagement({
       ...data,
+      ytd_collections,
       business_transactions: transactions.business,
       personal_transactions: transactions.personal,
     });
@@ -66,7 +68,7 @@ export function InputForm({ transactions }: InputsFormProps) {
   return (
     <div className="p-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(calculate)} className="space-y-8">
           <FormField
             control={form.control}
             name="start_date"

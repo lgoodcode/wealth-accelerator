@@ -16,7 +16,11 @@ async function exchangeCodeForSession(request: Request) {
     }
   } catch (error) {
     console.error(error);
-    captureException(error);
+    captureException(error, {
+      extra: {
+        code,
+      },
+    });
   }
 
   return NextResponse.redirect(`${requestURL.origin}/login`);

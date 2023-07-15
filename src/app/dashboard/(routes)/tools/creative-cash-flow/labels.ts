@@ -54,6 +54,10 @@ export const resultsLabels = {
     title: 'WAA',
     description: 'Description for WAA.',
   },
+  total_waa: {
+    title: 'Total WAA',
+    description: 'Description for total WAA.',
+  },
   collections: {
     title: 'Collections',
     description: 'Description for collections.',
