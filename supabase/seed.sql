@@ -284,7 +284,7 @@ CREATE TABLE plaid_transactions (
   name text NOT NULL,
   amount decimal(10,2) NOT NULL,
   category category NOT NULL,
-  date timestamp with time zone NOT NULL
+  date date NOT NULL
 );
 
 -- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
@@ -507,7 +507,7 @@ RETURNS TABLE (
     name text,
     amount decimal(10,2),
     category category,
-    date timestamp with time zone,
+    date date,
     account text
 ) AS $$
 BEGIN
@@ -695,7 +695,7 @@ $$
 DECLARE
     total_waa_sum decimal;
 BEGIN
-    SELECT SUM(cfr.waa)
+    SELECT COALESCE(SUM(cfr.waa), 0)
     INTO total_waa_sum
     FROM creative_cash_flow_results cfr
     JOIN creative_cash_flow_inputs cci ON cfr.id = cci.id
@@ -704,4 +704,5 @@ BEGIN
     RETURN total_waa_sum;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql SECURITY definer;
+
