@@ -6,7 +6,6 @@ import { getUser } from '@/lib/supabase/server/getUser';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { Institutions } from './components/institutions';
-import { ClientInstitution } from '@/lib/plaid/types/institutions';
 
 export const metadata: Metadata = {
   title: 'Banking',
@@ -15,7 +14,7 @@ export const metadata: Metadata = {
 export default async function BankingPage() {
   const user = (await getUser()) as User;
   const supabase = createSupabase();
-  const { error, data } = await supabase
+  const { error, data: institutions } = await supabase
     .from('plaid')
     .select('item_id, name, expiration, cursor')
     .eq('user_id', user.id);
@@ -26,8 +25,6 @@ export default async function BankingPage() {
     return <PageError />;
   }
 
-  const institutions: ClientInstitution[] = data ?? [];
-
   return (
     <div className="p-8">
       <div className="space-y-1">
@@ -37,7 +34,7 @@ export default async function BankingPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <Institutions institutions={institutions} />
+      <Institutions institutionsData={institutions} />
     </div>
   );
 }

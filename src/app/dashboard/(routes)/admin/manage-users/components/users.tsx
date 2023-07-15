@@ -3,6 +3,7 @@
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 
+import { Loading } from '@/components/loading';
 import { usersAtom } from '../atoms';
 import { UsersTable } from './table/users-table';
 
@@ -16,6 +17,10 @@ export function Users({ usersData }: FiltersProps) {
   useEffect(() => {
     setUsers(usersData);
   }, []);
+
+  if (!users) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex justify-center">

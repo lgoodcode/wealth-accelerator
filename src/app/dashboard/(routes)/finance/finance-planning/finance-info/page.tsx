@@ -18,7 +18,6 @@ export default async function FinanceInfoPage() {
   if (error) {
     console.error(error);
     captureException(error);
-
     return <PageError />;
   }
 
