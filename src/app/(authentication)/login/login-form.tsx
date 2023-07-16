@@ -1,7 +1,6 @@
 'use client';
 
 import { z } from 'zod';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,7 +27,6 @@ const formSchema = z.object({
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
-  const router = useRouter();
   const login = useLogin();
   const [serverError, setServerError] = useState('');
   const form = useForm<z.infer<typeof formSchema>>({
@@ -42,14 +40,10 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setServerError('');
 
-    await login(data)
-      .then(() => {
-        router.refresh();
-      })
-      .catch((error) => {
-        console.error(error);
-        setServerError(error.message);
-      });
+    await login(data).catch((error) => {
+      console.error(error);
+      setServerError(error.message);
+    });
   };
 
   return (
