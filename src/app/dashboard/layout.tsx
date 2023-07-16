@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
-import { Provider as JotaiProvider } from 'jotai';
 import type { Metadata } from 'next';
 
 import { getUser } from '@/lib/supabase/server/getUser';
 import { ThemeProvider } from '@/components/theme-provider';
+import { JotaiProvider } from './components/jotai-provider';
 import { UserProvider } from '@/components/user-provider';
 import { Header } from './components/header';
 import { QueryProvider } from './components/query-provider';
