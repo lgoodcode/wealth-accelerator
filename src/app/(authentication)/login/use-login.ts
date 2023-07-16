@@ -17,7 +17,6 @@ export const useLogin = () => {
       throw error;
     }
 
-    router.refresh();
     router.push(redirectTo || '/dashboard/home');
   };
 };
