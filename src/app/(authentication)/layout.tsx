@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Link from 'next/link';
+// import Link from 'next/link';
 
 import { ThemeProvider } from '@/components/theme-provider';
 
@@ -27,17 +27,17 @@ export default async function AuthenticationLayout({ children }: AuthenticationL
 
             {children}
 
-            <p className="px-8 text-center text-sm text-muted-foreground">
-              By clicking continue, you agree to our{' '}
+            {/* <p className="px-8 text-center text-sm text-muted-foreground">
+              By using our website, you agree to our{' '}
               <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
-                Terms of Service
+                Terms
               </Link>{' '}
               and{' '}
               <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
                 Privacy Policy
               </Link>
               .
-            </p>
+            </p> */}
           </div>
         </div>
       </div>
