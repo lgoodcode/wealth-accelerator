@@ -12,7 +12,7 @@ export interface Database {
       creative_cash_flow_inputs: {
         Row: {
           all_other_income: number
-          created: string
+          created_at: string
           end_date: string
           id: string
           lifestyle_expenses_tax_rate: number
@@ -24,7 +24,7 @@ export interface Database {
         }
         Insert: {
           all_other_income: number
-          created?: string
+          created_at?: string
           end_date: string
           id: string
           lifestyle_expenses_tax_rate: number
@@ -36,7 +36,7 @@ export interface Database {
         }
         Update: {
           all_other_income?: number
-          created?: string
+          created_at?: string
           end_date?: string
           id?: string
           lifestyle_expenses_tax_rate?: number

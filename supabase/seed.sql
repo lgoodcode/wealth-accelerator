@@ -185,7 +185,7 @@ CREATE TABLE plaid (
   item_id text PRIMARY KEY,
   user_id uuid NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   name text NOT NULL,
-  access_token text NOT NULL,
+  access_token text UNIQUE NOT NULL,
   expiration timestamp with time zone NOT NULL,
   cursor text -- used to track last transactions synced
 );
@@ -384,12 +384,12 @@ DROP TABLE IF EXISTS creative_cash_flow_inputs CASCADE;
 CREATE TABLE creative_cash_flow_inputs (
   id uuid PRIMARY KEY,
   user_id uuid REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-  created timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   start_date timestamp with time zone NOT NULL,
   end_date timestamp with time zone NOT NULL,
   all_other_income int NOT NULL,
   payroll_and_distributions int NOT NULL,
-  lifestyle_expenses_tax_rate int NOT NULL,
+  lifestyle_expenses_tax_rate smallint NOT NULL,
   tax_account_rate smallint NOT NULL,
   optimal_savings_strategy int NOT NULL
 );
