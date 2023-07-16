@@ -15,6 +15,7 @@ export type CreativeCashFlowManagementInputs = {
 export type CreativeCashFlowManagementArgs = CreativeCashFlowManagementInputs & {
   business_transactions: Transaction[];
   personal_transactions: Transaction[];
+  ytd_collections: number;
 };
 
 export type CreativeCashFlowManagementResult = {
@@ -26,6 +27,7 @@ export type CreativeCashFlowManagementResult = {
   /** tax on business profit */
   tax_account: number;
   waa: number;
+  total_waa: number;
   weekly_trend: number[];
   monthly_trend: number[];
   yearly_trend: number[];

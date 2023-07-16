@@ -196,10 +196,10 @@ export function Results() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[120px]">Period</TableHead>
-                  <TableHead>Actual</TableHead>
-                  <TableHead>Weekly</TableHead>
-                  <TableHead>Annual</TableHead>
+                  <TableHead className="w-[120px] text-lg">Period</TableHead>
+                  <TableHead className="text-lg">Actual</TableHead>
+                  <TableHead className="text-lg">Weekly</TableHead>
+                  <TableHead className="text-lg">Annual</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="text-lg">
@@ -304,12 +304,12 @@ export function Results() {
       </motion.div>
 
       <motion.div
-        className="col-span-1 row-start-4"
+        className="col-span-1 row-start-4 row-span-full"
         transition={{ ...ANIMATION_DURATIONS.row4 }}
         {...ANIMATION_PROPS}
       >
         <Card>
-          <CardHeader className="space-y-1">
+          <CardHeader className="space-y-1 pb-2">
             <CardTitle className="text-2xl">{resultsLabels.waa.title}</CardTitle>
             <CardDescription>{resultsLabels.waa.description}</CardDescription>
           </CardHeader>
@@ -317,6 +317,16 @@ export function Results() {
             <CountUp
               className="text-2xl"
               {...createCountUpProps(results.waa, ANIMATION_DURATIONS.row4.delay)}
+            />
+          </CardContent>
+          <CardHeader className="space-y-1 pb-2">
+            <CardTitle className="text-2xl">{resultsLabels.total_waa.title}</CardTitle>
+            <CardDescription>{resultsLabels.total_waa.description}</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <CountUp
+              className="text-2xl"
+              {...createCountUpProps(results.total_waa, ANIMATION_DURATIONS.row4.delay)}
             />
           </CardContent>
         </Card>

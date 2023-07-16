@@ -1,23 +1,30 @@
 'use client';
 
-import { useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 
 import { institutionsAtom } from '@/lib/plaid/atoms';
+import { Loading } from '@/components/loading';
 import { ManageInstitutions } from './manage-institutions';
 import { ViewInstitutions } from './view-institutions';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 
 interface InstitutionsProps {
-  institutions: ClientInstitution[];
+  institutionsData: ClientInstitution[] | null;
 }
 
-export function Institutions({ institutions }: InstitutionsProps) {
-  const setInstitutions = useSetAtom(institutionsAtom);
+export function Institutions({ institutionsData }: InstitutionsProps) {
+  const [institutions, setInstitutions] = useAtom(institutionsAtom);
 
   useEffect(() => {
-    setInstitutions(institutions);
+    if (institutionsData) {
+      setInstitutions(institutionsData);
+    }
   }, []);
+
+  if (!institutions) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex flex-col mt-6">

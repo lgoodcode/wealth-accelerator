@@ -15,8 +15,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { InstitutionSelection } from './institution-selection';
-import { RenameInstitution } from './rename-institution';
-import { DeleteInstitution } from './delete-institution';
+import { RenameInstitutionDialog } from './rename-institution-dialog';
+import { DeleteInstitutionDialog } from './delete-institution-dialog';
 
 export function ManageInstitutions() {
   const [showRenameDialog, setShowRenameDialog] = useState(false);
@@ -67,13 +67,13 @@ export function ManageInstitutions() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <RenameInstitution
+        <RenameInstitutionDialog
           open={showRenameDialog}
           onOpenChange={handleRenameDialogOpenChange}
           institution={selectedInstitution}
         />
 
-        <DeleteInstitution
+        <DeleteInstitutionDialog
           open={showDeleteDialog}
           onOpenChange={handleDeleteDialogOpenChange}
           institution={selectedInstitution}

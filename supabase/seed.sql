@@ -185,7 +185,7 @@ CREATE TABLE plaid (
   item_id text PRIMARY KEY,
   user_id uuid NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   name text NOT NULL,
-  access_token text NOT NULL,
+  access_token text UNIQUE NOT NULL,
   expiration timestamp with time zone NOT NULL,
   cursor text -- used to track last transactions synced
 );
@@ -284,7 +284,7 @@ CREATE TABLE plaid_transactions (
   name text NOT NULL,
   amount decimal(10,2) NOT NULL,
   category category NOT NULL,
-  date timestamp with time zone NOT NULL
+  date date NOT NULL
 );
 
 -- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
@@ -384,12 +384,12 @@ DROP TABLE IF EXISTS creative_cash_flow_inputs CASCADE;
 CREATE TABLE creative_cash_flow_inputs (
   id uuid PRIMARY KEY,
   user_id uuid REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-  created timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   start_date timestamp with time zone NOT NULL,
   end_date timestamp with time zone NOT NULL,
   all_other_income int NOT NULL,
   payroll_and_distributions int NOT NULL,
-  lifestyle_expenses_tax_rate int NOT NULL,
+  lifestyle_expenses_tax_rate smallint NOT NULL,
   tax_account_rate smallint NOT NULL,
   optimal_savings_strategy int NOT NULL
 );
@@ -428,6 +428,7 @@ CREATE TABLE creative_cash_flow_results (
   business_overhead decimal(10,2) NOT NULL,
   tax_account decimal(10,2) NOT NULL,
   waa decimal(10,2) NOT NULL,
+  total_waa decimal(10,2) NOT NULL,
   weekly_trend decimal(10,2)[] NOT NULL,
   monthly_trend decimal(10,2)[] NOT NULL,
   yearly_trend decimal(10,2)[] NOT NULL,
@@ -506,7 +507,7 @@ RETURNS TABLE (
     name text,
     amount decimal(10,2),
     category category,
-    date timestamp with time zone,
+    date date,
     account text
 ) AS $$
 BEGIN
@@ -619,7 +620,7 @@ BEGIN
             jsonb_strip_nulls(to_jsonb(t1)) AS inputs,
             jsonb_strip_nulls(to_jsonb(t2)) AS results
         FROM (
-            SELECT id, created, start_date, end_date, all_other_income,
+            SELECT id, created_at, start_date, end_date, all_other_income,
             payroll_and_distributions, lifestyle_expenses_tax_rate,
             tax_account_rate, optimal_savings_strategy
             FROM creative_cash_flow_inputs
@@ -633,7 +634,7 @@ BEGIN
             WHERE user_id = arg_user_id
         ) AS t2
         ON t1.id = t2.id
-        ORDER BY t1.created DESC;
+        ORDER BY t1.created_at DESC;
 END;
 $BODY$
 LANGUAGE plpgsql SECURITY definer;
@@ -655,7 +656,7 @@ BEGIN
             jsonb_strip_nulls(to_jsonb(t1)) AS inputs,
             jsonb_strip_nulls(to_jsonb(t2)) AS results
         FROM (
-            SELECT id, created, start_date, end_date, all_other_income,
+            SELECT id, created_at, start_date, end_date, all_other_income,
             payroll_and_distributions, lifestyle_expenses_tax_rate,
             tax_account_rate, optimal_savings_strategy
             FROM creative_cash_flow_inputs
@@ -669,7 +670,7 @@ BEGIN
             WHERE id = record_id
         ) AS t2
         ON t1.id = t2.id
-        ORDER BY t1.created DESC;
+        ORDER BY t1.created_at DESC;
 END;
 $BODY$
 LANGUAGE plpgsql SECURITY definer;
@@ -686,3 +687,22 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql SECURITY definer;
+
+
+CREATE OR REPLACE FUNCTION total_waa_before_date(target_date timestamp with time zone)
+RETURNS decimal AS
+$$
+DECLARE
+    total_waa_sum decimal;
+BEGIN
+    SELECT COALESCE(SUM(cfr.waa), 0)
+    INTO total_waa_sum
+    FROM creative_cash_flow_results cfr
+    JOIN creative_cash_flow_inputs cci ON cfr.id = cci.id
+    WHERE cci.end_date <= target_date;
+
+    RETURN total_waa_sum;
+END;
+$$
+LANGUAGE plpgsql SECURITY definer;
+

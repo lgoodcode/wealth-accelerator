@@ -2,7 +2,6 @@ import { metadata as siteMetadata } from '@/config/site';
 import { Inter } from '@/lib/fonts';
 import { cn } from '@/lib/utils/cn';
 import { TailwindIndicator } from '@/components/tailwind-indicator';
-// import { AuthHelper } from '@/components/auth-helper';
 
 import '@/styles/globals.css';
 
@@ -22,7 +21,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <div className="flex-1">{children}</div>
         </div>
         <TailwindIndicator />
-        {/* <AuthHelper /> */}
       </body>
     </html>
   );

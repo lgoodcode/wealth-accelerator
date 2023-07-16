@@ -7,13 +7,14 @@ const DAYS_IN_YEAR = 365;
 export function creativeCashFlowManagement({
   business_transactions,
   personal_transactions,
+  ytd_collections,
   start_date,
   end_date,
   all_other_income,
   payroll_and_distributions,
   lifestyle_expenses_tax_rate,
   tax_account_rate,
-}: CreativeCashFlowManagementArgs): CreativeCashFlowManagementResult {
+}: CreativeCashFlowManagementArgs): Omit<CreativeCashFlowManagementResult, 'total_waa'> {
   lifestyle_expenses_tax_rate /= 100;
   tax_account_rate /= 100;
 
@@ -158,6 +159,6 @@ export function creativeCashFlowManagement({
     weekly_trend,
     monthly_trend,
     yearly_trend,
-    year_to_date,
+    year_to_date: year_to_date + ytd_collections,
   };
 }

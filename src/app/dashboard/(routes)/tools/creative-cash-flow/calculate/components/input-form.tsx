@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { inputLabels } from '../../labels';
@@ -18,6 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { creativeCashFlowManagement } from '../functions/creative-cash-flow';
+import { getTotalWAA } from '../getTotalWAA';
 import {
   creativeCashFlowInputsAtom,
   creativeCashFlowResultAtom,
@@ -31,9 +33,10 @@ interface InputsFormProps {
     business: Transaction[];
     personal: Transaction[];
   };
+  ytd_collections: number;
 }
 
-export function InputForm({ transactions }: InputsFormProps) {
+export function InputForm({ transactions, ytd_collections }: InputsFormProps) {
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
   const [creativeCashFlowInputs, setCreativeCashFlowInputs] = useAtom(creativeCashFlowInputsAtom);
   const setCreativeCashFlowResults = useSetAtom(creativeCashFlowResultAtom);
@@ -44,17 +47,31 @@ export function InputForm({ transactions }: InputsFormProps) {
   // Watch the values of the form to update the inputs atom when the form changes
   const watchValues = form.watch();
 
-  // Calculate the results
-  const onSubmit = (data: InputsFormSchemaType) => {
+  // Get all the WAA from records before the end date and calculate the results
+  const calculate = async (data: InputsFormSchemaType) => {
+    const total_waa = await getTotalWAA(data.start_date);
+
+    if (total_waa === null) {
+      toast.error(
+        <span>
+          There was an error calculating the <span className="font-bold">Total WAA</span>.
+        </span>
+      );
+    }
+
     setCreativeCashFlowInputs(data);
 
     const result = creativeCashFlowManagement({
       ...data,
+      ytd_collections,
       business_transactions: transactions.business,
       personal_transactions: transactions.personal,
     });
 
-    setCreativeCashFlowResults(result);
+    setCreativeCashFlowResults({
+      ...result,
+      total_waa: (total_waa || 0) + result.waa,
+    });
     setIsInputsOpen(false);
   };
 
@@ -66,7 +83,7 @@ export function InputForm({ transactions }: InputsFormProps) {
   return (
     <div className="p-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(calculate)} className="space-y-8">
           <FormField
             control={form.control}
             name="start_date"

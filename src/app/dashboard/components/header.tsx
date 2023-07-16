@@ -9,11 +9,20 @@ import { Nav } from './nav';
 import { ThemeToggle } from './theme-toggle';
 import { UserNav } from './user-nav';
 
-export function Header() {
+interface HeaderProps {
+  height: number;
+}
+
+export function Header({ height }: HeaderProps) {
   const user = useUser();
 
   return (
-    <div className="flex flex-col md:flex shadow-md dark:shadow-white-md">
+    <div
+      className="flex flex-col md:flex shadow-md dark:shadow-white-md"
+      style={{
+        height,
+      }}
+    >
       <div className="border-b">
         <div className="relative flex h-16 px-4 justify-between items-center">
           <Link href="/dashboard/home" className="px-3">

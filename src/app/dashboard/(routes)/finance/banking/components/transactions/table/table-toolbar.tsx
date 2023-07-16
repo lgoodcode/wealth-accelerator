@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { CalendarDateRangePicker } from '@/components/ui/date-range-picker';
 import { ViewOptions } from './view-options';
 import { FacetedFilter } from './faceted-filter';
-import { categoryOptions } from './column-options';
+import { useAccountOptions, categoryOptions } from './column-options';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 import { DateRange } from 'react-day-picker';
 
@@ -17,6 +17,7 @@ interface TableToolbarProps {
 }
 
 export function TableToolbar({ table }: TableToolbarProps) {
+  const accountOptions = useAccountOptions();
   const isFiltered =
     table.getPreFilteredRowModel().rows.length > table.getFilteredRowModel().rows.length;
 
@@ -29,6 +30,13 @@ export function TableToolbar({ table }: TableToolbarProps) {
           onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
           className="h-9 w-[150px] lg:w-[250px]"
         />
+        {table.getColumn('account') && (
+          <FacetedFilter
+            column={table.getColumn('account')}
+            title="Account"
+            options={accountOptions}
+          />
+        )}
         {table.getColumn('category') && (
           <FacetedFilter
             column={table.getColumn('category')}

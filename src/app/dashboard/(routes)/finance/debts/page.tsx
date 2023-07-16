@@ -12,7 +12,10 @@ export const metadata: Metadata = {
 
 export default async function DebtPage() {
   const supabase = createSupabase();
-  const { error, data } = await supabase.from('debts').select('*').order('id', { ascending: true });
+  const { error, data: debts } = await supabase
+    .from('debts')
+    .select('*')
+    .order('id', { ascending: true });
 
   if (error) {
     console.error(error);
@@ -29,7 +32,7 @@ export default async function DebtPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <Debts debtsData={data} />
+      <Debts debtsData={debts} />
     </div>
   );
 }

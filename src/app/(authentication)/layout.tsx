@@ -1,7 +1,8 @@
 import Image from 'next/image';
-import Link from 'next/link';
+// import Link from 'next/link';
 
 import { ThemeProvider } from '@/components/theme-provider';
+import { AuthHelper } from './auth-helper';
 
 interface AuthenticationLayoutProps {
   children: React.ReactNode;
@@ -10,6 +11,8 @@ interface AuthenticationLayoutProps {
 export default async function AuthenticationLayout({ children }: AuthenticationLayoutProps) {
   return (
     <ThemeProvider attribute="class" forcedTheme="light">
+      <AuthHelper />
+
       <div className="container relative flex flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
         <div className="hidden -z-10 h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
           <Image src="/img/bg-auth.jpg" alt="mountain covered by fog" fill />
@@ -27,17 +30,17 @@ export default async function AuthenticationLayout({ children }: AuthenticationL
 
             {children}
 
-            <p className="px-8 text-center text-sm text-muted-foreground">
-              By clicking continue, you agree to our{' '}
+            {/* <p className="px-8 text-center text-sm text-muted-foreground">
+              By using our website, you agree to our{' '}
               <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
-                Terms of Service
+                Terms
               </Link>{' '}
               and{' '}
               <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
                 Privacy Policy
               </Link>
               .
-            </p>
+            </p> */}
           </div>
         </div>
       </div>

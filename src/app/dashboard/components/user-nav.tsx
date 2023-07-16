@@ -38,8 +38,8 @@ export function UserNav({ user }: UserNavProps) {
   const logout = async () => {
     setSentryUser(null);
     await supabase.auth.signOut();
-    router.push('/login');
     router.refresh();
+    router.push('/login');
   };
 
   return (
@@ -61,10 +61,10 @@ export function UserNav({ user }: UserNavProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <User className="mr-2 h-5 w-5" />
             <span>Profile</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout}>

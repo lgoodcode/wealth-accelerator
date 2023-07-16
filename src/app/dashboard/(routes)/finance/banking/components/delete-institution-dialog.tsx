@@ -1,10 +1,6 @@
-'use client';
-
 import { useState } from 'react';
-import { useSetAtom } from 'jotai';
 import { toast } from 'react-toastify';
 
-import { useDeleteRecord } from '../use-delete-record';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -15,32 +11,47 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { removeCreativeCashFlowRecordAtom } from '../../atoms';
-import type { CreativeCashFlowRecord } from '../../types';
+import { useDeleteInstitution } from '../use-delete-institution';
+import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 
-interface DeleteRecordProps {
+interface DeleteInstitutionDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
-  record: CreativeCashFlowRecord;
+  institution: ClientInstitution | null;
 }
 
-export function DeleteRecord({ open, onOpenChange, record }: DeleteRecordProps) {
-  const deleteRecord = useDeleteRecord();
+export function DeleteInstitutionDialog({
+  open,
+  onOpenChange,
+  institution,
+}: DeleteInstitutionDialogProps) {
+  const deleteInstitution = useDeleteInstitution();
   const [isDeleting, setIsDeleting] = useState(false);
-  const removeRecord = useSetAtom(removeCreativeCashFlowRecordAtom);
 
   const handleDelete = async () => {
+    if (!institution) {
+      return;
+    }
+
     setIsDeleting(true);
 
-    await deleteRecord(record.inputs.id)
+    await deleteInstitution(institution.item_id)
       .then(() => {
-        toast.success('Successfully removed record');
+        toast.success(
+          <span>
+            Institution <span className="font-bold">{institution.name}</span> has been removed
+          </span>
+        );
+
         onOpenChange(false);
-        removeRecord(record.inputs.id);
       })
       .catch((error) => {
         console.error(error);
-        toast.error('Failed to remove record');
+        toast.error(
+          <span>
+            Failed to remove institution <span className="font-bold">{institution.name}</span>
+          </span>
+        );
       })
       .finally(() => setIsDeleting(false));
   };
@@ -50,7 +61,10 @@ export function DeleteRecord({ open, onOpenChange, record }: DeleteRecordProps) 
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+          <AlertDialogDescription>
+            This action cannot be undone. <span className="font-bold">{institution?.name}</span> and
+            all the data associated with it will be deleted.
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>

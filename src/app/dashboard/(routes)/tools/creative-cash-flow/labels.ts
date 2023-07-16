@@ -54,6 +54,11 @@ export const resultsLabels = {
     title: 'WAA',
     description: 'Description for WAA.',
   },
+  total_waa: {
+    title: 'Total WAA',
+    description:
+      'Running total of WAA from all previous records before the start date of this record.',
+  },
   collections: {
     title: 'Collections',
     description: 'Description for collections.',

@@ -18,7 +18,6 @@ export default async function IndexFundRatesPage() {
   if (error) {
     console.error(error);
     captureException(error);
-
     return <PageError />;
   }
 

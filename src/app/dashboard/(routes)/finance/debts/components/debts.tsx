@@ -3,12 +3,13 @@
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 
+import { Loading } from '@/components/loading';
 import { debtsAtom } from '../atoms';
 import { DebtsTable } from './table/debts-table';
 import type { Debt } from '@/lib/types/debts';
 
 interface DebtsProps {
-  debtsData: Debt[];
+  debtsData: Debt[] | null;
 }
 
 export function Debts({ debtsData }: DebtsProps) {
@@ -17,6 +18,10 @@ export function Debts({ debtsData }: DebtsProps) {
   useEffect(() => {
     setDebts(debtsData);
   }, []);
+
+  if (!debts) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex justify-center">
