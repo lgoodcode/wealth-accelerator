@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { Provider as JotaiProvider } from 'jotai';
 import type { Metadata } from 'next';
 
 import { getUser } from '@/lib/supabase/server/getUser';
@@ -43,20 +44,22 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
       enableSystem
       themes={['light', 'dark', 'system']}
     >
-      <UserProvider user={user}>
-        <QueryProvider>
-          <Header height={HEADER_HEIGHT} />
-          <div
-            className="absolute -z-10 opacity-40 w-full hidden dark:flex flex-col flex-grow bg-right-top bg-no-repeat"
-            style={{
-              height: `calc(100% - ${HEADER_HEIGHT}px)`,
-              backgroundImage: 'url(/img/bg-gradient.svg)',
-            }}
-          />
-          {children}
-        </QueryProvider>
-        <ToastProvider />
-      </UserProvider>
+      <JotaiProvider>
+        <UserProvider user={user}>
+          <QueryProvider>
+            <Header height={HEADER_HEIGHT} />
+            <div
+              className="absolute -z-10 opacity-40 w-full hidden dark:flex flex-col flex-grow bg-right-top bg-no-repeat"
+              style={{
+                height: `calc(100% - ${HEADER_HEIGHT}px)`,
+                backgroundImage: 'url(/img/bg-gradient.svg)',
+              }}
+            />
+            {children}
+          </QueryProvider>
+          <ToastProvider />
+        </UserProvider>
+      </JotaiProvider>
     </ThemeProvider>
   );
 }
