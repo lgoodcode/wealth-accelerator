@@ -620,7 +620,7 @@ BEGIN
             jsonb_strip_nulls(to_jsonb(t1)) AS inputs,
             jsonb_strip_nulls(to_jsonb(t2)) AS results
         FROM (
-            SELECT id, created, start_date, end_date, all_other_income,
+            SELECT id, created_at, start_date, end_date, all_other_income,
             payroll_and_distributions, lifestyle_expenses_tax_rate,
             tax_account_rate, optimal_savings_strategy
             FROM creative_cash_flow_inputs
@@ -634,7 +634,7 @@ BEGIN
             WHERE user_id = arg_user_id
         ) AS t2
         ON t1.id = t2.id
-        ORDER BY t1.created DESC;
+        ORDER BY t1.created_at DESC;
 END;
 $BODY$
 LANGUAGE plpgsql SECURITY definer;
@@ -656,7 +656,7 @@ BEGIN
             jsonb_strip_nulls(to_jsonb(t1)) AS inputs,
             jsonb_strip_nulls(to_jsonb(t2)) AS results
         FROM (
-            SELECT id, created, start_date, end_date, all_other_income,
+            SELECT id, created_at, start_date, end_date, all_other_income,
             payroll_and_distributions, lifestyle_expenses_tax_rate,
             tax_account_rate, optimal_savings_strategy
             FROM creative_cash_flow_inputs
@@ -670,7 +670,7 @@ BEGIN
             WHERE id = record_id
         ) AS t2
         ON t1.id = t2.id
-        ORDER BY t1.created DESC;
+        ORDER BY t1.created_at DESC;
 END;
 $BODY$
 LANGUAGE plpgsql SECURITY definer;
