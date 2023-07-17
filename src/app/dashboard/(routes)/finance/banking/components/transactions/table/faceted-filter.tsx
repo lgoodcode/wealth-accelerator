@@ -83,6 +83,7 @@ export function FacetedFilter({ column, title, options }: FacetedFilterProps) {
                 return (
                   <CommandItem
                     key={option.value}
+                    className="w-full"
                     onSelect={() => {
                       if (isSelected) {
                         selectedValues.delete(option.value);
@@ -103,10 +104,10 @@ export function FacetedFilter({ column, title, options }: FacetedFilterProps) {
                     >
                       <Check className={cn('h-4 w-4')} />
                     </div>
-                    {option.icon && <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
-                    <span>{option.label}</span>
+                    {option.icon && <option.icon className="mr-2 h-4 text-muted-foreground" />}
+                    <span className="mr-1">{option.label}</span>
                     {facets?.get(option.value) && (
-                      <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                      <span className="ml-auto flex h-4 items-center justify-center font-mono text-xs">
                         {facets.get(option.value)}
                       </span>
                     )}
