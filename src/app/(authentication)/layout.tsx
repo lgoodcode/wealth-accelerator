@@ -3,15 +3,34 @@ import Image from 'next/image';
 
 import { ThemeProvider } from '@/components/theme-provider';
 import { AuthHelper } from './auth-helper';
+import { createSupabase } from '@/lib/supabase/server/createSupabase';
+
+const useDevEmails = async () => {
+  if (process.env.NODE_ENV === 'production') {
+    return [];
+  }
+
+  const supabase = createSupabase(true);
+  const { error, data } = await supabase.from('users').select('email');
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return data.map((user) => user.email);
+};
 
 interface AuthenticationLayoutProps {
   children: React.ReactNode;
 }
 
 export default async function AuthenticationLayout({ children }: AuthenticationLayoutProps) {
+  const devEmails = await useDevEmails();
+
   return (
     <ThemeProvider attribute="class" forcedTheme="light">
-      <AuthHelper />
+      <AuthHelper devEmails={devEmails} />
 
       <div className="container relative flex flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
         <div className="hidden -z-10 h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
