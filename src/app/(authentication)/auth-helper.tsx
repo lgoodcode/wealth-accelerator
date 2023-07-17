@@ -56,6 +56,14 @@ const TestUserItem = ({ user, auth, disabled }: UserLoginItemProps) => {
   );
 };
 
+const isDisabled = (auth: Auth, user: TestUser, emails: string[]) => {
+  if (auth === 'signup') {
+    return emails.includes(user.email);
+  }
+
+  return !emails.includes(user.email);
+};
+
 interface TestUsersProps {
   auth: Auth;
   devEmails: string[];
@@ -70,11 +78,7 @@ const TestUsers = ({ auth, devEmails }: TestUsersProps) => {
     <div>
       {TEST_USERS.map((user, i) => (
         <Fragment key={user.email}>
-          <TestUserItem
-            user={user}
-            auth={auth}
-            disabled={auth === 'signup' && devEmails.includes(user.email)}
-          />
+          <TestUserItem user={user} auth={auth} disabled={isDisabled(auth, user, devEmails)} />
           {i !== TEST_USERS.length - 1 && <DropdownMenuSeparator />}
         </Fragment>
       ))}
