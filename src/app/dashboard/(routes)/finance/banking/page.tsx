@@ -17,7 +17,8 @@ export default async function BankingPage() {
   const { error, data: institutions } = await supabase
     .from('plaid')
     .select('item_id, name, expiration, cursor')
-    .eq('user_id', user.id);
+    .eq('user_id', user.id)
+    .order('name', { ascending: true });
 
   if (error) {
     console.error(error);
