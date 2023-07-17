@@ -32,8 +32,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useUpdateAccount } from '../use-update-account';
-import { updateAccountFormSchema, type UpdateAccountType } from '../schemas';
+import { useUpdateAccount } from '../../use-update-account';
+import { updateAccountFormSchema, type UpdateAccountType } from '../../schemas';
 import type { Account } from '@/lib/plaid/types/institutions';
 
 interface UpdateAccountDialogProps {
@@ -62,6 +62,12 @@ export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDi
       toast.error('An error occurred while updating the account');
     },
     onSuccess: (updatedAccount) => {
+      // If the enabled status has changed then invalidate the query cache for the
+      // transactions so that they are refetched (if an account is disabled, omit those transactions)
+      if (row.original.enabled !== updatedAccount.enabled) {
+        queryClient.invalidateQueries(['transactions', row.original.item_id]);
+      }
+      // Mutate the query cache for the accounts so that the updated account is reflected
       queryClient.setQueryData<Account[]>(['accounts', row.original.item_id], (oldAccounts) => {
         if (oldAccounts) {
           return oldAccounts.map((account) => {

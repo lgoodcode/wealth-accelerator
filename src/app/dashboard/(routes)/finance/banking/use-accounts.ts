@@ -24,7 +24,7 @@ const getAccounts = async (item_id: string) => {
 export const useAccounts = (item_id: string) => {
   const {
     isError,
-    isLoading,
+    isFetching,
     data: accounts = [],
   } = useQuery<Account[]>(['accounts', item_id], () => getAccounts(item_id), {
     staleTime: CACHE_ACCOUNTS_FOR,
@@ -32,7 +32,7 @@ export const useAccounts = (item_id: string) => {
 
   return {
     isError,
-    isLoading,
+    isFetching,
     accounts,
   };
 };

@@ -73,7 +73,7 @@ export const useTransactions = (item: ClientInstitution) => {
 
   const {
     isError,
-    isLoading,
+    isFetching,
     data: transactions = [],
   } = useQuery<TransactionWithAccountName[]>(
     ['transactions', item.item_id],
@@ -103,7 +103,7 @@ export const useTransactions = (item: ClientInstitution) => {
 
   return {
     isError,
-    isLoading,
+    isFetching,
     transactions,
   };
 };

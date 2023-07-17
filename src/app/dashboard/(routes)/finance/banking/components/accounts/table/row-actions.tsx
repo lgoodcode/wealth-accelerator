@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { UpdateAccountDialog } from '../../update-account-dialog';
+import { UpdateAccountDialog } from '../update-account-dialog';
 import type { Account } from '@/lib/plaid/types/institutions';
 
 interface RowActionsProps {

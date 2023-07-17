@@ -8,6 +8,7 @@ import type { Account } from '@/lib/plaid/types/institutions';
 type AccountOption = {
   label: string;
   value: string;
+  enabled: boolean;
 };
 
 type CategoryOption = {
@@ -27,6 +28,7 @@ export const useAccountOptions = (): AccountOption[] => {
   return accounts.map((account) => ({
     label: account.name,
     value: account.name,
+    enabled: account.enabled,
   }));
 };
 
