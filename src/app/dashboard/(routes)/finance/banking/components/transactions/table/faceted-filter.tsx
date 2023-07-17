@@ -25,6 +25,7 @@ interface FacetedFilterProps {
     label: string;
     value: string;
     icon?: LucideIcon;
+    enabled?: boolean;
   }[];
 }
 
@@ -74,6 +75,10 @@ export function FacetedFilter({ column, title, options }: FacetedFilterProps) {
             <CommandEmpty>No results found</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
+                if (option.enabled !== undefined && !option.enabled) {
+                  return null;
+                }
+
                 const isSelected = selectedValues.has(option.value);
                 return (
                   <CommandItem

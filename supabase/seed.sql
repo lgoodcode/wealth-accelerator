@@ -526,7 +526,7 @@ BEGIN
         INNER JOIN
             plaid_accounts a ON t.account_id = a.account_id
         WHERE
-            t.item_id = ins_item_id
+            t.item_id = ins_item_id AND a.enabled = true
         ORDER BY
             t.date DESC
         OFFSET
