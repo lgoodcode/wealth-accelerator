@@ -41,7 +41,7 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
-  const { isError, isLoading, accounts } = useAccounts(item_id);
+  const { isError, isFetching, accounts } = useAccounts(item_id);
 
   const table = useReactTable<Account>({
     data: accounts,
@@ -65,7 +65,7 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
 
   if (isError) {
     return <ClientError />;
-  } else if (isLoading) {
+  } else if (isFetching) {
     return <Loading title="Fetching accounts..." />;
   }
 
