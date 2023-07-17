@@ -13,7 +13,7 @@ export const inputLabels = {
   },
   payroll_and_distributions: {
     title: 'Payroll and Distributions to Self',
-    description: 'The total amount of money you pay yourself and your employees.',
+    description: 'The total amount of money you pay yourself.',
   },
   lifestyle_expenses_tax_rate: {
     title: 'Lifestyle Expenses Tax Rate',
@@ -52,7 +52,7 @@ export const resultsLabels = {
   },
   waa: {
     title: 'WAA',
-    description: 'Description for WAA.',
+    description: 'The amount to deposit into your WAA account.',
   },
   total_waa: {
     title: 'Total WAA',
@@ -61,14 +61,14 @@ export const resultsLabels = {
   },
   collections: {
     title: 'Collections',
-    description: 'Description for collections.',
+    description: '',
   },
   trends: {
     title: 'Trends',
-    description: 'Description for trends.',
+    description: '',
   },
   year_to_date: {
     title: 'Year to Date',
-    description: 'Description for year to date.',
+    description: '',
   },
 };
