@@ -19,6 +19,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/dashboard/home',
+        destination: '/dashboard/finance/banking',
+        permanent: false,
+      },
+      {
         // Make sure this is in sync with the /dashboard/finance-planning/layout routes
         source: '/dashboard/finance/finance-planning',
         destination: '/dashboard/finance/finance-planning/finance-info',
