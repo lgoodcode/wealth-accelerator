@@ -46,6 +46,7 @@ export function UsersTable({ users }: UsersTableProps) {
       columnFilters,
     },
     enableHiding: false,
+    autoResetPageIndex: false,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,

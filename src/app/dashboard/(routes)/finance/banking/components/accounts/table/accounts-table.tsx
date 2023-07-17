@@ -52,6 +52,7 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
       columnFilters,
     },
     enableHiding: false,
+    autoResetPageIndex: false,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,

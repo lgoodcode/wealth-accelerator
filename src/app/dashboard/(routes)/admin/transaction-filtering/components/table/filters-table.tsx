@@ -46,6 +46,7 @@ export function FiltersTable({ filters }: FiltersTableProps) {
       columnFilters,
     },
     enableHiding: false,
+    autoResetPageIndex: false,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,

@@ -47,6 +47,7 @@ export function NotifiersTable({ notifiers }: NotifiersTableProps) {
       columnFilters,
     },
     enableHiding: false,
+    autoResetPageIndex: false,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
