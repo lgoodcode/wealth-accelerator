@@ -699,7 +699,7 @@ BEGIN
     INTO total_waa_sum
     FROM creative_cash_flow_results cfr
     JOIN creative_cash_flow_inputs cci ON cfr.id = cci.id
-    WHERE cfr.user_id = user_id AND cci.end_date <= target_date;
+    WHERE cfr.user_id = $1 AND cci.end_date <= target_date;
 
     RETURN total_waa_sum;
 END;
