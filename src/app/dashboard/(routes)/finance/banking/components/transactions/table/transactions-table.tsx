@@ -42,7 +42,7 @@ export function TransactionsTable({ item }: TransactionsTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
-  const { isError, isLoading, transactions } = useTransactions(item);
+  const { isError, isFetching, transactions } = useTransactions(item);
 
   const table = useReactTable<TransactionWithAccountName>({
     data: transactions,
@@ -68,7 +68,7 @@ export function TransactionsTable({ item }: TransactionsTableProps) {
 
   if (isError) {
     return <ClientError />;
-  } else if (isLoading) {
+  } else if (isFetching) {
     return <Loading title="Fetching transactions..." />;
   }
 
