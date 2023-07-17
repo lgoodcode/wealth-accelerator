@@ -2,8 +2,9 @@ import { captureException } from '@sentry/nextjs';
 
 import { supabase } from '@/lib/supabase/client';
 
-export const getTotalWAA = async (date: Date) => {
+export const getTotalWAA = async (user_id: string, date: Date) => {
   const { error: waaError, data = 0 } = await supabase.rpc('total_waa_before_date', {
+    user_id,
     target_date: date.toUTCString(),
   });
 

@@ -380,6 +380,7 @@ export interface Database {
       }
       total_waa_before_date: {
         Args: {
+          user_id: string
           target_date: string
         }
         Returns: number

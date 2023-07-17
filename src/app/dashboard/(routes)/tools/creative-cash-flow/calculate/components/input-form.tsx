@@ -29,6 +29,7 @@ import { inputsFormSchema, type InputsFormSchemaType } from '../schema';
 import type { Transaction } from '@/lib/plaid/types/transactions';
 
 interface InputsFormProps {
+  user_id: string;
   transactions: {
     business: Transaction[];
     personal: Transaction[];
@@ -36,7 +37,7 @@ interface InputsFormProps {
   ytd_collections: number;
 }
 
-export function InputForm({ transactions, ytd_collections }: InputsFormProps) {
+export function InputForm({ user_id, transactions, ytd_collections }: InputsFormProps) {
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
   const [creativeCashFlowInputs, setCreativeCashFlowInputs] = useAtom(creativeCashFlowInputsAtom);
   const setCreativeCashFlowResults = useSetAtom(creativeCashFlowResultAtom);
@@ -47,9 +48,15 @@ export function InputForm({ transactions, ytd_collections }: InputsFormProps) {
   // Watch the values of the form to update the inputs atom when the form changes
   const watchValues = form.watch();
 
-  // Get all the WAA from records before the end date and calculate the results
   const calculate = async (data: InputsFormSchemaType) => {
-    const total_waa = await getTotalWAA(data.start_date);
+    if (!transactions.business.length || !transactions.personal.length) {
+      toast.error(
+        'There are no transactions to calculate the Creative Cash Flow. Please check your bank accounts.'
+      );
+      return;
+    }
+
+    const total_waa = await getTotalWAA(user_id, data.start_date);
 
     if (total_waa === null) {
       toast.error(
