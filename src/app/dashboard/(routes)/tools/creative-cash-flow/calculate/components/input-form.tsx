@@ -49,7 +49,7 @@ export function InputForm({ user_id, transactions, ytd_collections }: InputsForm
   const watchValues = form.watch();
 
   const calculate = async (data: InputsFormSchemaType) => {
-    if (!transactions.business.length || !transactions.personal.length) {
+    if (!transactions.business.length && !transactions.personal.length) {
       toast.error(
         'There are no transactions to calculate the Creative Cash Flow. Please check your bank accounts.'
       );
