@@ -5,10 +5,10 @@ import type { ColumnDef } from '@tanstack/react-table';
 
 import { dollarFormatter } from '@/lib/utils/dollarFormatter';
 import { formattedDate } from '@/lib/utils/formattedDate';
-import { categoryOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
-import type { TransactionWithAccountName, Category } from '@/lib/plaid/types/transactions';
+import { CategoryColumn } from './category-column';
+import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 
 /**
  * NOTES
@@ -78,19 +78,7 @@ export const columns: ColumnDef<TransactionWithAccountName>[] = [
     accessorKey: 'category',
     header: ({ column }) => <ColumnHeader column={column} title="Category" />,
     cell: ({ row }) => {
-      const category = categoryOptions.find(
-        (option) => option.value === row.getValue<Category>('category')
-      );
-
-      if (!category) {
-        return null;
-      }
-
-      return (
-        <div className="flex items-center">
-          <span>{category.label}</span>
-        </div>
-      );
+      return <CategoryColumn row={row} />;
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
