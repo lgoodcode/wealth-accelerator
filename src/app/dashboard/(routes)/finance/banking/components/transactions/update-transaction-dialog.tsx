@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from 'react';
-import { useAtomValue } from 'jotai';
 import { captureException } from '@sentry/nextjs';
 import { useForm } from 'react-hook-form';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
@@ -32,7 +31,6 @@ import {
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { selectedInstitutionAtom } from '@/lib/plaid/atoms';
 import { useUpdateTransaction } from '../../use-update-transaction';
 import { updateTransactionFormSchema, type UpdateTransactionType } from '../../schemas';
 import { Category, type TransactionWithAccountName } from '@/lib/plaid/types/transactions';
@@ -46,7 +44,6 @@ interface UpdateTransactionDialogProps {
 export function UpdateTransactionDialog({ open, onOpenChange, row }: UpdateTransactionDialogProps) {
   const updateTransaction = useUpdateTransaction();
   const queryClient = useQueryClient();
-  const selectedInstitution = useAtomValue(selectedInstitutionAtom);
   const form = useForm<UpdateTransactionType>({
     resolver: zodResolver(updateTransactionFormSchema),
     values: {
@@ -66,7 +63,7 @@ export function UpdateTransactionDialog({ open, onOpenChange, row }: UpdateTrans
     onSuccess: (updatedTransaction) => {
       if (updatedTransaction) {
         queryClient.setQueryData<TransactionWithAccountName[]>(
-          ['transactions', selectedInstitution?.item_id],
+          ['transactions', row.original.item_id],
           (oldTransactions) => {
             if (oldTransactions) {
               return oldTransactions.map((transaction) => {
@@ -82,7 +79,6 @@ export function UpdateTransactionDialog({ open, onOpenChange, row }: UpdateTrans
             return oldTransactions;
           }
         );
-        toast.success('Transaction updated');
       } else {
         toast.error('An error occurred while updating the transaction');
       }
