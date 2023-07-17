@@ -48,7 +48,7 @@ const createCountUpProps = (end: number, delay = 0): CountUpProps => ({
   prefix: '$',
 });
 
-export function Results() {
+export function CcfResults() {
   const inputs = useAtomValue(creativeCashFlowInputsAtom);
   const results = useAtomValue(creativeCashFlowResultAtom);
 
