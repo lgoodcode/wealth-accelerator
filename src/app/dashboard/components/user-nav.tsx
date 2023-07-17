@@ -54,9 +54,9 @@ export function UserNav({ user }: UserNavProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-64" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-2">
+          <div className="flex flex-col space-y-1">
             <p className="font-medium leading-none">{user?.name}</p>
-            <p className="text-sm leading-none truncate text-muted-foreground">{user?.email}</p>
+            <p className="text-sm truncate text-muted-foreground">{user?.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
