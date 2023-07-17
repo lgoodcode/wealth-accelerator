@@ -545,7 +545,7 @@ $$ LANGUAGE plpgsql SECURITY definer;
 --   "personal": Transaction[],
 --   "business": Transaction[]
 -- }
-CREATE OR REPLACE FUNCTION public.get_transactions_by_user_id(arg_user_id uuid)
+CREATE OR REPLACE FUNCTION public.get_transactions_by_user_id(user_id uuid)
 RETURNS JSON AS $$
 DECLARE
   personal_transactions JSON;
@@ -570,7 +570,7 @@ BEGIN
     INNER JOIN users u ON u.id = p.user_id
   WHERE
     pa.type = 'personal' AND
-    u.id = arg_user_id AND
+    u.id = $1 AND
     pa.enabled = true;
 
   SELECT COALESCE(
@@ -592,7 +592,7 @@ BEGIN
     INNER JOIN users u ON u.id = p.user_id
   WHERE
     pa.type = 'business' AND
-    u.id = arg_user_id AND
+    u.id = $1 AND
     pa.enabled = true;
 
   RETURN json_build_object(
@@ -611,7 +611,7 @@ $$ LANGUAGE plpgsql SECURITY definer;
 --   "results": CreativeCashFlowResults[]
 -- }
 -- and is sorted by the created date in descending order
-CREATE OR REPLACE FUNCTION get_creative_cash_flow_records(arg_user_id uuid)
+CREATE OR REPLACE FUNCTION get_creative_cash_flow_records(user_id uuid)
 RETURNS TABLE(inputs jsonb, results jsonb) AS
 $BODY$
 BEGIN
@@ -624,14 +624,14 @@ BEGIN
             payroll_and_distributions, lifestyle_expenses_tax_rate,
             tax_account_rate, optimal_savings_strategy
             FROM creative_cash_flow_inputs
-            WHERE user_id = arg_user_id
+            WHERE user_id = $1
         ) AS t1
         JOIN (
             SELECT id, collections, lifestyle_expenses, lifestyle_expenses_tax,
             business_profit_before_tax, business_overhead, tax_account, waa,
             weekly_trend, monthly_trend, yearly_trend, year_to_date
             FROM creative_cash_flow_results
-            WHERE user_id = arg_user_id
+            WHERE user_id = $1
         ) AS t2
         ON t1.id = t2.id
         ORDER BY t1.created_at DESC;

@@ -5,9 +5,7 @@ const getTransactions = async (supabase: SupabaseServer, user_id: string) => {
   // Get all of the users transactions data split into business and personal
   const { error: transactionsError, data: transactionsData } = await supabase.rpc(
     'get_transactions_by_user_id',
-    {
-      arg_user_id: user_id,
-    }
+    { user_id }
   );
 
   if (transactionsError || !transactionsData) {
