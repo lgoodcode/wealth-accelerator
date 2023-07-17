@@ -334,7 +334,7 @@ export interface Database {
       }
       get_creative_cash_flow_records: {
         Args: {
-          arg_user_id: string
+          user_id: string
         }
         Returns: {
           inputs: Json
@@ -343,7 +343,7 @@ export interface Database {
       }
       get_transactions_by_user_id: {
         Args: {
-          arg_user_id: string
+          user_id: string
         }
         Returns: Json
       }
@@ -380,6 +380,7 @@ export interface Database {
       }
       total_waa_before_date: {
         Args: {
+          user_id: string
           target_date: string
         }
         Returns: number

@@ -53,6 +53,12 @@ export function TransactionsTable({ item }: TransactionsTableProps) {
       // rowSelection,
       columnFilters,
     },
+    initialState: {
+      pagination: {
+        pageSize: 50,
+      },
+    },
+    autoResetPageIndex: false,
     // enableRowSelection: true,
     // onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,

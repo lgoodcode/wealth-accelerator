@@ -21,7 +21,7 @@ interface RowActionsProps {
 }
 
 export function RowActions({ row }: RowActionsProps) {
-  const user = useUser() as User;
+  const user = useUser();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -50,7 +50,7 @@ export function RowActions({ row }: RowActionsProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onSelect={() => setShowDeleteDialog(true)}
-            disabled={user.id === row.original.id}
+            disabled={user!.id === row.original.id}
             className="text-red-600 font-medium"
           >
             <Trash className="mr-2 h-4 w-4" />

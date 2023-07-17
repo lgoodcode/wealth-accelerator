@@ -86,7 +86,11 @@ export function Container({ user_id, transactions, ytd_collections }: ContentPro
               Inputs
             </AccordionTrigger>
             <AccordionContent>
-              <InputForm transactions={transactions} ytd_collections={ytd_collections} />
+              <InputForm
+                user_id={user_id}
+                transactions={transactions}
+                ytd_collections={ytd_collections}
+              />
             </AccordionContent>
           </AccordionItem>
         </Accordion>

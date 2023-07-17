@@ -47,6 +47,7 @@ export function DebtsTable({ debts }: DebtsTableProps) {
       // rowSelection,
       columnFilters,
     },
+    autoResetPageIndex: false,
     // enableRowSelection: true,
     // onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
