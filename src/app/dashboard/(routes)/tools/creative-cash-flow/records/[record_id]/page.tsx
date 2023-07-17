@@ -36,7 +36,7 @@ export default async function SharedCreativeCashFlowRecordPage({
   if (!user) {
     redirect('/login');
   } else if (!isAdmin(user)) {
-    redirect('/dashboard');
+    redirect('/dashboard/home');
     // If invalid UUID is passed, don't request the record and display the no record card
   } else if (!isUUID(record_id)) {
     return <NoRecordCard record_id={record_id} />;
