@@ -28,7 +28,7 @@ import {
 import { inputsFormSchema, type InputsFormSchemaType } from '../schema';
 import type { Transaction } from '@/lib/plaid/types/transactions';
 
-interface InputsFormProps {
+interface CcfInputsFormProps {
   user_id: string;
   transactions: {
     business: Transaction[];
@@ -37,7 +37,7 @@ interface InputsFormProps {
   ytd_collections: number;
 }
 
-export function InputForm({ user_id, transactions, ytd_collections }: InputsFormProps) {
+export function CcfInputForm({ user_id, transactions, ytd_collections }: CcfInputsFormProps) {
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
   const [creativeCashFlowInputs, setCreativeCashFlowInputs] = useAtom(creativeCashFlowInputsAtom);
   const setCreativeCashFlowResults = useSetAtom(creativeCashFlowResultAtom);

@@ -19,11 +19,11 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { InputForm } from './input-form';
+import { CcfInputForm } from './ccf-input-form';
 import { useSaveRecord } from '../use-save-record';
 import type { Transaction } from '@/lib/plaid/types/transactions';
 
-interface ContentProps {
+interface CcfContainerProps {
   user_id: string;
   transactions: {
     business: Transaction[];
@@ -32,7 +32,7 @@ interface ContentProps {
   ytd_collections: number;
 }
 
-export function Container({ user_id, transactions, ytd_collections }: ContentProps) {
+export function CcfContainer({ user_id, transactions, ytd_collections }: CcfContainerProps) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
@@ -86,7 +86,7 @@ export function Container({ user_id, transactions, ytd_collections }: ContentPro
               Inputs
             </AccordionTrigger>
             <AccordionContent>
-              <InputForm
+              <CcfInputForm
                 user_id={user_id}
                 transactions={transactions}
                 ytd_collections={ytd_collections}

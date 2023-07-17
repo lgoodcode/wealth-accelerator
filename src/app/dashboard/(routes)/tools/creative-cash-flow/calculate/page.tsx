@@ -4,8 +4,8 @@ import type { Metadata } from 'next';
 import { getUser } from '@/lib/supabase/server/getUser';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
-import { Container } from './components/container';
-import { Results } from './components/results';
+import { CcfContainer } from './components/ccf-container';
+import { CcfResults } from './components/ccf-results';
 import { getData } from './getData';
 
 export const metadata: Metadata = {
@@ -31,12 +31,12 @@ export default async function CreativeCashFlowCalculatePage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <Container
+      <CcfContainer
         user_id={user.id}
         transactions={data.transactions}
         ytd_collections={data.ytd_collections}
       />
-      <Results />
+      <CcfResults />
     </div>
   );
 }

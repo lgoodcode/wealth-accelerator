@@ -11,7 +11,7 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
   const user = (await getUser()) as User;
 
   if (!isAdmin(user)) {
-    redirect('/dashboard');
+    redirect('/dashboard/home');
   }
 
   return <>{children}</>;

@@ -7,9 +7,3 @@ export type Route = {
   description?: string;
   disabled?: boolean;
 };
-
-const BASE_PATH = '/dashboard';
-
-export const withBasePath = (path: `/${string}`) => {
-  return BASE_PATH + path;
-};
