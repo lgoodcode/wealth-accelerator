@@ -1,17 +1,16 @@
 import Image from 'next/image';
 // import Link from 'next/link';
 
+import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { ThemeProvider } from '@/components/theme-provider';
 import { AuthHelper } from './auth-helper';
-import { createSupabase } from '@/lib/supabase/server/createSupabase';
 
 const useDevEmails = async () => {
   if (process.env.NODE_ENV === 'production') {
     return [];
   }
 
-  const supabase = createSupabase(true);
-  const { error, data } = await supabase.from('users').select('email');
+  const { error, data } = await supabaseAdmin.from('users').select('email');
 
   if (error) {
     console.error(error);
