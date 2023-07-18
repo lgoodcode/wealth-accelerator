@@ -44,27 +44,29 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
   const { error, data } = await serverSyncTransactions(item);
 
   if (error) {
-    console.error(error);
+    const transactions = !data.transactions
+      ? []
+      : {
+          added: data.transactions.added.map((t) => ({
+            transaction_id: t.transaction_id,
+            account_id: t.account_id,
+            name: t.name,
+          })),
+          modified: data.transactions.modified.map((t) => ({
+            transaction_id: t.transaction_id,
+            account_id: t.account_id,
+            name: t.name,
+          })),
+          removed: data.transactions.removed.map((t) => ({
+            transaction_id: t.transaction_id,
+          })),
+        };
+
+    console.error(error, { item_id }, transactions);
     captureException(error, {
       extra: {
         item_id,
-        transactions: !data.transactions
-          ? []
-          : {
-              added: data.transactions.added.map((t) => ({
-                transaction_id: t.transaction_id,
-                account_id: t.account_id,
-                name: t.name,
-              })),
-              modified: data.transactions.modified.map((t) => ({
-                transaction_id: t.transaction_id,
-                account_id: t.account_id,
-                name: t.name,
-              })),
-              removed: data.transactions.removed.map((t) => ({
-                transaction_id: t.transaction_id,
-              })),
-            },
+        transactions: JSON.stringify(transactions),
       },
     });
     return NextResponse.json<SyncTransactionsResponse>(
