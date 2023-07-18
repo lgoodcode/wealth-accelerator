@@ -1,7 +1,7 @@
 import Image from 'next/image';
 // import Link from 'next/link';
 
-import { supabaseAdmin } from '@/lib/supabase/server/admin';
+import { createSupabase } from '@/lib/supabase/server/createSupabase';
 import { ThemeProvider } from '@/components/theme-provider';
 import { AuthHelper } from './auth-helper';
 
@@ -10,7 +10,8 @@ const useDevEmails = async () => {
     return [];
   }
 
-  const { error, data } = await supabaseAdmin.from('users').select('email');
+  const supabase = createSupabase(true);
+  const { error, data } = await supabase.from('users').select('email');
 
   if (error) {
     console.error(error);
