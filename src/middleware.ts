@@ -43,20 +43,17 @@ export async function middleware(request: NextRequest) {
     });
   }
 
-  const dashboardHomeRedirectUrl = new URL(`${request.nextUrl.origin}/dashboard/home`);
-  dashboardHomeRedirectUrl.searchParams.set('redirect_to', request.nextUrl.pathname);
-
   // If there is an error or there's no session, redirect to login page for all pages except auth pages
   if ((error || !session) && !isAuthPage) {
     return NextResponse.redirect(loginRedirectUrl);
   } else if (session && isLoginPage) {
     // If there is a session and user is visiting the login page, redirect to dashboard home
-    return NextResponse.redirect(dashboardHomeRedirectUrl);
+    return NextResponse.redirect(new URL(`${request.nextUrl.origin}/dashboard/home`));
   }
 
   return res;
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: ['/login', '/dashboard/:path*'],
 };
