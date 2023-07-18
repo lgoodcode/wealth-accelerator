@@ -334,7 +334,7 @@ export interface Database {
       }
       get_creative_cash_flow_records: {
         Args: {
-          user_id: string
+          arg_user_id: string
         }
         Returns: {
           inputs: Json
