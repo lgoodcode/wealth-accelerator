@@ -3,6 +3,7 @@ import type { CreativeCashFlowManagementArgs, CreativeCashFlowManagementResult }
 const MONTH_LENGTH = 30;
 const DAYS_IN_WEEK = 7;
 const DAYS_IN_YEAR = 365;
+const MS_IN_DAY = 86400000;
 
 export function creativeCashFlowManagement({
   business_transactions,
@@ -118,7 +119,11 @@ export function creativeCashFlowManagement({
       continue;
     }
 
-    const diff_in_days = Math.abs(new Date(transaction.date).getTime() - Date.now());
+    const diff_in_days = Math.abs(
+      Math.round(
+        new Date().getTime() / MS_IN_DAY - new Date(transaction.date).getTime() / MS_IN_DAY
+      )
+    );
 
     if (diff_in_days <= MONTH_LENGTH * 3 && transaction.category === 'Money-In') {
       monthly_trend[2] -= transaction.amount;
