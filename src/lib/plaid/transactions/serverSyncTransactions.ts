@@ -92,8 +92,7 @@ export const serverSyncTransactions = async (
         transactions: null,
       },
     };
-  } catch (err) {
-    const error = err as any;
+  } catch (error: any) {
     const errorCode = error?.response?.data?.error_code;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
     const isCredentialError = errorCode in PlaidCredentialErrorCode;
