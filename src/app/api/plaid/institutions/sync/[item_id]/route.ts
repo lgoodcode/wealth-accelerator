@@ -48,7 +48,23 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
     captureException(error, {
       extra: {
         item_id,
-        transactions: JSON.stringify(data?.transactions),
+        transactions: !data.transactions
+          ? []
+          : {
+              added: data.transactions.added.map((t) => ({
+                transaction_id: t.transaction_id,
+                account_id: t.account_id,
+                name: t.name,
+              })),
+              modified: data.transactions.modified.map((t) => ({
+                transaction_id: t.transaction_id,
+                account_id: t.account_id,
+                name: t.name,
+              })),
+              removed: data.transactions.removed.map((t) => ({
+                transaction_id: t.transaction_id,
+              })),
+            },
       },
     });
     return NextResponse.json<SyncTransactionsResponse>(
