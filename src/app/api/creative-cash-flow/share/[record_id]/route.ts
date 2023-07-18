@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
 import { getUser } from '@/lib/supabase/server/getUser';
-import { createSupabase } from '@/lib/supabase/server/createSupabase';
+import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import type { Notifier } from '@/app/dashboard/(routes)/admin/creative-cash-flow-notifiers/types';
 
 export const GET = ShareCreativeCashFlowRecord;
@@ -76,8 +76,7 @@ async function ShareCreativeCashFlowRecord(
     return NextResponse.json({ error: 'No user' }, { status: 400 });
   }
 
-  const supabase = createSupabase(true);
-  const { error: notifiersError, data } = await supabase
+  const { error: notifiersError, data } = await supabaseAdmin
     .from('creative_cash_flow_notifiers')
     .select('name, email')
     .eq('enabled', true);
@@ -93,7 +92,9 @@ async function ShareCreativeCashFlowRecord(
     await sendEmail(emailBody);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error);
+    console.error(error, {
+      emailBody: JSON.parse(emailBody),
+    });
     captureException(error, {
       extra: {
         emailBody,

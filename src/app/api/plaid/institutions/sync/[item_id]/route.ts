@@ -33,7 +33,7 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
     return NextResponse.json<SyncTransactionsResponse>(
       {
         error: {
-          general: itemError,
+          general: 'Failed to retrieve item',
           plaid: null,
         },
       },
@@ -46,12 +46,31 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
   if (error) {
     console.error(error);
     captureException(error, {
-      extra: { item_id },
+      extra: {
+        item_id,
+        transactions: !data.transactions
+          ? []
+          : {
+              added: data.transactions.added.map((t) => ({
+                transaction_id: t.transaction_id,
+                account_id: t.account_id,
+                name: t.name,
+              })),
+              modified: data.transactions.modified.map((t) => ({
+                transaction_id: t.transaction_id,
+                account_id: t.account_id,
+                name: t.name,
+              })),
+              removed: data.transactions.removed.map((t) => ({
+                transaction_id: t.transaction_id,
+              })),
+            },
+      },
     });
     return NextResponse.json<SyncTransactionsResponse>(
       {
         error: {
-          general: error.general,
+          general: 'Failed to sync transactions',
           plaid: error.plaid,
         },
       },
