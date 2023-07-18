@@ -4,8 +4,8 @@ import { forwardRef } from 'react';
 import Link from 'next/link';
 import { LucideIcon } from 'lucide-react';
 
+import { financeRoutes, toolsRoutes, adminRoutes, exampleRoutes } from '@/config/routes';
 import { cn } from '@/lib/utils/cn';
-import { financeRoutes, toolsRoutes, adminRoutes, exampleRoutes } from '@/routes';
 import {
   NavigationMenu,
   NavigationMenuContent,
