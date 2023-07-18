@@ -93,7 +93,9 @@ async function ShareCreativeCashFlowRecord(
     await sendEmail(emailBody);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error, emailBody);
+    console.error(error, {
+      emailBody: JSON.parse(emailBody),
+    });
     captureException(error, {
       extra: {
         emailBody,
