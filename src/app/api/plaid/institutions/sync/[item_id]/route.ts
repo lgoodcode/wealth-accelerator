@@ -48,7 +48,7 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
     captureException(error, {
       extra: {
         item_id,
-        transactions: data?.transactions,
+        transactions: JSON.stringify(data?.transactions),
       },
     });
     return NextResponse.json<SyncTransactionsResponse>(
