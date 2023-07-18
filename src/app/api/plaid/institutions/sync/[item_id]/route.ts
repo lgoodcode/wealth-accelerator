@@ -46,7 +46,10 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
   if (error) {
     console.error(error);
     captureException(error, {
-      extra: { item_id },
+      extra: {
+        item_id,
+        transactions: data?.transactions,
+      },
     });
     return NextResponse.json<SyncTransactionsResponse>(
       {

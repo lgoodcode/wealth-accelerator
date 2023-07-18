@@ -29,6 +29,7 @@ export const serverSyncTransactions = async (
       },
       data: {
         hasMore: false,
+        transactions: null,
       },
     };
   }
@@ -55,6 +56,11 @@ export const serverSyncTransactions = async (
         },
         data: {
           hasMore: false,
+          transactions: {
+            added: data.added,
+            modified: data.modified,
+            removed: data.removed,
+          },
         },
       };
     }
@@ -74,6 +80,7 @@ export const serverSyncTransactions = async (
         },
         data: {
           hasMore: false,
+          transactions: null,
         },
       };
     }
@@ -82,6 +89,7 @@ export const serverSyncTransactions = async (
       error: null,
       data: {
         hasMore: data.has_more,
+        transactions: null,
       },
     };
   } catch (err) {
@@ -104,6 +112,7 @@ export const serverSyncTransactions = async (
       },
       data: {
         hasMore: false,
+        transactions: null,
       },
     };
   }

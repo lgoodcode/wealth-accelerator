@@ -1,4 +1,5 @@
 import type { PostgrestError } from '@supabase/postgrest-js';
+import type { RemovedTransaction, Transaction } from 'plaid';
 
 export const PlaidRateLimitErrorCode = 'TRANSACTIONS_SYNC_LIMIT';
 
@@ -23,6 +24,12 @@ export type ServerSyncTransactions = {
   } | null;
   data: {
     hasMore: boolean;
+    /** Used to pass to Sentry for debugging on errors */
+    transactions: null | {
+      added: Transaction[];
+      modified: Transaction[];
+      removed: RemovedTransaction[];
+    };
   };
 };
 
