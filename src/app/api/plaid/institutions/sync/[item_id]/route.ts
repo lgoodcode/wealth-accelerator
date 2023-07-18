@@ -62,7 +62,7 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
           })),
         };
 
-    console.error(error, transactions);
+    console.error(error, { item_id }, transactions);
     captureException(error, {
       extra: {
         item_id,
