@@ -34,7 +34,7 @@ export type ServerSyncTransactions = {
 };
 
 export type SyncTransactionsResponseError = {
-  general: PostgrestError | Error | null;
+  general: PostgrestError | Error | string | null;
   plaid: {
     isRateLimitError: boolean;
     isCredentialError: boolean;

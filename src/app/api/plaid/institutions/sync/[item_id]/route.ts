@@ -33,7 +33,7 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
     return NextResponse.json<SyncTransactionsResponse>(
       {
         error: {
-          general: new Error('Failed to retrieve item'),
+          general: 'Failed to retrieve item',
           plaid: null,
         },
       },
@@ -54,7 +54,7 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
     return NextResponse.json<SyncTransactionsResponse>(
       {
         error: {
-          general: new Error('Failed to sync transactions'),
+          general: 'Failed to sync transactions',
           plaid: error.plaid,
         },
       },
