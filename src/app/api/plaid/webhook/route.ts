@@ -31,6 +31,7 @@ async function syncTransactionsWebhook(request: Request) {
       }
 
       const { error: syncError } = await serverSyncTransactions(item!, true);
+
       if (syncError) {
         console.error(syncError);
         captureException(syncError);
