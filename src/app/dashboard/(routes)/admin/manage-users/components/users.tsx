@@ -23,7 +23,7 @@ export function Users({ usersData }: FiltersProps) {
   }
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center mx-auto lg:w-[1024px]">
       <UsersTable users={users} />
     </div>
   );
