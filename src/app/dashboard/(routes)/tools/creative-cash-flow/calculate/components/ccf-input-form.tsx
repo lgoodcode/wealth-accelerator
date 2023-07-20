@@ -71,14 +71,12 @@ export function CcfInputForm({ user_id, transactions, ytd_collections }: CcfInpu
     const result = creativeCashFlowManagement({
       ...data,
       ytd_collections,
+      total_waa: total_waa || 0,
       business_transactions: transactions.business,
       personal_transactions: transactions.personal,
     });
 
-    setCreativeCashFlowResults({
-      ...result,
-      total_waa: (total_waa || 0) + result.waa,
-    });
+    setCreativeCashFlowResults(result);
     setIsInputsOpen(false);
   };
 
