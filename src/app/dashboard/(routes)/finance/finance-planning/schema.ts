@@ -1,9 +1,11 @@
 import { z } from 'zod';
 
 export const FinanceInfoSchema = z.object({
-  start_date: z.date({
-    required_error: 'Select a date.',
-  }),
+  start_date: z
+    .date({
+      required_error: 'Select a date.',
+    })
+    .refine((val) => val.getTime() >= new Date().getTime(), 'Date cannot be in the past'),
   stop_invest: z
     .number({
       required_error: 'Enter the year',
