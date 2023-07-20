@@ -24,7 +24,7 @@ export function Debts({ debtsData }: DebtsProps) {
   }
 
   return (
-    <div className="flex justify-center mx-auto lg:w-[1024px]">
+    <div className="flex justify-center mt-8 mx-auto lg:w-[1024px]">
       <DebtsTable debts={debts} />
     </div>
   );
