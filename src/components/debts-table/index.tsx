@@ -93,14 +93,8 @@ export function DebtsTable({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell, i, arr) => (
-                    <TableCell
-                      key={cell.id}
-                      className={cn({
-                        'w-[35%]': i === 0,
-                        'w-[10%]': i === arr.length - 1,
-                      })}
-                    >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
