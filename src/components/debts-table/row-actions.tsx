@@ -12,8 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DeleteDebtMenuItem } from '../delete-debt-menu-item';
-import { UpdateFilterDialog } from '../update-debt-dialog';
+import { DeleteDebtMenuItem } from '../../app/dashboard/(routes)/finance/debts/components/delete-debt-menu-item';
+import { UpdateFilterDialog } from '../../app/dashboard/(routes)/finance/debts/components/update-debt-dialog';
 import type { Debt } from '@/lib/types/debts';
 
 interface RowActionsProps {

@@ -4,8 +4,8 @@ import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 
 import { Loading } from '@/components/loading';
+import { DebtsTable } from '@/components/debts-table';
 import { debtsAtom } from '../atoms';
-import { DebtsTable } from './table/debts-table';
 import type { Debt } from '@/lib/types/debts';
 
 interface DebtsProps {

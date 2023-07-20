@@ -6,7 +6,7 @@ import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 // import { FacetedFilter } from './faceted-filter';
-import { AddDebtButton } from '../add-debt-button';
+import { AddDebtButton } from '../../app/dashboard/(routes)/finance/debts/components/add-debt-button';
 import type { Debt } from '@/lib/types/debts';
 
 interface TableToolbarProps {
