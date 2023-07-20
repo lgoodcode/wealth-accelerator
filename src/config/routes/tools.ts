@@ -1,4 +1,4 @@
-import { Album, DollarSign } from 'lucide-react';
+import { Album, DollarSign, Snowflake } from 'lucide-react';
 
 import type { Route } from './routes';
 
@@ -14,5 +14,12 @@ export const toolsRoutes: Route[] = [
     path: '/dashboard/tools/creative-cash-flow/records',
     Icon: Album,
     description: 'View and manage records saved of your creative cash flow information.',
+  },
+  {
+    name: 'Debt Snowball',
+    path: '/dashboard/tools/debt-snowball',
+    Icon: Snowflake,
+    description: 'View strategies to pay off your debt with the debt snowball method.',
+    disabled: true,
   },
 ];
