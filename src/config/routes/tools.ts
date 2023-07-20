@@ -20,5 +20,6 @@ export const toolsRoutes: Route[] = [
     path: '/dashboard/tools/debt-snowball',
     Icon: Snowflake,
     description: 'View strategies to pay off your debt with the debt snowball method.',
+    disabled: true,
   },
 ];
