@@ -33,16 +33,22 @@ interface DebtsTableProps {
   debts: Debt[] | null;
   toolbar?: boolean;
   rowActions?: boolean;
+  enableHiding?: boolean;
 }
 
-export function DebtsTable({ debts, toolbar = true, rowActions = true }: DebtsTableProps) {
+export function DebtsTable({
+  debts,
+  toolbar = true,
+  rowActions = true,
+  enableHiding = true,
+}: DebtsTableProps) {
   // const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable<Debt>({
     data: debts || [],
-    columns: columns(rowActions),
+    columns: columns(rowActions, enableHiding),
     state: {
       sorting,
       columnVisibility,
