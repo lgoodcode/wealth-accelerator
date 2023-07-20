@@ -4,8 +4,8 @@ import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 
 import { Loading } from '@/components/loading';
+import { DebtsTable } from '@/components/debts-table';
 import { debtsAtom } from '../atoms';
-import { DebtsTable } from './table/debts-table';
 import type { Debt } from '@/lib/types/debts';
 
 interface DebtsProps {
@@ -24,7 +24,7 @@ export function Debts({ debtsData }: DebtsProps) {
   }
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center mt-8 mx-auto lg:w-[1024px]">
       <DebtsTable debts={debts} />
     </div>
   );

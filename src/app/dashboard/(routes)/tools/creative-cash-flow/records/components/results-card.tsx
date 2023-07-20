@@ -40,6 +40,10 @@ export function ResultsCard({ record }: InputsCardProps) {
             <span>{dollarFormatter(record.results.waa)}</span>
           </div>
           <div className="flex py-4 justify-between border-b">
+            <span>{resultsLabels.total_waa.title}</span>
+            <span>{dollarFormatter(record.results.total_waa)}</span>
+          </div>
+          <div className="flex py-4 justify-between border-b">
             <span>{resultsLabels.collections.title}</span>
             <span>{dollarFormatter(record.results.collections)}</span>
           </div>

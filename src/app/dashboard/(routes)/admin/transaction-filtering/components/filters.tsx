@@ -24,7 +24,7 @@ export function Filters({ filtersData }: FiltersProps) {
   }
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center mx-auto lg:w-[1024px]">
       <FiltersTable filters={filters} />
     </div>
   );

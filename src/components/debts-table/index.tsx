@@ -31,16 +31,18 @@ import type { Debt } from '@/lib/types/debts';
 
 interface DebtsTableProps {
   debts: Debt[] | null;
+  toolbar?: boolean;
+  rowActions?: boolean;
 }
 
-export function DebtsTable({ debts }: DebtsTableProps) {
+export function DebtsTable({ debts, toolbar = true, rowActions = true }: DebtsTableProps) {
   // const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable<Debt>({
     data: debts || [],
-    columns,
+    columns: columns(rowActions),
     state: {
       sorting,
       columnVisibility,
@@ -62,8 +64,8 @@ export function DebtsTable({ debts }: DebtsTableProps) {
   });
 
   return (
-    <div className="space-y-4 mt-8 w-full lg:w-[1024px]">
-      <TableToolbar table={table} />
+    <div className="space-y-4 w-full">
+      {toolbar && <TableToolbar table={table} />}
       <div className="rounded-md border">
         <Table>
           <TableHeader>

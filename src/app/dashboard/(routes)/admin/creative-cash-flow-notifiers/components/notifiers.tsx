@@ -24,7 +24,7 @@ export function Notifiers({ notifiersData }: NotifiersProps) {
   }
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center mx-auto lg:w-[1024px]">
       <NotifiersTable notifiers={notifiers} />
     </div>
   );

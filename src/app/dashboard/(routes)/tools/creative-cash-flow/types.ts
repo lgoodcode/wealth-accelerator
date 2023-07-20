@@ -16,6 +16,7 @@ export type CreativeCashFlowManagementArgs = CreativeCashFlowManagementInputs & 
   business_transactions: Transaction[];
   personal_transactions: Transaction[];
   ytd_collections: number;
+  total_waa: number;
 };
 
 export type CreativeCashFlowManagementResult = {
