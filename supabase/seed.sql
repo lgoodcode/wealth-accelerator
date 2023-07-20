@@ -628,7 +628,7 @@ BEGIN
         ) AS t1
         JOIN (
             SELECT id, collections, lifestyle_expenses, lifestyle_expenses_tax,
-            business_profit_before_tax, business_overhead, tax_account, waa,
+            business_profit_before_tax, business_overhead, tax_account, waa, total_waa,
             weekly_trend, monthly_trend, yearly_trend, year_to_date
             FROM creative_cash_flow_results
             WHERE user_id = arg_user_id
