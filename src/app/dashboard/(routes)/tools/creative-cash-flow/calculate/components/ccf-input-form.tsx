@@ -220,7 +220,7 @@ export function CcfInputForm({ user_id, transactions, ytd_collections }: CcfInpu
             )}
           />
           <div className="flex justify-end">
-            <Button type="submit">
+            <Button type="submit" className="w-full">
               {/* <Button type="submit" loading={form.formState.isSubmitting}> */}
               Calculate
             </Button>

@@ -15,7 +15,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
-import { cn } from '@/lib/utils/cn';
 import {
   Table,
   TableBody,
@@ -33,16 +32,22 @@ interface DebtsTableProps {
   debts: Debt[] | null;
   toolbar?: boolean;
   rowActions?: boolean;
+  enableHeaderOptions?: boolean;
 }
 
-export function DebtsTable({ debts, toolbar = true, rowActions = true }: DebtsTableProps) {
+export function DebtsTable({
+  debts,
+  toolbar = true,
+  rowActions = true,
+  enableHeaderOptions = true,
+}: DebtsTableProps) {
   // const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable<Debt>({
     data: debts || [],
-    columns: columns(rowActions),
+    columns: columns(rowActions, enableHeaderOptions),
     state: {
       sorting,
       columnVisibility,
@@ -87,14 +92,8 @@ export function DebtsTable({ debts, toolbar = true, rowActions = true }: DebtsTa
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell, i, arr) => (
-                    <TableCell
-                      key={cell.id}
-                      className={cn({
-                        'w-[35%]': i === 0,
-                        'w-[10%]': i === arr.length - 1,
-                      })}
-                    >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

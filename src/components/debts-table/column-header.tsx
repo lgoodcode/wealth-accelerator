@@ -15,10 +15,11 @@ import type { Debt } from '@/lib/types/debts';
 interface ColumnHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<Debt>;
   title: string;
+  enableHeaderOptions?: boolean;
 }
 
-export function ColumnHeader({ column, title, className }: ColumnHeaderProps) {
-  if (!column.getCanSort()) {
+export function ColumnHeader({ column, title, enableHeaderOptions, className }: ColumnHeaderProps) {
+  if (!enableHeaderOptions || !column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
 

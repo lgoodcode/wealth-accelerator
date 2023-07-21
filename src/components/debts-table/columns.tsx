@@ -16,12 +16,12 @@ import { dollarFormatter } from '@/lib/utils/dollarFormatter';
  * The filterFn `value` is the value set from the table.getColumn('date')?.setFilterValue() call.
  */
 
-export const columns = (rowActions: boolean): ColumnDef<Debt>[] => {
+export const columns = (rowActions: boolean, enableHeaderOptions = true): ColumnDef<Debt>[] => {
   const cols: ColumnDef<Debt>[] = [
     // {
     //   id: 'select',
     //   enableSorting: false,
-    //   enableHiding: false,
+    //   enableHeaderOptions: false,
     //   header: ({ table }) => (
     //     <Checkbox
     //       checked={table.getIsAllPageRowsSelected()}
@@ -42,7 +42,13 @@ export const columns = (rowActions: boolean): ColumnDef<Debt>[] => {
     {
       accessorKey: 'description',
       enableHiding: false,
-      header: ({ column }) => <ColumnHeader column={column} title="Description" />,
+      header: ({ column }) => (
+        <ColumnHeader
+          column={column}
+          title="Description"
+          enableHeaderOptions={enableHeaderOptions}
+        />
+      ),
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
@@ -55,7 +61,9 @@ export const columns = (rowActions: boolean): ColumnDef<Debt>[] => {
     },
     {
       accessorKey: 'amount',
-      header: ({ column }) => <ColumnHeader column={column} title="Amount" />,
+      header: ({ column }) => (
+        <ColumnHeader column={column} title="Amount" enableHeaderOptions={enableHeaderOptions} />
+      ),
       cell: ({ row }) => {
         return (
           <div className="flex items-center">
@@ -69,7 +77,9 @@ export const columns = (rowActions: boolean): ColumnDef<Debt>[] => {
     },
     {
       accessorKey: 'payment',
-      header: ({ column }) => <ColumnHeader column={column} title="Payment" />,
+      header: ({ column }) => (
+        <ColumnHeader column={column} title="Payment" enableHeaderOptions={enableHeaderOptions} />
+      ),
       cell: ({ row }) => {
         return (
           <div className="flex items-center">
@@ -83,7 +93,9 @@ export const columns = (rowActions: boolean): ColumnDef<Debt>[] => {
     },
     {
       accessorKey: 'interest',
-      header: ({ column }) => <ColumnHeader column={column} title="Interest" />,
+      header: ({ column }) => (
+        <ColumnHeader column={column} title="Interest" enableHeaderOptions={enableHeaderOptions} />
+      ),
       cell: ({ row }) => {
         return (
           <div className="flex items-center">
@@ -97,7 +109,13 @@ export const columns = (rowActions: boolean): ColumnDef<Debt>[] => {
     },
     {
       accessorKey: 'months_remaining',
-      header: ({ column }) => <ColumnHeader column={column} title="Months Remaining" />,
+      header: ({ column }) => (
+        <ColumnHeader
+          column={column}
+          title="Months Remaining"
+          enableHeaderOptions={enableHeaderOptions}
+        />
+      ),
       cell: ({ row }) => {
         return (
           <div className="flex items-center">

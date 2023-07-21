@@ -59,7 +59,14 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Strategy Start Date</FormLabel>
-              <DatePicker className="w-full" date={field.value} onSelect={field.onChange} />
+              <DatePicker
+                className="w-full"
+                date={field.value}
+                onSelect={field.onChange}
+                calendarProps={{
+                  disabled: { before: new Date() },
+                }}
+              />
               <FormDescription>
                 The month and year that you want to start comparing the strategy timeframe.
               </FormDescription>
