@@ -24,44 +24,43 @@ export const inputLabels = {
     description: 'The rate at which you are taxed on your business profit.',
   },
   optimal_savings_strategy: {
-    title: 'Optimal Savings Strategy',
-    description: 'The amount of money you want to achieve.',
+    title: 'Optimal Wealth Strategy',
+    description: 'Annual savings goal.',
   },
 };
 
 export const resultsLabels = {
   business_profit_before_tax: {
     title: 'Business Profit Before Tax',
-    description: 'The amount of profit your business made before tax.',
+    description: '',
   },
   lifestyle_expenses: {
     title: 'Lifestyle Expenses',
-    description: 'The total of your lifestyle related expenses.',
+    description: 'Total lifestyle related expenses.',
   },
   lifestyle_expenses_tax: {
     title: 'Lifestyle Expenses Tax',
-    description: 'The total amount of tax you pay on your lifestyle expenses.',
+    description: '',
   },
   tax_on_business_profit: {
     title: 'Tax on Business Profit',
-    description: 'The total amount of tax you pay on your business profit.',
+    description: '',
   },
   business_overhead: {
     title: 'Business Overhead',
-    description: 'The overhead costs associated with running your business.',
+    description: 'Deductible business expenses.',
   },
   waa: {
     title: 'WAA',
-    description: 'The amount to deposit into your WAA account.',
+    description: 'The amount to deposit to your WAA account.',
   },
   total_waa: {
     title: 'Total WAA',
-    description:
-      'Running total of WAA from all previous records before the start date of this record.',
+    description: 'Running total of your WAA.',
   },
   collections: {
     title: 'Collections',
-    description: '',
+    description: 'Collections within the selected timeframe.',
   },
   trends: {
     title: 'Trends',

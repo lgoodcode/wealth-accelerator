@@ -66,7 +66,9 @@ export function CcfResults() {
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl">{inputLabels.optimal_savings_strategy.title}</CardTitle>
-            <CardDescription>{inputLabels.optimal_savings_strategy.description}</CardDescription>
+            <CardDescription className="text-md">
+              {inputLabels.optimal_savings_strategy.description}
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -78,16 +80,16 @@ export function CcfResults() {
       </motion.div>
 
       <motion.div
-        className="col-span-1 row-start-2"
+        className="flex col-span-1 row-start-2"
         transition={{ ...ANIMATION_DURATIONS.row2 }}
         {...ANIMATION_PROPS}
       >
-        <Card>
+        <Card className="flex flex-col flex-grow justify-between">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl">
               {resultsLabels.business_profit_before_tax.title}
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-md">
               {resultsLabels.business_profit_before_tax.description}
             </CardDescription>
           </CardHeader>
@@ -111,7 +113,9 @@ export function CcfResults() {
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl">{resultsLabels.lifestyle_expenses.title}</CardTitle>
-            <CardDescription>{resultsLabels.lifestyle_expenses.description}</CardDescription>
+            <CardDescription className="text-md">
+              {resultsLabels.lifestyle_expenses.description}
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -123,14 +127,16 @@ export function CcfResults() {
       </motion.div>
 
       <motion.div
-        className="col-span-1 row-start-2"
+        className="flex col-span-1 row-start-2"
         transition={{ ...ANIMATION_DURATIONS.row2 }}
         {...ANIMATION_PROPS}
       >
-        <Card>
+        <Card className="flex flex-col flex-grow justify-between">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl">{resultsLabels.lifestyle_expenses_tax.title}</CardTitle>
-            <CardDescription>{resultsLabels.lifestyle_expenses_tax.description}</CardDescription>
+            <CardDescription className="text-md">
+              {resultsLabels.lifestyle_expenses_tax.description}
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -145,14 +151,16 @@ export function CcfResults() {
       </motion.div>
 
       <motion.div
-        className="col-span-1 row-start-3"
+        className="flex col-span-1 row-start-3"
         transition={{ ...ANIMATION_DURATIONS.row3 }}
         {...ANIMATION_PROPS}
       >
-        <Card>
+        <Card className="flex flex-col flex-grow justify-between">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl">{resultsLabels.tax_on_business_profit.title}</CardTitle>
-            <CardDescription>{resultsLabels.tax_on_business_profit.description}</CardDescription>
+            <CardDescription className="text-md">
+              {resultsLabels.tax_on_business_profit.description}
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -171,7 +179,9 @@ export function CcfResults() {
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl">{resultsLabels.business_overhead.title}</CardTitle>
-            <CardDescription>{resultsLabels.business_overhead.description}</CardDescription>
+            <CardDescription className="text-md">
+              {resultsLabels.business_overhead.description}
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -190,7 +200,9 @@ export function CcfResults() {
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl">{resultsLabels.trends.title}</CardTitle>
-            <CardDescription>{resultsLabels.trends.description}</CardDescription>
+            <CardDescription className="text-md">
+              {resultsLabels.trends.description}
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-4 space-y-4">
             <Table>
@@ -290,7 +302,9 @@ export function CcfResults() {
             <div>
               <CardHeader className="space-y-1 px-0">
                 <CardTitle className="text-2xl">{resultsLabels.year_to_date.title}</CardTitle>
-                <CardDescription>{resultsLabels.year_to_date.description}</CardDescription>
+                <CardDescription className="text-md">
+                  {resultsLabels.year_to_date.description}
+                </CardDescription>
               </CardHeader>
               <div className="pt-4">
                 <CountUp
@@ -311,7 +325,7 @@ export function CcfResults() {
         <Card>
           <CardHeader className="space-y-1 pb-2">
             <CardTitle className="text-2xl">{resultsLabels.waa.title}</CardTitle>
-            <CardDescription>{resultsLabels.waa.description}</CardDescription>
+            <CardDescription className="text-md">{resultsLabels.waa.description}</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -321,7 +335,9 @@ export function CcfResults() {
           </CardContent>
           <CardHeader className="space-y-1 pb-2">
             <CardTitle className="text-2xl">{resultsLabels.total_waa.title}</CardTitle>
-            <CardDescription>{resultsLabels.total_waa.description}</CardDescription>
+            <CardDescription className="text-md">
+              {resultsLabels.total_waa.description}
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
@@ -340,7 +356,9 @@ export function CcfResults() {
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl">{resultsLabels.collections.title}</CardTitle>
-            <CardDescription>{resultsLabels.collections.description}</CardDescription>
+            <CardDescription className="text-md">
+              {resultsLabels.collections.description}
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <CountUp
