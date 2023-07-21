@@ -10,4 +10,8 @@ VALUES
   ('stripe', 'Money-In'::category),
   ('venmo', 'Money-Out'::category),
   ('fullscript', 'Money-In'::category),
-  ('check', 'Money-Out'::category);
+  ('check', 'Money-Out'::category),
+  ('synchrony', 'Money-In'::category),
+  ('commerce', 'Money-In'::category),
+  ('hcclaimpmt', 'Money-In'::category),
+  ('clearent', 'Money-In'::category);

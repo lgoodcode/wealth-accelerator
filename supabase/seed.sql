@@ -287,6 +287,10 @@ CREATE TABLE plaid_transactions (
   date date NOT NULL
 );
 
+-- Index the name column, which is text, to optimize for case-insensitive LIKE queries
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+CREATE INDEX trgm_idx_plaid_transactions_name ON plaid_transactions USING gin (name gin_trgm_ops);
+
 -- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
 CREATE OR REPLACE FUNCTION is_own_plaid_transaction()
 RETURNS BOOL AS $$
@@ -366,13 +370,37 @@ BEGIN
   WHERE name ILIKE '%' || NEW.filter || '%';
   RETURN NULL;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY definer;
 
 -- Trigger to update the transactions table when a new filter is created or updated
 DROP TRIGGER IF EXISTS on_update_or_insert_filter_update_transaction_categories ON public.plaid_filters;
 CREATE TRIGGER on_update_or_insert_filter_update_transaction_categories
-AFTER INSERT OR UPDATE ON plaid_filters
-  EXECUTE FUNCTION update_transaction_categories();
+  AFTER INSERT OR UPDATE ON public.plaid_filters
+    FOR EACH ROW
+      EXECUTE FUNCTION update_transaction_categories();
+
+-- Function that re-categorizes all transactions that match the deleted filter
+CREATE OR REPLACE FUNCTION recategorize_transactions()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Update rows in plaid_transactions table that match the deleted filter.
+  UPDATE plaid_transactions
+  SET category = CASE
+    WHEN amount < 0 THEN 'Money-In'::category
+    ELSE 'Money-Out'::category
+  END
+  WHERE name ILIKE '%' || OLD.filter || '%';
+
+  RETURN NULL; -- The function does not modify the row being deleted, so return NULL.
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+-- Trigger to recategorize the transactions from the deleted filter when it is deleted
+DROP TRIGGER IF EXISTS on_delete_filter_recategorize_transactions ON public.plaid_filters;
+CREATE TRIGGER on_delete_filter_recategorize_transactions
+  AFTER DELETE ON plaid_filters
+    FOR EACH ROW
+      EXECUTE FUNCTION recategorize_transactions();
 
 
 
