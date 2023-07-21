@@ -14,7 +14,7 @@ interface DatePickerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSel
   date?: Date;
   variant?: Variant;
   onSelect?: (date: Date | undefined) => void;
-  calendarProps?: DayPickerSingleProps;
+  calendarProps?: Omit<DayPickerSingleProps, 'mode'>;
   onOpenChange?: (isOpen: boolean) => void;
 }
 
