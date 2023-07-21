@@ -15,11 +15,11 @@ import type { Debt } from '@/lib/types/debts';
 interface ColumnHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<Debt>;
   title: string;
-  enableHiding?: boolean;
+  enableHeaderOptions?: boolean;
 }
 
-export function ColumnHeader({ column, title, enableHiding, className }: ColumnHeaderProps) {
-  if (!column.getCanSort()) {
+export function ColumnHeader({ column, title, enableHeaderOptions, className }: ColumnHeaderProps) {
+  if (!enableHeaderOptions || !column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
 
@@ -47,7 +47,7 @@ export function ColumnHeader({ column, title, enableHiding, className }: ColumnH
             <SortDesc className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Desc
           </DropdownMenuItem>
-          {enableHiding && column.getCanHide() && (
+          {column.getCanHide() && (
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>

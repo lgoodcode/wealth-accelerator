@@ -16,12 +16,12 @@ import { dollarFormatter } from '@/lib/utils/dollarFormatter';
  * The filterFn `value` is the value set from the table.getColumn('date')?.setFilterValue() call.
  */
 
-export const columns = (rowActions: boolean, enableHiding = true): ColumnDef<Debt>[] => {
+export const columns = (rowActions: boolean, enableHeaderOptions = true): ColumnDef<Debt>[] => {
   const cols: ColumnDef<Debt>[] = [
     // {
     //   id: 'select',
     //   enableSorting: false,
-    //   enableHiding: false,
+    //   enableHeaderOptions: false,
     //   header: ({ table }) => (
     //     <Checkbox
     //       checked={table.getIsAllPageRowsSelected()}
@@ -43,7 +43,11 @@ export const columns = (rowActions: boolean, enableHiding = true): ColumnDef<Deb
       accessorKey: 'description',
       enableHiding: false,
       header: ({ column }) => (
-        <ColumnHeader column={column} title="Description" enableHiding={enableHiding} />
+        <ColumnHeader
+          column={column}
+          title="Description"
+          enableHeaderOptions={enableHeaderOptions}
+        />
       ),
       cell: ({ row }) => {
         return (
@@ -58,7 +62,7 @@ export const columns = (rowActions: boolean, enableHiding = true): ColumnDef<Deb
     {
       accessorKey: 'amount',
       header: ({ column }) => (
-        <ColumnHeader column={column} title="Amount" enableHiding={enableHiding} />
+        <ColumnHeader column={column} title="Amount" enableHeaderOptions={enableHeaderOptions} />
       ),
       cell: ({ row }) => {
         return (
@@ -74,7 +78,7 @@ export const columns = (rowActions: boolean, enableHiding = true): ColumnDef<Deb
     {
       accessorKey: 'payment',
       header: ({ column }) => (
-        <ColumnHeader column={column} title="Payment" enableHiding={enableHiding} />
+        <ColumnHeader column={column} title="Payment" enableHeaderOptions={enableHeaderOptions} />
       ),
       cell: ({ row }) => {
         return (
@@ -90,7 +94,7 @@ export const columns = (rowActions: boolean, enableHiding = true): ColumnDef<Deb
     {
       accessorKey: 'interest',
       header: ({ column }) => (
-        <ColumnHeader column={column} title="Interest" enableHiding={enableHiding} />
+        <ColumnHeader column={column} title="Interest" enableHeaderOptions={enableHeaderOptions} />
       ),
       cell: ({ row }) => {
         return (
@@ -106,7 +110,11 @@ export const columns = (rowActions: boolean, enableHiding = true): ColumnDef<Deb
     {
       accessorKey: 'months_remaining',
       header: ({ column }) => (
-        <ColumnHeader column={column} title="Months Remaining" enableHiding={enableHiding} />
+        <ColumnHeader
+          column={column}
+          title="Months Remaining"
+          enableHeaderOptions={enableHeaderOptions}
+        />
       ),
       cell: ({ row }) => {
         return (

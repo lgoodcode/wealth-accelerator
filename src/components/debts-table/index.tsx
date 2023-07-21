@@ -15,7 +15,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
-import { cn } from '@/lib/utils/cn';
 import {
   Table,
   TableBody,
@@ -33,14 +32,14 @@ interface DebtsTableProps {
   debts: Debt[] | null;
   toolbar?: boolean;
   rowActions?: boolean;
-  enableHiding?: boolean;
+  enableHeaderOptions?: boolean;
 }
 
 export function DebtsTable({
   debts,
   toolbar = true,
   rowActions = true,
-  enableHiding = true,
+  enableHeaderOptions = true,
 }: DebtsTableProps) {
   // const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -48,7 +47,7 @@ export function DebtsTable({
   const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable<Debt>({
     data: debts || [],
-    columns: columns(rowActions, enableHiding),
+    columns: columns(rowActions, enableHeaderOptions),
     state: {
       sorting,
       columnVisibility,
