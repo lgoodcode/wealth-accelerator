@@ -1,4 +1,4 @@
-import { createSupabase } from '@/lib/supabase/server/createSupabase';
+import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import type { Institution } from './types/institutions';
 
 /**

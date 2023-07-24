@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { createSupabase } from '@/lib/supabase/server/createSupabase';
+import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { captureException } from '@sentry/nextjs';
 
 export const DELETE = deleteUser;

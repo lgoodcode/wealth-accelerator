@@ -1,7 +1,7 @@
 import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
-import { getUser } from '@/lib/supabase/server/getUser';
+import { getUser } from '@/lib/supabase/server/get-user';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { CcfContainer } from './components/ccf-container';

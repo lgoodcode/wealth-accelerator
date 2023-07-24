@@ -1,4 +1,4 @@
-import { dollarFormatter } from '@/lib/utils/dollarFormatter';
+import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import { resultsLabels } from '../../labels';
 import {
   Table,

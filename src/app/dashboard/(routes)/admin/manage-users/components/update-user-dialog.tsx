@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
-import { updateUserFormSchema, type UpdateUserFormType } from '@/lib/userSchema';
+import { updateUserFormSchema, type UpdateUserFormType } from '@/lib/user-schema';
 import { Role } from '@/lib/types';
 import { useUpdateUser } from '../use-update-user';
 import { Input } from '@/components/ui/input';

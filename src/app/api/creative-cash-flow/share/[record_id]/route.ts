@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
-import { getUser } from '@/lib/supabase/server/getUser';
+import { getUser } from '@/lib/supabase/server/get-user';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import type { Notifier } from '@/app/dashboard/(routes)/admin/creative-cash-flow-notifiers/types';
 

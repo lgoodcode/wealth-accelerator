@@ -3,8 +3,8 @@
 import type { DateRange } from 'react-day-picker';
 import type { ColumnDef } from '@tanstack/react-table';
 
-import { dollarFormatter } from '@/lib/utils/dollarFormatter';
-import { formattedDate } from '@/lib/utils/formattedDate';
+import { dollarFormatter } from '@/lib/utils/dollar-formatter';
+import { formattedDate } from '@/lib/utils/formatted-date';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
 import { CategoryColumn } from './category-column';

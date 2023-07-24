@@ -1,7 +1,7 @@
 import type { Transaction } from 'plaid';
 
 import { parseTransactions } from '@/lib/plaid/transactions/parseTransactions';
-import type { SupabaseServer } from '@/lib/supabase/server/createSupabase';
+import type { SupabaseServer } from '@/lib/supabase/server/create-supabase';
 import type { Filter } from '../types/transactions';
 
 export const addTransactions = async (

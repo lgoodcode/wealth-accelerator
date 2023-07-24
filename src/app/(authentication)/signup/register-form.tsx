@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
-import { registerUserFormSchema, type RegisterUserFormType } from '@/lib/userSchema';
+import { registerUserFormSchema, type RegisterUserFormType } from '@/lib/user-schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {

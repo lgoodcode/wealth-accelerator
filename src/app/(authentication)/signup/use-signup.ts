@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase/client';
-import type { RegisterUserFormType } from '@/lib/userSchema';
+import type { RegisterUserFormType } from '@/lib/user-schema';
 
 export const useSignUp = () => {
   return async (data: RegisterUserFormType) => {

@@ -1,7 +1,7 @@
 import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
-import { createSupabase } from '@/lib/supabase/server/createSupabase';
+import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { Notifiers } from './components/notifiers';

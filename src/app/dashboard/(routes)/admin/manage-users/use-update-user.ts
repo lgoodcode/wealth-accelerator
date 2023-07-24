@@ -3,7 +3,7 @@ import { useSetAtom } from 'jotai';
 import { supabase } from '@/lib/supabase/client';
 import { updateUserAtom } from './atoms';
 import { updateUserAtom as updateGlobalUserAtom } from '@/lib/atoms';
-import type { UpdateUserFormType } from '@/lib/userSchema';
+import type { UpdateUserFormType } from '@/lib/user-schema';
 
 export const useUpdateUser = () => {
   const updateUser = useSetAtom(updateUserAtom);

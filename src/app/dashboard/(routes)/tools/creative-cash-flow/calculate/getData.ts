@@ -1,4 +1,4 @@
-import { createSupabase, type SupabaseServer } from '@/lib/supabase/server/createSupabase';
+import { createSupabase, type SupabaseServer } from '@/lib/supabase/server/create-supabase';
 import { Transaction } from '@/lib/plaid/types/transactions';
 
 const getTransactions = async (supabase: SupabaseServer, user_id: string) => {
