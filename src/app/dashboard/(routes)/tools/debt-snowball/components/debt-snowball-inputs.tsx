@@ -9,13 +9,13 @@ interface DebtSnowballInputsContainerProps {
   debts: Debt[];
 }
 
-export function DebtSnowballInputsContainer({ debts }: DebtSnowballInputsContainerProps) {
+export function DebtSnowballInputs({ debts }: DebtSnowballInputsContainerProps) {
   const paymentsSum = debts.reduce((acc, debt) => acc + debt.payment, 0);
 
   return (
     <div className="flex flex-col lg:grid grid-cols-3 gap-8">
       <div className="col-span-1">
-        <Card>
+        <Card className="col-span-1">
           <CardContent className="pt-6">
             <DebtSnowballInputsForm paymentsSum={paymentsSum} debts={debts} />
           </CardContent>

@@ -7,8 +7,6 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
-import { useCreateFilter } from '../use-create-filter';
-import { hasFilterAtom } from '../atoms';
 import { createFilterFormSchema, type CreateFilterFormType } from '../schemas';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +33,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useCreateFilter } from '../hooks/use-create-filter';
+import { hasFilterAtom } from '../atoms';
 import { Category } from '@/lib/plaid/types/transactions';
 
 export function AddFilterButton() {

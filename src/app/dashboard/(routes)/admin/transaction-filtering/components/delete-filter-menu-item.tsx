@@ -4,7 +4,7 @@ import { Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { useDeleteFilter } from '../use-delete-filter';
+import { useDeleteFilter } from '../hooks/use-delete-filter';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
 interface DeleteFilterMenuItemProps {

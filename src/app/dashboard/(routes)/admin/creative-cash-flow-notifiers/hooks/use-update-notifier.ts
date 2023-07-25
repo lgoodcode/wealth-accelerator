@@ -1,8 +1,8 @@
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
-import { updateNotifierAtom } from './atoms';
-import type { NotifierFormType } from './schema';
+import { updateNotifierAtom } from '../atoms';
+import type { NotifierFormType } from '../schema';
 
 export const useUpdateNotifier = () => {
   const updateNotifiers = useSetAtom(updateNotifierAtom);

@@ -31,7 +31,7 @@ import {
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useUpdateTransaction } from '../../use-update-transaction';
+import { useUpdateTransaction } from '../../hooks/use-update-transaction';
 import { updateTransactionFormSchema, type UpdateTransactionType } from '../../schemas';
 import { Category, type TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 

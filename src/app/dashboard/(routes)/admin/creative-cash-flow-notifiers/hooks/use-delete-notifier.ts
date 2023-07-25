@@ -1,7 +1,7 @@
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
-import { removeNotifierAtom } from './atoms';
+import { removeNotifierAtom } from '../atoms';
 
 export const useDeleteNotifier = () => {
   const removeNotifer = useSetAtom(removeNotifierAtom);

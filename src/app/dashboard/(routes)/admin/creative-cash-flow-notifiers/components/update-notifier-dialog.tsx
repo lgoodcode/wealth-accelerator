@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
-import { useUpdateNotifier } from '../use-update-notifier';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -23,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useUpdateNotifier } from '../hooks/use-update-notifier';
 import { notifierFormSchema, type NotifierFormType } from '../schema';
 import type { Notifier } from '../types';
 

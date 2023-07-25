@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 
 import { updateUserFormSchema, type UpdateUserFormType } from '@/lib/user-schema';
 import { Role } from '@/lib/types';
-import { useUpdateUser } from '../use-update-user';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,6 +31,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useUpdateUser } from '../hooks/use-update-user';
 
 interface UpdateUserDialog {
   open: boolean;

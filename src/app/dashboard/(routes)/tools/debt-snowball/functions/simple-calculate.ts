@@ -15,7 +15,7 @@ export const simpleCalculate = (debts: Debt[], target_date?: Date): DebtCalculat
   }
 
   // Track the debt payoffs by initializing an array of the debts in a DebtPayoff object
-  const debtPayoffs: DebtPayoff[] = debts.map((debt) => ({
+  const debt_payoffs: DebtPayoff[] = debts.map((debt) => ({
     debt: structuredClone(debt),
     months: 0,
     total: 0,
@@ -23,27 +23,27 @@ export const simpleCalculate = (debts: Debt[], target_date?: Date): DebtCalculat
   }));
   // Track the total amount of debt remaining for each month and year using an array with the years and months as indices
   // with the first index being an array of 12 months
-  const debtTracking: number[][] = [Array.from({ length: 12 }, () => 0)];
+  const debt_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
   // Track the total debt remaining
-  const initialTotalDebt = debts.reduce((acc, debt) => acc + debt.amount, 0);
-  let totalDebtRemaining = initialTotalDebt;
+  const intitial_total_debt = debts.reduce((acc, debt) => acc + debt.amount, 0);
+  let totat_debt_remaining = intitial_total_debt;
   let year = 0;
 
   // Initialize the debt remaining for the first month
-  debtTracking[0][0] = totalDebtRemaining;
+  debt_tracking[0][0] = totat_debt_remaining;
 
   // While we still haven't reached the target date and there is still debt remaining
-  while (months && totalDebtRemaining) {
+  while (months && totat_debt_remaining) {
     for (let i = 0; i < NUM_OF_MONTHS; i++) {
-      let payment = 0;
       // If a debt is paid off, use the remainder for the next debt
       let spillover = 0;
 
-      for (const debtPayoff of debtPayoffs) {
+      for (const debtPayoff of debt_payoffs) {
         const { debt } = debtPayoff;
+        const payment = debt.payment + spillover;
 
         // If all debts are paid or if the debt is paid off, skip it
-        if (!totalDebtRemaining || !debt.amount) {
+        if (!totat_debt_remaining || !debt.amount) {
           continue;
         }
 
@@ -52,57 +52,61 @@ export const simpleCalculate = (debts: Debt[], target_date?: Date): DebtCalculat
         // Add the interest to the total interest paid
         debtPayoff.interest = moneyRound(debtPayoff.interest + interest);
         // Add the interest to the total balance
-        debt.amount += interest;
+        debt.amount = moneyRound(debt.amount + interest);
         // Add a month to the debt payoff
         debtPayoff.months++;
 
-        if (interest >= debt.payment) {
+        if (interest >= payment) {
           throw new Error('The interest rate is too high to pay off the debt', {
-            cause: 'interest',
+            cause: debt.description,
           });
         }
 
-        payment += spillover;
-
         if (debt.amount < payment) {
+          spillover = moneyRound(payment - debt.amount);
           debt.amount = 0;
-          spillover = payment - debt.amount;
         } else {
-          debt.amount -= payment;
+          debt.amount = moneyRound(debt.amount - payment);
           spillover = 0;
         }
       }
 
       // After running through each debt for the month, calculate the new total debt remaining
-      totalDebtRemaining = debtPayoffs.reduce((acc, debtPayoff) => acc + debtPayoff.debt.amount, 0);
+      totat_debt_remaining = debt_payoffs.reduce(
+        (acc, debtPayoff) => acc + debtPayoff.debt.amount,
+        0
+      );
 
       // Update the debt tracking for the month
-      debtTracking[year][i] = moneyRound(totalDebtRemaining);
+      debt_tracking[year][i] = moneyRound(totat_debt_remaining);
 
       // Subtract a month from the total months remaining
       months--;
 
       // If there is no more debt remaining, break out of the loop
-      if (!totalDebtRemaining) {
+      if (!totat_debt_remaining) {
         break;
       }
     }
 
     // Increment the year and add a new array of 12 months to the debt tracking
-    debtTracking[++year] = Array.from({ length: 12 }, () => 0);
+    debt_tracking[++year] = Array.from({ length: 12 }, () => 0);
   }
 
-  const totalInterestPaid = debtPayoffs.reduce((acc, debtPayoff) => acc + debtPayoff.interest, 0);
+  const totatl_interest = debt_payoffs.reduce((acc, debtPayoff) => acc + debtPayoff.interest, 0);
   // Find the longest payoff months to determine the payoff date
-  const payoffMonths = debtPayoffs.reduce((acc, debtPayoff) => Math.max(acc, debtPayoff.months), 0);
+  const payoff_months = debt_payoffs.reduce(
+    (acc, debtPayoff) => Math.max(acc, debtPayoff.months),
+    0
+  );
   // Calculate the total amount paid for all debts with the principal and interest
-  const totalPaid = initialTotalDebt + totalInterestPaid;
+  const total_amount = intitial_total_debt + totatl_interest;
 
   return {
-    debtPayoffs,
-    debtTracking,
-    totalInterestPaid,
-    payoffMonths,
-    totalPaid,
+    debt_payoffs: debt_payoffs,
+    debt_tracking: debt_tracking,
+    payoff_months: payoff_months,
+    total_interest: moneyRound(totatl_interest),
+    total_amount: moneyRound(total_amount),
   };
 };

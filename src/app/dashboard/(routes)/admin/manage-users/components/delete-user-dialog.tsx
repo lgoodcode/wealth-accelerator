@@ -11,7 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useDeleteUser } from '../use-delete-user';
+import { useDeleteUser } from '../hooks/use-delete-user';
 
 interface DeleteUserProps {
   open: boolean;

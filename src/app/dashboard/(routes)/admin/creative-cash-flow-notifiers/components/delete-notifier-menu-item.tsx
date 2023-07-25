@@ -4,7 +4,7 @@ import { Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { useDeleteNotifier } from '../use-delete-notifier';
+import { useDeleteNotifier } from '../hooks/use-delete-notifier';
 import type { Notifier } from '../types';
 
 interface DeleteFilterMenuItemProps {

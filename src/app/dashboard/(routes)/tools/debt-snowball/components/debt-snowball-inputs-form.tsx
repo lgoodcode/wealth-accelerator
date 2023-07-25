@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'react-toastify';
 
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import {
@@ -26,8 +25,8 @@ import { Button } from '@/components/ui/button';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Strategies } from '../strategies';
-import { snowballCalculation } from '../functions/debt-snowball';
 import { debtCalculationSchema, type DebtCalculationSchemaType } from '../schema';
+import { useDebtCalculate } from '../hooks/use-debt-calculate';
 import type { Debt } from '@/lib/types/debts';
 
 interface DebtSnowballInputsFormProps {
@@ -36,6 +35,7 @@ interface DebtSnowballInputsFormProps {
 }
 
 export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInputsFormProps) {
+  const calculateDebt = useDebtCalculate(debts);
   const form = useForm<DebtCalculationSchemaType>({
     resolver: zodResolver(debtCalculationSchema),
     defaultValues: {
@@ -48,36 +48,9 @@ export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInput
     form.setValue('snowball', paymentsSum + form.watch('monthly_payments'));
   }, [paymentsSum, form.watch('monthly_payments')]);
 
-  const calculate = (data: DebtCalculationSchemaType) => {
-    let sorted_debts: Debt[];
-
-    if (data.strategy === Strategies.DebtSnowball || data.strategy === Strategies.LowestBalance) {
-      sorted_debts = debts.sort((a, b) => a.amount - b.amount);
-    } else if (data.strategy === Strategies.HighestBalance) {
-      sorted_debts = debts.sort((a, b) => b.amount - a.amount);
-    } else if (data.strategy === Strategies.HighestInterest) {
-      sorted_debts = debts.sort((a, b) => b.interest - a.interest);
-    } else if (data.strategy === Strategies.LowestInterest) {
-      sorted_debts = debts.sort((a, b) => a.interest - b.interest);
-    } else {
-      console.error('Invalid strategy', data.strategy);
-      toast.error('Invalid strategy');
-      return;
-    }
-
-    try {
-      const results = snowballCalculation(data.snowball, sorted_debts, data.target_date);
-      console.log(results);
-    } catch (error: any) {
-      if (error.cause === 'interest') {
-        toast.error('A debt has a prinicipal and interest rate that exceeds the snowball amount.');
-      }
-    }
-  };
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(calculate)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(calculateDebt)} className="space-y-8">
         <FormField
           control={form.control}
           name="target_date"

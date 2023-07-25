@@ -1,4 +1,5 @@
 import type { Debt } from '@/lib/types/debts';
+import type { DebtCalculationSchemaType } from './schema';
 
 export type DebtPayoff = {
   debt: Debt;
@@ -9,9 +10,15 @@ export type DebtPayoff = {
 };
 
 export type DebtCalculation = {
-  debtPayoffs: DebtPayoff[];
-  debtTracking: number[][];
-  totalInterestPaid: number;
-  payoffMonths: number;
-  totalPaid: number;
+  debt_payoffs: DebtPayoff[];
+  debt_tracking: number[][];
+  payoff_months: number;
+  total_interest: number;
+  total_amount: number;
+};
+
+export type DebtCalculationResults = {
+  inputs: DebtCalculationSchemaType;
+  currentResults: DebtCalculation;
+  strategyResults: DebtCalculation;
 };

@@ -29,7 +29,7 @@ import {
 import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
-import { useTransactions } from '../../../use-transactions';
+import { useTransactions } from '../../../hooks/use-transactions';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 

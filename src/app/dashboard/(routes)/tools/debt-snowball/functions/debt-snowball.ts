@@ -19,7 +19,7 @@ export const snowballCalculation = (
   }
 
   // Track the debt payoffs by initializing an array of the debts in a DebtPayoff object
-  const debtPayoffs: DebtPayoff[] = debts.map((debt) => ({
+  const debt_payoffs: DebtPayoff[] = debts.map((debt) => ({
     debt: structuredClone(debt),
     months: 0,
     total: 0,
@@ -27,25 +27,25 @@ export const snowballCalculation = (
   }));
   // Track the total amount of debt remaining for each month and year using an array with the years and months as indices
   // with the first index being an array of 12 months
-  const debtTracking: number[][] = [Array.from({ length: 12 }, () => 0)];
+  const debt_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
   // Track the total debt remaining
-  const initialTotalDebt = debts.reduce((acc, debt) => acc + debt.amount, 0);
-  let totalDebtRemaining = initialTotalDebt;
+  const initial_total_debt = debts.reduce((acc, debt) => acc + debt.amount, 0);
+  let total_debt_remaining = initial_total_debt;
   let year = 0;
 
   // Initialize the debt remaining for the first month
-  debtTracking[0][0] = totalDebtRemaining;
+  debt_tracking[0][0] = total_debt_remaining;
 
   // While we still haven't reached the target date and there is still debt remaining
-  while (months && totalDebtRemaining) {
+  while (months && total_debt_remaining) {
     for (let i = 0; i < NUM_OF_MONTHS; i++) {
       let monthly_payment = snowball;
 
-      for (const debtPayoff of debtPayoffs) {
+      for (const debtPayoff of debt_payoffs) {
         const { debt } = debtPayoff;
 
         // If all debts are paid or if the debt is paid off, skip it
-        if (!totalDebtRemaining || !debt.amount) {
+        if (!total_debt_remaining || !debt.amount) {
           continue;
         }
 
@@ -54,7 +54,7 @@ export const snowballCalculation = (
         // Add the interest to the total interest paid
         debtPayoff.interest = moneyRound(debtPayoff.interest + interest);
         // Add the interest to the total balance
-        debt.amount += interest;
+        debt.amount = moneyRound(debt.amount + interest);
         // Add a month to the debt payoff
         debtPayoff.months++;
 
@@ -73,42 +73,48 @@ export const snowballCalculation = (
         const payment = Math.min(debt.amount, monthly_payment);
 
         // Subtract from the monthly payment, the amount paid towards the principal
-        monthly_payment -= payment;
+        monthly_payment = moneyRound(monthly_payment - payment);
 
         // Subtract the payment from the debt amount
         debt.amount = moneyRound(debt.amount - payment);
       }
 
       // After running through each debt for the month, calculate the new total debt remaining
-      totalDebtRemaining = debtPayoffs.reduce((acc, debtPayoff) => acc + debtPayoff.debt.amount, 0);
+      total_debt_remaining = debt_payoffs.reduce(
+        (acc, debtPayoff) => acc + debtPayoff.debt.amount,
+        0
+      );
 
       // Update the debt tracking for the month
-      debtTracking[year][i] = moneyRound(totalDebtRemaining);
+      debt_tracking[year][i] = moneyRound(total_debt_remaining);
 
       // Subtract a month from the total months remaining
       months--;
 
       // If there is no more debt remaining, break out of the loop
-      if (!totalDebtRemaining) {
+      if (!total_debt_remaining) {
         break;
       }
     }
 
     // Increment the year and add a new array of 12 months to the debt tracking
-    debtTracking[++year] = Array.from({ length: 12 }, () => 0);
+    debt_tracking[++year] = Array.from({ length: 12 }, () => 0);
   }
 
-  const totalInterestPaid = debtPayoffs.reduce((acc, debtPayoff) => acc + debtPayoff.interest, 0);
+  const total_interest = debt_payoffs.reduce((acc, debtPayoff) => acc + debtPayoff.interest, 0);
   // Find the longest payoff months to determine the payoff date
-  const payoffMonths = debtPayoffs.reduce((acc, debtPayoff) => Math.max(acc, debtPayoff.months), 0);
+  const payoff_months = debt_payoffs.reduce(
+    (acc, debtPayoff) => Math.max(acc, debtPayoff.months),
+    0
+  );
   // Calculate the total amount paid for all debts with the principal and interest
-  const totalPaid = initialTotalDebt + totalInterestPaid;
+  const total_paid = initial_total_debt + total_interest;
 
   return {
-    debtPayoffs,
-    debtTracking,
-    totalInterestPaid,
-    payoffMonths,
-    totalPaid,
+    debt_payoffs: debt_payoffs,
+    debt_tracking: debt_tracking,
+    payoff_months: payoff_months,
+    total_interest: moneyRound(total_interest),
+    total_amount: moneyRound(total_paid),
   };
 };
