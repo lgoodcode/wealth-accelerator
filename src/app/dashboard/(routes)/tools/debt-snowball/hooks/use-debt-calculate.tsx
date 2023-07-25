@@ -1,26 +1,39 @@
 import { useSetAtom } from 'jotai';
 import { toast } from 'react-toastify';
 
-import { debtCalculationResultsAtom } from '../atoms';
+import type { Debt } from '@/lib/types/debts';
+import { debtCalculationInputsAtom, debtCalculationResultsAtom } from '../atoms';
 import { snowballCalculation } from '../functions/debt-snowball';
 import { simpleCalculate } from '../functions/simple-calculate';
 import { Strategies } from '../strategies';
-import type { Debt } from '@/lib/types/debts';
 import type { DebtCalculationSchemaType } from '../schema';
 
 export const useDebtCalculate = (debts: Debt[]) => {
-  const setDebtCalculation = useSetAtom(debtCalculationResultsAtom);
+  const setDebtCaluclationInputs = useSetAtom(debtCalculationInputsAtom);
+  const setDebtCalculationResults = useSetAtom(debtCalculationResultsAtom);
 
-  return (data: DebtCalculationSchemaType) => {
+  return async (data: DebtCalculationSchemaType) => {
     let sorted_debts: Debt[];
 
-    if (data.strategy === Strategies.DebtSnowball || data.strategy === Strategies.LowestBalance) {
+    if (
+      data.strategy === Strategies.DebtSnowballLowestBalance ||
+      data.strategy === Strategies.LowestBalance
+    ) {
       sorted_debts = debts.sort((a, b) => a.amount - b.amount);
-    } else if (data.strategy === Strategies.HighestBalance) {
+    } else if (
+      data.strategy === Strategies.DebtSnowballHighestBalance ||
+      data.strategy === Strategies.HighestBalance
+    ) {
       sorted_debts = debts.sort((a, b) => b.amount - a.amount);
-    } else if (data.strategy === Strategies.HighestInterest) {
+    } else if (
+      data.strategy === Strategies.DebtSnowballHighestInterest ||
+      data.strategy === Strategies.HighestInterest
+    ) {
       sorted_debts = debts.sort((a, b) => b.interest - a.interest);
-    } else if (data.strategy === Strategies.LowestInterest) {
+    } else if (
+      data.strategy === Strategies.DebtSnowballLowestInterest ||
+      data.strategy === Strategies.LowestInterest
+    ) {
       sorted_debts = debts.sort((a, b) => a.interest - b.interest);
     } else {
       console.error('Invalid strategy', data.strategy);
@@ -28,17 +41,23 @@ export const useDebtCalculate = (debts: Debt[]) => {
       return;
     }
 
+    // Simulate loading by waiting 2 seconds
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
+
     try {
       const currentResults = simpleCalculate(debts, data.target_date);
       const strategyResults = snowballCalculation(data.snowball, sorted_debts, data.target_date);
 
-      setDebtCalculation({
-        inputs: data,
+      setDebtCaluclationInputs(data);
+      setDebtCalculationResults({
         currentResults,
         strategyResults,
       });
 
-      console.log({ currentResults, strategyResults });
+      console.log({
+        currentResults,
+        strategyResults,
+      });
     } catch (error: any) {
       toast.error(
         <span>

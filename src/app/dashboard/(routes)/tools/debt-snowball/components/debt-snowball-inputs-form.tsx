@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useAtomValue } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -25,9 +26,11 @@ import { Button } from '@/components/ui/button';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Strategies } from '../strategies';
+import { debtCalculationInputsAtom } from '../atoms';
 import { debtCalculationSchema, type DebtCalculationSchemaType } from '../schema';
 import { useDebtCalculate } from '../hooks/use-debt-calculate';
 import type { Debt } from '@/lib/types/debts';
+import { X } from 'lucide-react';
 
 interface DebtSnowballInputsFormProps {
   paymentsSum: number;
@@ -35,12 +38,14 @@ interface DebtSnowballInputsFormProps {
 }
 
 export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInputsFormProps) {
+  const inputs = useAtomValue(debtCalculationInputsAtom);
   const calculateDebt = useDebtCalculate(debts);
   const form = useForm<DebtCalculationSchemaType>({
     resolver: zodResolver(debtCalculationSchema),
     defaultValues: {
-      monthly_payments: 0,
+      monthly_payments: inputs?.monthly_payments ?? 0,
       snowball: paymentsSum,
+      strategy: inputs?.strategy,
     },
   });
 
@@ -59,14 +64,24 @@ export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInput
               <FormLabel>
                 Target date <span className="text-muted-foreground">(optional)</span>
               </FormLabel>
-              <DatePicker
-                className="w-full"
-                date={field.value}
-                onSelect={field.onChange}
-                calendarProps={{
-                  disabled: { before: new Date() },
-                }}
-              />
+              <div className="flex flex-row gap-3">
+                <DatePicker
+                  className="w-full"
+                  date={field.value}
+                  onSelect={field.onChange}
+                  calendarProps={{
+                    disabled: { before: new Date() },
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="px-2"
+                  onClick={() => form.setValue('target_date', undefined)}
+                >
+                  <X />
+                </Button>
+              </div>
               <FormDescription>
                 The month and year that you want to start the strategy. (The day will be ignored.)
               </FormDescription>
@@ -143,7 +158,7 @@ export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInput
           )}
         />
 
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full" loading={form.formState.isSubmitting}>
           Calculate
         </Button>
       </form>

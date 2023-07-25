@@ -18,7 +18,7 @@ export function BetaBadge({ badgeClassName }: BetaBadgeProps) {
       </HoverCardTrigger>
       <HoverCardContent>
         <p className="text-sm text-muted-foreground">
-          This tool is may not be fully functional and is still in development.
+          This tool is still in development and may not operate properly.
         </p>
       </HoverCardContent>
     </HoverCard>

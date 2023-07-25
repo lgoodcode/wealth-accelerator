@@ -1,5 +1,7 @@
 import { atom } from 'jotai';
 
-import type { DebtCalculationResults } from './types';
+import { DebtCalculationInputs, DebtCalculationResults } from './types';
+
+export const debtCalculationInputsAtom = atom<DebtCalculationInputs | null>(null);
 
 export const debtCalculationResultsAtom = atom<DebtCalculationResults | null>(null);

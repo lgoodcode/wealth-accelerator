@@ -1,3 +1,3 @@
 export const moneyRound = (number: number) => {
-  return Math.ceil(number * 100) / 100;
+  return Math.round(number * 100) / 100;
 };

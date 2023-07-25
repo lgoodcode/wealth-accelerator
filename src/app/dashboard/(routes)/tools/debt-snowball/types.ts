@@ -11,14 +11,16 @@ export type DebtPayoff = {
 
 export type DebtCalculation = {
   debt_payoffs: DebtPayoff[];
-  debt_tracking: number[][];
+  balance_tracking: number[][];
+  interest_tracking: number[][];
   payoff_months: number;
   total_interest: number;
   total_amount: number;
 };
 
+export type DebtCalculationInputs = DebtCalculationSchemaType;
+
 export type DebtCalculationResults = {
-  inputs: DebtCalculationSchemaType;
   currentResults: DebtCalculation;
   strategyResults: DebtCalculation;
 };

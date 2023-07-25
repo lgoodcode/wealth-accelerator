@@ -4,7 +4,6 @@ import type { Metadata } from 'next';
 
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { PageError } from '@/components/page-error';
-import { BetaBadge } from '@/components/beta-badge';
 import { Separator } from '@/components/ui/separator';
 import { DebtSnowball } from './components/debt-snowball';
 
@@ -30,7 +29,6 @@ export default async function DebtSnowballPage() {
       <div className="space-y-1">
         <div className="flex flex-row items-center">
           <h2 className="text-3xl font-bold">Debt Snowball</h2>
-          <BetaBadge badgeClassName="ml-3 text-md" />
         </div>
         <p className="text-muted-foreground">
           View records saved from the Creative Cash Flow page.
