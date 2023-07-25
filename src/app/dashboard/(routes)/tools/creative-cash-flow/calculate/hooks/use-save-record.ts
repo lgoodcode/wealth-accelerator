@@ -2,12 +2,12 @@ import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
 import { generateUUID } from '@/lib/utils/uuid';
-import { addCreativeCashFlowRecordAtom } from '../atoms';
+import { addCreativeCashFlowRecordAtom } from '../../atoms';
 import type {
   CreativeCashFlowManagementInputs,
   CreativeCashFlowManagementResult,
   CreativeCashFlowRecord,
-} from '../types';
+} from '../../types';
 
 export const useSaveRecord = () => {
   const addRecord = useSetAtom(addCreativeCashFlowRecordAtom);

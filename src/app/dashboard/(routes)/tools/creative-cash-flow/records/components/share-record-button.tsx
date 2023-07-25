@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Share2 } from 'lucide-react';
 
-import { useShareRecord } from '../use-share-record';
 import { Button } from '@/components/ui/button';
+import { useShareRecord } from '../hooks/use-share-record';
 import type { CreativeCashFlowRecord } from '../../types';
 
 interface ShareRecordButtonProps {

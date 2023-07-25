@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { inputLabels } from '../../labels';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { CurrencyInput } from '@/components/ui/currency-input';
@@ -18,8 +17,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { inputLabels } from '../../labels';
 import { creativeCashFlowManagement } from '../functions/creative-cash-flow';
-import { getTotalWAA } from '../getTotalWAA';
+import { getTotalWAA } from '../functions/get-total-waa';
 import {
   creativeCashFlowInputsAtom,
   creativeCashFlowResultAtom,
