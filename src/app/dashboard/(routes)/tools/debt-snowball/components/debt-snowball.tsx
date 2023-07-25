@@ -19,6 +19,7 @@ interface DebtSnowballProps {
 }
 
 export function DebtSnowball({ debts }: DebtSnowballProps) {
+  const [data, setData] = useState<Debt[]>(debts);
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
   const debtCalculationResults = useAtomValue(debtCalculationResultsAtom);
 
@@ -27,6 +28,10 @@ export function DebtSnowball({ debts }: DebtSnowballProps) {
       setActiveTab(TabsValue.Results);
     }
   }, [debtCalculationResults]);
+
+  useEffect(() => {
+    setData(debts);
+  }, [debts]);
 
   return (
     <Tabs
@@ -43,7 +48,7 @@ export function DebtSnowball({ debts }: DebtSnowballProps) {
         </TabsTrigger>
       </TabsList>
       <TabsContent value={TabsValue.Inputs}>
-        <DebtSnowballInputs debts={debts} />
+        <DebtSnowballInputs debts={data} />
       </TabsContent>
       <TabsContent value={TabsValue.Results}>
         <DebtSnowballResults />
