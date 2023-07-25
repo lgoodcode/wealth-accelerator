@@ -6,7 +6,7 @@ import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { CcfContainer } from './components/ccf-container';
 import { CcfResults } from './components/ccf-results';
-import { getData } from './getData';
+import { getData } from './functions/get-data';
 
 export const metadata: Metadata = {
   title: 'Creative Cash Flow',
