@@ -4,12 +4,20 @@ import { Role } from '@/lib/types';
 
 export const registerUserFormSchema = z.object({
   name: z
-    .string()
+    .string({
+      required_error: 'Please enter your name',
+    })
     .min(2, 'Your name must contain at least 2 characters')
     .max(50, 'Name is too long'),
-  email: z.string().nonempty('Please enter your email').email(),
+  email: z
+    .string({
+      required_error: 'Please enter your email',
+    })
+    .email(),
   password: z
-    .string()
+    .string({
+      required_error: 'Please enter your password',
+    })
     .min(8, 'Password must contain at least 8 characters')
     .max(50, 'Password is too long')
     .refine((value) => /[a-z]+/.test(value), {
@@ -26,8 +34,6 @@ export const registerUserFormSchema = z.object({
     }),
 });
 
-export type RegisterUserFormType = z.infer<typeof registerUserFormSchema>;
-
 export const updateUserFormSchema = registerUserFormSchema
   .omit({
     password: true,
@@ -36,4 +42,18 @@ export const updateUserFormSchema = registerUserFormSchema
     role: z.nativeEnum(Role),
   });
 
+export const sendResetPasswordEmailSchema = registerUserFormSchema.pick({
+  email: true,
+});
+
+export const resetUserPasswordSchema = registerUserFormSchema.pick({
+  password: true,
+});
+
+export type RegisterUserFormType = z.infer<typeof registerUserFormSchema>;
+
 export type UpdateUserFormType = z.infer<typeof updateUserFormSchema>;
+
+export type SendResetPasswordEmailFormType = z.infer<typeof sendResetPasswordEmailSchema>;
+
+export type ResetUserPasswordFormType = z.infer<typeof resetUserPasswordSchema>;

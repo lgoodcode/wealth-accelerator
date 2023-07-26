@@ -8,6 +8,7 @@ export const GET = exchangeCodeForSession;
 async function exchangeCodeForSession(request: Request) {
   const requestURL = new URL(request.url);
   const code = requestURL.searchParams.get('code');
+  const redirectTo = requestURL.searchParams.get('redirect_to') ?? '/login';
 
   try {
     if (code) {
@@ -23,5 +24,5 @@ async function exchangeCodeForSession(request: Request) {
     });
   }
 
-  return NextResponse.redirect(`${requestURL.origin}/login`);
+  return NextResponse.redirect(`${requestURL.origin}${redirectTo}`);
 }
