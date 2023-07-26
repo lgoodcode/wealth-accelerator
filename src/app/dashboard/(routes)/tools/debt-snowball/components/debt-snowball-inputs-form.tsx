@@ -55,7 +55,7 @@ export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInput
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(calculateDebt)} className="space-y-8">
+      <form noValidate onSubmit={form.handleSubmit(calculateDebt)} className="space-y-8">
         <FormField
           control={form.control}
           name="target_date"

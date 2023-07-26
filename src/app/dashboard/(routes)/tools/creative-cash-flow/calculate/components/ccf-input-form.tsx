@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
-import { CurrencyInput } from '@/components/ui/currency-input';
+import { Input } from '@/components/ui/input';
 import {
   Form,
   FormDescription,
@@ -97,7 +97,7 @@ export function CcfInputForm({
   return (
     <div className="p-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(calculate)} className="space-y-8">
+        <form noValidate onSubmit={form.handleSubmit(calculate)} className="space-y-8">
           <FormField
             control={form.control}
             name="start_date"
@@ -131,11 +131,11 @@ export function CcfInputForm({
                   {inputLabels.all_other_income.title}
                   <span className="ml-1 text-muted-foreground">($)</span>
                 </FormLabel>
-                <CurrencyInput
+                <Input
+                  type="number"
                   placeholder="$30,000"
-                  prefix="$"
                   value={field.value}
-                  onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                  onChange={field.onChange}
                 />
                 <FormDescription>{inputLabels.all_other_income.description}</FormDescription>
                 <FormMessage />
@@ -151,11 +151,11 @@ export function CcfInputForm({
                   {inputLabels.payroll_and_distributions.title}
                   <span className="ml-1 text-muted-foreground">($)</span>
                 </FormLabel>
-                <CurrencyInput
+                <Input
+                  type="number"
                   placeholder="$100,000"
-                  prefix="$"
                   value={field.value}
-                  onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                  onChange={field.onChange}
                 />
                 <FormDescription>
                   {inputLabels.payroll_and_distributions.description}
@@ -173,11 +173,11 @@ export function CcfInputForm({
                   {inputLabels.lifestyle_expenses_tax_rate.title}
                   <span className="ml-1 text-muted-foreground">(%)</span>
                 </FormLabel>
-                <CurrencyInput
+                <Input
+                  type="number"
                   placeholder="25%"
-                  suffix="%"
                   value={field.value}
-                  onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                  onChange={field.onChange}
                 />
                 <FormDescription>
                   {inputLabels.lifestyle_expenses_tax_rate.description}
@@ -195,11 +195,11 @@ export function CcfInputForm({
                   {inputLabels.tax_account_rate.title}
                   <span className="ml-1 text-muted-foreground">(%)</span>
                 </FormLabel>
-                <CurrencyInput
+                <Input
+                  type="number"
                   placeholder="30%"
-                  suffix="%"
                   value={field.value}
-                  onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                  onChange={field.onChange}
                 />
                 <FormDescription>{inputLabels.tax_account_rate.description}</FormDescription>
                 <FormMessage />
@@ -215,11 +215,11 @@ export function CcfInputForm({
                   {inputLabels.optimal_savings_strategy.title}
                   <span className="ml-1 text-muted-foreground">($)</span>
                 </FormLabel>
-                <CurrencyInput
+                <Input
+                  type="number"
                   placeholder="$50,000"
-                  prefix="$"
                   value={field.value}
-                  onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                  onChange={field.onChange}
                 />
                 <FormDescription>
                   {inputLabels.optimal_savings_strategy.description}
