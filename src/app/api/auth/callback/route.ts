@@ -10,8 +10,6 @@ async function exchangeCodeForSession(request: Request) {
   const code = requestURL.searchParams.get('code');
   const redirectTo = requestURL.searchParams.get('redirect_to') ?? '/login';
 
-  console.log('exchange', { code, redirectTo });
-
   try {
     if (code) {
       const supabase = createRouteHandlerClient({ cookies });
