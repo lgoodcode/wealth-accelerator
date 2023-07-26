@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
+import { CurrencyInput } from '@/components/ui/currency-input';
 import {
   Form,
   FormDescription,
@@ -174,11 +175,11 @@ export function CcfInputForm({
                   {inputLabels.lifestyle_expenses_tax_rate.title}
                   <span className="ml-1 text-muted-foreground">(%)</span>
                 </FormLabel>
-                <Input
-                  type="number"
+                <CurrencyInput
                   placeholder="25%"
+                  suffix="%"
                   value={field.value}
-                  onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  onValueChange={(value) => field.onChange(parseInt(value || '0'))}
                 />
                 <FormDescription>
                   {inputLabels.lifestyle_expenses_tax_rate.description}
@@ -196,11 +197,11 @@ export function CcfInputForm({
                   {inputLabels.tax_account_rate.title}
                   <span className="ml-1 text-muted-foreground">(%)</span>
                 </FormLabel>
-                <Input
-                  type="number"
-                  placeholder="30%"
+                <CurrencyInput
+                  placeholder="25%"
+                  suffix="%"
                   value={field.value}
-                  onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  onValueChange={(value) => field.onChange(parseInt(value || '0'))}
                 />
                 <FormDescription>{inputLabels.tax_account_rate.description}</FormDescription>
                 <FormMessage />
