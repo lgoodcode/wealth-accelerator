@@ -55,10 +55,8 @@ export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
   return (
     <div className={cn('grid gap-6', className)} {...props}>
       <div className="flex flex-col space-y-2 text-center">
-        <h1 className="text-2xl font-medium tracking-tight">Create an account</h1>
-        <p className="md:px-8 text-sm text-muted-foreground">
-          Enter your name, email, and password below to create your account
-        </p>
+        <h1 className="text-2xl font-medium tracking-tight">Reset password</h1>
+        <p className="text-sm text-muted-foreground">Enter your new password</p>
       </div>
 
       {serverMessage && (
@@ -94,7 +92,7 @@ export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
             // override default spinner color for light theme
             spinner={{ className: 'border-white border-b-primary' }}
           >
-            Sign Up
+            Reset password
           </Button>
         </form>
       </Form>
