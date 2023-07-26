@@ -1,6 +1,6 @@
 import type { RemovedTransaction } from 'plaid';
 
-import type { SupabaseServer } from '@/lib/supabase/server/createSupabase';
+import type { SupabaseServer } from '@/lib/supabase/server/create-supabase';
 
 export const removeTransactions = async (
   transactions: RemovedTransaction[],

@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-import { dollarFormatter } from '@/lib/utils/dollarFormatter';
+import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { inputLabels } from '../../labels';
 import type { CreativeCashFlowRecord } from '../../types';

@@ -1,5 +1,4 @@
-import { dollarFormatter } from '@/lib/utils/dollarFormatter';
-import { resultsLabels } from '../../labels';
+import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import {
   Table,
   TableBody,
@@ -9,6 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardDescription, CardTitle } from '@/components/ui/card';
+import { resultsLabels } from '../../labels';
 import type { CreativeCashFlowRecord } from '../../types';
 
 interface TrendsCardProps {

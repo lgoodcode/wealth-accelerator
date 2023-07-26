@@ -11,6 +11,7 @@ export declare global {
       SUPABASE_SERVICE_ROLE_KEY: string;
       SUPABASE_PROJECT_ID: string;
       NEXT_PUBLIC_SENTRY_DSN: string;
+      SENTRY_AUTH_TOKEN: string;
       PLAID_ENV: string;
       PLAID_CLIENT_NAME: string;
       PLAID_CLIENT_ID: string;

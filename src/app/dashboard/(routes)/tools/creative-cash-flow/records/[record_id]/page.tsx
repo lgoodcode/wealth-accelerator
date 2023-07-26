@@ -2,10 +2,10 @@ import { redirect } from 'next/navigation';
 import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
-import { createSupabase } from '@/lib/supabase/server/createSupabase';
-import { getUser } from '@/lib/supabase/server/getUser';
-import { isUUID } from '@/lib/utils/isUUID';
-import { isAdmin } from '@/lib/utils/isAdmin';
+import { createSupabase } from '@/lib/supabase/server/create-supabase';
+import { getUser } from '@/lib/supabase/server/get-user';
+import { isUUID } from '@/lib/utils/is-uuid';
+import { isAdmin } from '@/lib/utils/is-admin';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { InputsCard } from '../components/inputs-card';

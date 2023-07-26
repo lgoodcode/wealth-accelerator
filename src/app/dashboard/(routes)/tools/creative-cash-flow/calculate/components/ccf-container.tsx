@@ -7,20 +7,20 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
 import {
-  isInputsOpenAtom,
-  creativeCashFlowInputsAtom,
-  creativeCashFlowResultAtom,
-  resetCreativeCashFlowInputsAtom,
-} from '../../atoms';
-import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
+import {
+  isInputsOpenAtom,
+  creativeCashFlowInputsAtom,
+  creativeCashFlowResultAtom,
+  resetCreativeCashFlowInputsAtom,
+} from '../../atoms';
 import { CcfInputForm } from './ccf-input-form';
-import { useSaveRecord } from '../use-save-record';
+import { useSaveRecord } from '../hooks/use-save-record';
 import type { Transaction } from '@/lib/plaid/types/transactions';
 
 interface CcfContainerProps {

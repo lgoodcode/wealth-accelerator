@@ -1,8 +1,8 @@
 import { captureException } from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 
-import { getUser } from '@/lib/supabase/server/getUser';
-import { createSupabase } from '@/lib/supabase/server/createSupabase';
+import { getUser } from '@/lib/supabase/server/get-user';
+import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { plaidClient } from '@/lib/plaid/config';
 import type {
   ExchangeLinkTokenBody,

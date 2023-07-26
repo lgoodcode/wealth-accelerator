@@ -5,7 +5,6 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { Trash } from 'lucide-react';
 
-import { useDeleteRecord } from '../use-delete-record';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -16,6 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { useDeleteRecord } from '../hooks/use-delete-record';
 import type { CreativeCashFlowRecord } from '../../types';
 
 interface DeleteRecordButtonProps {

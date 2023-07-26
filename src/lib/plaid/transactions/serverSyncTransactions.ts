@@ -2,7 +2,7 @@ import { PlaidErrorType } from 'plaid';
 
 import { PLAID_SYNC_BATCH_SIZE } from '@/config/app';
 import { plaidClient } from '@/lib/plaid/config';
-import { createSupabase } from '@/lib/supabase/server/createSupabase';
+import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { updateTransactions } from '@/lib/plaid/transactions/updateTransactions';
 import { addTransactions } from '@/lib/plaid/transactions/addTransactions';
 import { removeTransactions } from '@/lib/plaid/transactions/removeTransactions';

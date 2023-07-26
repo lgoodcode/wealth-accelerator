@@ -5,7 +5,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
 import type { Debt } from '@/lib/types/debts';
-import { dollarFormatter } from '@/lib/utils/dollarFormatter';
+import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 
 /**
  * NOTES

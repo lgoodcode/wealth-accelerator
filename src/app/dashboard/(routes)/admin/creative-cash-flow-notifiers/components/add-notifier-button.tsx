@@ -6,8 +6,6 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
-import { useCreateNotifier } from '../use-create-notifier';
-import { hasNotifierAtom } from '../atoms';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -27,6 +25,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useCreateNotifier } from '../hooks/use-create-notifier';
+import { hasNotifierAtom } from '../atoms';
 import { notifierFormSchema, type NotifierFormType } from '../schema';
 
 export function AddNotifierButton() {

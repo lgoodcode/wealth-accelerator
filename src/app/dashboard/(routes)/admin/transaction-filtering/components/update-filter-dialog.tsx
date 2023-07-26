@@ -5,8 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
-import { useUpdateFilter } from '../use-update-filter';
-import { updateFilterFormSchema, type UpdateFilterFormType } from '../schemas';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -31,6 +29,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useUpdateFilter } from '../hooks/use-update-filter';
+import { updateFilterFormSchema, type UpdateFilterFormType } from '../schemas';
 import { Category, type Filter } from '@/lib/plaid/types/transactions';
 
 interface UpdateFilterProps {

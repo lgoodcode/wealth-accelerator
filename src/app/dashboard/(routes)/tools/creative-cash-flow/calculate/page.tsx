@@ -1,12 +1,12 @@
 import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
-import { getUser } from '@/lib/supabase/server/getUser';
+import { getUser } from '@/lib/supabase/server/get-user';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { CcfContainer } from './components/ccf-container';
 import { CcfResults } from './components/ccf-results';
-import { getData } from './getData';
+import { getData } from './functions/get-data';
 
 export const metadata: Metadata = {
   title: 'Creative Cash Flow',

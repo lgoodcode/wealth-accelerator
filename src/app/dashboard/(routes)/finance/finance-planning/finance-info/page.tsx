@@ -1,7 +1,7 @@
 import { captureException } from '@sentry/nextjs';
 
-import { createSupabase } from '@/lib/supabase/server/createSupabase';
-import { getUser } from '@/lib/supabase/server/getUser';
+import { createSupabase } from '@/lib/supabase/server/create-supabase';
+import { getUser } from '@/lib/supabase/server/get-user';
 import { Separator } from '@/components/ui/separator';
 import { PageError } from '@/components/page-error';
 import { FinanceInfoForm } from './finance-info-form';

@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase/client';
 import { useSetAtom } from 'jotai';
-import { removeCreativeCashFlowRecordAtom } from '../atoms';
+import { removeCreativeCashFlowRecordAtom } from '../../atoms';
 
 export const useDeleteRecord = () => {
   const removeRecord = useSetAtom(removeCreativeCashFlowRecordAtom);

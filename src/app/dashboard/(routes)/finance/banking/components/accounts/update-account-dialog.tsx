@@ -32,7 +32,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useUpdateAccount } from '../../use-update-account';
+import { useUpdateAccount } from '../../hooks/use-update-account';
 import { updateAccountFormSchema, type UpdateAccountType } from '../../schemas';
 import type { Account } from '@/lib/plaid/types/institutions';
 

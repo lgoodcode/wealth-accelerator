@@ -57,6 +57,9 @@ module.exports = withBundleAnalyzer(
       silent: true,
       authToken: process.env.SENTRY_AUTH_TOKEN,
     },
-    { hideSourcemaps: true, tunnelRoute: '/sentry' }
+    {
+      hideSourcemaps: true,
+      tunnelRoute: '/sentry',
+    }
   )
 );

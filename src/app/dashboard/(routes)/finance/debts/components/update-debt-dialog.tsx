@@ -23,7 +23,7 @@ import {
   FormDescription,
   FormMessage,
 } from '@/components/ui/form';
-import { useUpdateDebt } from '../use-update-debt';
+import { useUpdateDebt } from '../hooks/use-update-debt';
 import { debtFormSchema, type DebtFormType } from '../schemas';
 import type { Debt } from '@/lib/types/debts';
 

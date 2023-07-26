@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase/client';
-import type { UpdateAccountType } from './schemas';
+import type { UpdateAccountType } from '../schemas';
 import type { Account } from '@/lib/plaid/types/institutions';
 
 export const useUpdateAccount = () => {

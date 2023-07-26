@@ -1,8 +1,8 @@
 import { captureException, setUser } from '@sentry/nextjs';
 import { cookies } from 'next/headers';
 
-import { createSupabase } from './createSupabase';
-import { parseAuthCookie } from './parseAuthCookie';
+import { createSupabase } from './create-supabase';
+import { parseAuthCookie } from './parse-auth-cookie';
 
 /**
  * Used in server components to retrieve the user from the Supabase server using the current auth cookie.

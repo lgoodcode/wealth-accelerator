@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
-import { getUser } from '@/lib/supabase/server/getUser';
+import { getUser } from '@/lib/supabase/server/get-user';
 import { plaidClient, createLinkTokenRequest } from '@/lib/plaid/config';
 import type { CreateLinkTokenResponse } from '@/lib/plaid/types/link-token';
 

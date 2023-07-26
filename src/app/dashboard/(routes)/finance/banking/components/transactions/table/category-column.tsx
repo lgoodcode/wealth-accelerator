@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { categoryOptions } from './column-options';
-import { useUpdateTransaction } from '../../../use-update-transaction';
+import { useUpdateTransaction } from '../../../hooks/use-update-transaction';
 import { Category, type TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 import { captureException } from '@sentry/nextjs';
 

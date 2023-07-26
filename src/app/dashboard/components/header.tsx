@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { useUser } from '@/hooks/use-user';
-import { isAdmin } from '@/lib/utils/isAdmin';
+import { isAdmin } from '@/lib/utils/is-admin';
 import { Nav } from './nav';
 import { ThemeToggle } from './theme-toggle';
 import { UserNav } from './user-nav';

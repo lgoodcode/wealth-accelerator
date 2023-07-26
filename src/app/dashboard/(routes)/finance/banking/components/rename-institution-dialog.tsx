@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { renameFormSchema, type RenameFormType } from '../schemas';
-import { useRenameInstitution } from '../use-rename-institution';
+import { useRenameInstitution } from '../hooks/use-rename-institution';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 
 interface RenameInstitutionDialogProps {

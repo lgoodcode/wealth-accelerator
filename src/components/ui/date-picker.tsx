@@ -23,7 +23,7 @@ export function DatePicker({
   date,
   onSelect,
   calendarProps,
-  placeholder = 'Select a date',
+  placeholder = 'Pick a date',
   variant = 'outline',
   onOpenChange,
   ...props

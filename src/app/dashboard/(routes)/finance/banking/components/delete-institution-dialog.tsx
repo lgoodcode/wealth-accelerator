@@ -11,7 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useDeleteInstitution } from '../use-delete-institution';
+import { useDeleteInstitution } from '../hooks/use-delete-institution';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 
 interface DeleteInstitutionDialogProps {

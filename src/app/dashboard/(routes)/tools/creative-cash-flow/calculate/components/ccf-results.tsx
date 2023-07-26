@@ -5,8 +5,6 @@ import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import type { CountUpProps } from 'react-countup/build/CountUp';
 
-import { inputLabels, resultsLabels } from '../../labels';
-import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../../atoms';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -16,6 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { inputLabels, resultsLabels } from '../../labels';
+import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../../atoms';
 
 const ANIMATION_PROPS = {
   initial: { opacity: 0, y: 20 },

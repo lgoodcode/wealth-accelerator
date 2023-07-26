@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
-import { getUser } from '@/lib/supabase/server/getUser';
-import { isAdmin } from '@/lib/utils/isAdmin';
+import { getUser } from '@/lib/supabase/server/get-user';
+import { isAdmin } from '@/lib/utils/is-admin';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
