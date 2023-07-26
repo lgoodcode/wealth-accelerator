@@ -27,6 +27,7 @@ import {
 } from '../../atoms';
 import { inputsFormSchema, type InputsFormSchemaType } from '../schema';
 import type { Transaction } from '@/lib/plaid/types/transactions';
+import { moneyRound } from '@/lib/utils/money-round';
 
 interface CcfInputsFormProps {
   user_id: string;
@@ -135,7 +136,7 @@ export function CcfInputForm({
                   type="number"
                   placeholder="$30,000"
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
                 />
                 <FormDescription>{inputLabels.all_other_income.description}</FormDescription>
                 <FormMessage />
@@ -155,7 +156,7 @@ export function CcfInputForm({
                   type="number"
                   placeholder="$100,000"
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
                 />
                 <FormDescription>
                   {inputLabels.payroll_and_distributions.description}
@@ -177,7 +178,7 @@ export function CcfInputForm({
                   type="number"
                   placeholder="25%"
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(e) => field.onChange(parseInt(e.target.value))}
                 />
                 <FormDescription>
                   {inputLabels.lifestyle_expenses_tax_rate.description}
@@ -199,7 +200,7 @@ export function CcfInputForm({
                   type="number"
                   placeholder="30%"
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(e) => field.onChange(parseInt(e.target.value))}
                 />
                 <FormDescription>{inputLabels.tax_account_rate.description}</FormDescription>
                 <FormMessage />
@@ -219,7 +220,7 @@ export function CcfInputForm({
                   type="number"
                   placeholder="$50,000"
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
                 />
                 <FormDescription>
                   {inputLabels.optimal_savings_strategy.description}
