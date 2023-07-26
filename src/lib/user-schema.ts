@@ -26,8 +26,6 @@ export const registerUserFormSchema = z.object({
     }),
 });
 
-export type RegisterUserFormType = z.infer<typeof registerUserFormSchema>;
-
 export const updateUserFormSchema = registerUserFormSchema
   .omit({
     password: true,
@@ -36,4 +34,18 @@ export const updateUserFormSchema = registerUserFormSchema
     role: z.nativeEnum(Role),
   });
 
+export const sendResetPasswordEmailSchema = registerUserFormSchema.pick({
+  email: true,
+});
+
+export const resetUserPasswordSchema = registerUserFormSchema.pick({
+  password: true,
+});
+
+export type RegisterUserFormType = z.infer<typeof registerUserFormSchema>;
+
 export type UpdateUserFormType = z.infer<typeof updateUserFormSchema>;
+
+export type SendResetPasswordEmailFormType = z.infer<typeof sendResetPasswordEmailSchema>;
+
+export type ResetUserPasswordFormType = z.infer<typeof resetUserPasswordSchema>;
