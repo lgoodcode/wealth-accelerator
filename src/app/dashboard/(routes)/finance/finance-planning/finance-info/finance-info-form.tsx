@@ -220,6 +220,26 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="default_tax_rate"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>
+                Default Tax Bracket
+                <span className="ml-1 text-muted-foreground">(%)</span>
+              </FormLabel>
+              <CurrencyInput
+                placeholder="25%"
+                suffix="%"
+                value={field.value}
+                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+              />
+              <FormDescription>Default tax account rate for the CCF inputs.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type="submit" loading={form.formState.isSubmitting}>
           Save changes
         </Button>

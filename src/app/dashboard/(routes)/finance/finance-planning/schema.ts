@@ -1,11 +1,9 @@
 import { z } from 'zod';
 
 export const FinanceInfoSchema = z.object({
-  start_date: z
-    .date({
-      required_error: 'Select a date.',
-    })
-    .refine((val) => val.getTime() >= new Date().getTime(), 'Date cannot be in the past'),
+  start_date: z.date({
+    required_error: 'Select a date.',
+  }),
   stop_invest: z
     .number({
       required_error: 'Enter the year',
@@ -43,6 +41,12 @@ export const FinanceInfoSchema = z.object({
   ytd_collections: z.number({
     required_error: 'Enter the amount',
   }),
+  default_tax_rate: z
+    .number({
+      required_error: 'Enter the tax rate percentage',
+    })
+    .min(0, 'Enter a positive percentage')
+    .max(101, 'Enter a valid percentage'),
 });
 
 export const RatesFormSchema = (numOfYears: number) =>
