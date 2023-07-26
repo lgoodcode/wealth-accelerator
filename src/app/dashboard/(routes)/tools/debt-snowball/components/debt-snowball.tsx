@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DebtSnowballInputs } from './debt-snowball-inputs';
 import { DebtSnowballResults } from './debt-snowball-results';
 import { debtCalculationResultsAtom } from '../atoms';
+import { debtsAtom } from '../../../finance/debts/atoms';
 import type { Debt } from '@/lib/types/debts';
 
 enum TabsValue {
@@ -20,6 +21,7 @@ interface DebtSnowballProps {
 
 export function DebtSnowball({ debts }: DebtSnowballProps) {
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
+  const setDebts = useSetAtom(debtsAtom);
   const debtCalculationResults = useAtomValue(debtCalculationResultsAtom);
 
   useEffect(() => {
@@ -27,6 +29,18 @@ export function DebtSnowball({ debts }: DebtSnowballProps) {
       setActiveTab(TabsValue.Results);
     }
   }, [debtCalculationResults]);
+
+  // If the debts page has not been visited, we use the data retrieved from the sever
+  // Otherwise, we use the data from the debts page so that when any changes are made
+  // it will be synced on the client-side for debt snowball and debts page
+  useEffect(() => {
+    setDebts((curr) => {
+      if (!curr) {
+        return debts;
+      }
+      return curr;
+    });
+  }, [debts]);
 
   return (
     <Tabs
