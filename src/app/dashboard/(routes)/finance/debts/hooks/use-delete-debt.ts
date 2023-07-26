@@ -1,7 +1,7 @@
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
-import { removeDebtAtom } from './atoms';
+import { removeDebtAtom } from '../atoms';
 
 export const useDeleteDebt = () => {
   const removeDebt = useSetAtom(removeDebtAtom);

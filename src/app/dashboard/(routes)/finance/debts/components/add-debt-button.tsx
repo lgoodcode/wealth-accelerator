@@ -24,7 +24,7 @@ import {
   FormDescription,
   FormMessage,
 } from '@/components/ui/form';
-import { useCreateDebt } from '../use-create-debt';
+import { useCreateDebt } from '../hooks/use-create-debt';
 import { debtFormSchema, DebtFormType } from '../schemas';
 
 export function AddDebtButton() {

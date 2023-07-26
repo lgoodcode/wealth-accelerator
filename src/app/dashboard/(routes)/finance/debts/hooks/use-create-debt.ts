@@ -2,7 +2,7 @@ import { useSetAtom } from 'jotai';
 
 import { useUser } from '@/hooks/use-user';
 import { supabase } from '@/lib/supabase/client';
-import { addDebtAtom } from './atoms';
+import { addDebtAtom } from '../atoms';
 import type { Debt } from '@/lib/types/debts';
 
 export const useCreateDebt = () => {

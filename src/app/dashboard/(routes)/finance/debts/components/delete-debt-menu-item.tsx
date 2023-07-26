@@ -4,7 +4,7 @@ import { Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { useDeleteDebt } from '../use-delete-debt';
+import { useDeleteDebt } from '../hooks/use-delete-debt';
 import type { Debt } from '@/lib/types/debts';
 
 interface DeleteFilterMenuItemProps {
