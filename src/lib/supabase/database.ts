@@ -148,6 +148,7 @@ export interface Database {
       }
       personal_finance: {
         Row: {
+          default_tax_rate: number
           id: number
           money_needed_to_live: number
           premium_deposit: number
@@ -161,6 +162,7 @@ export interface Database {
           ytd_collections: number
         }
         Insert: {
+          default_tax_rate?: number
           id?: number
           money_needed_to_live?: number
           premium_deposit?: number
@@ -174,6 +176,7 @@ export interface Database {
           ytd_collections?: number
         }
         Update: {
+          default_tax_rate?: number
           id?: number
           money_needed_to_live?: number
           premium_deposit?: number

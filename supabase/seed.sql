@@ -99,7 +99,8 @@ CREATE TABLE personal_finance (
   tax_bracket smallint NOT NULL DEFAULT 25,
   tax_bracket_future smallint NOT NULL DEFAULT 30,
   premium_deposit int NOT NULL DEFAULT 50000,
-  ytd_collections int NOT NULL DEFAULT 0
+  ytd_collections int NOT NULL DEFAULT 0,
+  default_tax_rate smallint NOT NULL DEFAULT 25,
 );
 
 ALTER TABLE public.personal_finance ENABLE ROW LEVEL SECURITY;

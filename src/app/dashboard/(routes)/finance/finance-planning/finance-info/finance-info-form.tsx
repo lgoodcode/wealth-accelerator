@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/form';
 import { useUpdateFinanceInfo } from '../use-update-finance-info';
 import { FinanceInfoSchema, type FinanceInfoSchemaType as FinanceInfoSchemaType } from '../schema';
+import { moneyRound } from '@/lib/utils/money-round';
 
 // Override the type for the start_date because Supabase returns a string.
 interface FinanceInfoFormProps {
@@ -52,7 +53,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="start_date"
@@ -123,11 +124,11 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                 Money Needed To Live
                 <span className="ml-1 text-muted-foreground">($)</span>
               </FormLabel>
-              <CurrencyInput
+              <Input
+                type="number"
                 placeholder="$100,000"
-                prefix="$"
                 value={field.value}
-                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
               />
               <FormDescription>
                 Index Fund ROR Needed to Equal Life Insurance Income Distributions
@@ -185,11 +186,11 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                 Premium Deposit
                 <span className="ml-1 text-muted-foreground">($)</span>
               </FormLabel>
-              <CurrencyInput
-                placeholder="$50,000"
-                prefix="$"
+              <Input
+                type="number"
+                placeholder="$20,000"
                 value={field.value}
-                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
               />
               <FormDescription>
                 The amount of money you want to deposit into your life insurance policy.
@@ -207,15 +208,35 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                 Year to Date Collections
                 <span className="ml-1 text-muted-foreground">($)</span>
               </FormLabel>
-              <CurrencyInput
-                placeholder="$25,000"
-                prefix="$"
+              <Input
+                type="number"
+                placeholder="$30,000"
                 value={field.value}
-                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
               />
               <FormDescription>
                 The amount of money you want you have that is not included in the transactions.
               </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="default_tax_rate"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>
+                Default Tax Bracket
+                <span className="ml-1 text-muted-foreground">(%)</span>
+              </FormLabel>
+              <CurrencyInput
+                placeholder="25%"
+                suffix="%"
+                value={field.value}
+                onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+              />
+              <FormDescription>Default tax account rate for the CCF inputs.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

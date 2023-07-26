@@ -71,7 +71,7 @@ export function RenameInstitutionDialog({
           <DialogDescription>Set a new name for this institution.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleRename)}>
+          <form noValidate onSubmit={form.handleSubmit(handleRename)}>
             <FormField
               control={form.control}
               name="name"

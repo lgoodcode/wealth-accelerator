@@ -22,7 +22,7 @@ const getCollections = async (supabase: SupabaseServer, user_id: string) => {
   // Get the users year to date collections value to add to the Year to Date results
   const { error: collectionsError, data: collectionsData } = await supabase
     .from('personal_finance')
-    .select('ytd_collections')
+    .select('ytd_collections, default_tax_rate')
     .eq('user_id', user_id)
     .single();
 
@@ -30,13 +30,13 @@ const getCollections = async (supabase: SupabaseServer, user_id: string) => {
     throw collectionsError || new Error('No collectionsData returned');
   }
 
-  return collectionsData.ytd_collections;
+  return collectionsData;
 };
 
 export const getData = async (user_id: string) => {
   try {
     const supabase = createSupabase();
-    const [transactions, ytd_collections] = await Promise.all([
+    const [transactions, collections] = await Promise.all([
       getTransactions(supabase, user_id),
       getCollections(supabase, user_id),
     ]);
@@ -45,7 +45,8 @@ export const getData = async (user_id: string) => {
       error: null,
       data: {
         transactions,
-        ytd_collections,
+        ytd_collections: collections.ytd_collections,
+        default_tax_rate: collections.default_tax_rate,
       },
     };
   } catch (error) {

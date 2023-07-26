@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
+import { Input } from '@/components/ui/input';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import {
   Form,
@@ -27,6 +28,7 @@ import {
 } from '../../atoms';
 import { inputsFormSchema, type InputsFormSchemaType } from '../schema';
 import type { Transaction } from '@/lib/plaid/types/transactions';
+import { moneyRound } from '@/lib/utils/money-round';
 
 interface CcfInputsFormProps {
   user_id: string;
@@ -35,15 +37,24 @@ interface CcfInputsFormProps {
     personal: Transaction[];
   };
   ytd_collections: number;
+  default_tax_rate: number;
 }
 
-export function CcfInputForm({ user_id, transactions, ytd_collections }: CcfInputsFormProps) {
+export function CcfInputForm({
+  user_id,
+  transactions,
+  ytd_collections,
+  default_tax_rate,
+}: CcfInputsFormProps) {
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
   const [creativeCashFlowInputs, setCreativeCashFlowInputs] = useAtom(creativeCashFlowInputsAtom);
   const setCreativeCashFlowResults = useSetAtom(creativeCashFlowResultAtom);
   const form = useForm<InputsFormSchemaType>({
     resolver: zodResolver(inputsFormSchema),
-    defaultValues: creativeCashFlowInputs,
+    defaultValues: {
+      ...creativeCashFlowInputs,
+      tax_account_rate: creativeCashFlowInputs.tax_account_rate || default_tax_rate,
+    },
   });
   // Watch the values of the form to update the inputs atom when the form changes
   const watchValues = form.watch();
@@ -88,7 +99,7 @@ export function CcfInputForm({ user_id, transactions, ytd_collections }: CcfInpu
   return (
     <div className="p-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(calculate)} className="space-y-8">
+        <form noValidate onSubmit={form.handleSubmit(calculate)} className="space-y-8">
           <FormField
             control={form.control}
             name="start_date"
@@ -122,11 +133,11 @@ export function CcfInputForm({ user_id, transactions, ytd_collections }: CcfInpu
                   {inputLabels.all_other_income.title}
                   <span className="ml-1 text-muted-foreground">($)</span>
                 </FormLabel>
-                <CurrencyInput
+                <Input
+                  type="number"
                   placeholder="$30,000"
-                  prefix="$"
                   value={field.value}
-                  onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                  onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
                 />
                 <FormDescription>{inputLabels.all_other_income.description}</FormDescription>
                 <FormMessage />
@@ -142,11 +153,11 @@ export function CcfInputForm({ user_id, transactions, ytd_collections }: CcfInpu
                   {inputLabels.payroll_and_distributions.title}
                   <span className="ml-1 text-muted-foreground">($)</span>
                 </FormLabel>
-                <CurrencyInput
+                <Input
+                  type="number"
                   placeholder="$100,000"
-                  prefix="$"
                   value={field.value}
-                  onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                  onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
                 />
                 <FormDescription>
                   {inputLabels.payroll_and_distributions.description}
@@ -187,7 +198,7 @@ export function CcfInputForm({ user_id, transactions, ytd_collections }: CcfInpu
                   <span className="ml-1 text-muted-foreground">(%)</span>
                 </FormLabel>
                 <CurrencyInput
-                  placeholder="30%"
+                  placeholder="25%"
                   suffix="%"
                   value={field.value}
                   onValueChange={(value) => field.onChange(parseInt(value || '0'))}
@@ -206,11 +217,11 @@ export function CcfInputForm({ user_id, transactions, ytd_collections }: CcfInpu
                   {inputLabels.optimal_savings_strategy.title}
                   <span className="ml-1 text-muted-foreground">($)</span>
                 </FormLabel>
-                <CurrencyInput
+                <Input
+                  type="number"
                   placeholder="$50,000"
-                  prefix="$"
                   value={field.value}
-                  onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                  onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
                 />
                 <FormDescription>
                   {inputLabels.optimal_savings_strategy.description}

@@ -97,7 +97,6 @@ export function UpdateFilterDialog({ open, onOpenChange, debt }: UpdateFilterPro
                     <Input
                       type="number"
                       placeholder="$5,000"
-                      prefix="$"
                       value={field.value}
                       onChange={(e) => field.onChange(parseFloat(e.target.value))}
                     />
@@ -120,7 +119,6 @@ export function UpdateFilterDialog({ open, onOpenChange, debt }: UpdateFilterPro
                     <Input
                       type="number"
                       placeholder="$450"
-                      prefix="$"
                       value={field.value}
                       onChange={(e) => field.onChange(parseFloat(e.target.value))}
                     />
