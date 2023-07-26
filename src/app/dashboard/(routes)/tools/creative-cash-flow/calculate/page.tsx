@@ -33,6 +33,7 @@ export default async function CreativeCashFlowCalculatePage() {
         user_id={user.id}
         transactions={data.transactions}
         ytd_collections={data.ytd_collections}
+        default_tax_rate={data.default_tax_rate}
       />
       <CcfResults />
     </div>

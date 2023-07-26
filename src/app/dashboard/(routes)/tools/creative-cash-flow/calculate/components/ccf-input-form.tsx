@@ -35,15 +35,24 @@ interface CcfInputsFormProps {
     personal: Transaction[];
   };
   ytd_collections: number;
+  default_tax_rate: number;
 }
 
-export function CcfInputForm({ user_id, transactions, ytd_collections }: CcfInputsFormProps) {
+export function CcfInputForm({
+  user_id,
+  transactions,
+  ytd_collections,
+  default_tax_rate,
+}: CcfInputsFormProps) {
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
   const [creativeCashFlowInputs, setCreativeCashFlowInputs] = useAtom(creativeCashFlowInputsAtom);
   const setCreativeCashFlowResults = useSetAtom(creativeCashFlowResultAtom);
   const form = useForm<InputsFormSchemaType>({
     resolver: zodResolver(inputsFormSchema),
-    defaultValues: creativeCashFlowInputs,
+    defaultValues: {
+      ...creativeCashFlowInputs,
+      tax_account_rate: creativeCashFlowInputs.tax_account_rate || default_tax_rate,
+    },
   });
   // Watch the values of the form to update the inputs atom when the form changes
   const watchValues = form.watch();

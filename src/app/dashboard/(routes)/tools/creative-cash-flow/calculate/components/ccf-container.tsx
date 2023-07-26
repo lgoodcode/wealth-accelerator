@@ -30,9 +30,15 @@ interface CcfContainerProps {
     personal: Transaction[];
   };
   ytd_collections: number;
+  default_tax_rate: number;
 }
 
-export function CcfContainer({ user_id, transactions, ytd_collections }: CcfContainerProps) {
+export function CcfContainer({
+  user_id,
+  transactions,
+  ytd_collections,
+  default_tax_rate,
+}: CcfContainerProps) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [isInputsOpen, setIsInputsOpen] = useAtom(isInputsOpenAtom);
@@ -90,6 +96,7 @@ export function CcfContainer({ user_id, transactions, ytd_collections }: CcfCont
                 user_id={user_id}
                 transactions={transactions}
                 ytd_collections={ytd_collections}
+                default_tax_rate={default_tax_rate}
               />
             </AccordionContent>
           </AccordionItem>

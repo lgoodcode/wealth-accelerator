@@ -14,7 +14,7 @@ const defaultValues = {
   all_other_income: 0,
   payroll_and_distributions: 0,
   lifestyle_expenses_tax_rate: 25,
-  tax_account_rate: 30,
+  tax_account_rate: 0,
   optimal_savings_strategy: 0,
 };
 
