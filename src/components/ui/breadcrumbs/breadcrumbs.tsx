@@ -6,12 +6,21 @@ import './breadcrumbs.css';
 interface BreadcrumbProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   href?: string;
+  active?: boolean;
 }
 
-export const BreadcrumbItem = ({ children, className = '', href }: BreadcrumbProps) => {
+export const BreadcrumbItem = ({ children, className, href, active }: BreadcrumbProps) => {
   if (href) {
     return (
-      <li className={cn('flex items-center select-none', className)}>
+      <li
+        className={cn(
+          'select-none px-4 py-2 hover:text-accent-foreground hover:bg-accent inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
+          className,
+          {
+            'text-accent-foreground/70': !active,
+          }
+        )}
+      >
         <Link href={href} className="flex items-center cursor-pointer">
           {children}
         </Link>
@@ -19,10 +28,18 @@ export const BreadcrumbItem = ({ children, className = '', href }: BreadcrumbPro
     );
   }
 
-  return <li className={cn('flex items-center', className)}>{children}</li>;
+  return (
+    <li
+      className={cn('flex items-center', className, {
+        'text-accent-foreground/70': !active,
+      })}
+    >
+      {children}
+    </li>
+  );
 };
 
-export const Breadcrumbs = ({ children, className = '' }: BreadcrumbProps) => {
+export const Breadcrumbs = ({ children, className }: BreadcrumbProps) => {
   return (
     <div className={cn('breadcrumbs overflow-x-auto py-2 text-sm', className)}>
       <ul className="flex items-center whitespace-nowrap min-h-fit">{children}</ul>
