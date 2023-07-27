@@ -873,3 +873,124 @@ END;
 $$
 LANGUAGE plpgsql SECURITY definer;
 
+
+CREATE OR REPLACE FUNCTION get_user_policy_company_info(user_id uuid)
+RETURNS TABLE (
+    result jsonb
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT jsonb_build_object(
+        'user', jsonb_build_object(
+            'id', u.id,
+            'name', u.name
+        ),
+        'policy', jsonb_build_object(
+            'id', ip.id,
+            'name', ip.name
+        ),
+        'company', jsonb_build_object(
+            'id', ic.id,
+            'name', ic.name
+        )
+    )
+    FROM users AS u
+    INNER JOIN insurance_policies AS ip ON u.id = ip.user_id
+    INNER JOIN insurance_companies AS ic ON ip.company_id = ic.id
+    WHERE u.id = user_id;
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+
+
+
+CREATE OR REPLACE FUNCTION get_user_insurance_policies(arg_user_id uuid)
+RETURNS TABLE (
+    id int,
+    user_id uuid,
+    user_name text,
+    company_id int,
+    company text,
+    name text,
+    rows json[]
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        ip.id,
+        ip.user_id,
+        ip.name AS user_name,
+        ip.company_id,
+        ic.name AS company,
+        ip.name,
+        json_agg(json_build_object(
+            'id', ipr.id,
+            'policy_id', ipr.policy_id,
+            'year', ipr.year,
+            'premium', ipr.premium,
+            'loan_interest_rate', ipr.loan_interest_rate,
+            'age_end_year', ipr.age_end_year,
+            'net_cash_value_end_year', ipr.net_cash_value_end_year,
+            'net_death_benefit_end_year', ipr.net_death_benefit_end_year,
+            'annual_net_outlay', ipr.annual_net_outlay,
+            'cumulative_net_outlay', ipr.cumulative_net_outlay,
+            'net_annual_cash_value_increase', ipr.net_annual_cash_value_increase
+        )) AS rows
+    FROM insurance_policies AS ip
+    INNER JOIN insurance_companies AS ic ON ip.company_id = ic.id
+    LEFT JOIN insurance_policy_rows AS ipr ON ip.id = ipr.policy_id
+    WHERE ip.user_id = arg_user_id
+    GROUP BY ip.id, ic.name;
+END;
+LANGUAGE plpgsql SECURITY definer;
+
+
+CREATE OR REPLACE FUNCTION get_users_insurance_policies()
+RETURNS TABLE (
+    result jsonb
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT jsonb_build_object(
+        'user', jsonb_build_object(
+            'id', u.id,
+            'name', u.name
+        ),
+        'policies', (
+            SELECT jsonb_agg(
+                jsonb_build_object(
+                    'id', ip.id,
+                    'company_id', ic.id,
+                    'name', ip.name,
+                    'rows', (
+                        SELECT jsonb_agg(jsonb_build_object(
+                            'id', ipr.id,
+                            'policy_id', ipr.policy_id,
+                            'year', ipr.year,
+                            'premium', ipr.premium,
+                            'loan_interest_rate', ipr.loan_interest_rate,
+                            'age_end_year', ipr.age_end_year,
+                            'net_cash_value_end_year', ipr.net_cash_value_end_year,
+                            'net_death_benefit_end_year', ipr.net_death_benefit_end_year,
+                            'annual_net_outlay', ipr.annual_net_outlay,
+                            'cumulative_net_outlay', ipr.cumulative_net_outlay,
+                            'net_annual_cash_value_increase', ipr.net_annual_cash_value_increase
+                        ))
+                        FROM insurance_policy_rows AS ipr
+                        WHERE ipr.policy_id = ip.id
+                    )
+                )
+            )
+            FROM insurance_policies AS ip
+            INNER JOIN insurance_companies AS ic ON ip.company_id = ic.id
+            WHERE ip.user_id = u.id
+        )
+    )
+    FROM users AS u;
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+

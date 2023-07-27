@@ -6,7 +6,8 @@ import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { PageError } from '@/components/page-error';
 import { Breadcrumbs, BreadcrumbItem } from '@/components/ui/breadcrumbs';
 import { Separator } from '@/components/ui/separator';
-import { UsersInsurance } from './components/users-insurance';
+import { UsersInsurancePolicies } from './components/users-insurance-policies';
+import type { UserInsurancePolicyView } from './types';
 
 export const metadata: Metadata = {
   title: 'Insurance Policies',
@@ -14,16 +15,15 @@ export const metadata: Metadata = {
 
 export default async function InsurancePolicies() {
   const supabase = createSupabase();
-  // const { error, data } = await supabase
-  //   .from('users')
-  //   .select('*')
-  //   .order('created_at', { ascending: true });
+  const { error, data } = await supabase.rpc('get_all_users_policies_info');
 
-  // if (error) {
-  //   console.error(error);
-  //   captureException(error);
-  //   return <PageError />;
-  // }
+  if (error) {
+    console.error(error);
+    captureException(error);
+    return <PageError />;
+  }
+
+  const userInsurancePolicyViews = data as unknown as UserInsurancePolicyView[];
 
   return (
     <div className="p-8">
@@ -41,7 +41,7 @@ export default async function InsurancePolicies() {
         <Separator />
       </div>
       <div className="flex justify-center">
-        <UsersInsurance />
+        <UsersInsurancePolicies data={userInsurancePolicyViews} />
       </div>
     </div>
   );

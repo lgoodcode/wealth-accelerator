@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FacetedFilter } from './faceted-filter';
 import { roleOptions } from './column-options';
+// import { AddFilterButton } from '../add-filter-button';
 
 interface TableToolbarProps {
   table: Table<User>;
@@ -39,6 +40,8 @@ export function TableToolbar({ table }: TableToolbarProps) {
           </Button>
         )}
       </div>
+
+      {/* <AddFilterButton /> */}
     </div>
   );
 }
