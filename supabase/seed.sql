@@ -294,7 +294,7 @@ CREATE TABLE plaid_transactions (
   name text NOT NULL,
   amount decimal(10,2) NOT NULL,
   category category NOT NULL,
-  date date NOT NULL
+  date timestamp with time zone NOT NULL
 );
 
 -- Index the name column, which is text, to optimize for case-insensitive LIKE queries
