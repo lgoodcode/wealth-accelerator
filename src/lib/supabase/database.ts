@@ -401,6 +401,12 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: number[]
       }
+      get_all_users_policies_info: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          result: Json
+        }[]
+      }
       get_creative_cash_flow_record: {
         Args: {
           record_id: string
@@ -440,6 +446,26 @@ export interface Database {
           category: Database["public"]["Enums"]["category"]
           date: string
           account: string
+        }[]
+      }
+      get_user_insurance_policies: {
+        Args: {
+          arg_user_id: string
+        }
+        Returns: {
+          id: number
+          user_id: string
+          user_name: string
+          company_id: number
+          company: string
+          name: string
+          rows: Json[]
+        }[]
+      }
+      get_users_insurance_policies: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          result: Json
         }[]
       }
       gtrgm_compress: {
