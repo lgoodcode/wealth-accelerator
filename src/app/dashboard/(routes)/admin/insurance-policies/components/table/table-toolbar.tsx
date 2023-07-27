@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FacetedFilter } from './faceted-filter';
 import { roleOptions } from './column-options';
+// import { AddFilterButton } from '../add-filter-button';
 
 interface TableToolbarProps {
   table: Table<User>;
@@ -19,7 +20,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
-        <Input
+        {/* <Input
           placeholder="Filter users..."
           value={(table.getColumn('email')?.getFilterValue() as string) || ''}
           onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
@@ -37,8 +38,10 @@ export function TableToolbar({ table }: TableToolbarProps) {
             Reset
             <X className="ml-2 h-4 w-4" />
           </Button>
-        )}
+        )} */}
       </div>
+
+      {/* <AddFilterButton /> */}
     </div>
   );
 }

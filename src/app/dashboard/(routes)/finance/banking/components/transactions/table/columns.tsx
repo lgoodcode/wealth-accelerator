@@ -109,9 +109,7 @@ export const columns: ColumnDef<TransactionWithAccountName>[] = [
       );
     },
     filterFn: (row, id, value: DateRange) => {
-      // Because the date is stored in regular date format, we need to set the hours to 24
-      // to ensure that the date is the same as the date selected.
-      const date = new Date(new Date(row.getValue<string>(id)).setHours(24));
+      const date = new Date(row.getValue<string>(id));
 
       if (value.from && value.to) {
         return date >= value.from && date <= value.to;

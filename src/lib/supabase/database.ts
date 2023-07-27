@@ -146,6 +146,81 @@ export interface Database {
           user_id?: string
         }
       }
+      insurance_companies: {
+        Row: {
+          id: number
+          name: string
+        }
+        Insert: {
+          id?: number
+          name: string
+        }
+        Update: {
+          id?: number
+          name?: string
+        }
+      }
+      insurance_policies: {
+        Row: {
+          company_id: number
+          id: number
+          name: string
+          user_id: string
+        }
+        Insert: {
+          company_id: number
+          id?: number
+          name: string
+          user_id: string
+        }
+        Update: {
+          company_id?: number
+          id?: number
+          name?: string
+          user_id?: string
+        }
+      }
+      insurance_policy_rows: {
+        Row: {
+          age_end_year: number
+          annual_net_outlay: number
+          cumulative_net_outlay: number
+          id: number
+          loan_interest_rate: number
+          net_annual_cash_value_increase: number
+          net_cash_value_end_year: number
+          net_death_benefit_end_year: number
+          policy_id: number
+          premium: number
+          year: number
+        }
+        Insert: {
+          age_end_year: number
+          annual_net_outlay?: number
+          cumulative_net_outlay?: number
+          id?: number
+          loan_interest_rate?: number
+          net_annual_cash_value_increase?: number
+          net_cash_value_end_year: number
+          net_death_benefit_end_year: number
+          policy_id: number
+          premium?: number
+          year: number
+        }
+        Update: {
+          age_end_year?: number
+          annual_net_outlay?: number
+          cumulative_net_outlay?: number
+          id?: number
+          loan_interest_rate?: number
+          net_annual_cash_value_increase?: number
+          net_cash_value_end_year?: number
+          net_death_benefit_end_year?: number
+          policy_id?: number
+          premium?: number
+          year?: number
+        }
+      }
       personal_finance: {
         Row: {
           default_tax_rate: number
@@ -326,6 +401,12 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: number[]
       }
+      get_all_users_policies_info: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          result: Json
+        }[]
+      }
       get_creative_cash_flow_record: {
         Args: {
           record_id: string
@@ -365,6 +446,26 @@ export interface Database {
           category: Database["public"]["Enums"]["category"]
           date: string
           account: string
+        }[]
+      }
+      get_user_insurance_policies: {
+        Args: {
+          arg_user_id: string
+        }
+        Returns: {
+          id: number
+          user_id: string
+          user_name: string
+          company_id: number
+          company: string
+          name: string
+          rows: Json[]
+        }[]
+      }
+      get_users_insurance_policies: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          result: Json
         }[]
       }
       gtrgm_compress: {
