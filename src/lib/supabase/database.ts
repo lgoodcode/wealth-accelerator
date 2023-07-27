@@ -146,6 +146,81 @@ export interface Database {
           user_id?: string
         }
       }
+      insurance_companies: {
+        Row: {
+          id: number
+          name: string
+        }
+        Insert: {
+          id?: number
+          name: string
+        }
+        Update: {
+          id?: number
+          name?: string
+        }
+      }
+      insurance_policies: {
+        Row: {
+          company_id: number
+          id: number
+          name: string
+          user_id: string
+        }
+        Insert: {
+          company_id: number
+          id?: number
+          name: string
+          user_id: string
+        }
+        Update: {
+          company_id?: number
+          id?: number
+          name?: string
+          user_id?: string
+        }
+      }
+      insurance_policy_rows: {
+        Row: {
+          age_end_year: number
+          annual_net_outlay: number
+          cumulative_net_outlay: number
+          id: number
+          loan_interest_rate: number
+          net_annual_cash_value_increase: number
+          net_cash_value_end_year: number
+          net_death_benefit_end_year: number
+          policy_id: number
+          premium: number
+          year: number
+        }
+        Insert: {
+          age_end_year: number
+          annual_net_outlay?: number
+          cumulative_net_outlay?: number
+          id?: number
+          loan_interest_rate?: number
+          net_annual_cash_value_increase?: number
+          net_cash_value_end_year: number
+          net_death_benefit_end_year: number
+          policy_id: number
+          premium?: number
+          year: number
+        }
+        Update: {
+          age_end_year?: number
+          annual_net_outlay?: number
+          cumulative_net_outlay?: number
+          id?: number
+          loan_interest_rate?: number
+          net_annual_cash_value_increase?: number
+          net_cash_value_end_year?: number
+          net_death_benefit_end_year?: number
+          policy_id?: number
+          premium?: number
+          year?: number
+        }
+      }
       personal_finance: {
         Row: {
           default_tax_rate: number
