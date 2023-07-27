@@ -674,7 +674,7 @@ RETURNS TABLE (
     name text,
     amount decimal(10,2),
     category category,
-    date date,
+    date timestamp with time zone,
     account text
 ) AS $$
 BEGIN
