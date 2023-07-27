@@ -27,7 +27,7 @@ export function UsersInsurancePolicies({ data }: UsersInsurancePoliciesProps) {
 
   return (
     <div className="flex justify-center mx-auto lg:w-[1024px]">
-      {/* <UsersInsurancePoliciesTable usersInsurancePolicyViews={usersInsurancePolicyViews} /> */}
+      <UsersInsurancePoliciesTable usersInsurancePolicyViews={usersInsurancePolicyViews} />
     </div>
   );
 }

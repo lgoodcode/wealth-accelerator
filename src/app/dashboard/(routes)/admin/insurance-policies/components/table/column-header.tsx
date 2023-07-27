@@ -9,10 +9,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { UserInsurancePolicies } from '../../types';
+import type { UserInsurancePolicyView } from '../../types';
 
 interface ColumnHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  column: Column<UserInsurancePolicies>;
+  column: Column<UserInsurancePolicyView>;
   title: string;
 }
 

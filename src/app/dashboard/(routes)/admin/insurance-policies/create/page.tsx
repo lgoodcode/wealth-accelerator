@@ -6,14 +6,14 @@ import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { PageError } from '@/components/page-error';
 import { Breadcrumbs, BreadcrumbItem } from '@/components/ui/breadcrumbs';
 import { Separator } from '@/components/ui/separator';
-import { UsersInsurancePolicies } from './components/users-insurance-policies';
-import type { UserInsurancePolicyView } from './types';
+// import { UsersInsurancePolicies } from './components/users-insurance-policies';
+// import type { UserInsurancePolicyView } from './types';
 
 export const metadata: Metadata = {
-  title: 'Insurance Policies',
+  title: 'New Policy | Insurance Policies',
 };
 
-export default async function InsurancePoliciesPage() {
+export default async function CreatePolicyPage() {
   const supabase = createSupabase();
   const { error, data } = await supabase.rpc('get_all_users_policies_info');
 
@@ -23,8 +23,6 @@ export default async function InsurancePoliciesPage() {
     return <PageError />;
   }
 
-  const userInsurancePolicyViews = data as unknown as UserInsurancePolicyView[];
-
   return (
     <div className="p-8">
       <div className="space-y-4">
@@ -33,15 +31,19 @@ export default async function InsurancePoliciesPage() {
           <p className="text-muted-foreground">View, create, and manage user&apos;s policies.</p>
         </div>
         <Breadcrumbs>
-          <BreadcrumbItem>
+          <BreadcrumbItem href="/dashboard/admin/insurance-policies">
             <Users size={16} className="mr-2" />
             Users
+          </BreadcrumbItem>
+          <BreadcrumbItem active>
+            <Users size={16} className="mr-2" />
+            New Policy
           </BreadcrumbItem>
         </Breadcrumbs>
         <Separator />
       </div>
       <div className="flex justify-center">
-        <UsersInsurancePolicies data={userInsurancePolicyViews} />
+        {/* <UsersInsurancePolicies data={userInsurancePolicyViews} /> */}
       </div>
     </div>
   );

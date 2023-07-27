@@ -16,10 +16,10 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
-import { UserInsurancePolicies } from '../../types';
+import { UserInsurancePolicyView } from '../../types';
 
 interface FacetedFilterProps {
-  column?: Column<UserInsurancePolicies>;
+  column?: Column<UserInsurancePolicyView>;
   title?: string;
   options: {
     label: string;

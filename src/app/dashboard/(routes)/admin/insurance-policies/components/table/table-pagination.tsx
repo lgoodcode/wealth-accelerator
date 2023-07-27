@@ -9,10 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { UserInsurancePolicies } from '../../types';
+import type { UserInsurancePolicyView } from '../../types';
 
 interface TablePaginationProps {
-  table: Table<UserInsurancePolicies>;
+  table: Table<UserInsurancePolicyView>;
 }
 
 export function TablePagination({ table }: TablePaginationProps) {
