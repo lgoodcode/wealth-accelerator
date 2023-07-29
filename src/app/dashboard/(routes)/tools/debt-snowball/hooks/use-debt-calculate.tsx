@@ -16,22 +16,22 @@ export const useDebtCalculate = (debts: Debt[]) => {
     let sorted_debts: Debt[];
 
     if (
-      data.strategy === Strategies.DebtSnowballLowestBalance ||
+      data.strategy === Strategies.WealthAcceleratorLowestBalance ||
       data.strategy === Strategies.LowestBalance
     ) {
       sorted_debts = debts.sort((a, b) => a.amount - b.amount);
     } else if (
-      data.strategy === Strategies.DebtSnowballHighestBalance ||
+      data.strategy === Strategies.WealthAcceleratorHighestBalance ||
       data.strategy === Strategies.HighestBalance
     ) {
       sorted_debts = debts.sort((a, b) => b.amount - a.amount);
     } else if (
-      data.strategy === Strategies.DebtSnowballHighestInterest ||
+      data.strategy === Strategies.WealthAcceleratorHighestInterest ||
       data.strategy === Strategies.HighestInterest
     ) {
       sorted_debts = debts.sort((a, b) => b.interest - a.interest);
     } else if (
-      data.strategy === Strategies.DebtSnowballLowestInterest ||
+      data.strategy === Strategies.WealthAcceleratorLowestInterest ||
       data.strategy === Strategies.LowestInterest
     ) {
       sorted_debts = debts.sort((a, b) => a.interest - b.interest);
@@ -41,8 +41,8 @@ export const useDebtCalculate = (debts: Debt[]) => {
       return;
     }
 
-    // Simulate loading by waiting 2 seconds
-    // await new Promise((resolve) => setTimeout(resolve, 2000));
+    // Simulate loading by waiting 1 seconds
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     try {
       const currentResults = simpleCalculate(debts, data.target_date);
@@ -60,10 +60,13 @@ export const useDebtCalculate = (debts: Debt[]) => {
       });
     } catch (error: any) {
       toast.error(
-        <span>
-          <span className="font-bold">{error.cause}</span> has a prinicipal and interest rate that
-          exceeds the payment amount.
-        </span>
+        <div className="flex flex-col gap-2">
+          <span>
+            <span className="font-bold">{error.cause}</span> has a prinicipal and interest rate that
+            exceeds the payment amount.
+          </span>
+          <span>Go to Finance &gt; Debts and increase the monthly payment.</span>
+        </div>
       );
     }
   };

@@ -30,11 +30,9 @@ export function RecordsList({ records }: RecordsListProps) {
               format(new Date(record.inputs.end_date), 'LLL dd, y')}
           </AccordionTrigger>
           <AccordionContent className="p-6">
-            <div className="flex flex-row justify-center w-full gap-8 flex-wrap">
+            <div className="flex flex-row justify-center w-full gap-6 flex-wrap">
               <InputsCard record={record} />
-
               <ResultsCard record={record} />
-
               <TrendsCard record={record} />
             </div>
 

@@ -46,7 +46,7 @@ export const Breadcrumbs = ({ children, className }: BreadcrumbProps) => {
       <ul className="flex items-center whitespace-nowrap min-h-fit">
         {Children.map(children, (child, i) => (
           <>
-            {i > 0 && <ChevronRight className="mx-1 opacity-70" />}
+            {i > 0 && <ChevronRight className="opacity-70" />}
             {child}
           </>
         ))}

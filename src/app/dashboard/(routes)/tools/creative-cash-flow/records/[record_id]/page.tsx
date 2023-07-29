@@ -71,7 +71,7 @@ export default async function SharedCreativeCashFlowRecordPage({
         <p className="text-muted-foreground">Viewing a shared record.</p>
       </div>
       <Separator className="mt-6" />
-      <div className="flex flex-row justify-center w-full gap-8 flex-wrap">
+      <div className="flex flex-row justify-center w-full gap-6 flex-wrap">
         <InputsCard record={record} />
         <ResultsCard record={record} />
         <TrendsCard record={record} />
