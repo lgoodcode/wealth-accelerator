@@ -38,9 +38,13 @@ export const FinanceInfoSchema = z.object({
       required_error: 'Enter the amount',
     })
     .min(1, 'Enter an amount greater than 0'),
-  ytd_collections: z.number({
-    required_error: 'Enter the amount',
-  }),
+  ytd_collections: z
+    .number({
+      required_error: 'Enter the amount',
+    })
+    .nonnegative({
+      message: 'Enter a positive amount',
+    }),
   default_tax_rate: z
     .number({
       required_error: 'Enter the tax rate percentage',
