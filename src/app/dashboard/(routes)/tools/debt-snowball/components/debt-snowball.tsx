@@ -23,6 +23,7 @@ export function DebtSnowball({ debts }: DebtSnowballProps) {
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
   const setDebts = useSetAtom(debtsAtom);
   const debtCalculationResults = useAtomValue(debtCalculationResultsAtom);
+  const totalDebt = debts.reduce((a, b) => a + b.amount, 0);
 
   useEffect(() => {
     if (debtCalculationResults) {
@@ -35,7 +36,7 @@ export function DebtSnowball({ debts }: DebtSnowballProps) {
   // it will be synced on the client-side for debt snowball and debts page
   useEffect(() => {
     setDebts((curr) => {
-      if (!curr) {
+      if (!curr || curr !== debts) {
         return debts;
       }
       return curr;
@@ -60,7 +61,7 @@ export function DebtSnowball({ debts }: DebtSnowballProps) {
         <DebtSnowballInputs debts={debts} />
       </TabsContent>
       <TabsContent value={TabsValue.Results}>
-        <DebtSnowballResults />
+        <DebtSnowballResults totalDebt={totalDebt} />
       </TabsContent>
     </Tabs>
   );

@@ -9,10 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { UserInsurancePolicyView } from '../../types';
+import type { InsurancePolicyRow } from '../../../types';
 
 interface TablePaginationProps {
-  table: Table<UserInsurancePolicyView>;
+  table: Table<InsurancePolicyRow>;
 }
 
 export function TablePagination({ table }: TablePaginationProps) {
@@ -39,7 +39,7 @@ export function TablePagination({ table }: TablePaginationProps) {
       <div className="flex-1 text-sm text-muted-foreground">
         Displaying {startRecord} through {endRecord} of {filteredRowsLength} row(s)
       </div>
-      <div className="flex items-center space-x-6 lg:space-x-8">
+      {/* <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Rows per page</p>
           <Select
@@ -101,7 +101,7 @@ export function TablePagination({ table }: TablePaginationProps) {
             <ChevronsRight className="h-4 w-4" />
           </Button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

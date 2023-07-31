@@ -4,7 +4,11 @@ import { ResultsCard } from './results-card';
 import { debtCalculationInputsAtom, debtCalculationResultsAtom } from '../atoms';
 import type { DebtCalculationInputs, DebtCalculationResults } from '../types';
 
-export function DebtSnowballResults() {
+interface DebtSnowballResultsProps {
+  totalDebt: number;
+}
+
+export function DebtSnowballResults({ totalDebt }: DebtSnowballResultsProps) {
   const inputs = useAtomValue(debtCalculationInputsAtom) as DebtCalculationInputs;
   const results = useAtomValue(debtCalculationResultsAtom) as DebtCalculationResults;
   const diff_in_months =
@@ -35,6 +39,7 @@ export function DebtSnowballResults() {
   return (
     <div className="flex flex-col lg:grid grid-cols-2 gap-8">
       <ResultsCard
+        totalDebt={totalDebt}
         title="Current Strategy"
         targetDate={inputs.target_date}
         data={results.currentResults}
@@ -44,6 +49,7 @@ export function DebtSnowballResults() {
       />
       <ResultsCard
         title={inputs.strategy}
+        totalDebt={totalDebt}
         targetDate={inputs.target_date}
         data={results.strategyResults}
         cost={strategyCost}

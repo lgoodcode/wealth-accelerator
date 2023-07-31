@@ -31,7 +31,7 @@ export default async function DebtSnowballPage() {
           <h2 className="text-3xl font-bold">Debt Snowball</h2>
         </div>
         <p className="text-muted-foreground">
-          View records saved from the Creative Cash Flow page.
+          Quickly visualize different strategies for paying off your debt.
         </p>
       </div>
       <Separator className="mt-6" />

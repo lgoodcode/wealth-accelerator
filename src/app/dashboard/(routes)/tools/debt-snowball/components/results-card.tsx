@@ -1,6 +1,7 @@
 import { format, addMonths } from 'date-fns';
 
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
+import { formatMonths } from '@/lib/utils/format-months';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -16,13 +17,22 @@ import type { DebtCalculation } from '../types';
 interface ResultsCardProps {
   title: string;
   targetDate?: Date;
+  totalDebt: number;
   data: DebtCalculation;
   cost: number;
   saved: number;
   dateDiff: number;
 }
 
-export function ResultsCard({ title, targetDate, data, cost, saved, dateDiff }: ResultsCardProps) {
+export function ResultsCard({
+  title,
+  targetDate,
+  totalDebt,
+  data,
+  cost,
+  saved,
+  dateDiff,
+}: ResultsCardProps) {
   const TotalDifference = () => {
     return (
       <div className="flex flex-row justify-between">
@@ -39,13 +49,13 @@ export function ResultsCard({ title, targetDate, data, cost, saved, dateDiff }: 
   const TimeDifference = () => {
     return (
       <div className="flex flex-row justify-between">
-        <span className="text-xl">
-          Time Difference <span className="text-muted-foreground">(months)</span>
-        </span>
+        <span className="text-xl">Time Difference</span>
         {dateDiff > 0 ? (
-          <span className="text-xl font-medium text-destructive">{dateDiff}</span>
+          <span className="text-xl font-medium text-destructive">{formatMonths(dateDiff)}</span>
         ) : (
-          <span className="text-xl font-medium text-success">{dateDiff}</span>
+          <span className="text-xl font-medium text-success">
+            {formatMonths(Math.abs(dateDiff))}
+          </span>
         )}
       </div>
     );
@@ -64,6 +74,10 @@ export function ResultsCard({ title, targetDate, data, cost, saved, dateDiff }: 
             <span className="text-xl font-medium">
               {targetDate ? format(targetDate, 'MMMM yyyy') : 'None'}
             </span>
+          </div>
+          <div className="flex flex-row justify-between">
+            <span className="text-xl">Total Debt</span>
+            <span className="text-xl font-medium">{dollarFormatter(totalDebt)}</span>
           </div>
           <div className="flex flex-row justify-between">
             <span className="text-xl">Total Interest Paid</span>

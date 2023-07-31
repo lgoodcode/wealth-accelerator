@@ -30,7 +30,6 @@ import { debtCalculationInputsAtom } from '../atoms';
 import { debtCalculationSchema, type DebtCalculationSchemaType } from '../schema';
 import { useDebtCalculate } from '../hooks/use-debt-calculate';
 import type { Debt } from '@/lib/types/debts';
-import { X } from 'lucide-react';
 
 interface DebtSnowballInputsFormProps {
   paymentsSum: number;
@@ -76,10 +75,9 @@ export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInput
                 <Button
                   type="button"
                   variant="outline"
-                  className="px-2"
                   onClick={() => form.setValue('target_date', undefined)}
                 >
-                  <X />
+                  Reset
                 </Button>
               </div>
               <FormDescription>
@@ -95,7 +93,7 @@ export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInput
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>
-                Monthly payments <span className="text-muted-foreground">(optional)</span>
+                Additional monthly payment <span className="text-muted-foreground">(optional)</span>
               </FormLabel>
               <CurrencyInput
                 placeholder="$500"
@@ -105,7 +103,7 @@ export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInput
                 onChange={undefined}
               />
               <FormDescription>
-                The amount of money you can put towards your debt each month.
+                Additional amount of money you can put towards your debt each month.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -116,7 +114,7 @@ export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInput
           name="snowball"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Initial snowball</FormLabel>
+              <FormLabel>Current monthly payment</FormLabel>
               <Input
                 readOnly
                 value={dollarFormatter(field.value, {

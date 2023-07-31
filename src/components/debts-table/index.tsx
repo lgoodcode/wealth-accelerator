@@ -33,6 +33,7 @@ interface DebtsTableProps {
   toolbar?: boolean;
   rowActions?: boolean;
   enableHeaderOptions?: boolean;
+  pagination?: boolean;
 }
 
 export function DebtsTable({
@@ -40,8 +41,8 @@ export function DebtsTable({
   toolbar = true,
   rowActions = true,
   enableHeaderOptions = true,
+  pagination = true,
 }: DebtsTableProps) {
-  // const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -51,12 +52,10 @@ export function DebtsTable({
     state: {
       sorting,
       columnVisibility,
-      // rowSelection,
       columnFilters,
     },
+    enableHiding: false,
     autoResetPageIndex: false,
-    // enableRowSelection: true,
-    // onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
@@ -109,7 +108,7 @@ export function DebtsTable({
           </TableBody>
         </Table>
       </div>
-      <TablePagination table={table} />
+      {pagination && <TablePagination table={table} />}
     </div>
   );
 }

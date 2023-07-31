@@ -1,34 +1,31 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Table } from '@tanstack/react-table';
-import { X } from 'lucide-react';
+import { PlusCircle, X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { FacetedFilter } from './faceted-filter';
-import { roleOptions } from './column-options';
-// import { AddFilterButton } from '../add-filter-button';
+import type { UserInsurancePolicyView } from '../../types';
 
 interface TableToolbarProps {
-  table: Table<User>;
+  table: Table<UserInsurancePolicyView>;
 }
 
 export function TableToolbar({ table }: TableToolbarProps) {
+  const router = useRouter();
   const isFiltered =
     table.getPreFilteredRowModel().rows.length > table.getFilteredRowModel().rows.length;
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
-        {/* <Input
-          placeholder="Filter users..."
-          value={(table.getColumn('email')?.getFilterValue() as string) || ''}
-          onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
+        <Input
+          placeholder="Filter policies..."
+          value={(table.getColumn('name')?.getFilterValue() as string) || ''}
+          onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn('role') && (
-          <FacetedFilter column={table.getColumn('role')} title="Role" options={roleOptions} />
-        )}
         {isFiltered && (
           <Button
             variant="ghost"
@@ -38,10 +35,13 @@ export function TableToolbar({ table }: TableToolbarProps) {
             Reset
             <X className="ml-2 h-4 w-4" />
           </Button>
-        )} */}
+        )}
       </div>
 
-      {/* <AddFilterButton /> */}
+      <Button onClick={() => router.push('/dashboard/admin/insurance-policies/create')}>
+        <PlusCircle className="mr-2 h-4 w-4" />
+        New Policy
+      </Button>
     </div>
   );
 }

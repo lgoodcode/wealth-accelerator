@@ -132,7 +132,7 @@ export interface Database {
           description: string
           id?: number
           interest: number
-          months_remaining: number
+          months_remaining?: number
           payment: number
           user_id: string
         }
@@ -391,6 +391,15 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      create_insurance_policy: {
+        Args: {
+          p_user_id: string
+          p_company_id: number
+          p_name: string
+          p_policy_rows: unknown[]
+        }
+        Returns: undefined
+      }
       delete_creative_cash_flow_record: {
         Args: {
           record_id: string
@@ -401,7 +410,7 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: number[]
       }
-      get_all_users_policies_info: {
+      get_all_user_insurance_policy_views: {
         Args: Record<PropertyKey, never>
         Returns: {
           result: Json
@@ -446,26 +455,6 @@ export interface Database {
           category: Database["public"]["Enums"]["category"]
           date: string
           account: string
-        }[]
-      }
-      get_user_insurance_policies: {
-        Args: {
-          arg_user_id: string
-        }
-        Returns: {
-          id: number
-          user_id: string
-          user_name: string
-          company_id: number
-          company: string
-          name: string
-          rows: Json[]
-        }[]
-      }
-      get_users_insurance_policies: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          result: Json
         }[]
       }
       gtrgm_compress: {
