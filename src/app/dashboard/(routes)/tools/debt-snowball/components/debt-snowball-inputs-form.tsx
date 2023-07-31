@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useAtomValue } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSetAtom } from 'jotai';
 
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import {
@@ -26,31 +26,37 @@ import { Button } from '@/components/ui/button';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Strategies } from '../strategies';
-import { debtCalculationInputsAtom } from '../atoms';
-import { debtCalculationSchema, type DebtCalculationSchemaType } from '../schema';
+import { strategyAtom } from '../atoms';
 import { useDebtCalculate } from '../hooks/use-debt-calculate';
+import { debtCalculationSchema, type DebtCalculationSchemaType } from '../schema';
 import type { Debt } from '@/lib/types/debts';
 
 interface DebtSnowballInputsFormProps {
-  paymentsSum: number;
   debts: Debt[];
 }
 
-export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInputsFormProps) {
-  const inputs = useAtomValue(debtCalculationInputsAtom);
+export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
+  const paymentsSum = debts.reduce((a, b) => a + b.payment, 0);
   const calculateDebt = useDebtCalculate(debts);
+  const setStrategy = useSetAtom(strategyAtom);
   const form = useForm<DebtCalculationSchemaType>({
     resolver: zodResolver(debtCalculationSchema),
     defaultValues: {
-      monthly_payments: inputs?.monthly_payments ?? 0,
-      snowball: paymentsSum,
-      strategy: inputs?.strategy,
+      monthly_payment: paymentsSum,
     },
   });
+  const strategy = form.watch('strategy');
+  const additional_payment = form.watch('additional_payment');
 
+  // Track the strategy for conditional rendering the Wealth Accelerator options
   useEffect(() => {
-    form.setValue('snowball', paymentsSum + form.watch('monthly_payments'));
-  }, [paymentsSum, form.watch('monthly_payments')]);
+    setStrategy(strategy);
+  }, [strategy]);
+
+  // Update the monthly payment when the additional payment changes
+  useEffect(() => {
+    form.setValue('monthly_payment', paymentsSum + (additional_payment ?? 0));
+  }, [paymentsSum, additional_payment]);
 
   return (
     <Form {...form}>
@@ -89,7 +95,7 @@ export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInput
         />
         <FormField
           control={form.control}
-          name="monthly_payments"
+          name="additional_payment"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>
@@ -111,7 +117,7 @@ export function DebtSnowballInputsForm({ paymentsSum, debts }: DebtSnowballInput
         />
         <FormField
           control={form.control}
-          name="snowball"
+          name="monthly_payment"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Current monthly payment</FormLabel>

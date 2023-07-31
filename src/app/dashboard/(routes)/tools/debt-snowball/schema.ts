@@ -15,15 +15,17 @@ export const debtCalculationSchema = z.object({
       'Date must be at least one month in the future'
     )
     .optional(),
-  monthly_payments: z
+  additional_payment: z
     .number({
       required_error: 'Enter the amount you can pay each month',
     })
     .min(0, 'Enter a positive amount'),
-  snowball: z.number(),
+  monthly_payment: z.number(),
   strategy: z.nativeEnum(Strategies, {
     required_error: 'Select a strategy',
   }),
 });
+
+// export const wealthAcceleratorDebtCalculationSchema =
 
 export type DebtCalculationSchemaType = z.infer<typeof debtCalculationSchema>;

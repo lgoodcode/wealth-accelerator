@@ -1,9 +1,13 @@
 'use client';
 
+import { useAtomValue } from 'jotai';
+
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DebtsTable } from '@/components/debts-table';
 import { DebtSnowballInputsForm } from './debt-snowball-inputs-form';
+import { DebtSnowballWealthAcceleratorForm } from './debt-snowball-wa-form';
+import { strategyAtom } from '../atoms';
 import type { Debt } from '@/lib/types/debts';
 
 interface DebtSnowballInputsContainerProps {
@@ -11,17 +15,26 @@ interface DebtSnowballInputsContainerProps {
 }
 
 export function DebtSnowballInputs({ debts }: DebtSnowballInputsContainerProps) {
-  const paymentsSum = debts.reduce((acc, debt) => acc + debt.payment, 0);
+  const strategy = useAtomValue(strategyAtom);
   const totalDebt = debts.reduce((a, b) => a + b.amount, 0);
+  const shouldDisplayWealthAccelerator = strategy?.includes('Wealth Accelerator');
 
   return (
     <div className="flex flex-col lg:grid grid-cols-3 gap-8">
-      <div className="col-span-1">
-        <Card className="col-span-1">
+      <div className="col-span-1 flex flex-col gap-6">
+        <Card>
           <CardContent className="pt-6">
-            <DebtSnowballInputsForm paymentsSum={paymentsSum} debts={debts} />
+            <DebtSnowballInputsForm debts={debts} />
+            <DebtSnowballWealthAcceleratorForm />
           </CardContent>
         </Card>
+        {shouldDisplayWealthAccelerator && (
+          <Card>
+            <CardContent className="pt-6">
+              <DebtSnowballWealthAcceleratorForm />
+            </CardContent>
+          </Card>
+        )}
       </div>
       <div className="col-span-2">
         <Card>

@@ -36,7 +36,7 @@ export function ResultsCard({
   const TotalDifference = () => {
     return (
       <div className="flex flex-row justify-between">
-        <span className="text-xl">Total Difference</span>
+        <span className="text-xl">Total Amount Difference</span>
         {cost ? (
           <span className="text-xl font-medium text-destructive">{dollarFormatter(cost * -1)}</span>
         ) : (
@@ -84,7 +84,7 @@ export function ResultsCard({
             <span className="text-xl font-medium">{dollarFormatter(data.total_interest)}</span>
           </div>
           <div className="flex flex-row justify-between">
-            <span className="text-xl">Total Paid</span>
+            <span className="text-xl">Total Amount Paid</span>
             <span className="text-xl font-medium">{dollarFormatter(data.total_amount)}</span>
           </div>
           <div className="flex flex-row justify-between">

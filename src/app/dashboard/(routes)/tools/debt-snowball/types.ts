@@ -1,5 +1,6 @@
 import type { Debt } from '@/lib/types/debts';
-import type { DebtCalculationSchemaType } from './schema';
+
+import { Strategies } from './strategies';
 
 export type DebtPayoff = {
   debt: Debt;
@@ -18,7 +19,12 @@ export type DebtCalculation = {
   total_amount: number;
 };
 
-export type DebtCalculationInputs = DebtCalculationSchemaType;
+export type DebtCalculationInputs = {
+  target_date?: Date;
+  additional_payment: number;
+  monthly_payment: number;
+  strategy: Strategies;
+};
 
 export type DebtCalculationResults = {
   currentResults: DebtCalculation;

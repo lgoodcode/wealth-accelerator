@@ -46,7 +46,11 @@ export const useDebtCalculate = (debts: Debt[]) => {
 
     try {
       const currentResults = simpleCalculate(debts, data.target_date);
-      const strategyResults = snowballCalculation(data.snowball, sorted_debts, data.target_date);
+      const strategyResults = snowballCalculation(
+        data.monthly_payment,
+        sorted_debts,
+        data.target_date
+      );
 
       setDebtCaluclationInputs(data);
       setDebtCalculationResults({
