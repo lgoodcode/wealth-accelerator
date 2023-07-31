@@ -19,13 +19,23 @@ export const debtCalculationSchema = z.object({
     .number({
       required_error: 'Enter the amount you can pay each month',
     })
-    .min(0, 'Enter a positive amount'),
+    .nonnegative({
+      message: 'Enter a positive amount',
+    })
+    .optional(),
   monthly_payment: z.number(),
   strategy: z.nativeEnum(Strategies, {
     required_error: 'Select a strategy',
   }),
+  lump_amounts: z.array(
+    z
+      .number({
+        required_error: 'Enter a lump amount',
+      })
+      .nonnegative({
+        message: 'Enter a positive amount',
+      })
+  ),
 });
-
-// export const wealthAcceleratorDebtCalculationSchema =
 
 export type DebtCalculationSchemaType = z.infer<typeof debtCalculationSchema>;

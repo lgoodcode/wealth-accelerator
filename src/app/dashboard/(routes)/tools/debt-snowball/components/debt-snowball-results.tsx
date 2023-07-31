@@ -55,6 +55,7 @@ export function DebtSnowballResults({ totalDebt }: DebtSnowballResultsProps) {
         cost={strategyCost}
         saved={strategySaved}
         dateDiff={strategyDateDiff}
+        lump_amounts={inputs.lump_amounts}
       />
     </div>
   );

@@ -21,9 +21,10 @@ export type DebtCalculation = {
 
 export type DebtCalculationInputs = {
   target_date?: Date;
-  additional_payment: number;
+  additional_payment?: number;
   monthly_payment: number;
   strategy: Strategies;
+  lump_amounts: number[];
 };
 
 export type DebtCalculationResults = {

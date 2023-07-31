@@ -1,11 +1,10 @@
 import { useSetAtom } from 'jotai';
 import { toast } from 'react-toastify';
 
-import type { Debt } from '@/lib/types/debts';
 import { debtCalculationInputsAtom, debtCalculationResultsAtom } from '../atoms';
-import { snowballCalculation } from '../functions/debt-snowball';
-import { simpleCalculate } from '../functions/simple-calculate';
+import { calculate_debt } from '../functions/calculate-debt';
 import { Strategies } from '../strategies';
+import type { Debt } from '@/lib/types/debts';
 import type { DebtCalculationSchemaType } from '../schema';
 
 export const useDebtCalculate = (debts: Debt[]) => {
@@ -13,28 +12,29 @@ export const useDebtCalculate = (debts: Debt[]) => {
   const setDebtCalculationResults = useSetAtom(debtCalculationResultsAtom);
 
   return async (data: DebtCalculationSchemaType) => {
-    let sorted_debts: Debt[];
+    const regular_debts = structuredClone(debts);
+    const sorted_debts = structuredClone(debts);
 
     if (
       data.strategy === Strategies.WealthAcceleratorLowestBalance ||
       data.strategy === Strategies.LowestBalance
     ) {
-      sorted_debts = debts.sort((a, b) => a.amount - b.amount);
+      sorted_debts.sort((a, b) => a.amount - b.amount);
     } else if (
       data.strategy === Strategies.WealthAcceleratorHighestBalance ||
       data.strategy === Strategies.HighestBalance
     ) {
-      sorted_debts = debts.sort((a, b) => b.amount - a.amount);
+      sorted_debts.sort((a, b) => b.amount - a.amount);
     } else if (
       data.strategy === Strategies.WealthAcceleratorHighestInterest ||
       data.strategy === Strategies.HighestInterest
     ) {
-      sorted_debts = debts.sort((a, b) => b.interest - a.interest);
+      sorted_debts.sort((a, b) => b.interest - a.interest);
     } else if (
       data.strategy === Strategies.WealthAcceleratorLowestInterest ||
       data.strategy === Strategies.LowestInterest
     ) {
-      sorted_debts = debts.sort((a, b) => a.interest - b.interest);
+      sorted_debts.sort((a, b) => a.interest - b.interest);
     } else {
       console.error('Invalid strategy', data.strategy);
       toast.error('Invalid strategy');
@@ -45,20 +45,19 @@ export const useDebtCalculate = (debts: Debt[]) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     try {
-      const currentResults = simpleCalculate(debts, data.target_date);
-      const strategyResults = snowballCalculation(
-        data.monthly_payment,
-        sorted_debts,
-        data.target_date
-      );
+      const currentResults = calculate_debt(regular_debts, {
+        target_date: data.target_date,
+      });
+      const strategyResults = calculate_debt(sorted_debts, {
+        isDebtSnowball: true,
+        isWealthAccelerator: data.strategy.includes('Wealth Accelerator'),
+        additional_payment: data.additional_payment,
+        target_date: data.target_date,
+        lump_amounts: data.lump_amounts,
+      });
 
       setDebtCaluclationInputs(data);
       setDebtCalculationResults({
-        currentResults,
-        strategyResults,
-      });
-
-      console.log({
         currentResults,
         strategyResults,
       });
