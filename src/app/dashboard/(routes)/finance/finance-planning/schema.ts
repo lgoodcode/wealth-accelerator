@@ -31,13 +31,17 @@ export const FinanceInfoSchema = z.object({
     .number({
       required_error: 'Enter the tax bracket percentage',
     })
-    .min(0, 'Enter a positive percentage')
+    .positive({
+      message: 'Enter a positive percentage',
+    })
     .max(101, 'Enter a valid percentage'),
   premium_deposit: z
     .number({
       required_error: 'Enter the amount',
     })
-    .min(1, 'Enter an amount greater than 0'),
+    .positive({
+      message: 'Enter a positive amount',
+    }),
   ytd_collections: z
     .number({
       required_error: 'Enter the amount',
@@ -49,7 +53,9 @@ export const FinanceInfoSchema = z.object({
     .number({
       required_error: 'Enter the tax rate percentage',
     })
-    .min(0, 'Enter a positive percentage')
+    .positive({
+      message: 'Enter a positive percentage',
+    })
     .max(101, 'Enter a valid percentage'),
 });
 

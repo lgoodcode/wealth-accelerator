@@ -8,7 +8,9 @@ export const debtFormSchema = z.object({
     .number({
       required_error: 'Please enter an amount for this debt.',
     })
-    .min(0, 'Enter a number greater than or equal to 0'),
+    .positive({
+      message: 'Enter a positive number',
+    }),
   payment: z
     .number({
       required_error: 'Please enter a payment for this debt.',
@@ -16,9 +18,11 @@ export const debtFormSchema = z.object({
     .min(0, 'Enter a number greater than or equal to 0'),
   interest: z
     .number({
-      required_error: 'Please enter an interest for this debt.',
+      required_error: 'Please enter an interest rate for this debt.',
     })
-    .min(0, 'Enter a percentage greater than or equal to 0')
+    .positive({
+      message: 'Enter a positive interest rate',
+    })
     .max(101, 'Enter a percentage less than or equal to 100')
     .refine((value) => /^\d{1,2}(\.\d{1,2})?$/.test(value.toString()), {
       message: 'Enter a valid percentage (0 to 99.99)',
@@ -27,7 +31,9 @@ export const debtFormSchema = z.object({
     .number({
       required_error: 'Please enter the months remaining for this debt.',
     })
-    .min(0, 'Enter a number greater than or equal to 0'),
+    .nonnegative({
+      message: 'Enter a positive number',
+    }),
 });
 
 export type DebtFormType = z.infer<typeof debtFormSchema>;

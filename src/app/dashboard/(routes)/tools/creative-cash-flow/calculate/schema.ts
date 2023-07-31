@@ -32,7 +32,9 @@ export const inputsFormSchema = z
       .number({
         required_error: 'Enter a percentage.',
       })
-      .min(0, 'Enter a positive percentage')
+      .positive({
+        message: 'Enter a positive percentage',
+      })
       .max(101, 'Enter a valid percentage'),
     optimal_savings_strategy: z
       .number({
