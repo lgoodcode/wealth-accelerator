@@ -25,16 +25,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useCreateDebt } from '../hooks/use-create-debt';
-import { debtFormSchema, DebtFormType } from '../schemas';
+import { debtFormSchema, DebtFormType } from '../schema';
 
 export function AddDebtButton() {
   const createDebt = useCreateDebt();
   const [isOpen, setIsOpen] = useState(false);
   const form = useForm<DebtFormType>({
     resolver: zodResolver(debtFormSchema),
-    defaultValues: {
-      months_remaining: 0,
-    },
   });
 
   const handleCreate = async (data: DebtFormType) => {
@@ -155,7 +152,6 @@ export function AddDebtButton() {
                   <FormItem>
                     <FormLabel>
                       Months Remaining
-                      <span className="ml-1 text-muted-foreground">(months)</span>
                       <span className="ml-1 text-muted-foreground">(optional)</span>
                     </FormLabel>
                     <FormControl>

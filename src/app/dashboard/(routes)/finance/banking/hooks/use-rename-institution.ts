@@ -3,7 +3,7 @@ import { useSetAtom } from 'jotai';
 import { supabase } from '@/lib/supabase/client';
 import { updateInstitutionsAtom } from '@/lib/plaid/atoms';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
-import type { RenameFormType } from '../schemas';
+import type { RenameFormType } from '../schema';
 
 export const useRenameInstitution = () => {
   const updateInstitutions = useSetAtom(updateInstitutionsAtom);

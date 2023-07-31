@@ -14,8 +14,8 @@ export function DebtSnowballInputs({ debts }: DebtSnowballInputsContainerProps) 
   const totalDebt = debts.reduce((a, b) => a + b.amount, 0);
 
   return (
-    <div className="flex flex-col lg:grid grid-cols-3 gap-8">
-      <div className="col-span-1 flex flex-col gap-6">
+    <div className="relative flex flex-col lg:grid grid-cols-3 gap-8">
+      <div className="col-span-1 sticky top-8 h-fit flex flex-col gap-6">
         <DebtSnowballInputsForm debts={debts} />
       </div>
       <div className="col-span-2">

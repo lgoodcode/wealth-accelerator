@@ -32,7 +32,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUpdateTransaction } from '../../hooks/use-update-transaction';
-import { updateTransactionFormSchema, type UpdateTransactionType } from '../../schemas';
+import { updateTransactionFormSchema, type UpdateTransactionType } from '../../schema';
 import { Category, type TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 
 interface UpdateTransactionDialogProps {

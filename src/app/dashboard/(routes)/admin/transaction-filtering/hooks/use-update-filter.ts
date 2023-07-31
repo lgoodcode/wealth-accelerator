@@ -2,7 +2,7 @@ import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
 import { updateFilterAtom } from '../atoms';
-import type { UpdateFilterFormType } from '../schemas';
+import type { UpdateFilterFormType } from '../schema';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
 export const useUpdateFilter = () => {

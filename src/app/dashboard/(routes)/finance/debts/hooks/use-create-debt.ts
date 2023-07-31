@@ -3,13 +3,13 @@ import { useSetAtom } from 'jotai';
 import { useUser } from '@/hooks/use-user';
 import { supabase } from '@/lib/supabase/client';
 import { addDebtAtom } from '../atoms';
-import type { Debt } from '@/lib/types/debts';
+import type { DebtFormType } from '../schema';
 
 export const useCreateDebt = () => {
   const user = useUser();
   const addDebt = useSetAtom(addDebtAtom);
 
-  return async (debt: Omit<Debt, 'id' | 'user_id'>) => {
+  return async (debt: DebtFormType) => {
     if (!user) {
       throw new Error('User is not authenticated');
     }

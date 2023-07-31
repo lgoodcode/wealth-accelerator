@@ -1,5 +1,6 @@
 import { format, addMonths } from 'date-fns';
 
+import { cn } from '@/lib/utils/cn';
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import { formatMonths } from '@/lib/utils/format-months';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import type { DebtCalculation } from '../types';
+import { Info } from 'lucide-react';
 
 interface ResultsCardProps {
   title: string;
@@ -36,7 +38,7 @@ export function ResultsCard({
   dateDiff,
   lump_amounts,
 }: ResultsCardProps) {
-  const loan_taken_out = lump_amounts?.reduce((a, b) => a + b, 0);
+  const loan_taken_out = lump_amounts?.reduce((a, b) => a + b, 0) ?? 0;
 
   const TotalDifference = () => {
     return (
@@ -102,16 +104,19 @@ export function ResultsCard({
               {format(addMonths(new Date(), data.payoff_months), 'MMMM yyyy')}
             </span>
           </div>
+          <div className="flex flex-row justify-between">
+            <span className="text-xl">Loan Taken Out</span>
+            <span
+              className={cn('text-xl font-medium', {
+                'text-success': loan_taken_out > 0,
+                'text-destructive': loan_taken_out < 0,
+              })}
+            >
+              {dollarFormatter(loan_taken_out)}
+            </span>
+          </div>
           <TotalDifference />
           <TimeDifference />
-          {!loan_taken_out ? null : (
-            <div className="flex flex-row justify-between">
-              <span className="text-xl">Loan Taken Out</span>
-              <span className="text-xl font-medium text-destructive">
-                {dollarFormatter(loan_taken_out)}
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Display a table of total interest and debt for each month */}
@@ -139,7 +144,10 @@ export function ResultsCard({
                     {monthIndex === 0 && lump_amounts?.[yearIndex] ? (
                       <HoverCard>
                         <HoverCardTrigger asChild>
-                          <TableCell className="text-success">{dollarFormatter(month)}</TableCell>
+                          <TableCell className="flex flex-row justify-center items-center">
+                            <span className="text-success">{dollarFormatter(month)}</span>
+                            <Info className="ml-2 w-5 h-5" />
+                          </TableCell>
                         </HoverCardTrigger>
                         <HoverCardContent className="bg-accent">
                           A lump amount of{' '}

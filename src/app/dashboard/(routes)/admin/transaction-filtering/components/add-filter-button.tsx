@@ -7,7 +7,7 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
-import { createFilterFormSchema, type CreateFilterFormType } from '../schemas';
+import { createFilterFormSchema, type CreateFilterFormType } from '../schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {

@@ -39,13 +39,11 @@ export const calculate_debt = (
   // Track the total debt remaining
   const intitial_total_debt = debts.reduce((acc, debt) => acc + debt.amount, 0);
   let balance_remaining = intitial_total_debt;
-  let year = 0;
 
   // Initialize the debt remaining for the first month
   balance_tracking[0][0] = balance_remaining;
 
-  // While we still haven't reached the target date and there is still debt remaining
-  while (months && balance_remaining) {
+  for (let year = 0; months && balance_remaining; year++) {
     // If a debt is paid off, use the remainder for the next debt
     // If we are using the Wealth Accelerator, apply the lump sum to the spillover to use for the debts
     let spillover = options?.isWealthAccelerator ? options?.lump_amounts?.[year] ?? 0 : 0;
@@ -117,9 +115,8 @@ export const calculate_debt = (
     // If there's still an outstanding balance - increment the year and
     // add a new array of 12 months to the debt tracking
     if (balance_remaining) {
-      year++;
-      balance_tracking[year] = Array.from({ length: 12 }, () => 0);
-      interest_tracking[year] = Array.from({ length: 12 }, () => 0);
+      balance_tracking[year + 1] = Array.from({ length: 12 }, () => 0);
+      interest_tracking[year + 1] = Array.from({ length: 12 }, () => 0);
     }
   }
 
