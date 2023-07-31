@@ -6,9 +6,20 @@ import type { DebtCalculation, DebtPayoff } from '../types';
 
 const NUM_OF_MONTHS = 12;
 
-export const simpleCalculate = (debts: Debt[], target_date?: Date): DebtCalculation => {
+export const calculate_debt = (
+  debts: Debt[],
+  options: {
+    isDebtSnowball?: boolean;
+    isWealthAccelerator?: boolean;
+    additional_payment?: number;
+    lump_amounts?: number[];
+    target_date?: Date;
+  }
+): DebtCalculation => {
   // Get difference in the number of months from the target date to the current date
-  let months = target_date ? differenceInMonths(target_date, new Date()) : Infinity;
+  let months = options?.target_date
+    ? differenceInMonths(options.target_date, new Date())
+    : Infinity;
 
   if (months < 1) {
     throw new Error('Must be at least one month in the future');
@@ -35,9 +46,23 @@ export const simpleCalculate = (debts: Debt[], target_date?: Date): DebtCalculat
 
   // While we still haven't reached the target date and there is still debt remaining
   while (months && balance_remaining) {
+    // If a debt is paid off, use the remainder for the next debt
+    // If we are using the Wealth Accelerator, apply the lump sum to the spillover to use for the debts
+    let spillover = options?.isWealthAccelerator ? options?.lump_amounts?.[year] ?? 0 : 0;
+
     for (let month = 0; month < NUM_OF_MONTHS && months; month++) {
-      // If a debt is paid off, use the remainder for the next debt
-      let spillover = 0;
+      // Add the additional monthly payments
+      spillover += options?.additional_payment ?? 0;
+
+      // If we are using the debt snowball strategy, add up the debt payments for any debts that are
+      // paid off to use to pay towards other debts if we are using
+      // the debt snowball strategy
+      if (options?.isDebtSnowball) {
+        spillover += debt_payoffs.reduce(
+          (acc, debtPayoff) => acc + (debtPayoff.debt.amount ? 0 : debtPayoff.debt.payment),
+          0
+        );
+      }
 
       for (const debtPayoff of debt_payoffs) {
         const { debt } = debtPayoff;

@@ -4,6 +4,7 @@ import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import { formatMonths } from '@/lib/utils/format-months';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import {
   Table,
   TableBody,
@@ -22,6 +23,7 @@ interface ResultsCardProps {
   cost: number;
   saved: number;
   dateDiff: number;
+  lump_amounts?: number[];
 }
 
 export function ResultsCard({
@@ -32,11 +34,14 @@ export function ResultsCard({
   cost,
   saved,
   dateDiff,
+  lump_amounts,
 }: ResultsCardProps) {
+  const loan_taken_out = lump_amounts?.reduce((a, b) => a + b, 0);
+
   const TotalDifference = () => {
     return (
       <div className="flex flex-row justify-between">
-        <span className="text-xl">Total Difference</span>
+        <span className="text-xl">Total Amount Difference</span>
         {cost ? (
           <span className="text-xl font-medium text-destructive">{dollarFormatter(cost * -1)}</span>
         ) : (
@@ -84,7 +89,7 @@ export function ResultsCard({
             <span className="text-xl font-medium">{dollarFormatter(data.total_interest)}</span>
           </div>
           <div className="flex flex-row justify-between">
-            <span className="text-xl">Total Paid</span>
+            <span className="text-xl">Total Amount Paid</span>
             <span className="text-xl font-medium">{dollarFormatter(data.total_amount)}</span>
           </div>
           <div className="flex flex-row justify-between">
@@ -99,6 +104,14 @@ export function ResultsCard({
           </div>
           <TotalDifference />
           <TimeDifference />
+          {!loan_taken_out ? null : (
+            <div className="flex flex-row justify-between">
+              <span className="text-xl">Loan Taken Out</span>
+              <span className="text-xl font-medium text-destructive">
+                {dollarFormatter(loan_taken_out)}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Display a table of total interest and debt for each month */}
@@ -113,6 +126,7 @@ export function ResultsCard({
           <TableBody className="text-lg text-center">
             {data.balance_tracking.map((_, yearIndex) =>
               data.balance_tracking[yearIndex].map((month, monthIndex) =>
+                // Don't render the last month when the debt is paid off
                 month === 0 ? null : (
                   <TableRow key={`${title}-${yearIndex * 12 + monthIndex + 1}`}>
                     <TableCell>
@@ -121,7 +135,25 @@ export function ResultsCard({
                     <TableCell>
                       {dollarFormatter(data.interest_tracking[yearIndex][monthIndex])}
                     </TableCell>
-                    <TableCell>{dollarFormatter(month)}</TableCell>
+                    {/* Render a different cell for when a lump sum is used */}
+                    {monthIndex === 0 && lump_amounts?.[yearIndex] ? (
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <TableCell className="text-success">{dollarFormatter(month)}</TableCell>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="bg-accent">
+                          A lump amount of{' '}
+                          <span className="font-bold">
+                            {dollarFormatter(lump_amounts[yearIndex], {
+                              maximumFractionDigits: 0,
+                            })}
+                          </span>{' '}
+                          was applied for this month
+                        </HoverCardContent>
+                      </HoverCard>
+                    ) : (
+                      <TableCell>{dollarFormatter(month)}</TableCell>
+                    )}
                   </TableRow>
                 )
               )

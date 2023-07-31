@@ -11,17 +11,12 @@ interface DebtSnowballInputsContainerProps {
 }
 
 export function DebtSnowballInputs({ debts }: DebtSnowballInputsContainerProps) {
-  const paymentsSum = debts.reduce((acc, debt) => acc + debt.payment, 0);
   const totalDebt = debts.reduce((a, b) => a + b.amount, 0);
 
   return (
     <div className="flex flex-col lg:grid grid-cols-3 gap-8">
-      <div className="col-span-1">
-        <Card className="col-span-1">
-          <CardContent className="pt-6">
-            <DebtSnowballInputsForm paymentsSum={paymentsSum} debts={debts} />
-          </CardContent>
-        </Card>
+      <div className="col-span-1 flex flex-col gap-6">
+        <DebtSnowballInputsForm debts={debts} />
       </div>
       <div className="col-span-2">
         <Card>
