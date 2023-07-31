@@ -56,7 +56,7 @@ export function DebtsTable({
     },
     initialState: {
       pagination: {
-        pageSize: pagination ? 10 : 1000,
+        pageSize: pagination ? 10 : 9999,
         pageIndex: 0,
       },
     },
