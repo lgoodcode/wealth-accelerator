@@ -54,6 +54,12 @@ export function DebtsTable({
       columnVisibility,
       columnFilters,
     },
+    initialState: {
+      pagination: {
+        pageSize: pagination ? 10 : 1000,
+        pageIndex: 0,
+      },
+    },
     enableHiding: false,
     autoResetPageIndex: false,
     onSortingChange: setSorting,

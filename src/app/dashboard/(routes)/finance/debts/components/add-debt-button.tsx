@@ -152,7 +152,6 @@ export function AddDebtButton() {
                   <FormItem>
                     <FormLabel>
                       Months Remaining
-                      <span className="ml-1 text-muted-foreground">(months)</span>
                       <span className="ml-1 text-muted-foreground">(optional)</span>
                     </FormLabel>
                     <FormControl>
