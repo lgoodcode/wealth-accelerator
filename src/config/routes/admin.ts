@@ -28,5 +28,6 @@ export const adminRoutes: Route[] = [
     path: '/dashboard/admin/insurance-policies',
     Icon: FileText,
     description: 'Manage insurance policies for users.',
+    disabled: true,
   },
 ];
