@@ -32,6 +32,9 @@ export function AddDebtButton() {
   const [isOpen, setIsOpen] = useState(false);
   const form = useForm<DebtFormType>({
     resolver: zodResolver(debtFormSchema),
+    defaultValues: {
+      months_remaining: 0,
+    },
   });
 
   const handleCreate = async (data: DebtFormType) => {
@@ -153,6 +156,7 @@ export function AddDebtButton() {
                     <FormLabel>
                       Months Remaining
                       <span className="ml-1 text-muted-foreground">(months)</span>
+                      <span className="ml-1 text-muted-foreground">(optional)</span>
                     </FormLabel>
                     <FormControl>
                       <Input

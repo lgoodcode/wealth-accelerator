@@ -1,13 +1,13 @@
 import { captureException } from '@sentry/nextjs';
-import { Users } from 'lucide-react';
+import { Users, FileText } from 'lucide-react';
 import type { Metadata } from 'next';
 
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { PageError } from '@/components/page-error';
 import { Breadcrumbs, BreadcrumbItem } from '@/components/ui/breadcrumbs';
 import { Separator } from '@/components/ui/separator';
-// import { UsersInsurancePolicies } from './components/users-insurance-policies';
-// import type { UserInsurancePolicyView } from './types';
+import { CreateInsurancePolicy } from './components/create-insurance-policy';
+import { InsuranceCompany } from '../types';
 
 export const metadata: Metadata = {
   title: 'New Policy | Insurance Policies',
@@ -15,13 +15,29 @@ export const metadata: Metadata = {
 
 export default async function CreatePolicyPage() {
   const supabase = createSupabase();
-  const { error, data } = await supabase.rpc('get_all_users_policies_info');
+  const { error: usersError, data: users } = await supabase
+    .from('users')
+    .select('id, name')
+    .order('created_at', { ascending: true });
 
-  if (error) {
-    console.error(error);
-    captureException(error);
+  if (usersError) {
+    console.error(usersError);
+    captureException(usersError);
     return <PageError />;
   }
+
+  const { error: companiesError, data: companiesData } = await supabase
+    .from('insurance_companies')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (companiesError) {
+    console.error(companiesError);
+    captureException(companiesError);
+    return <PageError />;
+  }
+
+  const companies = companiesData as unknown as InsuranceCompany[];
 
   return (
     <div className="p-8">
@@ -36,14 +52,14 @@ export default async function CreatePolicyPage() {
             Users
           </BreadcrumbItem>
           <BreadcrumbItem active>
-            <Users size={16} className="mr-2" />
+            <FileText size={16} className="mr-2" />
             New Policy
           </BreadcrumbItem>
         </Breadcrumbs>
         <Separator />
       </div>
       <div className="flex justify-center">
-        {/* <UsersInsurancePolicies data={userInsurancePolicyViews} /> */}
+        <CreateInsurancePolicy users={users} companies={companies} />
       </div>
     </div>
   );

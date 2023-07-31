@@ -15,6 +15,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
+import { cn } from '@/lib/utils/cn';
 import {
   Table,
   TableBody,
@@ -24,27 +25,28 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { columns } from './columns';
-import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
-import type { UserInsurancePolicyView } from '../../types';
+import type { InsurancePolicyRow } from '../../../types';
 
-interface UsersInsurancePoliciesTableProps {
-  usersInsurancePolicyViews: UserInsurancePolicyView[] | null;
+interface PolicyTableProps {
+  insurancePolicyRows: InsurancePolicyRow[] | null;
 }
 
-export function UsersInsurancePoliciesTable({
-  usersInsurancePolicyViews,
-}: UsersInsurancePoliciesTableProps) {
+export function PolicyTable({ insurancePolicyRows }: PolicyTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
-  const table = useReactTable<UserInsurancePolicyView>({
-    data: usersInsurancePolicyViews || [],
+  const table = useReactTable<InsurancePolicyRow>({
+    data: insurancePolicyRows || [],
     columns,
     state: {
       sorting,
       columnVisibility,
       columnFilters,
+      pagination: {
+        pageIndex: 0,
+        pageSize: 100,
+      },
     },
     enableHiding: false,
     autoResetPageIndex: false,
@@ -60,7 +62,6 @@ export function UsersInsurancePoliciesTable({
   });
   return (
     <div className="space-y-4 w-full">
-      <TableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -82,8 +83,13 @@ export function UsersInsurancePoliciesTable({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                  {row.getVisibleCells().map((cell, i, arr) => (
+                    <TableCell
+                      key={cell.id}
+                      className={cn({
+                        'w-[10%]': i === arr.length - 1,
+                      })}
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

@@ -8,7 +8,6 @@ import { UserInsurancePolicyView } from '../../types';
 export const columns: ColumnDef<UserInsurancePolicyView>[] = [
   {
     accessorKey: 'name',
-    enableHiding: false,
     enableGlobalFilter: true,
     header: ({ column }) => <ColumnHeader column={column} title="Name" />,
     cell: ({ row }) => {
@@ -27,14 +26,13 @@ export const columns: ColumnDef<UserInsurancePolicyView>[] = [
   },
   {
     accessorKey: 'policy',
-    enableHiding: false,
     enableGlobalFilter: true,
     header: ({ column }) => <ColumnHeader column={column} title="Policy" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue<UserInsurancePolicyView>('policy').policy_name}
+            {row.getValue<UserInsurancePolicyView['policy']>('policy').name}
           </span>
         </div>
       );
@@ -46,14 +44,13 @@ export const columns: ColumnDef<UserInsurancePolicyView>[] = [
   },
   {
     accessorKey: 'company',
-    enableHiding: false,
     enableGlobalFilter: true,
     header: ({ column }) => <ColumnHeader column={column} title="Comapny" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue<UserInsurancePolicyView>('policy').company_name}
+            {row.getValue<UserInsurancePolicyView['company']>('company').name}
           </span>
         </div>
       );

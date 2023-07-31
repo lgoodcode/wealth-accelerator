@@ -1,6 +1,9 @@
 import { atom } from 'jotai';
-import { UserInsurancePolicies, UserInsurancePolicyView } from './types';
+
+import type { UserInsurancePolicyView, InsurancePolicyRow } from './types';
 
 export const userInsurancePolicyViewsAtom = atom<UserInsurancePolicyView[] | null>(null);
 
-export const usersInsurancePoliciesAtom = atom<UserInsurancePolicies[] | null>(null);
+export const insurancePolicyRowsAtom = atom<InsurancePolicyRow[]>([]);
+
+export const newPolicyCompanyIdAtom = atom<number>(-1);

@@ -48,6 +48,12 @@ const nextConfig = {
       },
     ];
   },
+  // This is required for the pdfjslib library to work
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+    config.resolve.alias.encoding = false;
+    return config;
+  },
 };
 
 module.exports = withBundleAnalyzer(

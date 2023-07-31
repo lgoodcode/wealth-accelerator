@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function InsurancePoliciesPage() {
   const supabase = createSupabase();
-  const { error, data } = await supabase.rpc('get_all_users_policies_info');
+  const { error, data } = await supabase.rpc('get_all_user_insurance_policy_views');
 
   if (error) {
     console.error(error);
@@ -33,7 +33,7 @@ export default async function InsurancePoliciesPage() {
           <p className="text-muted-foreground">View, create, and manage user&apos;s policies.</p>
         </div>
         <Breadcrumbs>
-          <BreadcrumbItem>
+          <BreadcrumbItem active>
             <Users size={16} className="mr-2" />
             Users
           </BreadcrumbItem>

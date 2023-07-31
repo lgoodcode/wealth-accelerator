@@ -1,5 +1,13 @@
+export type InsuranceCompanies = 'Mass Mutual' | 'Lafayette Life' | 'AUL Inforce';
+
+export type InsuranceCompany = {
+  id: number;
+  name: InsuranceCompanies;
+};
+
 export type InsurancePolicy = {
   id: number;
+  user_id: string;
   company_id: number;
   name: string;
 };
@@ -35,6 +43,19 @@ export type UserInsurancePolicyView = {
     id: number;
     name: string;
   };
-  policy_name: string;
-  company_name: string;
+  policy: {
+    id: number;
+    name: string;
+  };
+  company_name: {
+    id: number;
+    name: InsuranceCompanies;
+  };
 };
+
+export type WindowWithPdfJs = Window &
+  typeof globalThis & {
+    pdfjsLib: any;
+  };
+
+export type PdfParser = (file: Blob) => Promise<InsurancePolicyRow[]>;
