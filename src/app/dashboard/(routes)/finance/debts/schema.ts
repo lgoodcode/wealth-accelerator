@@ -33,7 +33,8 @@ export const debtFormSchema = z.object({
     })
     .nonnegative({
       message: 'Enter a positive number',
-    }),
+    })
+    .optional(),
 });
 
 export type DebtFormType = z.infer<typeof debtFormSchema>;
