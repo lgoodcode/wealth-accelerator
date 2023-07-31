@@ -47,7 +47,7 @@ export type UserInsurancePolicyView = {
     id: number;
     name: string;
   };
-  company_name: {
+  company: {
     id: number;
     name: InsuranceCompanies;
   };
