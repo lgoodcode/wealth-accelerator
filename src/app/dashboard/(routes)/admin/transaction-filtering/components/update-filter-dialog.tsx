@@ -30,7 +30,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useUpdateFilter } from '../hooks/use-update-filter';
-import { updateFilterFormSchema, type UpdateFilterFormType } from '../schemas';
+import { updateFilterFormSchema, type UpdateFilterFormType } from '../schema';
 import { Category, type Filter } from '@/lib/plaid/types/transactions';
 
 interface UpdateFilterProps {

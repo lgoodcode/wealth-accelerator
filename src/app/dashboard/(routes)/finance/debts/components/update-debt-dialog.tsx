@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useUpdateDebt } from '../hooks/use-update-debt';
-import { debtFormSchema, type DebtFormType } from '../schemas';
+import { debtFormSchema, type DebtFormType } from '../schema';
 import type { Debt } from '@/lib/types/debts';
 
 interface UpdateFilterProps {

@@ -33,7 +33,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useUpdateAccount } from '../../hooks/use-update-account';
-import { updateAccountFormSchema, type UpdateAccountType } from '../../schemas';
+import { updateAccountFormSchema, type UpdateAccountType } from '../../schema';
 import type { Account } from '@/lib/plaid/types/institutions';
 
 interface UpdateAccountDialogProps {
