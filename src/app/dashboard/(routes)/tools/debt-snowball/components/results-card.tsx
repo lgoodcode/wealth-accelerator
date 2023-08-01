@@ -19,7 +19,6 @@ import { Info } from 'lucide-react';
 
 interface ResultsCardProps {
   title: string;
-  targetDate?: Date;
   totalDebt: number;
   data: DebtCalculation;
   cost: number;
@@ -30,7 +29,6 @@ interface ResultsCardProps {
 
 export function ResultsCard({
   title,
-  targetDate,
   totalDebt,
   data,
   cost,
@@ -76,12 +74,6 @@ export function ResultsCard({
       </CardHeader>
       <CardContent className="space-y-8">
         <div className="flex flex-col space-y-2">
-          <div className="flex flex-row justify-between">
-            <span className="text-xl">Target Date</span>
-            <span className="text-xl font-medium">
-              {targetDate ? format(targetDate, 'MMMM yyyy') : 'None'}
-            </span>
-          </div>
           <div className="flex flex-row justify-between">
             <span className="text-xl">Total Debt</span>
             <span className="text-xl font-medium">{dollarFormatter(totalDebt)}</span>

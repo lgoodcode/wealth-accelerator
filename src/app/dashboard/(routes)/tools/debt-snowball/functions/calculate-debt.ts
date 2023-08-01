@@ -1,5 +1,3 @@
-import { differenceInMonths } from 'date-fns';
-
 import { moneyRound } from '@/lib/utils/money-round';
 import type { Debt } from '@/lib/types/debts';
 import type { DebtCalculation, DebtPayoff } from '../types';
@@ -8,23 +6,13 @@ const NUM_OF_MONTHS = 12;
 
 export const calculate_debt = (
   debts: Debt[],
-  options: {
+  options?: {
     isDebtSnowball?: boolean;
     isWealthAccelerator?: boolean;
     additional_payment?: number;
     lump_amounts?: number[];
-    target_date?: Date;
   }
 ): DebtCalculation => {
-  // Get difference in the number of months from the target date to the current date
-  let months = options?.target_date
-    ? differenceInMonths(options.target_date, new Date())
-    : Infinity;
-
-  if (months < 1) {
-    throw new Error('Must be at least one month in the future');
-  }
-
   // Track the debt payoffs by initializing an array of the debts in a DebtPayoff object
   const debt_payoffs: DebtPayoff[] = debts.map((debt) => ({
     debt: structuredClone(debt),
@@ -43,12 +31,12 @@ export const calculate_debt = (
   // Initialize the debt remaining for the first month
   balance_tracking[0][0] = balance_remaining;
 
-  for (let year = 0; months && balance_remaining; year++) {
+  for (let year = 0; balance_remaining; year++) {
     // If a debt is paid off, use the remainder for the next debt
     // If we are using the Wealth Accelerator, apply the lump sum to the spillover to use for the debts
     let spillover = options?.isWealthAccelerator ? options?.lump_amounts?.[year] ?? 0 : 0;
 
-    for (let month = 0; month < NUM_OF_MONTHS && months; month++) {
+    for (let month = 0; month < NUM_OF_MONTHS; month++) {
       // Add the additional monthly payments
       spillover += options?.additional_payment ?? 0;
 
@@ -102,9 +90,6 @@ export const calculate_debt = (
 
       // Update the debt tracking for the month
       balance_tracking[year][month] = moneyRound(balance_remaining);
-
-      // Subtract a month from the total months remaining
-      months--;
 
       // If there is no more debt remaining, break out of the loop
       if (!balance_remaining) {

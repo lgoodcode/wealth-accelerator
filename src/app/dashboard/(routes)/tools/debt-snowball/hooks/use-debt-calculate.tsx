@@ -45,14 +45,11 @@ export const useDebtCalculate = (debts: Debt[]) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     try {
-      const currentResults = calculate_debt(regular_debts, {
-        target_date: data.target_date,
-      });
+      const currentResults = calculate_debt(regular_debts);
       const strategyResults = calculate_debt(sorted_debts, {
         isDebtSnowball: true,
         isWealthAccelerator: data.strategy.includes('Wealth Accelerator'),
         additional_payment: data.additional_payment,
-        target_date: data.target_date,
         lump_amounts: data.lump_amounts,
       });
 

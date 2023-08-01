@@ -25,7 +25,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { CurrencyInput } from '@/components/ui/currency-input';
-import { DatePicker } from '@/components/ui/date-picker';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { debtCalculationInputsAtom } from '../atoms';
 import { Strategies } from '../strategies';
@@ -87,39 +86,6 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
             <CardContent className="pt-6 space-y-8">
               <FormField
                 control={form.control}
-                name="target_date"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>
-                      Target date <span className="text-muted-foreground">(optional)</span>
-                    </FormLabel>
-                    <div className="flex flex-row gap-3">
-                      <DatePicker
-                        className="w-full"
-                        date={field.value}
-                        onSelect={field.onChange}
-                        calendarProps={{
-                          disabled: { before: new Date() },
-                        }}
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => form.setValue('target_date', undefined)}
-                      >
-                        Reset
-                      </Button>
-                    </div>
-                    <FormDescription>
-                      The month and year that you want to start the strategy. (The day will be
-                      ignored.)
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="additional_payment"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
@@ -156,8 +122,8 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                     <FormDescription className="flex flex-col gap-1">
                       <span>The amount of money you can put towards your debt each month.</span>
                       <span>
-                        (This value is derived from the &quot;Monthly payments&quot; field and the
-                        sum of the &quot;payment&quot; from the debts.)
+                        (This value is derived from the &quot;Additional monthly payments&quot;
+                        field and the sum of the &quot;payment&quot; from the debts.)
                       </span>
                     </FormDescription>
                     <FormMessage />
