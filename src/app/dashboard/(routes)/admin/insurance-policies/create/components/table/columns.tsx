@@ -2,9 +2,10 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 
-import { ColumnHeader } from './column-header';
-import type { InsurancePolicyRow } from '../../../types';
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
+import { ColumnHeader } from './column-header';
+import { RowActions } from './row-actions';
+import type { InsurancePolicyRow } from '../../../types';
 
 export const columns: ColumnDef<InsurancePolicyRow>[] = [
   {
@@ -123,5 +124,13 @@ export const columns: ColumnDef<InsurancePolicyRow>[] = [
       const valueToCompare = row.getValue<string>(id).toLowerCase();
       return valueToCompare.includes(value.toLowerCase());
     },
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => (
+      <div className="flex justify-end">
+        <RowActions row={row} />
+      </div>
+    ),
   },
 ];

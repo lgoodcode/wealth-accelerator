@@ -1,4 +1,4 @@
-import type { PdfParser, WindowWithPdfJs, InsurancePolicyRow } from '../../../types';
+import type { PdfParser, WindowWithPdfJs, InsurancePolicyRow } from '../../types';
 
 const NUM_PAGES = 2;
 const STARTING_PAGE = 1;

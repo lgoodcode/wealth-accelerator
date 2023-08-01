@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
-import { Debts } from './components/debts';
+import { Debts } from './debts';
 
 export const metadata: Metadata = {
   title: 'Debts',
@@ -32,7 +32,7 @@ export default async function DebtPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <Debts debtsData={debts} />
+      <Debts debts={debts} />
     </div>
   );
 }

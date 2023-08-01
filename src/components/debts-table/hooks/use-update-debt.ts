@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
@@ -5,6 +6,7 @@ import { updateDebtAtom } from '../atoms';
 import type { DebtFormType } from '../schema';
 
 export const useUpdateDebt = () => {
+  const router = useRouter();
   const updateDebt = useSetAtom(updateDebtAtom);
 
   return async (id: number, data: DebtFormType) => {
@@ -20,5 +22,7 @@ export const useUpdateDebt = () => {
     }
 
     updateDebt(updatedDebt);
+    // Refresh to force update the debts in debt snowball and other places where the debts are used
+    router.refresh();
   };
 };

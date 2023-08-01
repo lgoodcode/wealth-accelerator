@@ -662,26 +662,24 @@ CREATE POLICY "Admin can delete insurance_policy_rows" ON public.insurance_polic
 
 -- Retrieves the policies and combines the user and company for viewing in the policies page
 CREATE OR REPLACE FUNCTION get_all_user_insurance_policy_views()
-RETURNS TABLE (
-  result jsonb
-)
+RETURNS SETOF jsonb
 AS $$
 BEGIN
   RETURN QUERY
   SELECT jsonb_build_object(
     'user', jsonb_build_object(
-    'id', u.id,
-     'name', u.name
-  ),
+      'id', u.id,
+      'name', u.name
+    ),
     'policy', jsonb_build_object(
-    'id', ip.id,
-    'name', ip.name
-  ),
+      'id', ip.id,
+      'name', ip.name
+    ),
     'company', jsonb_build_object(
-    'id', ic.id,
-    'name', ic.name
+      'id', ic.id,
+      'name', ic.name
+    )
   )
-)
   FROM users AS u
   INNER JOIN insurance_policies AS ip ON u.id = ip.user_id
   INNER JOIN insurance_companies AS ic ON ip.company_id = ic.id

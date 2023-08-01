@@ -108,8 +108,7 @@ export function ResultsCard({
             <span className="text-xl">Loan Taken Out</span>
             <span
               className={cn('text-xl font-medium', {
-                'text-success': loan_taken_out > 0,
-                'text-destructive': loan_taken_out < 0,
+                'text-destructive': loan_taken_out > 0,
               })}
             >
               {dollarFormatter(loan_taken_out)}

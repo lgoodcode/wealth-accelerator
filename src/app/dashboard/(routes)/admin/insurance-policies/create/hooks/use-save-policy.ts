@@ -1,9 +1,11 @@
+import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
 import { insurancePolicyRowsAtom, newPolicyCompanyIdAtom } from '../../atoms';
 
 export const useSavePolicy = () => {
+  const router = useRouter();
   const [rows, setRows] = useAtom(insurancePolicyRowsAtom);
   const [companyId, setCompanyId] = useAtom(newPolicyCompanyIdAtom);
 
@@ -25,5 +27,7 @@ export const useSavePolicy = () => {
 
     setRows([]);
     setCompanyId(-1);
+    // Refresh the page to get the new policy and retain the state
+    router.refresh();
   };
 };

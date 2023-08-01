@@ -1,24 +1,14 @@
 'use client';
 
-import { useAtom } from 'jotai';
-import { useEffect } from 'react';
-
 import { Loading } from '@/components/loading';
 import { DebtsTable } from '@/components/debts-table';
-import { debtsAtom } from '../atoms';
 import type { Debt } from '@/lib/types/debts';
 
 interface DebtsProps {
-  debtsData: Debt[] | null;
+  debts: Debt[] | null;
 }
 
-export function Debts({ debtsData }: DebtsProps) {
-  const [debts, setDebts] = useAtom(debtsAtom);
-
-  useEffect(() => {
-    setDebts(debtsData);
-  }, []);
-
+export function Debts({ debts }: DebtsProps) {
   if (!debts) {
     return <Loading />;
   }

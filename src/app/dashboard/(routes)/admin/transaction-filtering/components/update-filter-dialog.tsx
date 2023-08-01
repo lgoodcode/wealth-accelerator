@@ -33,13 +33,13 @@ import { useUpdateFilter } from '../hooks/use-update-filter';
 import { updateFilterFormSchema, type UpdateFilterFormType } from '../schema';
 import { Category, type Filter } from '@/lib/plaid/types/transactions';
 
-interface UpdateFilterProps {
+interface UpdateFilterDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
   filter: Filter;
 }
 
-export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterProps) {
+export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterDialogProps) {
   const updateFilter = useUpdateFilter();
   const queryClient = useQueryClient();
   const form = useForm<UpdateFilterFormType>({

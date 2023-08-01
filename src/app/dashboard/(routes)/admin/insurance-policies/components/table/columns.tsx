@@ -7,8 +7,7 @@ import { UserInsurancePolicyView } from '../../types';
 
 export const columns: ColumnDef<UserInsurancePolicyView>[] = [
   {
-    accessorKey: 'name',
-    enableGlobalFilter: true,
+    accessorKey: 'user',
     header: ({ column }) => <ColumnHeader column={column} title="Name" />,
     cell: ({ row }) => {
       return (
@@ -20,13 +19,14 @@ export const columns: ColumnDef<UserInsurancePolicyView>[] = [
       );
     },
     filterFn: (row, id, value) => {
-      const valueToCompare = row.getValue<string>(id).toLowerCase();
+      const valueToCompare = row
+        .getValue<UserInsurancePolicyView['user']>('user')
+        .name.toLowerCase();
       return valueToCompare.includes(value.toLowerCase());
     },
   },
   {
     accessorKey: 'policy',
-    enableGlobalFilter: true,
     header: ({ column }) => <ColumnHeader column={column} title="Policy" />,
     cell: ({ row }) => {
       return (
@@ -37,15 +37,10 @@ export const columns: ColumnDef<UserInsurancePolicyView>[] = [
         </div>
       );
     },
-    filterFn: (row, id, value) => {
-      const valueToCompare = row.getValue<string>(id).toLowerCase();
-      return valueToCompare.includes(value.toLowerCase());
-    },
   },
   {
     accessorKey: 'company',
-    enableGlobalFilter: true,
-    header: ({ column }) => <ColumnHeader column={column} title="Comapny" />,
+    header: ({ column }) => <ColumnHeader column={column} title="Company" />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
@@ -54,10 +49,6 @@ export const columns: ColumnDef<UserInsurancePolicyView>[] = [
           </span>
         </div>
       );
-    },
-    filterFn: (row, id, value) => {
-      const valueToCompare = row.getValue<string>(id).toLowerCase();
-      return valueToCompare.includes(value.toLowerCase());
     },
   },
 ];

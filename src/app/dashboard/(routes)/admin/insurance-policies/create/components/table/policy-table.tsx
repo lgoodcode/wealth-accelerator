@@ -87,7 +87,7 @@ export function PolicyTable({ insurancePolicyRows }: PolicyTableProps) {
                     <TableCell
                       key={cell.id}
                       className={cn({
-                        'w-[10%]': i === arr.length - 1,
+                        'w-fit pl-0': i === arr.length - 1,
                       })}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

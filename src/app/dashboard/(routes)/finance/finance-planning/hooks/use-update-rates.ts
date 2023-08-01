@@ -1,7 +1,11 @@
+import { useRouter } from 'next/navigation';
+
 import { supabase } from '@/lib/supabase/client';
-import type { RatesFormSchemaType } from './schema';
+import type { RatesFormSchemaType } from '../schema';
 
 export const useUpdateRates = () => {
+  const router = useRouter();
+
   return async (user_id: string, data: RatesFormSchemaType) => {
     console.log(data);
     const { error } = await supabase
@@ -12,5 +16,8 @@ export const useUpdateRates = () => {
     if (error) {
       throw error;
     }
+
+    // Refresh to force the data to be re-fetched from the server wherever the rates are used
+    router.refresh();
   };
 };
