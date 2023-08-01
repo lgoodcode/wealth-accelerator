@@ -1,6 +1,6 @@
-import { massMutualParser } from './pdf/mass-mutual-parser';
-import { lafayetteParser } from './pdf/lafayette-parser';
-import { aulInforceParser } from './pdf/aul-inforce-parser';
+import { massMutualParser } from '../pdf/mass-mutual-parser';
+import { lafayetteParser } from '../pdf/lafayette-parser';
+import { aulInforceParser } from '../pdf/aul-inforce-parser';
 import { InsuranceCompany } from '../../types';
 
 export const useParsePdf = (companies: InsuranceCompany[]) => {
