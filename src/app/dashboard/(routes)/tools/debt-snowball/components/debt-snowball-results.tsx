@@ -41,6 +41,7 @@ export function DebtSnowballResults({ totalDebt }: DebtSnowballResultsProps) {
       <ResultsCard
         totalDebt={totalDebt}
         title="Current Strategy"
+        monthly_payment={inputs.monthly_payment - (inputs?.additional_payment ?? 0)}
         data={results.currentResults}
         cost={currentCost}
         saved={currentSaved}
@@ -48,6 +49,7 @@ export function DebtSnowballResults({ totalDebt }: DebtSnowballResultsProps) {
       />
       <ResultsCard
         title={inputs.strategy}
+        monthly_payment={inputs.monthly_payment}
         totalDebt={totalDebt}
         data={results.strategyResults}
         cost={strategyCost}

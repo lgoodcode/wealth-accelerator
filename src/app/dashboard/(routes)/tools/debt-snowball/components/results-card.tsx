@@ -19,6 +19,7 @@ import { Info } from 'lucide-react';
 
 interface ResultsCardProps {
   title: string;
+  monthly_payment: number;
   totalDebt: number;
   data: DebtCalculation;
   cost: number;
@@ -30,6 +31,7 @@ interface ResultsCardProps {
 export function ResultsCard({
   title,
   totalDebt,
+  monthly_payment,
   data,
   cost,
   saved,
@@ -74,6 +76,10 @@ export function ResultsCard({
       </CardHeader>
       <CardContent className="space-y-8">
         <div className="flex flex-col space-y-2">
+          <div className="flex flex-row justify-between">
+            <span className="text-xl">Monthly Debt Payment</span>
+            <span className="text-xl font-medium">{dollarFormatter(monthly_payment)}</span>
+          </div>
           <div className="flex flex-row justify-between">
             <span className="text-xl">Total Debt</span>
             <span className="text-xl font-medium">{dollarFormatter(totalDebt)}</span>
