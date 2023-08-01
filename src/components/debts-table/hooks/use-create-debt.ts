@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { useSetAtom } from 'jotai';
 
 import { useUser } from '@/hooks/use-user';
@@ -7,6 +8,7 @@ import type { DebtFormType } from '../schema';
 
 export const useCreateDebt = () => {
   const user = useUser();
+  const router = useRouter();
   const addDebt = useSetAtom(addDebtAtom);
 
   return async (debt: DebtFormType) => {
@@ -28,5 +30,7 @@ export const useCreateDebt = () => {
     }
 
     addDebt(newDebt);
+    // Refresh to force update the debts in debt snowball and other places where the debts are used
+    router.refresh();
   };
 };

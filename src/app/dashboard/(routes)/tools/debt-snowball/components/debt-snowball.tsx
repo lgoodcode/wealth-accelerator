@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DebtSnowballInputs } from './debt-snowball-inputs';
 import { DebtSnowballResults } from './debt-snowball-results';
 import { debtCalculationResultsAtom } from '../atoms';
-import { debtsAtom } from '../../../finance/debts/atoms';
+import { debtsAtom } from '@/components/debts-table/atoms';
 import type { Debt } from '@/lib/types/debts';
 
 enum TabsValue {

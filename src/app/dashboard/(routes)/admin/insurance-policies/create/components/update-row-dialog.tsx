@@ -23,46 +23,44 @@ import {
   FormDescription,
   FormMessage,
 } from '@/components/ui/form';
-import { useUpdateDebt } from '../hooks/use-update-debt';
-import { debtFormSchema, type DebtFormType } from '../schema';
-import type { Debt } from '@/lib/types/debts';
+import type { InsurancePolicyRow } from '../../types';
 
-interface UpdateFilterProps {
+interface UpdateRowDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
-  debt: Debt;
+  row: InsurancePolicyRow;
 }
 
-export function UpdateFilterDialog({ open, onOpenChange, debt }: UpdateFilterProps) {
-  const updateDebt = useUpdateDebt();
-  const form = useForm<DebtFormType>({
-    resolver: zodResolver(debtFormSchema),
-    values: debt,
-  });
+export function UpdateRowDialog({ open, onOpenChange, row }: UpdateRowDialogProps) {
+  // const updateDebt = useUpdateDebt();
+  // const form = useForm<DebtFormType>({
+  //   resolver: zodResolver(debtFormSchema),
+  //   values: debt,
+  // });
 
-  const handleUpdate = async (data: DebtFormType) => {
-    await updateDebt(debt.id, data)
-      .then(() => {
-        onOpenChange(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        captureException(error);
-        toast.error(
-          <span>
-            Failed to update debt <span className="font-bold">{debt.description}</span>
-          </span>
-        );
-      });
-  };
+  // const handleUpdate = async (data: DebtFormType) => {
+  //   await updateDebt(debt.id, data)
+  //     .then(() => {
+  //       onOpenChange(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       captureException(error);
+  //       toast.error(
+  //         <span>
+  //           Failed to update debt <span className="font-bold">{debt.description}</span>
+  //         </span>
+  //       );
+  //     });
+  // };
 
-  useEffect(() => {
-    form.reset();
-  }, [open, form]);
+  // useEffect(() => {
+  //   form.reset();
+  // }, [open, form]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      {/* <DialogContent>
         <DialogHeader>
           <DialogTitle>Update debt</DialogTitle>
           <DialogDescription>
@@ -191,7 +189,7 @@ export function UpdateFilterDialog({ open, onOpenChange, debt }: UpdateFilterPro
             Save
           </Button>
         </DialogFooter>
-      </DialogContent>
+      </DialogContent> */}
     </Dialog>
   );
 }

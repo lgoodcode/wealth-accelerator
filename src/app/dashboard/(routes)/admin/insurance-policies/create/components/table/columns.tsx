@@ -4,7 +4,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import { ColumnHeader } from './column-header';
-import { DeleteRow } from './delete-row';
+import { RowActions } from './row-actions';
 import type { InsurancePolicyRow } from '../../../types';
 
 export const columns: ColumnDef<InsurancePolicyRow>[] = [
@@ -129,7 +129,7 @@ export const columns: ColumnDef<InsurancePolicyRow>[] = [
     id: 'actions',
     cell: ({ row }) => (
       <div className="flex justify-end">
-        <DeleteRow row={row} />
+        <RowActions row={row} />
       </div>
     ),
   },

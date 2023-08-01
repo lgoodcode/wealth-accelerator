@@ -23,9 +23,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { columns } from './columns';
-import { TableToolbar } from './table-toolbar';
-import { TablePagination } from './table-pagination';
+import { columns } from './components/table/columns';
+import { TableToolbar } from './components/table/table-toolbar';
+import { TablePagination } from './components/table/table-pagination';
 import type { Debt } from '@/lib/types/debts';
 
 interface DebtsTableProps {
