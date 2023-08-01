@@ -48,7 +48,7 @@ export function ManageInstitutions() {
           <DropdownMenuTrigger asChild>
             <Button size="icon" variant="ghost" disabled={!selectedInstitution}>
               <span className="sr-only">Actions</span>
-              <MoreHorizontal />
+              <MoreHorizontal className="w-8 h-8" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
