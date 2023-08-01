@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useUpdateRates } from '../use-update-rates';
+import { useUpdateRates } from '../hooks/use-update-rates';
 import { RatesFormSchema, type RatesFormSchemaType } from '../schema';
 
 const NUM_RATE_YEARS = 60;

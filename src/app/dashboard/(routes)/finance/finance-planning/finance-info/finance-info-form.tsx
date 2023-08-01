@@ -17,7 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useUpdateFinanceInfo } from '../use-update-finance-info';
+import { useUpdateFinanceInfo } from '../hooks/use-update-finance-info';
 import { FinanceInfoSchema, type FinanceInfoSchemaType as FinanceInfoSchemaType } from '../schema';
 import { moneyRound } from '@/lib/utils/money-round';
 
