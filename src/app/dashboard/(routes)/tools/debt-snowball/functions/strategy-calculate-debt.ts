@@ -4,7 +4,7 @@ import type { StrategyDebtCalculation, DebtPayoff } from '../types';
 
 const NUM_OF_MONTHS = 12;
 
-export const strategy_calculate_debt = (
+export const strategy_calculate = (
   debts: Debt[],
   options?: {
     isDebtSnowball?: boolean;
@@ -32,7 +32,6 @@ export const strategy_calculate_debt = (
   let balance_remaining = intitial_total_debt;
   let year = 0;
   let snowball = 0;
-  let total_snowball = 0;
   let spillover = 0;
 
   // Initialize the debt remaining for the first month
@@ -138,9 +137,6 @@ export const strategy_calculate_debt = (
       }
     } // End of for-each month
 
-    // Add up the snowball for each year
-    total_snowball = moneyRound(total_snowball + snowball);
-
     // If there's still an outstanding balance - increment the year and
     // add a new array of 12 months to the debt tracking
     if (balance_remaining) {
@@ -161,7 +157,7 @@ export const strategy_calculate_debt = (
     0
   );
   // Calculate the total amount paid for all debts with the principal and interest and subtracting the snowball
-  const total_amount = intitial_total_debt + total_interest - total_snowball;
+  const total_amount = intitial_total_debt + total_interest;
 
   return {
     debt_payoffs,
@@ -171,6 +167,5 @@ export const strategy_calculate_debt = (
     payoff_months: payoff_months,
     total_interest: moneyRound(total_interest),
     total_amount: moneyRound(total_amount),
-    total_snowball: moneyRound(total_snowball),
   };
 };

@@ -49,8 +49,6 @@ export function DebtSnowball({ debtsData }: DebtSnowballProps) {
     return <Loading />;
   }
 
-  console.log(debts);
-
   return (
     <Tabs
       className="w-full"

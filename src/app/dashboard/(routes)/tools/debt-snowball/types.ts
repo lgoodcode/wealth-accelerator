@@ -28,7 +28,6 @@ export type StrategyDebtCalculation = {
   payoff_months: number;
   total_interest: number;
   total_amount: number;
-  total_snowball: number;
 };
 
 export type DebtCalculationInputs = {

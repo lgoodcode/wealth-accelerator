@@ -2,7 +2,7 @@ import { useSetAtom, useAtomValue } from 'jotai';
 import { toast } from 'react-toastify';
 
 import { simple_calculate } from '../functions/simple-calculate-debt';
-import { strategy_calculate_debt } from '../functions/strategy-calculate-debt';
+import { strategy_calculate } from '../functions/strategy-calculate-debt';
 import { debtsAtom, debtCalculationInputsAtom, debtCalculationResultsAtom } from '../atoms';
 import type { Debt } from '@/lib/types/debts';
 import type { DebtCalculationSchemaType } from '../schema';
@@ -18,8 +18,8 @@ export const useDebtCalculate = () => {
 
     try {
       // const currentResults = simple_calculate(structuredClone(debts));
-      const currentResults = strategy_calculate_debt(structuredClone(debts));
-      const strategyResults = strategy_calculate_debt(structuredClone(debts), {
+      const currentResults = strategy_calculate(structuredClone(debts));
+      const strategyResults = strategy_calculate(structuredClone(debts), {
         isDebtSnowball: true,
         isWealthAccelerator: data.strategy.includes('Wealth Accelerator'),
         additional_payment: data.additional_payment,
