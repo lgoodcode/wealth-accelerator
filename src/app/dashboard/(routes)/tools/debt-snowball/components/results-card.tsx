@@ -15,20 +15,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { SimpleDebtCalculation, StrategyDebtCalculation } from '../types';
-import { moneyRound } from '@/lib/utils/money-round';
+import type { SimpleDebtCalculation, SnowballDebtCalculation } from '../types';
 
 interface ResultsCardProps {
   title: string;
   monthly_payment: number;
   totalDebt: number;
-  data: SimpleDebtCalculation | StrategyDebtCalculation;
+  data: SimpleDebtCalculation | SnowballDebtCalculation;
   cost: number;
   saved: number;
   dateDiff: number;
   opportunity_rate: number;
   opportunity_cost: number;
-  total_snowball?: number;
   lump_amounts?: number[];
 }
 
@@ -55,7 +53,6 @@ export function ResultsCard({
   cost,
   saved,
   dateDiff,
-  total_snowball,
   opportunity_rate,
   opportunity_cost,
   lump_amounts,
@@ -122,16 +119,6 @@ export function ResultsCard({
             <span className="text-xl">Projected Payoff Date</span>
             <span className="text-xl font-medium">
               {format(addMonths(new Date(), data.payoff_months), 'MMMM yyyy')}
-            </span>
-          </div>
-          <div className="flex flex-row justify-between">
-            <span className="text-xl">Remaining Cash After Debt is Paid</span>
-            <span
-              className={cn('text-xl font-medium', {
-                'text-success': total_snowball && total_snowball > 0,
-              })}
-            >
-              {dollarFormatter(total_snowball ?? 0)}
             </span>
           </div>
           <div className="flex flex-row justify-between">
@@ -204,14 +191,6 @@ export function ResultsCard({
                           })}
                         </span>{' '}
                         was applied for this month
-                      </InfoHoverCard>
-                    )}
-
-                    {month === 0 && (
-                      <InfoHoverCard>
-                        The remaining{' '}
-                        <span className="font-bold">{dollarFormatter(total_snowball ?? 0)}</span>{' '}
-                        was deducted from the total amount paid
                       </InfoHoverCard>
                     )}
                   </TableCell>

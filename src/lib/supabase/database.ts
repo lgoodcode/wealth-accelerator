@@ -412,9 +412,7 @@ export interface Database {
       }
       get_all_user_insurance_policy_views: {
         Args: Record<PropertyKey, never>
-        Returns: {
-          result: Json
-        }[]
+        Returns: Json[]
       }
       get_creative_cash_flow_record: {
         Args: {

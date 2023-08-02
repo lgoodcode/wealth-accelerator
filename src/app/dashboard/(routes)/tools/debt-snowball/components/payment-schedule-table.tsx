@@ -15,11 +15,11 @@ import { debtCalculationInputsAtom, debtCalculationResultsAtom } from '../atoms'
 import type {
   DebtCalculationInputs,
   DebtCalculationResults,
-  StrategyDebtCalculation,
+  SnowballDebtCalculation,
 } from '../types';
 
 interface PaymentScheduleHeadersProps {
-  debtPayoffs: StrategyDebtCalculation['debt_payoffs'];
+  debtPayoffs: SnowballDebtCalculation['debt_payoffs'];
 }
 
 const PaymentScheduleHeaders = ({ debtPayoffs }: PaymentScheduleHeadersProps): JSX.Element => {
@@ -36,7 +36,7 @@ const PaymentScheduleHeaders = ({ debtPayoffs }: PaymentScheduleHeadersProps): J
 
 interface PaymentScheduleHeadersLeftProps {
   inputs: DebtCalculationInputs;
-  data: StrategyDebtCalculation;
+  data: SnowballDebtCalculation;
 }
 
 const PaymentScheduleHeadersLeft = ({ inputs, data }: PaymentScheduleHeadersLeftProps) => {
