@@ -1,18 +1,10 @@
 import { moneyRound } from '@/lib/utils/money-round';
 import type { Debt } from '@/lib/types/debts';
-import type { DebtCalculation, DebtPayoff } from '../types';
+import type { SimpleDebtCalculation, DebtPayoff } from '../types';
 
 const NUM_OF_MONTHS = 12;
 
-export const calculate_debt = (
-  debts: Debt[],
-  options?: {
-    isDebtSnowball?: boolean;
-    isWealthAccelerator?: boolean;
-    additional_payment?: number;
-    lump_amounts?: number[];
-  }
-): DebtCalculation => {
+export const simple_calculate = (debts: Debt[]): SimpleDebtCalculation => {
   // Track the debt payoffs by initializing an array of the debts in a DebtPayoff object
   const debt_payoffs: DebtPayoff[] = debts.map((debt) => ({
     debt: structuredClone(debt),
@@ -25,42 +17,19 @@ export const calculate_debt = (
   // with the first index being an array of 12 months
   const balance_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
   const interest_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
-  const spillover_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
-  // Track the balance for each debt with the inner array index value being the debt amount
   // Track the total debt remaining
   const intitial_total_debt = debts.reduce((acc, debt) => acc + debt.amount, 0);
   let balance_remaining = intitial_total_debt;
   let year = 0;
-  let spillover = 0;
-  let total_spillover = 0;
 
   // Initialize the debt remaining for the first month
   balance_tracking[0][0] = balance_remaining;
 
+  // While we still haven't reached the target date and there is still debt remaining
   while (balance_remaining) {
-    // If a debt is paid off, use the remainder for the next debt
-    // If we are using the Wealth Accelerator, apply the lump sum to the spillover to use for the debts
-    spillover = options?.isWealthAccelerator ? options?.lump_amounts?.[year] ?? 0 : 0;
-
     for (let month = 0; month < NUM_OF_MONTHS; month++) {
-      // Add the additional monthly payments
-      spillover += options?.additional_payment ?? 0;
-
-      // If we are using the debt snowball strategy, add up the debt payments for any debts that are
-      // paid off to use to pay towards other debts if we are using
-      // the debt snowball strategy
-      if (options?.isDebtSnowball) {
-        spillover += debt_payoffs.reduce(
-          (acc, debtPayoff) => acc + (debtPayoff.debt.amount ? 0 : debtPayoff.debt.payment),
-          0
-        );
-      }
-
-      spillover_tracking[year][month] = moneyRound(spillover);
-
       for (const debtPayoff of debt_payoffs) {
         const { debt } = debtPayoff;
-        const payment = debt.payment + spillover;
 
         // If all debts are paid or if the debt is paid off, skip it
         if (!balance_remaining || !debt.amount) {
@@ -78,21 +47,13 @@ export const calculate_debt = (
         // Add a month to the debt payoff
         debtPayoff.months++;
 
-        if (interest >= payment) {
+        if (interest >= debt.payment) {
           throw new Error('The interest rate is too high to pay off the debt', {
             cause: debt.description,
           });
         }
 
-        if (debt.amount < payment) {
-          debtPayoff.payment_tracking[year][month] = moneyRound(debt.amount);
-          spillover = moneyRound(payment - debt.amount);
-          debt.amount = 0;
-        } else {
-          debtPayoff.payment_tracking[year][month] = moneyRound(payment);
-          debt.amount = moneyRound(debt.amount - payment);
-          spillover = 0;
-        }
+        debt.amount = moneyRound(debt.amount - debt.payment);
       }
 
       // After running through each debt for the month, calculate the new total debt remaining
@@ -101,15 +62,12 @@ export const calculate_debt = (
       // Update the debt tracking for the month
       balance_tracking[year][month] = moneyRound(balance_remaining);
 
-      // If there is no more debt remaining, remove the remaining empty months and break out of the loop
+      // If there is no more debt remaining, break out of the loop
       if (!balance_remaining) {
         balance_tracking[year] = balance_tracking[year].slice(0, month + 1);
         break;
       }
-    } // End of for-each month
-
-    // Add up spillover for each year
-    total_spillover = moneyRound(total_spillover + spillover);
+    }
 
     // If there's still an outstanding balance - increment the year and
     // add a new array of 12 months to the debt tracking
@@ -117,7 +75,6 @@ export const calculate_debt = (
       year++;
       balance_tracking[year] = Array.from({ length: 12 }, () => 0);
       interest_tracking[year] = Array.from({ length: 12 }, () => 0);
-      spillover_tracking[year] = Array.from({ length: 12 }, () => 0);
       debt_payoffs.forEach((debtPayoff) => {
         debtPayoff.payment_tracking[year] = Array.from({ length: 12 }, () => 0);
       });
@@ -130,17 +87,15 @@ export const calculate_debt = (
     (acc, debtPayoff) => Math.max(acc, debtPayoff.months),
     0
   );
-  // Calculate the total amount paid for all debts with the principal and interest and subtracting the spillover
-  const total_amount = intitial_total_debt + total_interest - total_spillover;
+  // Calculate the total amount paid for all debts with the principal and interest
+  const total_amount = intitial_total_debt + total_interest;
 
   return {
     debt_payoffs,
     balance_tracking,
     interest_tracking,
-    spillover_tracking,
     payoff_months: payoff_months,
     total_interest: moneyRound(total_interest),
     total_amount: moneyRound(total_amount),
-    total_spillover: moneyRound(total_spillover),
   };
 };

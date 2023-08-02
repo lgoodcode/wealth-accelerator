@@ -3,10 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { Plus, X } from 'lucide-react';
 
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
+import { moneyRound } from '@/lib/utils/money-round';
 import {
   Form,
   FormDescription,
@@ -26,7 +27,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { debtCalculationInputsAtom } from '../atoms';
+import { debtCalculationInputsAtom, sortDebtsAtom } from '../atoms';
 import { Strategies } from '../strategies';
 import { useDebtCalculate } from '../hooks/use-debt-calculate';
 import { debtCalculationSchema, type DebtCalculationSchemaType } from '../schema';
@@ -39,7 +40,8 @@ interface DebtSnowballInputsFormProps {
 export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
   const inputs = useAtomValue(debtCalculationInputsAtom);
   const paymentsSum = debts.reduce((a, b) => a + b.payment, 0);
-  const calculateDebt = useDebtCalculate(debts);
+  const calculateDebt = useDebtCalculate();
+  const sortDebts = useSetAtom(sortDebtsAtom);
   const [numLumps, setNumLumps] = useState(1);
   const form = useForm<DebtCalculationSchemaType>({
     resolver: zodResolver(debtCalculationSchema),
@@ -51,6 +53,8 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
       // @ts-ignore - Default to undefined to make the user select a strategy
       strategy: inputs?.strategy ?? undefined,
       monthly_payment: paymentsSum,
+      // @ts-ignore - Default to undefined to make the user specify a rate
+      opportunity_rate: inputs?.opportunity_rate ?? undefined,
       lump_amounts: inputs?.lump_amounts ?? [0],
     },
   });
@@ -86,9 +90,15 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
     }
   }, [strategy]);
 
+  // Sort the debts when the strategy changes so it is displayed in the table and ready to
+  // be calculated. The sorting won't affect the "current" strategy because the snowball isn't used
+  useEffect(() => {
+    sortDebts(strategy);
+  }, [strategy]);
+
   return (
     <Form {...form}>
-      <form noValidate onSubmit={form.handleSubmit(calculateDebt, console.log)}>
+      <form noValidate onSubmit={form.handleSubmit(calculateDebt)}>
         <div className="flex flex-col gap-6">
           <Card>
             <CardContent className="pt-6 space-y-8">
@@ -133,6 +143,28 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                         (This value is derived from the &quot;Additional monthly payments&quot;
                         field and the sum of the &quot;payment&quot; from the debts.)
                       </span>
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="opportunity_rate"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>
+                      Opportunity cost recovery rate{' '}
+                      <span className="text-muted-foreground">(%)</span>
+                    </FormLabel>
+                    <Input
+                      type="number"
+                      placeholder="5%"
+                      value={field.value}
+                      onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value) || 0))}
+                    />
+                    <FormDescription>
+                      The rate to compound your savings for each month from the debt snowball.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

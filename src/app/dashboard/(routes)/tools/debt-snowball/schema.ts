@@ -14,6 +14,16 @@ export const debtCalculationSchema = z.object({
   strategy: z.nativeEnum(Strategies, {
     required_error: 'Select a strategy',
   }),
+  opportunity_rate: z
+    .number({
+      required_error: 'Enter a rate',
+    })
+    .nonnegative({
+      message: 'Enter a positive rate',
+    })
+    .max(100, {
+      message: 'Enter a rate less than 100%',
+    }),
   lump_amounts: z.array(
     z
       .number({

@@ -11,25 +11,35 @@ export type DebtPayoff = {
   payment_tracking: number[][];
 };
 
-export type DebtCalculation = {
+export type SimpleDebtCalculation = {
   debt_payoffs: DebtPayoff[];
   balance_tracking: number[][];
   interest_tracking: number[][];
-  spillover_tracking: number[][];
   payoff_months: number;
   total_interest: number;
   total_amount: number;
-  total_spillover: number;
+};
+
+export type StrategyDebtCalculation = {
+  debt_payoffs: DebtPayoff[];
+  balance_tracking: number[][];
+  interest_tracking: number[][];
+  snowball_tracking: number[][];
+  payoff_months: number;
+  total_interest: number;
+  total_amount: number;
+  total_snowball: number;
 };
 
 export type DebtCalculationInputs = {
   additional_payment?: number;
   monthly_payment: number;
+  opportunity_rate: number;
   strategy: Strategies;
   lump_amounts: number[];
 };
 
 export type DebtCalculationResults = {
-  currentResults: DebtCalculation;
-  strategyResults: DebtCalculation;
+  currentResults: SimpleDebtCalculation;
+  strategyResults: StrategyDebtCalculation;
 };

@@ -1,4 +1,5 @@
 import { format, addMonths } from 'date-fns';
+import { Info } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
@@ -14,18 +15,20 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { DebtCalculation } from '../types';
-import { Info } from 'lucide-react';
+import type { SimpleDebtCalculation, StrategyDebtCalculation } from '../types';
+import { moneyRound } from '@/lib/utils/money-round';
 
 interface ResultsCardProps {
   title: string;
   monthly_payment: number;
   totalDebt: number;
-  data: DebtCalculation;
+  data: SimpleDebtCalculation | StrategyDebtCalculation;
   cost: number;
   saved: number;
   dateDiff: number;
-  total_spillover: number;
+  opportunity_rate: number;
+  opportunity_cost: number;
+  total_snowball?: number;
   lump_amounts?: number[];
 }
 
@@ -52,7 +55,9 @@ export function ResultsCard({
   cost,
   saved,
   dateDiff,
-  total_spillover,
+  total_snowball,
+  opportunity_rate,
+  opportunity_cost,
   lump_amounts,
 }: ResultsCardProps) {
   const loan_taken_out = lump_amounts?.reduce((a, b) => a + b, 0) ?? 0;
@@ -121,8 +126,12 @@ export function ResultsCard({
           </div>
           <div className="flex flex-row justify-between">
             <span className="text-xl">Remaining Cash After Debt is Paid</span>
-            <span className="text-xl font-medium text-success">
-              {dollarFormatter(data.total_spillover)}
+            <span
+              className={cn('text-xl font-medium', {
+                'text-success': total_snowball && total_snowball > 0,
+              })}
+            >
+              {dollarFormatter(total_snowball ?? 0)}
             </span>
           </div>
           <div className="flex flex-row justify-between">
@@ -137,6 +146,20 @@ export function ResultsCard({
           </div>
           <TotalDifference />
           <TimeDifference />
+          <div className="flex flex-row justify-between">
+            <span className="text-xl">Opportunity Cost Recovery Rate</span>
+            <span className="text-xl font-medium">{opportunity_rate}%</span>
+          </div>
+          <div className="flex flex-row justify-between">
+            <span className="text-xl">Opportunity Cost Recovery</span>
+            <span
+              className={cn('text-xl font-medium', {
+                'text-success': opportunity_cost > 0,
+              })}
+            >
+              {dollarFormatter(opportunity_cost)}
+            </span>
+          </div>
         </div>
 
         {/* Display a table of total interest and debt for each month */}
@@ -187,8 +210,8 @@ export function ResultsCard({
                     {month === 0 && (
                       <InfoHoverCard>
                         The remaining{' '}
-                        <span className="font-bold">{dollarFormatter(total_spillover)}</span> was
-                        deducted from the total amount paid
+                        <span className="font-bold">{dollarFormatter(total_snowball ?? 0)}</span>{' '}
+                        was deducted from the total amount paid
                       </InfoHoverCard>
                     )}
                   </TableCell>
