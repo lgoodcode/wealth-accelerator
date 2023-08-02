@@ -15,13 +15,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { SimpleDebtCalculation, StrategyDebtCalculation } from '../types';
+import type { SimpleDebtCalculation, SnowballDebtCalculation } from '../types';
 
 interface ResultsCardProps {
   title: string;
   monthly_payment: number;
   totalDebt: number;
-  data: SimpleDebtCalculation | StrategyDebtCalculation;
+  data: SimpleDebtCalculation | SnowballDebtCalculation;
   cost: number;
   saved: number;
   dateDiff: number;

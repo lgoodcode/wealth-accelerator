@@ -20,14 +20,8 @@ export type SimpleDebtCalculation = {
   total_amount: number;
 };
 
-export type StrategyDebtCalculation = {
-  debt_payoffs: DebtPayoff[];
-  balance_tracking: number[][];
-  interest_tracking: number[][];
+export type SnowballDebtCalculation = SimpleDebtCalculation & {
   snowball_tracking: number[][];
-  payoff_months: number;
-  total_interest: number;
-  total_amount: number;
 };
 
 export type DebtCalculationInputs = {
@@ -40,5 +34,5 @@ export type DebtCalculationInputs = {
 
 export type DebtCalculationResults = {
   currentResults: SimpleDebtCalculation;
-  strategyResults: StrategyDebtCalculation;
+  strategyResults: SnowballDebtCalculation;
 };
