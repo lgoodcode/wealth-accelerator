@@ -78,6 +78,14 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
     form.setValue('monthly_payment', paymentsSum + (additional_payment ?? 0));
   }, [paymentsSum, additional_payment]);
 
+  // Reset the lump amounts whenever the strategy changes and isn't a Wealth Accelerator strategy
+  useEffect(() => {
+    if (!shouldDisplayWealthAccelerator) {
+      form.setValue('lump_amounts', [0]);
+      setNumLumps(1);
+    }
+  }, [strategy]);
+
   return (
     <Form {...form}>
       <form noValidate onSubmit={form.handleSubmit(calculateDebt, console.log)}>
