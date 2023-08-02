@@ -1,6 +1,5 @@
-import type { Debt } from '@/lib/types/debts';
-
 import { Strategies } from './strategies';
+import type { Debt } from '@/lib/types/debts';
 
 export type DebtPayoff = {
   debt: Debt;
