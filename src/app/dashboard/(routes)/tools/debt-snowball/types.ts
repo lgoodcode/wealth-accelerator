@@ -8,9 +8,10 @@ export type DebtPayoff = {
   months: number;
   /** The total amount of interest paid to pay off the debt */
   interest: number;
+  payment_tracking: number[][];
 };
 
-export type DebtCalculation = {
+export type SimpleDebtCalculation = {
   debt_payoffs: DebtPayoff[];
   balance_tracking: number[][];
   interest_tracking: number[][];
@@ -19,15 +20,26 @@ export type DebtCalculation = {
   total_amount: number;
 };
 
+export type StrategyDebtCalculation = {
+  debt_payoffs: DebtPayoff[];
+  balance_tracking: number[][];
+  interest_tracking: number[][];
+  snowball_tracking: number[][];
+  payoff_months: number;
+  total_interest: number;
+  total_amount: number;
+  total_snowball: number;
+};
+
 export type DebtCalculationInputs = {
-  target_date?: Date;
   additional_payment?: number;
   monthly_payment: number;
+  opportunity_rate: number;
   strategy: Strategies;
   lump_amounts: number[];
 };
 
 export type DebtCalculationResults = {
-  currentResults: DebtCalculation;
-  strategyResults: DebtCalculation;
+  currentResults: SimpleDebtCalculation;
+  strategyResults: StrategyDebtCalculation;
 };

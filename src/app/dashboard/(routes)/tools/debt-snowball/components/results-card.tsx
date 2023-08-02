@@ -1,4 +1,5 @@
 import { format, addMonths } from 'date-fns';
+import { Info } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
@@ -14,28 +15,49 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { DebtCalculation } from '../types';
-import { Info } from 'lucide-react';
+import type { SimpleDebtCalculation, StrategyDebtCalculation } from '../types';
+import { moneyRound } from '@/lib/utils/money-round';
 
 interface ResultsCardProps {
   title: string;
-  targetDate?: Date;
+  monthly_payment: number;
   totalDebt: number;
-  data: DebtCalculation;
+  data: SimpleDebtCalculation | StrategyDebtCalculation;
   cost: number;
   saved: number;
   dateDiff: number;
+  opportunity_rate: number;
+  opportunity_cost: number;
+  total_snowball?: number;
   lump_amounts?: number[];
 }
 
+interface InfoHoverCardProps {
+  children: React.ReactNode;
+}
+
+const InfoHoverCard = ({ children }: InfoHoverCardProps) => {
+  return (
+    <HoverCard>
+      <HoverCardTrigger asChild>
+        <Info className="ml-2 w-5 h-5 cursor-pointer" />
+      </HoverCardTrigger>
+      <HoverCardContent className="bg-accent">{children}</HoverCardContent>
+    </HoverCard>
+  );
+};
+
 export function ResultsCard({
   title,
-  targetDate,
   totalDebt,
+  monthly_payment,
   data,
   cost,
   saved,
   dateDiff,
+  total_snowball,
+  opportunity_rate,
+  opportunity_cost,
   lump_amounts,
 }: ResultsCardProps) {
   const loan_taken_out = lump_amounts?.reduce((a, b) => a + b, 0) ?? 0;
@@ -77,10 +99,8 @@ export function ResultsCard({
       <CardContent className="space-y-8">
         <div className="flex flex-col space-y-2">
           <div className="flex flex-row justify-between">
-            <span className="text-xl">Target Date</span>
-            <span className="text-xl font-medium">
-              {targetDate ? format(targetDate, 'MMMM yyyy') : 'None'}
-            </span>
+            <span className="text-xl">Monthly Debt Payment</span>
+            <span className="text-xl font-medium">{dollarFormatter(monthly_payment)}</span>
           </div>
           <div className="flex flex-row justify-between">
             <span className="text-xl">Total Debt</span>
@@ -105,6 +125,16 @@ export function ResultsCard({
             </span>
           </div>
           <div className="flex flex-row justify-between">
+            <span className="text-xl">Remaining Cash After Debt is Paid</span>
+            <span
+              className={cn('text-xl font-medium', {
+                'text-success': total_snowball && total_snowball > 0,
+              })}
+            >
+              {dollarFormatter(total_snowball ?? 0)}
+            </span>
+          </div>
+          <div className="flex flex-row justify-between">
             <span className="text-xl">Loan Taken Out</span>
             <span
               className={cn('text-xl font-medium', {
@@ -116,6 +146,20 @@ export function ResultsCard({
           </div>
           <TotalDifference />
           <TimeDifference />
+          <div className="flex flex-row justify-between">
+            <span className="text-xl">Opportunity Cost Recovery Rate</span>
+            <span className="text-xl font-medium">{opportunity_rate}%</span>
+          </div>
+          <div className="flex flex-row justify-between">
+            <span className="text-xl">Opportunity Cost Recovery</span>
+            <span
+              className={cn('text-xl font-medium', {
+                'text-success': opportunity_cost > 0,
+              })}
+            >
+              {dollarFormatter(opportunity_cost)}
+            </span>
+          </div>
         </div>
 
         {/* Display a table of total interest and debt for each month */}
@@ -129,41 +173,50 @@ export function ResultsCard({
           </TableHeader>
           <TableBody className="text-lg text-center">
             {data.balance_tracking.map((_, yearIndex) =>
-              data.balance_tracking[yearIndex].map((month, monthIndex) =>
-                // Don't render the last month when the debt is paid off
-                month === 0 ? null : (
-                  <TableRow key={`${title}-${yearIndex * 12 + monthIndex + 1}`}>
-                    <TableCell>
-                      {format(addMonths(new Date(), yearIndex * 12 + monthIndex + 1), 'MMM yyyy')}
-                    </TableCell>
-                    <TableCell>
-                      {dollarFormatter(data.interest_tracking[yearIndex][monthIndex])}
-                    </TableCell>
-                    {/* Render a different cell for when a lump sum is used */}
-                    {monthIndex === 0 && lump_amounts?.[yearIndex] ? (
-                      <HoverCard>
-                        <HoverCardTrigger asChild>
-                          <TableCell className="flex flex-row justify-center items-center">
-                            <span className="text-success">{dollarFormatter(month)}</span>
-                            <Info className="ml-2 w-5 h-5" />
-                          </TableCell>
-                        </HoverCardTrigger>
-                        <HoverCardContent className="bg-accent">
-                          A lump amount of{' '}
-                          <span className="font-bold">
-                            {dollarFormatter(lump_amounts[yearIndex], {
-                              maximumFractionDigits: 0,
-                            })}
-                          </span>{' '}
-                          was applied for this month
-                        </HoverCardContent>
-                      </HoverCard>
-                    ) : (
-                      <TableCell>{dollarFormatter(month)}</TableCell>
+              data.balance_tracking[yearIndex].map((month, monthIndex) => (
+                <TableRow key={`${title}-${yearIndex * 12 + monthIndex + 1}`}>
+                  <TableCell>
+                    {format(addMonths(new Date(), yearIndex * 12 + monthIndex + 1), 'MMM yyyy')}
+                  </TableCell>
+                  <TableCell>
+                    {dollarFormatter(data.interest_tracking[yearIndex][monthIndex])}
+                  </TableCell>
+                  <TableCell
+                    className={cn({
+                      'flex flex-row justify-center items-center':
+                        (monthIndex === 0 && lump_amounts?.[yearIndex]) || month === 0,
+                    })}
+                  >
+                    <span
+                      className={cn({
+                        'text-success': monthIndex === 0 && lump_amounts?.[yearIndex],
+                      })}
+                    >
+                      {dollarFormatter(month)}
+                    </span>
+
+                    {monthIndex === 0 && lump_amounts?.[yearIndex] && (
+                      <InfoHoverCard>
+                        A lump amount of{' '}
+                        <span className="font-bold">
+                          {dollarFormatter(lump_amounts[yearIndex], {
+                            maximumFractionDigits: 0,
+                          })}
+                        </span>{' '}
+                        was applied for this month
+                      </InfoHoverCard>
                     )}
-                  </TableRow>
-                )
-              )
+
+                    {month === 0 && (
+                      <InfoHoverCard>
+                        The remaining{' '}
+                        <span className="font-bold">{dollarFormatter(total_snowball ?? 0)}</span>{' '}
+                        was deducted from the total amount paid
+                      </InfoHoverCard>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))
             )}
           </TableBody>
         </Table>

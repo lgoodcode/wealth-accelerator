@@ -32,7 +32,7 @@ export default async function DebtPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <Debts debts={debts} />
+      <Debts debtsData={debts} />
     </div>
   );
 }

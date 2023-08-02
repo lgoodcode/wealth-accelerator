@@ -1,29 +1,31 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useAtom } from 'jotai';
 
+import { Loading } from '@/components/loading';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DebtSnowballInputs } from './debt-snowball-inputs';
 import { DebtSnowballResults } from './debt-snowball-results';
-import { debtCalculationResultsAtom } from '../atoms';
-import { debtsAtom } from '@/components/debts-table/atoms';
+import { PaymentScheduleTable } from './payment-schedule-table';
+import { debtsAtom, debtCalculationResultsAtom } from '../atoms';
 import type { Debt } from '@/lib/types/debts';
 
 enum TabsValue {
   Inputs = 'inputs',
   Results = 'results',
+  PaymentSchedule = 'payment-schedule',
 }
 
 interface DebtSnowballProps {
-  debts: Debt[];
+  debtsData: Debt[];
 }
 
-export function DebtSnowball({ debts }: DebtSnowballProps) {
+export function DebtSnowball({ debtsData }: DebtSnowballProps) {
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
-  const setDebts = useSetAtom(debtsAtom);
+  const [debts, setDebts] = useAtom(debtsAtom);
   const debtCalculationResults = useAtomValue(debtCalculationResultsAtom);
-  const totalDebt = debts.reduce((a, b) => a + b.amount, 0);
+  const totalDebt = debts?.reduce((a, b) => a + b.amount, 0) ?? 0;
 
   useEffect(() => {
     if (debtCalculationResults) {
@@ -36,32 +38,42 @@ export function DebtSnowball({ debts }: DebtSnowballProps) {
   // it will be synced on the client-side for debt snowball and debts page
   useEffect(() => {
     setDebts((curr) => {
-      if (!curr || curr !== debts) {
-        return debts;
+      if (!curr || curr !== debtsData) {
+        return debtsData;
       }
       return curr;
     });
-  }, [debts]);
+  }, [debtsData]);
+
+  if (!debts) {
+    return <Loading />;
+  }
+
+  console.log(debts);
 
   return (
     <Tabs
       className="w-full"
       value={activeTab}
-      onValueChange={(value) =>
-        setActiveTab(value === TabsValue.Inputs ? value : TabsValue.Results)
-      }
+      onValueChange={(value) => setActiveTab(value as TabsValue)}
     >
-      <TabsList className="grid w-[400px] mx-auto grid-cols-2 mb-8">
+      <TabsList className="grid w-[480px] mx-auto grid-cols-3 mb-8">
         <TabsTrigger value={TabsValue.Inputs}>Inputs</TabsTrigger>
         <TabsTrigger value={TabsValue.Results} disabled={!debtCalculationResults}>
           Results
         </TabsTrigger>
+        <TabsTrigger value={TabsValue.PaymentSchedule} disabled={!debtCalculationResults}>
+          Payment Schedule
+        </TabsTrigger>
       </TabsList>
       <TabsContent value={TabsValue.Inputs}>
-        <DebtSnowballInputs debts={debts} />
+        <DebtSnowballInputs debts={debts!} />
       </TabsContent>
       <TabsContent value={TabsValue.Results}>
         <DebtSnowballResults totalDebt={totalDebt} />
+      </TabsContent>
+      <TabsContent value={TabsValue.PaymentSchedule}>
+        <PaymentScheduleTable />
       </TabsContent>
     </Tabs>
   );
