@@ -25,8 +25,24 @@ interface ResultsCardProps {
   cost: number;
   saved: number;
   dateDiff: number;
+  total_spillover: number;
   lump_amounts?: number[];
 }
+
+interface InfoHoverCardProps {
+  children: React.ReactNode;
+}
+
+const InfoHoverCard = ({ children }: InfoHoverCardProps) => {
+  return (
+    <HoverCard>
+      <HoverCardTrigger asChild>
+        <Info className="ml-2 w-5 h-5 cursor-pointer" />
+      </HoverCardTrigger>
+      <HoverCardContent className="bg-accent">{children}</HoverCardContent>
+    </HoverCard>
+  );
+};
 
 export function ResultsCard({
   title,
@@ -36,6 +52,7 @@ export function ResultsCard({
   cost,
   saved,
   dateDiff,
+  total_spillover,
   lump_amounts,
 }: ResultsCardProps) {
   const loan_taken_out = lump_amounts?.reduce((a, b) => a + b, 0) ?? 0;
@@ -103,6 +120,12 @@ export function ResultsCard({
             </span>
           </div>
           <div className="flex flex-row justify-between">
+            <span className="text-xl">Remaining Cash After Debt is Paid</span>
+            <span className="text-xl font-medium text-success">
+              {dollarFormatter(data.total_spillover)}
+            </span>
+          </div>
+          <div className="flex flex-row justify-between">
             <span className="text-xl">Loan Taken Out</span>
             <span
               className={cn('text-xl font-medium', {
@@ -127,41 +150,50 @@ export function ResultsCard({
           </TableHeader>
           <TableBody className="text-lg text-center">
             {data.balance_tracking.map((_, yearIndex) =>
-              data.balance_tracking[yearIndex].map((month, monthIndex) =>
-                // Don't render the last month when the debt is paid off
-                month === 0 ? null : (
-                  <TableRow key={`${title}-${yearIndex * 12 + monthIndex + 1}`}>
-                    <TableCell>
-                      {format(addMonths(new Date(), yearIndex * 12 + monthIndex + 1), 'MMM yyyy')}
-                    </TableCell>
-                    <TableCell>
-                      {dollarFormatter(data.interest_tracking[yearIndex][monthIndex])}
-                    </TableCell>
-                    {/* Render a different cell for when a lump sum is used */}
-                    {monthIndex === 0 && lump_amounts?.[yearIndex] ? (
-                      <HoverCard>
-                        <HoverCardTrigger asChild>
-                          <TableCell className="flex flex-row justify-center items-center">
-                            <span className="text-success">{dollarFormatter(month)}</span>
-                            <Info className="ml-2 w-5 h-5" />
-                          </TableCell>
-                        </HoverCardTrigger>
-                        <HoverCardContent className="bg-accent">
-                          A lump amount of{' '}
-                          <span className="font-bold">
-                            {dollarFormatter(lump_amounts[yearIndex], {
-                              maximumFractionDigits: 0,
-                            })}
-                          </span>{' '}
-                          was applied for this month
-                        </HoverCardContent>
-                      </HoverCard>
-                    ) : (
-                      <TableCell>{dollarFormatter(month)}</TableCell>
+              data.balance_tracking[yearIndex].map((month, monthIndex) => (
+                <TableRow key={`${title}-${yearIndex * 12 + monthIndex + 1}`}>
+                  <TableCell>
+                    {format(addMonths(new Date(), yearIndex * 12 + monthIndex + 1), 'MMM yyyy')}
+                  </TableCell>
+                  <TableCell>
+                    {dollarFormatter(data.interest_tracking[yearIndex][monthIndex])}
+                  </TableCell>
+                  <TableCell
+                    className={cn({
+                      'flex flex-row justify-center items-center':
+                        (monthIndex === 0 && lump_amounts?.[yearIndex]) || month === 0,
+                    })}
+                  >
+                    <span
+                      className={cn({
+                        'text-success': monthIndex === 0 && lump_amounts?.[yearIndex],
+                      })}
+                    >
+                      {dollarFormatter(month)}
+                    </span>
+
+                    {monthIndex === 0 && lump_amounts?.[yearIndex] && (
+                      <InfoHoverCard>
+                        A lump amount of{' '}
+                        <span className="font-bold">
+                          {dollarFormatter(lump_amounts[yearIndex], {
+                            maximumFractionDigits: 0,
+                          })}
+                        </span>{' '}
+                        was applied for this month
+                      </InfoHoverCard>
                     )}
-                  </TableRow>
-                )
-              )
+
+                    {month === 0 && (
+                      <InfoHoverCard>
+                        The remaining{' '}
+                        <span className="font-bold">{dollarFormatter(total_spillover)}</span> was
+                        deducted from the total amount paid
+                      </InfoHoverCard>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))
             )}
           </TableBody>
         </Table>

@@ -46,6 +46,7 @@ export function DebtSnowballResults({ totalDebt }: DebtSnowballResultsProps) {
         cost={currentCost}
         saved={currentSaved}
         dateDiff={currentDateDiff}
+        total_spillover={results.currentResults.total_spillover}
       />
       <ResultsCard
         title={inputs.strategy}
@@ -55,6 +56,7 @@ export function DebtSnowballResults({ totalDebt }: DebtSnowballResultsProps) {
         cost={strategyCost}
         saved={strategySaved}
         dateDiff={strategyDateDiff}
+        total_spillover={results.strategyResults.total_spillover}
         lump_amounts={inputs.lump_amounts}
       />
     </div>

@@ -17,6 +17,7 @@ export type DebtCalculation = {
   payoff_months: number;
   total_interest: number;
   total_amount: number;
+  total_spillover: number;
 };
 
 export type DebtCalculationInputs = {

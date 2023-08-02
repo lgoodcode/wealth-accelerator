@@ -27,14 +27,17 @@ export const calculate_debt = (
   // Track the total debt remaining
   const intitial_total_debt = debts.reduce((acc, debt) => acc + debt.amount, 0);
   let balance_remaining = intitial_total_debt;
+  let year = 0;
+  let spillover = 0;
+  let total_spillover = 0;
 
   // Initialize the debt remaining for the first month
   balance_tracking[0][0] = balance_remaining;
 
-  for (let year = 0; balance_remaining; year++) {
+  while (balance_remaining) {
     // If a debt is paid off, use the remainder for the next debt
     // If we are using the Wealth Accelerator, apply the lump sum to the spillover to use for the debts
-    let spillover = options?.isWealthAccelerator ? options?.lump_amounts?.[year] ?? 0 : 0;
+    spillover = options?.isWealthAccelerator ? options?.lump_amounts?.[year] ?? 0 : 0;
 
     for (let month = 0; month < NUM_OF_MONTHS; month++) {
       // Add the additional monthly payments
@@ -91,17 +94,22 @@ export const calculate_debt = (
       // Update the debt tracking for the month
       balance_tracking[year][month] = moneyRound(balance_remaining);
 
-      // If there is no more debt remaining, break out of the loop
+      // If there is no more debt remaining, remove the remaining empty months and break out of the loop
       if (!balance_remaining) {
+        balance_tracking[year] = balance_tracking[year].slice(0, month + 1);
         break;
       }
-    }
+    } // End of for-each month
+
+    // Add up spillover for each year
+    total_spillover = moneyRound(total_spillover + spillover);
 
     // If there's still an outstanding balance - increment the year and
     // add a new array of 12 months to the debt tracking
     if (balance_remaining) {
       balance_tracking[year + 1] = Array.from({ length: 12 }, () => 0);
       interest_tracking[year + 1] = Array.from({ length: 12 }, () => 0);
+      year++;
     }
   }
 
@@ -111,8 +119,8 @@ export const calculate_debt = (
     (acc, debtPayoff) => Math.max(acc, debtPayoff.months),
     0
   );
-  // Calculate the total amount paid for all debts with the principal and interest
-  const total_amount = intitial_total_debt + total_interest;
+  // Calculate the total amount paid for all debts with the principal and interest and subtracting the spillover
+  const total_amount = intitial_total_debt + total_interest - total_spillover;
 
   return {
     debt_payoffs,
@@ -121,5 +129,6 @@ export const calculate_debt = (
     payoff_months: payoff_months,
     total_interest: moneyRound(total_interest),
     total_amount: moneyRound(total_amount),
+    total_spillover: moneyRound(total_spillover),
   };
 };
