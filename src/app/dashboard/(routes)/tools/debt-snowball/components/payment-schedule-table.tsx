@@ -94,7 +94,7 @@ export function PaymentScheduleTable() {
             {strategyResults.balance_tracking.map((_, yearIndex) =>
               strategyResults.balance_tracking[yearIndex].map((month, monthIndex) => (
                 <TableRow key={`content-${yearIndex * 12 + monthIndex + 1}`}>
-                  {strategyResults.debt_payoffs.map((debtPayoff, index) => (
+                  {strategyResults.debt_payoffs.map((debtPayoff) => (
                     <TableCell key={`${debtPayoff.debt.description}-${yearIndex}-${monthIndex}`}>
                       {debtPayoff.payment_tracking[yearIndex][monthIndex]
                         ? dollarFormatter(debtPayoff.payment_tracking[yearIndex][monthIndex])
