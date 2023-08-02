@@ -2,6 +2,7 @@ import { captureException } from '@sentry/nextjs';
 
 import type { Metadata } from 'next';
 
+import { getUser } from '@/lib/supabase/server/get-user';
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
@@ -12,10 +13,12 @@ export const metadata: Metadata = {
 };
 
 export default async function DebtSnowballPage() {
+  const user = (await getUser()) as User;
   const supabase = createSupabase();
   const { error, data: debts } = await supabase
     .from('debts')
     .select('*')
+    .eq('user_id', user.id)
     .order('id', { ascending: true });
 
   if (error) {
