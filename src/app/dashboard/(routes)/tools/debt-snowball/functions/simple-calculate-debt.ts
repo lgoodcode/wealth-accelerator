@@ -94,6 +94,10 @@ export const simple_calculate = (debts: Debt[]): SimpleDebtCalculation => {
     }
   } // End of years - no more balance remaining
 
+  /**
+   * Calculate the totals and convert the cents to dollars
+   */
+
   const total_interest = debt_payoffs.reduce((acc, debtPayoff) => acc + debtPayoff.interest, 0);
   const total_interest_dollars = moneyRound(total_interest / 100);
   // Find the longest payoff months to determine the payoff date
@@ -105,7 +109,6 @@ export const simple_calculate = (debts: Debt[]): SimpleDebtCalculation => {
   const total_amount = intitial_total_debt + total_interest;
   const total_amount_dollars = moneyRound(total_amount / 100);
 
-  // Map all money from cents back into dollars
   const debt_payoffs_dollars = debt_payoffs.map((debtPayoff) => ({
     ...debtPayoff,
     debt: {

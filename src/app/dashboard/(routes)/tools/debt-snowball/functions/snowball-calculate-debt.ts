@@ -39,20 +39,15 @@ export const snowball_calculate = (
   balance_tracking[0][0] = intitial_total_debt;
 
   while (balance_remaining) {
-    // // If a debt is paid off, use the remainder for the next debt
-    // // If we are using the Wealth Accelerator, apply the lump sum to the snowball to use for the debts
-    // snowball = options?.isWealthAccelerator ? options?.lump_amounts?.[year] ?? 0 : 0;
+    // If we are using the Wealth Accelerator, apply the lump sum to the snowball to use for the debts
+    snowball =
+      options?.isWealthAccelerator && options?.lump_amounts?.[year]
+        ? options.lump_amounts[year] * 100
+        : 0;
 
     for (let month = 0; month < NUM_OF_MONTHS; month++) {
-      // // If we are using the Wealth Accelerator strategy, separate the lump sum from the snowball tracking
-      // if (options?.isWealthAccelerator && month === 0 && options?.lump_amounts?.[year]) {
-      //   snowball_tracking[year][month] = moneyRound(snowball - options?.lump_amounts?.[year]);
-      // } else {
-      //   snowball_tracking[year][month] = moneyRound(snowball);
-      // }
-
       // Add the additional monthly payments after tracking snowball at the start of the month
-      snowball += options?.additional_payment ?? 0;
+      snowball += options?.additional_payment ? options?.additional_payment * 100 : 0;
 
       for (const debtPayoff of debt_payoffs) {
         const { debt } = debtPayoff;
@@ -150,6 +145,10 @@ export const snowball_calculate = (
     }
   } // End of years - no more balance remaining
 
+  /**
+   * Calculate the totals and convert the cents to dollars
+   */
+
   const total_interest = debt_payoffs.reduce((acc, debtPayoff) => acc + debtPayoff.interest, 0);
   const total_interest_dollars = moneyRound(total_interest / 100);
   // Find the longest payoff months to determine the payoff date
@@ -162,7 +161,6 @@ export const snowball_calculate = (
   // const total_amount_dollars = moneyRound(total_amount / 100);
   const total_amount_dollars = moneyRound(total_amount / 100);
 
-  // Map all money from cents back into dollars
   const debt_payoffs_dollars = debt_payoffs.map((debtPayoff) => ({
     ...debtPayoff,
     debt: {
