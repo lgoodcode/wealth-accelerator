@@ -9,10 +9,12 @@ import { DebtSnowballResults } from './debt-snowball-results';
 import { debtCalculationResultsAtom } from '../atoms';
 import { debtsAtom } from '@/components/debts-table/atoms';
 import type { Debt } from '@/lib/types/debts';
+import { BreakdownTable } from './breakdown-table';
 
 enum TabsValue {
   Inputs = 'inputs',
   Results = 'results',
+  Breakdown = 'breakdown',
 }
 
 interface DebtSnowballProps {
@@ -47,14 +49,15 @@ export function DebtSnowball({ debts }: DebtSnowballProps) {
     <Tabs
       className="w-full"
       value={activeTab}
-      onValueChange={(value) =>
-        setActiveTab(value === TabsValue.Inputs ? value : TabsValue.Results)
-      }
+      onValueChange={(value) => setActiveTab(value as TabsValue)}
     >
-      <TabsList className="grid w-[400px] mx-auto grid-cols-2 mb-8">
+      <TabsList className="grid w-[480px] mx-auto grid-cols-3 mb-8">
         <TabsTrigger value={TabsValue.Inputs}>Inputs</TabsTrigger>
         <TabsTrigger value={TabsValue.Results} disabled={!debtCalculationResults}>
           Results
+        </TabsTrigger>
+        <TabsTrigger value={TabsValue.Breakdown} disabled={!debtCalculationResults}>
+          Breakdown
         </TabsTrigger>
       </TabsList>
       <TabsContent value={TabsValue.Inputs}>
@@ -62,6 +65,9 @@ export function DebtSnowball({ debts }: DebtSnowballProps) {
       </TabsContent>
       <TabsContent value={TabsValue.Results}>
         <DebtSnowballResults totalDebt={totalDebt} />
+      </TabsContent>
+      <TabsContent value={TabsValue.Breakdown}>
+        <BreakdownTable />
       </TabsContent>
     </Tabs>
   );

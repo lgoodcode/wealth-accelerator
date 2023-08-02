@@ -19,11 +19,14 @@ export const calculate_debt = (
     months: 0,
     total: 0,
     interest: 0,
+    payment_tracking: [Array.from({ length: 12 }, () => 0)],
   }));
   // Track the total amount of debt remaining for each month and year using an array with the years and months as indices
   // with the first index being an array of 12 months
   const balance_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
   const interest_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
+  const spillover_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
+  // Track the balance for each debt with the inner array index value being the debt amount
   // Track the total debt remaining
   const intitial_total_debt = debts.reduce((acc, debt) => acc + debt.amount, 0);
   let balance_remaining = intitial_total_debt;
@@ -53,6 +56,8 @@ export const calculate_debt = (
         );
       }
 
+      spillover_tracking[year][month] = moneyRound(spillover);
+
       for (const debtPayoff of debt_payoffs) {
         const { debt } = debtPayoff;
         const payment = debt.payment + spillover;
@@ -80,9 +85,11 @@ export const calculate_debt = (
         }
 
         if (debt.amount < payment) {
+          debtPayoff.payment_tracking[year][month] = moneyRound(debt.amount);
           spillover = moneyRound(payment - debt.amount);
           debt.amount = 0;
         } else {
+          debtPayoff.payment_tracking[year][month] = moneyRound(payment);
           debt.amount = moneyRound(debt.amount - payment);
           spillover = 0;
         }
@@ -107,9 +114,13 @@ export const calculate_debt = (
     // If there's still an outstanding balance - increment the year and
     // add a new array of 12 months to the debt tracking
     if (balance_remaining) {
-      balance_tracking[year + 1] = Array.from({ length: 12 }, () => 0);
-      interest_tracking[year + 1] = Array.from({ length: 12 }, () => 0);
       year++;
+      balance_tracking[year] = Array.from({ length: 12 }, () => 0);
+      interest_tracking[year] = Array.from({ length: 12 }, () => 0);
+      spillover_tracking[year] = Array.from({ length: 12 }, () => 0);
+      debt_payoffs.forEach((debtPayoff) => {
+        debtPayoff.payment_tracking[year] = Array.from({ length: 12 }, () => 0);
+      });
     }
   }
 
@@ -126,6 +137,7 @@ export const calculate_debt = (
     debt_payoffs,
     balance_tracking,
     interest_tracking,
+    spillover_tracking,
     payoff_months: payoff_months,
     total_interest: moneyRound(total_interest),
     total_amount: moneyRound(total_amount),
