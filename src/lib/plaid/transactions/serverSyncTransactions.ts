@@ -6,7 +6,7 @@ import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { updateTransactions } from '@/lib/plaid/transactions/updateTransactions';
 import { addTransactions } from '@/lib/plaid/transactions/addTransactions';
 import { removeTransactions } from '@/lib/plaid/transactions/removeTransactions';
-import { PlaidRateLimitErrorCode, PlaidCredentialErrorCode } from '@/lib/plaid/types/sync';
+import { PlaidRateLimitErrorCode, PlaidCredentialErrorCodes } from '@/lib/plaid/types/sync';
 import type { Institution } from '@/lib/plaid/types/institutions';
 import type { Filter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
@@ -97,10 +97,9 @@ export const serverSyncTransactions = async (
       },
     };
   } catch (error: any) {
-    console.log(PlaidCredentialErrorCode);
     const errorCode = error?.response?.data?.error_code as string;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
-    const isCredentialError = errorCode === PlaidCredentialErrorCode.ItemLoginRequired;
+    const isCredentialError = errorCode in PlaidCredentialErrorCodes;
     const isOtherPlaidError = errorCode in PlaidErrorType;
     const status = isRateLimitError ? 429 : 500;
 

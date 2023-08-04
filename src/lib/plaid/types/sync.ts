@@ -3,10 +3,12 @@ import type { RemovedTransaction, Transaction } from 'plaid';
 
 export const PlaidRateLimitErrorCode = 'TRANSACTIONS_SYNC_LIMIT';
 
-export enum PlaidCredentialErrorCode {
-  ItemLoginRequired = 'ITEM_LOGIN_REQUIRED',
-  PendingExpiration = 'PENDING_EXPIRATION',
-}
+type PlaidCredentialErrorCode = 'ITEM_LOGIN_REQUIRED' | 'PENDING_EXPIRATION';
+
+export const PlaidCredentialErrorCodes: PlaidCredentialErrorCode[] = [
+  'ITEM_LOGIN_REQUIRED',
+  'PENDING_EXPIRATION',
+];
 
 export enum PlaidErrorType {
   InvalidRequest = 'INVALID_REQUEST',
