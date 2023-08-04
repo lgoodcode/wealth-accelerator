@@ -12,7 +12,10 @@ export const addTransactions = async (
 ) => {
   if (transactions.length) {
     const parsedTransactions = await parseTransactions(item_id, transactions, filters);
-    const { error } = await supabase.from('plaid_transactions').upsert(parsedTransactions);
+    const { error } = await supabase.from('plaid_transactions').upsert(parsedTransactions, {
+      onConflict: 'id',
+      ignoreDuplicates: true,
+    });
     return error;
   }
 
