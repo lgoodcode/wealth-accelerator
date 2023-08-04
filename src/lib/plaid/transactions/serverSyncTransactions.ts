@@ -15,28 +15,28 @@ export const serverSyncTransactions = async (
   item: Institution,
   admin?: boolean
 ): Promise<ServerSyncTransactions> => {
-  const supabase = createSupabase(admin);
-  const { error: filtersError, data: filtersData } = await supabase
-    .from('plaid_filters')
-    .select('*');
-
-  if (filtersError) {
-    return {
-      error: {
-        status: 500,
-        general: filtersError,
-        plaid: null,
-      },
-      data: {
-        hasMore: false,
-        transactions: null,
-      },
-    };
-  }
-
-  const filters = filtersData as Filter[];
-
   try {
+    const supabase = createSupabase(admin);
+    const { error: filtersError, data: filtersData } = await supabase
+      .from('plaid_filters')
+      .select('*');
+
+    if (filtersError) {
+      return {
+        error: {
+          status: 500,
+          general: filtersError,
+          plaid: null,
+        },
+        data: {
+          hasMore: false,
+          transactions: null,
+        },
+      };
+    }
+
+    const filters = filtersData as Filter[];
+
     const { data } = await plaidClient.transactionsSync({
       access_token: item.access_token,
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
