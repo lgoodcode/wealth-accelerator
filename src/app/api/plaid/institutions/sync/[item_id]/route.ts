@@ -63,9 +63,10 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
         };
 
     console.error(error, { item_id }, transactions);
-    captureException(new Error(JSON.stringify(error)), {
+    captureException(new Error('Failed to sync transactions'), {
       extra: {
         item_id,
+        error,
         transactions: JSON.stringify(transactions),
       },
     });
