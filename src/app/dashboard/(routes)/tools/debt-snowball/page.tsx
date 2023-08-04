@@ -1,5 +1,4 @@
 import { captureException } from '@sentry/nextjs';
-
 import type { Metadata } from 'next';
 
 import { getUser } from '@/lib/supabase/server/get-user';
