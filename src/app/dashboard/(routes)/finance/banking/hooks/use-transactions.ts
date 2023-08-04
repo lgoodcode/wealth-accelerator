@@ -21,7 +21,7 @@ const CACHE_TRANASACTIONS_FOR = 1000 * 60 * 60; // Cache transactions for an hou
  */
 const syncTransactions = async (item: ClientInstitution) => {
   const syncError = await clientSyncTransactions(item.item_id);
-
+  console.log('syncError', syncError);
   if (syncError) {
     console.error(syncError);
     displaySyncError(syncError, item.name);
@@ -92,7 +92,7 @@ export const useTransactions = (item: ClientInstitution) => {
    */
   const handleGetTransactions = useCallback(async () => {
     const needsUpdate = await syncTransactions(item);
-
+    console.log('needsUpdate', needsUpdate);
     if (needsUpdate) {
       setUpdateMode(true);
       return [];
