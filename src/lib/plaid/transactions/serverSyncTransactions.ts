@@ -2,7 +2,7 @@ import { PlaidErrorType } from 'plaid';
 
 import { PLAID_SYNC_BATCH_SIZE } from '@/config/app';
 import { plaidClient } from '@/lib/plaid/config';
-import { createSupabase } from '@/lib/supabase/server/create-supabase';
+import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { updateTransactions } from '@/lib/plaid/transactions/updateTransactions';
 import { addTransactions } from '@/lib/plaid/transactions/addTransactions';
 import { removeTransactions } from '@/lib/plaid/transactions/removeTransactions';
@@ -12,17 +12,17 @@ import type { Filter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
 
 export const serverSyncTransactions = async (
-  item: Institution,
-  admin?: boolean
+  item: Institution
 ): Promise<ServerSyncTransactions> => {
   try {
-    const supabase = createSupabase(admin);
-    const { error: filtersError, data: filtersData } = await supabase
+    const { error: filtersError, data: filtersData } = await supabaseAdmin
       .from('plaid_filters')
-      .select('*');
+      .select('*')
+      .order('id', { ascending: true });
 
     console.log('filtersData', filtersData, filtersError);
     console.log('item', item);
+    console.log('PLAID_SYNC_BATCH_SIZE', PLAID_SYNC_BATCH_SIZE);
     if (filtersError) {
       return {
         error: {
@@ -38,16 +38,20 @@ export const serverSyncTransactions = async (
     }
 
     const filters = filtersData as Filter[];
-
     const { data } = await plaidClient.transactionsSync({
       access_token: item.access_token,
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
       count: PLAID_SYNC_BATCH_SIZE,
     });
 
-    const addedError = await addTransactions(item.item_id, data.added, filters, supabase);
-    const updatedError = await updateTransactions(item.item_id, data.modified, filters, supabase);
-    const removedError = await removeTransactions(data.removed, supabase);
+    const addedError = await addTransactions(item.item_id, data.added, filters, supabaseAdmin);
+    const updatedError = await updateTransactions(
+      item.item_id,
+      data.modified,
+      filters,
+      supabaseAdmin
+    );
+    const removedError = await removeTransactions(data.removed, supabaseAdmin);
 
     if (addedError || updatedError || removedError) {
       return {
@@ -68,7 +72,7 @@ export const serverSyncTransactions = async (
     }
 
     // Update the item's cursor
-    const { error: cursorError } = await supabase
+    const { error: cursorError } = await supabaseAdmin
       .from('plaid')
       .update({ cursor: data.next_cursor })
       .eq('item_id', item.item_id);
