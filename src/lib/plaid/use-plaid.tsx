@@ -59,12 +59,17 @@ export const usePlaid = () => {
       setIsInsItemIdSyncingOrLoading(institution.item_id);
 
       const syncError = await clientSyncTransactions(institution.item_id);
+      console.log('usePlaid syncError', syncError);
       // If there is a sync error, display it and if it's a credential error, set update mode
       // and display a simple toast that the institution was connected
       if (syncError) {
         displaySyncError(syncError, metadata.institution?.name ?? 'Unknown institution');
-
+        console.log(
+          'usePlaid syncError.plaid?.isCredentialError',
+          syncError.plaid?.isCredentialError
+        );
         if (syncError.plaid?.isCredentialError) {
+          console.log('usePlaid setUpdateMode(true)');
           setUpdateMode(true);
         }
 
@@ -137,7 +142,9 @@ export const usePlaid = () => {
 
   // Launches update mode
   useEffect(() => {
+    console.log('updateMode', updateMode, linkToken);
     if (updateMode && linkToken && open) {
+      console.log('opening', updateMode, linkToken);
       open();
     }
   }, [updateMode, linkToken, open]);
