@@ -100,7 +100,7 @@ export const serverSyncTransactions = async (
     console.error(error); // Log just in case an unexpected error occurs
     const errorCode = error?.response?.data?.error_code as string;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
-    const isCredentialError = errorCode in PlaidCredentialErrorCodes;
+    const isCredentialError = PlaidCredentialErrorCodes.includes(errorCode);
     const isOtherPlaidError = errorCode in PlaidErrorType;
     const status = isRateLimitError ? 429 : 500;
 
