@@ -7,7 +7,8 @@ VALUES
   (NEW.id, 'MB GLE 350', 9810.71, 30, 420, 0);
 
 
-INSERT INTO debts (user_id, description, amount, interest, payment) VALUES
+INSERT INTO debts (user_id, description, amount, interest, payment)
+VALUES
 ('009a445c-51ee-4fde-9c30-c9643c2419b0', 'AES', 72001.00, 4.00, 443.00, 0),
 ('009a445c-51ee-4fde-9c30-c9643c2419b0', 'JPMCB', 14513.00, 24.00, 495.00, 0),
 ('009a445c-51ee-4fde-9c30-c9643c2419b0', 'Bestbuy', 1004.00, 0.00, 29.00, 0),
