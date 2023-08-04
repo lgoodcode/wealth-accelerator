@@ -33,8 +33,6 @@ export const serverSyncTransactions = async (
     };
   }
 
-  console.log('item', item);
-
   const filters = filtersData as Filter[];
 
   try {
@@ -99,10 +97,10 @@ export const serverSyncTransactions = async (
       },
     };
   } catch (error: any) {
-    console.error(error);
-    const errorCode = error?.response?.data?.error_code;
+    console.log(PlaidCredentialErrorCode);
+    const errorCode = error?.response?.data?.error_code as string;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
-    const isCredentialError = errorCode in PlaidCredentialErrorCode;
+    const isCredentialError = errorCode === PlaidCredentialErrorCode.ItemLoginRequired;
     const isOtherPlaidError = errorCode in PlaidErrorType;
     const status = isRateLimitError ? 429 : 500;
 
