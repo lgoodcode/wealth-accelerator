@@ -102,7 +102,7 @@ export const serverSyncTransactions = async (
     return {
       error: {
         status,
-        general: null,
+        general: !errorCode ? error : null, // If not a Plaid error, return the error
         plaid: {
           isRateLimitError,
           isCredentialError,
