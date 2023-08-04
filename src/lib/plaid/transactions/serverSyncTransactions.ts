@@ -14,30 +14,30 @@ import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
 export const serverSyncTransactions = async (
   item: Institution
 ): Promise<ServerSyncTransactions> => {
+  const { error: filtersError, data: filtersData } = await supabaseAdmin // Need admin to access plaid_filters for all users
+    .from('plaid_filters')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (filtersError) {
+    return {
+      error: {
+        status: 500,
+        general: filtersError,
+        plaid: null,
+      },
+      data: {
+        hasMore: false,
+        transactions: null,
+      },
+    };
+  }
+
+  console.log('item', item);
+
+  const filters = filtersData as Filter[];
+
   try {
-    const { error: filtersError, data: filtersData } = await supabaseAdmin
-      .from('plaid_filters')
-      .select('*')
-      .order('id', { ascending: true });
-
-    console.log('filtersData', filtersData, filtersError);
-    console.log('item', item);
-    console.log('PLAID_SYNC_BATCH_SIZE', PLAID_SYNC_BATCH_SIZE);
-    if (filtersError) {
-      return {
-        error: {
-          status: 500,
-          general: filtersError,
-          plaid: null,
-        },
-        data: {
-          hasMore: false,
-          transactions: null,
-        },
-      };
-    }
-
-    const filters = filtersData as Filter[];
     const { data } = await plaidClient.transactionsSync({
       access_token: item.access_token,
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
@@ -99,6 +99,7 @@ export const serverSyncTransactions = async (
       },
     };
   } catch (error: any) {
+    console.error(error);
     const errorCode = error?.response?.data?.error_code;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
     const isCredentialError = errorCode in PlaidCredentialErrorCode;
