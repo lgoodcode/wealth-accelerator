@@ -70,6 +70,7 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
         transactions: JSON.stringify(transactions),
       },
     });
+
     return NextResponse.json<SyncTransactionsResponse>(
       {
         error: {
