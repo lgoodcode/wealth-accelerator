@@ -21,6 +21,8 @@ export const serverSyncTransactions = async (
       .from('plaid_filters')
       .select('*');
 
+    console.log('filtersData', filtersData, filtersError);
+    console.log('item', item);
     if (filtersError) {
       return {
         error: {
