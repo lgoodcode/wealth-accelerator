@@ -3,6 +3,8 @@ import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 
 export const updateModeAtom = atom(false);
 
+export const linkTokenAtom = atom<string | null>(null);
+
 /**
  * Set the item_id of an institution to know it's syncing or loading data and is used
  * to show a loading indicator on the institution selection item.

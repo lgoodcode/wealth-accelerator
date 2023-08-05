@@ -15,6 +15,7 @@ import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
 import { displaySyncError } from '@/lib/plaid/transactions/displaySyncError';
 import {
+  linkTokenAtom,
   updateModeAtom,
   addInstitutionAtom,
   isInsItemIdSyncingOrLoadingAtom,
@@ -22,7 +23,7 @@ import {
 import { Toast } from '@/components/ui/toast';
 
 export const usePlaid = () => {
-  const [linkToken, setLinkToken] = useState<string | null>(null);
+  const [linkToken, setLinkToken] = useAtom(linkTokenAtom);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
   const [updateMode, setUpdateMode] = useAtom(updateModeAtom);
   const setIsInsItemIdSyncingOrLoading = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
@@ -59,17 +60,12 @@ export const usePlaid = () => {
       setIsInsItemIdSyncingOrLoading(institution.item_id);
 
       const syncError = await clientSyncTransactions(institution.item_id);
-      console.log('usePlaid syncError', syncError);
       // If there is a sync error, display it and if it's a credential error, set update mode
       // and display a simple toast that the institution was connected
       if (syncError) {
         displaySyncError(syncError, metadata.institution?.name ?? 'Unknown institution');
-        console.log(
-          'usePlaid syncError.plaid?.isCredentialError',
-          syncError.plaid?.isCredentialError
-        );
+
         if (syncError.plaid?.isCredentialError) {
-          console.log('usePlaid setUpdateMode(true)');
           setUpdateMode(true);
           setLinkToken(syncError.access_token);
         }
