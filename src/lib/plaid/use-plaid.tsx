@@ -24,10 +24,10 @@ import { Toast } from '@/components/ui/toast';
 
 export const usePlaid = () => {
   const [linkToken, setLinkToken] = useAtom(linkTokenAtom);
-  const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
   const [updateMode, setUpdateMode] = useAtom(updateModeAtom);
   const setIsInsItemIdSyncingOrLoading = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
   const addInstitution = useSetAtom(addInstitutionAtom);
+  const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
 
   // On successful link, exchange the public token for an access token
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
