@@ -22,6 +22,8 @@ export const useDebtCalculate = () => {
         isWealthAccelerator: data.strategy.includes('Wealth Accelerator'),
         additional_payment: data.additional_payment,
         lump_amounts: data.lump_amounts,
+        pay_back_loan: data.pay_back_loan,
+        loan_interest_rate: data.loan_interest_rate,
       });
 
       setDebtCaluclationInputs(data);

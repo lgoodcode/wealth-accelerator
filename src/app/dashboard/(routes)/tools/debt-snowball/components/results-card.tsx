@@ -28,6 +28,11 @@ interface ResultsCardProps {
   opportunity_rate: number;
   opportunity_cost: number;
   lump_amounts?: number[];
+  loan_payback: {
+    total: number;
+    interest: number;
+    months: number;
+  };
 }
 
 interface InfoHoverCardProps {
@@ -56,6 +61,7 @@ export function ResultsCard({
   opportunity_rate,
   opportunity_cost,
   lump_amounts,
+  loan_payback,
 }: ResultsCardProps) {
   const loan_taken_out = lump_amounts?.reduce((a, b) => a + b, 0) ?? 0;
 
@@ -121,6 +127,24 @@ export function ResultsCard({
               {format(addMonths(new Date(), data.payoff_months), 'MMMM yyyy')}
             </span>
           </div>
+          <TotalDifference />
+          <TimeDifference />
+          <div className="flex flex-row justify-between">
+            <span className="text-xl">Opportunity Cost Recovery Rate</span>
+            <span className="text-xl font-medium">
+              {opportunity_cost > 0 ? `${opportunity_rate}%` : '-'}
+            </span>
+          </div>
+          <div className="flex flex-row justify-between">
+            <span className="text-xl">Opportunity Cost Recovery</span>
+            <span
+              className={cn('text-xl font-medium', {
+                'text-success': opportunity_cost > 0,
+              })}
+            >
+              {opportunity_cost ? dollarFormatter(opportunity_cost) : '-'}
+            </span>
+          </div>
           <div className="flex flex-row justify-between">
             <span className="text-xl">Loan Taken Out</span>
             <span
@@ -131,20 +155,35 @@ export function ResultsCard({
               {loan_taken_out ? dollarFormatter(loan_taken_out) : '-'}
             </span>
           </div>
-          <TotalDifference />
-          <TimeDifference />
           <div className="flex flex-row justify-between">
-            <span className="text-xl">Opportunity Cost Recovery Rate</span>
-            <span className="text-xl font-medium">{opportunity_rate}%</span>
-          </div>
-          <div className="flex flex-row justify-between">
-            <span className="text-xl">Opportunity Cost Recovery</span>
+            <span className="text-xl">Loan Payback Interest</span>
             <span
               className={cn('text-xl font-medium', {
-                'text-success': opportunity_cost > 0,
+                'text-destructive': loan_payback.interest > 0,
               })}
             >
-              {dollarFormatter(opportunity_cost)}
+              {loan_payback.interest ? dollarFormatter(loan_payback.interest) : '-'}
+            </span>
+          </div>
+          <div className="flex flex-row justify-between">
+            <span className="text-xl">Loan Payback Amount</span>
+            <span
+              className={cn('text-xl font-medium', {
+                'text-destructive': loan_payback.total > 0,
+              })}
+            >
+              {loan_payback.total ? dollarFormatter(loan_payback.total) : '-'}
+            </span>
+          </div>
+          <div className="flex flex-row justify-between">
+            <span className="text-xl">Loan Payback Projected Date</span>
+            <span className="text-xl font-medium">
+              {loan_payback.months > 0
+                ? format(
+                    addMonths(new Date(), data.payoff_months + loan_payback.months),
+                    'MMMM yyyy'
+                  )
+                : '-'}
             </span>
           </div>
         </div>

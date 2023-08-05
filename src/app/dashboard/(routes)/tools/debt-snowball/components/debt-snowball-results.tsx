@@ -87,6 +87,11 @@ export function DebtSnowballResults({ totalDebt }: DebtSnowballResultsProps) {
         dateDiff={currentDateDiff}
         opportunity_rate={inputs.opportunity_rate}
         opportunity_cost={currentOppCost}
+        loan_payback={{
+          total: 0,
+          interest: 0,
+          months: 0,
+        }}
       />
       <ResultsCard
         title={inputs.strategy}
@@ -98,6 +103,7 @@ export function DebtSnowballResults({ totalDebt }: DebtSnowballResultsProps) {
         dateDiff={strategyDateDiff}
         opportunity_rate={inputs.opportunity_rate}
         opportunity_cost={strategyOppCost}
+        loan_payback={results.strategyResults.loan_payback}
         lump_amounts={inputs.lump_amounts}
       />
     </div>

@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { debtCalculationInputsAtom, sortDebtsAtom } from '../atoms';
@@ -56,11 +57,15 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
       // @ts-ignore - Default to undefined to make the user specify a rate
       opportunity_rate: inputs?.opportunity_rate ?? undefined,
       lump_amounts: inputs?.lump_amounts ?? [0],
+      pay_back_loan: inputs?.pay_back_loan ?? false,
+      // @ts-ignore - Default to undefined to make the user specify a rate
+      loan_interest_rate: inputs?.loan_interest_rate ?? undefined,
     },
   });
   const strategy = form.watch('strategy');
   const additional_payment = form.watch('additional_payment');
   const shouldDisplayWealthAccelerator = strategy?.includes('Wealth Accelerator');
+  const canPayBackLoan = Boolean(form.watch('lump_amounts')?.reduce((a, b) => a + b, 0));
 
   const addLump = () => {
     const lump_amounts = form.getValues('lump_amounts') as (number | undefined)[];
@@ -95,6 +100,12 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
   useEffect(() => {
     sortDebts(strategy);
   }, [strategy]);
+
+  // useEffect(() => {
+  //   if (!canPayBackLoan) {
+  //     form.setValue('pay_back_loan', false);
+  //   }
+  // }, [canPayBackLoan])
 
   return (
     <Form {...form}>
@@ -209,6 +220,60 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                 <CardDescription>Enter the lump sum cash to apply each year.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-8">
+                <div className="p-4 border space-y-8">
+                  <FormField
+                    control={form.control}
+                    name="pay_back_loan"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <div className="flex items-center space-x-2 ">
+                          <Checkbox
+                            id="pay-back"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            onBlur={field.onBlur}
+                            disabled={!canPayBackLoan}
+                          />
+                          <FormLabel htmlFor="pay-back" className="text-md cursor-pointer">
+                            Pay back loan
+                          </FormLabel>
+                        </div>
+
+                        <FormDescription>
+                          Displays the payments necessary to pay back the loan taken out to pay off
+                          the debt.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="loan_interest_rate"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>
+                          Loan interest rate <span className="text-muted-foreground">(%)</span>
+                        </FormLabel>
+                        <Input
+                          type="number"
+                          placeholder="7%"
+                          value={field.value}
+                          disabled={!canPayBackLoan}
+                          onChange={(e) =>
+                            field.onChange(moneyRound(parseFloat(e.target.value) || 0))
+                          }
+                        />
+                        <FormDescription>
+                          The rate to compound the loan amounts taken, beginning when each lump sum
+                          is taken out.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
                 <div className="space-y-4">
                   {Array.from({ length: form.getValues('lump_amounts')?.length }).map((_, i) => (
                     <FormField
@@ -238,6 +303,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                     />
                   ))}
                 </div>
+
                 <Button type="button" variant="ghost" className="w-full" onClick={addLump}>
                   <Plus className="mr-1" />
                   Add Year

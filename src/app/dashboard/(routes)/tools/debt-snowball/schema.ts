@@ -34,6 +34,17 @@ export const debtCalculationSchema = z.object({
         message: 'Enter a positive amount',
       })
   ),
+  pay_back_loan: z.boolean(),
+  loan_interest_rate: z
+    .number({
+      required_error: 'Enter a rate',
+    })
+    .nonnegative({
+      message: 'Enter a positive rate',
+    })
+    .max(100, {
+      message: 'Enter a rate less than 100%',
+    }),
 });
 
 export type DebtCalculationSchemaType = z.infer<typeof debtCalculationSchema>;
