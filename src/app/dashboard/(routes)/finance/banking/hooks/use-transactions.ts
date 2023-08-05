@@ -100,7 +100,7 @@ export const useTransactions = (item: ClientInstitution) => {
     }
 
     return await getTransactions(item.item_id);
-  }, [item, setUpdateMode]);
+  }, [item]);
 
   return {
     isError,
