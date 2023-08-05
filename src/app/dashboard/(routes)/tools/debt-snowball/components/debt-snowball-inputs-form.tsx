@@ -101,12 +101,6 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
     sortDebts(strategy);
   }, [strategy]);
 
-  // useEffect(() => {
-  //   if (!canPayBackLoan) {
-  //     form.setValue('pay_back_loan', false);
-  //   }
-  // }, [canPayBackLoan])
-
   return (
     <Form {...form}>
       <form noValidate onSubmit={form.handleSubmit(calculateDebt)}>

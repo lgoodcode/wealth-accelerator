@@ -118,9 +118,8 @@ export const usePlaid = () => {
       // or click a different institution
       if (updateMode && metadata.status === 'requires_credentials') {
         setLinkToken(null);
+        setUpdateMode(false);
       }
-
-      setUpdateMode(false);
     },
     [updateMode]
   );
