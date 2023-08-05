@@ -96,7 +96,6 @@ export const useTransactions = (item: ClientInstitution) => {
     if (accessTokenForUpdateMode) {
       setUpdateMode(true);
       setLinkToken(accessTokenForUpdateMode);
-      return [];
     }
 
     return await getTransactions(item.item_id);
