@@ -17,7 +17,8 @@ async function createLinkToken() {
   try {
     const response = await plaidClient.linkTokenCreate(createLinkTokenRequest(user.id));
     const { link_token } = response.data;
-    return NextResponse.json<CreateLinkTokenResponse>({ link_token });
+    // return NextResponse.json<CreateLinkTokenResponse>({ link_token });
+    return NextResponse.json({ error: 'Failed to create link token' }, { status: 500 });
   } catch (error) {
     console.error(error);
     captureException(error);
