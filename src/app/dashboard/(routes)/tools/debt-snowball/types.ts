@@ -25,6 +25,7 @@ export type SnowballDebtCalculation = SimpleDebtCalculation & {
     total: number;
     interest: number;
     months: number;
+    tracking: number[][];
   };
 };
 
@@ -35,6 +36,7 @@ export type DebtCalculationInputs = {
   strategy: Strategies;
   lump_amounts: number[];
   pay_back_loan: boolean;
+  pay_interest: boolean;
   loan_interest_rate: number;
 };
 

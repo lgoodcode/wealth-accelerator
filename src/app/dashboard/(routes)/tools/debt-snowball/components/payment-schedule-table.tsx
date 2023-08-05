@@ -36,26 +36,38 @@ const PaymentScheduleHeaders = ({ debtPayoffs }: PaymentScheduleHeadersProps): J
 
 interface PaymentScheduleHeadersLeftProps {
   inputs: DebtCalculationInputs;
-  data: SnowballDebtCalculation;
+  results: SnowballDebtCalculation;
+  years: number[][];
 }
 
-const PaymentScheduleHeadersLeft = ({ inputs, data }: PaymentScheduleHeadersLeftProps) => {
+const PaymentScheduleHeadersLeft = ({
+  inputs,
+  results,
+  years,
+}: PaymentScheduleHeadersLeftProps) => {
   return (
     <>
-      {data.balance_tracking.map((_, yearIndex) =>
-        data.balance_tracking[yearIndex].map((_, monthIndex) => (
+      {years.map((_, yearIndex) =>
+        years[yearIndex].map((_, monthIndex) => (
           <TableRow key={`content-${yearIndex * 12 + monthIndex + 1}`}>
             <TableCell>
               {format(addMonths(new Date(), yearIndex * 12 + monthIndex + 1), 'MMM yyyy')}
             </TableCell>
-            <TableCell>{dollarFormatter(data.snowball_tracking[yearIndex][monthIndex])}</TableCell>
             <TableCell>
               {dollarFormatter(
-                // The additional monthly payment and lump sum amounts
-                (inputs?.additional_payment ?? 0) +
-                  (monthIndex === 0 ? inputs.lump_amounts[yearIndex] ?? 0 : 0)
+                results.snowball_tracking[yearIndex] &&
+                  results.snowball_tracking[yearIndex][monthIndex]
+                  ? results.snowball_tracking[yearIndex][monthIndex]
+                  : inputs.monthly_payment
               )}
             </TableCell>
+            {inputs.pay_back_loan && (
+              <TableCell>
+                {results.loan_payback.tracking[yearIndex][monthIndex]
+                  ? dollarFormatter(results.loan_payback.tracking[yearIndex][monthIndex])
+                  : '-'}
+              </TableCell>
+            )}
           </TableRow>
         ))
       )}
@@ -66,6 +78,17 @@ const PaymentScheduleHeadersLeft = ({ inputs, data }: PaymentScheduleHeadersLeft
 export function PaymentScheduleTable() {
   const inputs = useAtomValue(debtCalculationInputsAtom) as DebtCalculationInputs;
   const { strategyResults } = useAtomValue(debtCalculationResultsAtom) as DebtCalculationResults;
+  const numYears = Math.max(
+    strategyResults.balance_tracking.length,
+    strategyResults.loan_payback.tracking.length
+  );
+  const lastMonth = Math.max(
+    strategyResults.balance_tracking[numYears - 1].length,
+    strategyResults.loan_payback.tracking[numYears - 1].length
+  );
+  const years = Array.from({ length: numYears }, (_, i) =>
+    Array.from({ length: i === numYears - 1 ? lastMonth : 12 }, (_, j) => j)
+  );
 
   return (
     <Card>
@@ -76,11 +99,11 @@ export function PaymentScheduleTable() {
               <TableRow>
                 <TableHead className="text-center">Date</TableHead>
                 <TableHead className="text-center">Snowball</TableHead>
-                <TableHead className="text-center">Additional</TableHead>
+                {inputs.pay_back_loan && <TableHead className="text-center">Loan</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody className="text-center whitespace-nowrap">
-              <PaymentScheduleHeadersLeft inputs={inputs} data={strategyResults} />
+              <PaymentScheduleHeadersLeft inputs={inputs} results={strategyResults} years={years} />
             </TableBody>
           </Table>
         </div>
@@ -91,11 +114,13 @@ export function PaymentScheduleTable() {
             </TableRow>
           </TableHeader>
           <TableBody className="text-center">
-            {strategyResults.balance_tracking.map((_, yearIndex) =>
-              strategyResults.balance_tracking[yearIndex].map((month, monthIndex) => (
+            {years.map((_, yearIndex) =>
+              years[yearIndex].map((_, monthIndex) => (
                 <TableRow key={`content-${yearIndex * 12 + monthIndex + 1}`}>
-                  {strategyResults.debt_payoffs.map((debtPayoff) => (
-                    <TableCell key={`${debtPayoff.debt.description}-${yearIndex}-${monthIndex}`}>
+                  {strategyResults.debt_payoffs.map((debtPayoff, i) => (
+                    <TableCell
+                      key={`${debtPayoff.debt.description}-${yearIndex}-${monthIndex}-${i}`}
+                    >
                       {debtPayoff.payment_tracking[yearIndex][monthIndex]
                         ? dollarFormatter(debtPayoff.payment_tracking[yearIndex][monthIndex])
                         : '-'}

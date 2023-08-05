@@ -20,9 +20,10 @@ export const useDebtCalculate = () => {
       const currentResults = simple_calculate(structuredClone(debts));
       const strategyResults = snowball_calculate(structuredClone(debts), {
         isWealthAccelerator: data.strategy.includes('Wealth Accelerator'),
-        additional_payment: data.additional_payment,
+        additional_payment: data.additional_payment ?? 0,
         lump_amounts: data.lump_amounts,
         pay_back_loan: data.pay_back_loan,
+        pay_interest: data.pay_interest,
         loan_interest_rate: data.loan_interest_rate,
       });
 

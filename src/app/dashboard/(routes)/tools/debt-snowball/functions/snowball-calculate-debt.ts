@@ -8,12 +8,13 @@ const centsToDollars = (cents: number) => moneyRound(cents / 100);
 
 export const snowball_calculate = (
   debts: Debt[],
-  options?: {
-    isWealthAccelerator?: boolean;
-    additional_payment?: number;
-    lump_amounts?: number[];
-    pay_back_loan?: boolean;
-    loan_interest_rate?: number;
+  options: {
+    isWealthAccelerator: boolean;
+    additional_payment: number;
+    lump_amounts: number[];
+    pay_back_loan: boolean;
+    pay_interest: boolean;
+    loan_interest_rate: number;
   }
 ): SnowballDebtCalculation => {
   // Track the debt payoffs by initializing an array of the debts in a DebtPayoff object
@@ -33,17 +34,18 @@ export const snowball_calculate = (
   const balance_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
   const interest_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
   const snowball_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
-  const loan_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
+  const loan_payment_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
   const intitial_total_debt = debts.reduce((acc, debt) => acc + dollarsToCents(debt.amount), 0);
-  const lump_amounts = options?.lump_amounts?.map(dollarsToCents) ?? [];
-  const additional_payment = options?.additional_payment
-    ? dollarsToCents(options?.additional_payment)
+  const lump_amounts = options.lump_amounts?.map(dollarsToCents) ?? [];
+  const additional_payment = options.additional_payment
+    ? dollarsToCents(options.additional_payment)
     : 0;
+  const loan_payoffs = [...lump_amounts];
+  const monthly_payment = debts.reduce((acc, debt) => acc + dollarsToCents(debt.payment), 0);
   let balance_remaining = intitial_total_debt;
   let year = 0;
   let month = 0;
   let snowball = 0;
-  let loan_total = 0;
   let loan_interest = 0;
   let loan_payback_months = 0;
 
@@ -52,23 +54,32 @@ export const snowball_calculate = (
 
   while (balance_remaining) {
     // If we are using the Wealth Accelerator, apply the lump sum to the snowball to use for the debts
-    snowball = options?.isWealthAccelerator && lump_amounts?.[year] ? lump_amounts[year] : 0;
+    snowball = options.isWealthAccelerator && lump_amounts?.[year] ? lump_amounts[year] : 0;
 
     for (month = 0; month < NUM_OF_MONTHS; month++) {
       // Add the additional monthly payments after tracking snowball at the start of the month
-      snowball += options?.additional_payment ? additional_payment : 0;
+      snowball += options.additional_payment ? additional_payment : 0;
+
+      // Calculate loan interest only for loans that have been taken out - use the year to only calculate for
+      // loans after they have been taken out
+      if (options.isWealthAccelerator) {
+        for (let i = 0; i <= year; i++) {
+          if (loan_payoffs[i]) {
+            const interest = loan_payoffs[i] * (options.loan_interest_rate / 100 / 12);
+            loan_payoffs[i] += interest;
+            loan_interest += interest;
+          }
+        }
+      }
 
       for (const debtPayoff of debt_payoffs) {
         const { debt } = debtPayoff;
-
         // If the debt is paid off, add the debt's payment to the snowball
         if (!debt.amount) {
           snowball += debt.payment;
           continue;
         }
 
-        // Calculate the amortized interest for the month:
-        //   Divide by 100 to get the percentage, then divide by 12 to get the monthly interest
         const interest = debt.amount * (debt.interest / 100 / 12);
         // Add the interest to the total interest paid for the month
         interest_tracking[year][month] += interest;
@@ -136,11 +147,7 @@ export const snowball_calculate = (
 
       // If there is no more debt remaining, break out of the loop
       if (!balance_remaining) {
-        // Remove the extra months only if we aren't paying the loan back
-        // otherwise we keep it and remove any empty months at the end
-        if (!options?.pay_back_loan) {
-          balance_tracking[year] = balance_tracking[year].slice(0, month + 1);
-        }
+        balance_tracking[year] = balance_tracking[year].slice(0, month + 1);
         break;
       }
     } // End of for-each month
@@ -152,7 +159,7 @@ export const snowball_calculate = (
       balance_tracking[year] = Array.from({ length: 12 }, () => 0);
       interest_tracking[year] = Array.from({ length: 12 }, () => 0);
       snowball_tracking[year] = Array.from({ length: 12 }, () => 0);
-      loan_tracking[year] = Array.from({ length: 12 }, () => 0); // Only used for paying back the loan later on
+      loan_payment_tracking[year] = Array.from({ length: 12 }, () => 0);
       debt_payoffs.forEach((debtPayoff) => {
         debtPayoff.payment_tracking[year] = Array.from({ length: 12 }, () => 0);
       });
@@ -163,55 +170,67 @@ export const snowball_calculate = (
    * If paying the loan back, use any remainder snowball and the monthly payments to pay back the loan
    */
 
-  if (options?.pay_back_loan) {
-    const loan_interest_rate = options?.loan_interest_rate ?? 0;
-    const monthly_payment = debts.reduce((acc, debt) => acc + dollarsToCents(debt.payment), 0);
-    let loan_balance_remaining = lump_amounts?.reduce((acc, lump_amount) => acc + lump_amount, 0);
-    loan_total = loan_balance_remaining;
-
-    // If the snowball is greater than the total loan, subtract the loan from the snowball
-    if (snowball > loan_balance_remaining) {
-      snowball -= loan_balance_remaining;
-      loan_balance_remaining = 0;
-      // Otherwise, subtract the snowball from the loan and set the snowball to 0
-    } else {
-      loan_balance_remaining -= snowball;
-      snowball = 0;
-    }
-
+  if (options.pay_back_loan) {
+    let loan_balance_remaining = loan_payoffs.reduce((acc, lump_amount) => acc + lump_amount, 0);
+    let first = true;
     // If there is any loan remaining, use the monthly payments to pay it off and continue
     // tracking it in the balance tracking
     while (loan_balance_remaining) {
+      // Reset the month if we are starting a new year
       if (month === NUM_OF_MONTHS) {
         month = 0;
       }
 
       // Set the initial payment for the month to the monthly payment plus any snowball remaining
       for (; month < NUM_OF_MONTHS; month++) {
-        const interest = loan_balance_remaining * (loan_interest_rate / 100 / 12);
-        loan_interest += interest;
-        loan_balance_remaining += interest;
-        loan_payback_months++;
+        // On the initial payment, we use the snowball because it is the same month as paying off the debts
+        // and we can't use more money than we have
+        let payment = first ? snowball : monthly_payment;
+        // Track the payment used for each month
+        loan_payment_tracking[year][month] = payment;
 
-        if (monthly_payment > loan_balance_remaining) {
-          loan_balance_remaining = 0;
+        // Iterate through each debt to properly calculate interest on each loan lump amount
+        for (let i = 0; i < loan_payoffs.length; i++) {
+          // If there is any balance left for this loan, calculate the interest
+          if (loan_payoffs[i]) {
+            const interest = loan_payoffs[i] * (options.loan_interest_rate / 100 / 12);
+            loan_payoffs[i] += interest;
+            loan_interest += interest;
+
+            // Make a payment towards the loan if we have any payment remaining
+            if (payment) {
+              if (payment > loan_payoffs[i]) {
+                payment -= loan_payoffs[i];
+                loan_payoffs[i] = 0;
+              } else {
+                loan_payoffs[i] -= payment;
+                payment = 0;
+              }
+            }
+          }
+        } // End of for-each loan lump amount
+
+        // On the first payment, we are in the same month as paying off debts so we use the snowball
+        // and don't increment the month
+        if (first) {
+          first = false;
         } else {
-          loan_balance_remaining -= monthly_payment;
+          loan_payback_months++;
         }
 
-        loan_tracking[year][month] = loan_balance_remaining;
+        loan_balance_remaining = loan_payoffs.reduce((acc, lump_amount) => acc + lump_amount, 0);
 
         // If there is no more loan remaining, remove any empty months, add any remaining payment back into
         // the snowball to be used to deduct from the total  at the end and break out of the loop
         if (!loan_balance_remaining) {
           break;
         }
-      }
+      } // End of for-each month
 
       if (loan_balance_remaining) {
-        loan_tracking[++year] = Array.from({ length: 12 }, () => 0);
+        loan_payment_tracking[++year] = Array.from({ length: 12 }, () => 0);
       } else {
-        loan_tracking[year] = loan_tracking[year].slice(0, month + 1);
+        loan_payment_tracking[year] = loan_payment_tracking[year].slice(0, month + 1);
         break;
       }
     } // No loan balance remaining
@@ -246,6 +265,11 @@ export const snowball_calculate = (
   const interest_tracking_dollars = interest_tracking.map((year) => year.map(centsToDollars));
   const snowball_tracking_dollars = snowball_tracking.map((year) => year.map(centsToDollars));
 
+  const loan_total =
+    lump_amounts?.reduce((acc, lump_amount) => acc + lump_amount, 0) ?? 0 + loan_interest;
+  const loan_interest_dollars = centsToDollars(loan_total + loan_interest);
+  const loan_tracking_dollars = loan_payment_tracking.map((year) => year.map(centsToDollars));
+
   return {
     debt_payoffs: debt_payoffs_dollars,
     balance_tracking: balance_tracking_dollars,
@@ -255,9 +279,10 @@ export const snowball_calculate = (
     total_interest: total_interest_dollars,
     total_amount: total_amount_dollars,
     loan_payback: {
-      total: centsToDollars(loan_total + loan_interest),
+      total: loan_interest_dollars,
       interest: centsToDollars(loan_interest),
       months: loan_payback_months,
+      tracking: loan_tracking_dollars,
     },
   };
 };

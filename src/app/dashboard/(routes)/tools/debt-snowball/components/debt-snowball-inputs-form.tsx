@@ -54,12 +54,11 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
       // @ts-ignore - Default to undefined to make the user select a strategy
       strategy: inputs?.strategy ?? undefined,
       monthly_payment: paymentsSum,
-      // @ts-ignore - Default to undefined to make the user specify a rate
-      opportunity_rate: inputs?.opportunity_rate ?? undefined,
+      opportunity_rate: inputs?.opportunity_rate ?? 5,
       lump_amounts: inputs?.lump_amounts ?? [0],
       pay_back_loan: inputs?.pay_back_loan ?? false,
-      // @ts-ignore - Default to undefined to make the user specify a rate
-      loan_interest_rate: inputs?.loan_interest_rate ?? undefined,
+      pay_interest: inputs?.pay_interest ?? false,
+      loan_interest_rate: inputs?.loan_interest_rate ?? 5,
     },
   });
   const strategy = form.watch('strategy');
