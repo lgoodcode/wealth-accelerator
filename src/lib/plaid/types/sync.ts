@@ -16,6 +16,7 @@ export type ServerSyncTransactions = {
   error: {
     status: number;
     general: PostgrestError | Error | null;
+    access_token: string | null; // Need to be passed in addition with a plaid.isCredentialError for update mode
     plaid: {
       isRateLimitError: boolean;
       isCredentialError: boolean;
@@ -35,6 +36,7 @@ export type ServerSyncTransactions = {
 
 export type SyncTransactionsResponseError = {
   general: PostgrestError | Error | string | null;
+  access_token: string | null; // Need to be passed in addition with a plaid.isCredentialError for update mode
   plaid: {
     isRateLimitError: boolean;
     isCredentialError: boolean;
@@ -42,13 +44,7 @@ export type SyncTransactionsResponseError = {
   } | null;
 };
 
-export type SyncTransactionsResponseBody = {
+export type SyncTransactionsResponse = {
+  error: SyncTransactionsResponseError | null;
   hasMore: boolean;
 };
-
-export type SyncTransactionsResponse =
-  | {
-      error: SyncTransactionsResponseError | null;
-    }
-  | SyncTransactionsResponseBody
-  | null;

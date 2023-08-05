@@ -5,7 +5,7 @@ import { captureException } from '@sentry/nextjs';
 
 import { SUPABASE_QUERY_LIMIT } from '@/config/app';
 import { supabase } from '@/lib/supabase/client';
-import { updateModeAtom } from '@/lib/plaid/atoms';
+import { updateModeAtom, linkTokenAtom } from '@/lib/plaid/atoms';
 import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
 import { displaySyncError } from '@/lib/plaid/transactions/displaySyncError';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
@@ -23,15 +23,14 @@ const syncTransactions = async (item: ClientInstitution) => {
   const syncError = await clientSyncTransactions(item.item_id);
 
   if (syncError) {
-    console.error(syncError);
     displaySyncError(syncError, item.name);
 
     if (syncError.plaid?.isCredentialError) {
-      return true;
+      return syncError.access_token;
     }
   }
 
-  return false;
+  return null;
 };
 
 /**
@@ -70,6 +69,7 @@ const getTransactions = async (item_id: string) => {
 
 export const useTransactions = (item: ClientInstitution) => {
   const setUpdateMode = useSetAtom(updateModeAtom);
+  const setLinkToken = useSetAtom(linkTokenAtom);
 
   const {
     isError,
@@ -91,15 +91,16 @@ export const useTransactions = (item: ClientInstitution) => {
    * @returns An array of transactions
    */
   const handleGetTransactions = useCallback(async () => {
-    const needsUpdate = await syncTransactions(item);
+    const accessTokenForUpdateMode = await syncTransactions(item);
 
-    if (needsUpdate) {
+    if (accessTokenForUpdateMode) {
       setUpdateMode(true);
+      setLinkToken(accessTokenForUpdateMode);
       return [];
     }
 
     return await getTransactions(item.item_id);
-  }, [item, setUpdateMode]);
+  }, [item]);
 
   return {
     isError,

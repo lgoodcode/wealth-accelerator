@@ -28,25 +28,46 @@ export async function middleware(request: NextRequest) {
 
   // Refresh session to prevent expiration
   const {
-    error,
+    error: sessionError,
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (error) {
-    console.error('Middleware error', error);
-    captureException(error, {
+  if (sessionError) {
+    console.error('Middleware session error', sessionError);
+    captureException(sessionError, {
       user: {
-        id: session?.user.id,
-        email: session?.user.email,
-        username: session?.user.user_metadata?.name,
+        id: token.sub,
+        email: token.email,
+        username: token.user_metadata.name,
+      },
+    });
+  }
+
+  if (!session) {
+    return NextResponse.redirect(loginRedirectUrl);
+  }
+
+  // Get the user to make sure they are authenticated
+  const {
+    error: userError,
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (userError) {
+    console.error('Middleware user error', userError);
+    captureException(userError, {
+      user: {
+        id: session.user.id,
+        email: session.user.email,
+        username: session.user.user_metadata?.name,
       },
     });
   }
 
   // If there is an error or there's no session, redirect to login page for all pages except auth pages
-  if ((error || !session) && !isAuthPage) {
+  if ((userError || !user) && !isAuthPage) {
     return NextResponse.redirect(loginRedirectUrl);
-  } else if (session && isLoginPage) {
+  } else if (user && isLoginPage) {
     // If there is a session and user is visiting the login page, redirect to dashboard home
     return NextResponse.redirect(new URL(`${request.nextUrl.origin}/dashboard/home`));
   }

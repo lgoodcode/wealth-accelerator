@@ -1,7 +1,7 @@
 import { fetcher } from '@/lib/utils/fetcher';
-import {
-  SyncTransactionsResponseBody,
-  type SyncTransactionsResponseError,
+import type {
+  SyncTransactionsResponse,
+  SyncTransactionsResponseError,
 } from '@/lib/plaid/types/sync';
 
 /**
@@ -29,10 +29,9 @@ export const clientSyncTransactions = async (
       await new Promise((resolve) => setTimeout(resolve, 60000));
     }
 
-    const { error, data } = await fetcher<
-      SyncTransactionsResponseBody,
-      SyncTransactionsResponseError
-    >(`/api/plaid/institutions/sync/${item_id}?request_id=${Date.now()}`);
+    const { error, data } = await fetcher<SyncTransactionsResponse, SyncTransactionsResponseError>(
+      `/api/plaid/institutions/sync/${item_id}?request_id=${Date.now()}`
+    );
 
     if (error) {
       // If it's a rate limit error, wait a minute and continue

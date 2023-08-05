@@ -3,6 +3,8 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
+export const dynamic = 'force-dynamic';
+
 export const GET = exchangeCodeForSession;
 
 async function exchangeCodeForSession(request: Request) {

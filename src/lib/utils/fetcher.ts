@@ -38,8 +38,17 @@ export const fetcher = async <T = any, E = Error>(
         data: json as T,
       };
     } else {
+      const json = await res.json();
+
+      if ('error' in json) {
+        return {
+          error: json.error as E,
+          data: null,
+        };
+      }
+
       return {
-        error: (await res.json()) as E,
+        error: json as E,
         data: null,
       };
     }

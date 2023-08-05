@@ -15,6 +15,7 @@ import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
 import { displaySyncError } from '@/lib/plaid/transactions/displaySyncError';
 import {
+  linkTokenAtom,
   updateModeAtom,
   addInstitutionAtom,
   isInsItemIdSyncingOrLoadingAtom,
@@ -22,11 +23,11 @@ import {
 import { Toast } from '@/components/ui/toast';
 
 export const usePlaid = () => {
-  const [linkToken, setLinkToken] = useState<string | null>(null);
-  const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
+  const [linkToken, setLinkToken] = useAtom(linkTokenAtom);
   const [updateMode, setUpdateMode] = useAtom(updateModeAtom);
   const setIsInsItemIdSyncingOrLoading = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
   const addInstitution = useSetAtom(addInstitutionAtom);
+  const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
 
   // On successful link, exchange the public token for an access token
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
@@ -66,6 +67,7 @@ export const usePlaid = () => {
 
         if (syncError.plaid?.isCredentialError) {
           setUpdateMode(true);
+          setLinkToken(syncError.access_token);
         }
 
         toast(
@@ -120,7 +122,7 @@ export const usePlaid = () => {
 
       setUpdateMode(false);
     },
-    [setUpdateMode, updateMode]
+    [updateMode]
   );
 
   const plaidConfig: PlaidLinkOptions = useMemo(

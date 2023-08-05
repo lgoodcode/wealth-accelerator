@@ -128,7 +128,7 @@ export function ResultsCard({
                 'text-destructive': loan_taken_out > 0,
               })}
             >
-              {dollarFormatter(loan_taken_out)}
+              {loan_taken_out ? dollarFormatter(loan_taken_out) : '-'}
             </span>
           </div>
           <TotalDifference />

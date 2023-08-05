@@ -30,7 +30,7 @@ async function syncTransactionsWebhook(request: Request) {
         return NextResponse.json({ error: itemError.message }, { status: 500 });
       }
 
-      const { error: syncError } = await serverSyncTransactions(item!, true);
+      const { error: syncError } = await serverSyncTransactions(item!);
 
       if (syncError) {
         console.error(syncError);

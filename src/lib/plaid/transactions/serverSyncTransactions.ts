@@ -2,7 +2,7 @@ import { PlaidErrorType } from 'plaid';
 
 import { PLAID_SYNC_BATCH_SIZE } from '@/config/app';
 import { plaidClient } from '@/lib/plaid/config';
-import { createSupabase } from '@/lib/supabase/server/create-supabase';
+import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { updateTransactions } from '@/lib/plaid/transactions/updateTransactions';
 import { addTransactions } from '@/lib/plaid/transactions/addTransactions';
 import { removeTransactions } from '@/lib/plaid/transactions/removeTransactions';
@@ -12,13 +12,12 @@ import type { Filter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
 
 export const serverSyncTransactions = async (
-  item: Institution,
-  admin?: boolean
+  item: Institution
 ): Promise<ServerSyncTransactions> => {
-  const supabase = createSupabase(admin);
-  const { error: filtersError, data: filtersData } = await supabase
+  const { error: filtersError, data: filtersData } = await supabaseAdmin // Need admin to access plaid_filters for all users
     .from('plaid_filters')
-    .select('*');
+    .select('*')
+    .order('id', { ascending: true });
 
   if (filtersError) {
     return {
@@ -26,6 +25,7 @@ export const serverSyncTransactions = async (
         status: 500,
         general: filtersError,
         plaid: null,
+        access_token: null,
       },
       data: {
         hasMore: false,
@@ -42,10 +42,14 @@ export const serverSyncTransactions = async (
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
       count: PLAID_SYNC_BATCH_SIZE,
     });
-
-    const addedError = await addTransactions(item.item_id, data.added, filters, supabase);
-    const updatedError = await updateTransactions(item.item_id, data.modified, filters, supabase);
-    const removedError = await removeTransactions(data.removed, supabase);
+    const addedError = await addTransactions(item.item_id, data.added, filters, supabaseAdmin);
+    const updatedError = await updateTransactions(
+      item.item_id,
+      data.modified,
+      filters,
+      supabaseAdmin
+    );
+    const removedError = await removeTransactions(data.removed, supabaseAdmin);
 
     if (addedError || updatedError || removedError) {
       return {
@@ -53,6 +57,7 @@ export const serverSyncTransactions = async (
           status: 500,
           general: addedError || updatedError || removedError,
           plaid: null,
+          access_token: null,
         },
         data: {
           hasMore: false,
@@ -66,7 +71,7 @@ export const serverSyncTransactions = async (
     }
 
     // Update the item's cursor
-    const { error: cursorError } = await supabase
+    const { error: cursorError } = await supabaseAdmin
       .from('plaid')
       .update({ cursor: data.next_cursor })
       .eq('item_id', item.item_id);
@@ -77,6 +82,7 @@ export const serverSyncTransactions = async (
           status: 500,
           general: cursorError,
           plaid: null,
+          access_token: null,
         },
         data: {
           hasMore: false,
@@ -93,16 +99,17 @@ export const serverSyncTransactions = async (
       },
     };
   } catch (error: any) {
-    const errorCode = error?.response?.data?.error_code;
+    const errorCode = error?.response?.data?.error_code as string;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
-    const isCredentialError = errorCode in PlaidCredentialErrorCode;
-    const isOtherPlaidError = errorCode in PlaidErrorType;
+    const isCredentialError = Object.values(PlaidCredentialErrorCode).includes(errorCode as any);
+    const isOtherPlaidError = Object.values(PlaidErrorType).includes(errorCode as any);
     const status = isRateLimitError ? 429 : 500;
 
     return {
       error: {
         status,
-        general: null,
+        general: !errorCode ? error : null, // If not a Plaid error, return the error
+        access_token: isCredentialError ? item.access_token : null,
         plaid: {
           isRateLimitError,
           isCredentialError,
