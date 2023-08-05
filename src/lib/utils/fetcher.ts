@@ -27,8 +27,6 @@ export const fetcher = async <T = any, E = Error>(
     if (res.ok) {
       const json = await res.json();
 
-      console.log({ json });
-
       if ('error' in json) {
         return {
           error: json.error as E,
