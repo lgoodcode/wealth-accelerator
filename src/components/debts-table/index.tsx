@@ -46,9 +46,10 @@ export function DebtsTable({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const tableColumns = columns(rowActions, enableHeaderOptions);
   const table = useReactTable<Debt>({
     data: debts || [],
-    columns: columns(rowActions, enableHeaderOptions),
+    columns: tableColumns,
     state: {
       sorting,
       columnVisibility,
@@ -106,7 +107,7 @@ export function DebtsTable({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={tableColumns.length} className="h-24 text-center">
                   No results
                 </TableCell>
               </TableRow>
