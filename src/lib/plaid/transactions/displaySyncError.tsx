@@ -7,22 +7,18 @@ export const displaySyncError = (
   syncError: SyncTransactionsResponseError,
   institutionName: string
 ) => {
-  if (syncError.general) {
+  if (syncError.plaid?.isCredentialError) {
+    toast.error(
+      <Toast title="Syncing transactions">
+        Credentials need to be updated for <span className="font-bold">{institutionName}</span>
+      </Toast>
+    );
+  } else if (syncError.general) {
     toast.error(
       <Toast title="Syncing transactions">
         Failed to begin transactions sync for <span className="font-bold">{institutionName}</span>
       </Toast>
     );
-    // Plaid credential error
-  } else if (syncError.plaid) {
-    if (syncError.plaid.isCredentialError) {
-      toast.error(
-        <Toast title="Syncing transactions">
-          Credentials need to be updated for <span className="font-bold">{institutionName}</span>
-        </Toast>
-      );
-    }
-    // Other Plaid error
   } else {
     toast.error(
       <Toast title="Syncing transactions">
