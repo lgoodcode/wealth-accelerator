@@ -21,13 +21,11 @@ const CACHE_TRANASACTIONS_FOR = 1000 * 60 * 60; // Cache transactions for an hou
  */
 const syncTransactions = async (item: ClientInstitution) => {
   const syncError = await clientSyncTransactions(item.item_id);
-  console.log('sync', syncError);
+
   if (syncError) {
-    console.log('trigger', syncError.plaid);
     displaySyncError(syncError, item.name);
 
     if (syncError.plaid?.isCredentialError) {
-      console.log('returening', syncError.access_token);
       return syncError.access_token;
     }
   }
@@ -94,7 +92,7 @@ export const useTransactions = (item: ClientInstitution) => {
    */
   const handleGetTransactions = useCallback(async () => {
     const accessTokenForUpdateMode = await syncTransactions(item);
-    console.log('accessTokenForUpdateMode', accessTokenForUpdateMode);
+
     if (accessTokenForUpdateMode) {
       setUpdateMode(true);
       setLinkToken(accessTokenForUpdateMode);
