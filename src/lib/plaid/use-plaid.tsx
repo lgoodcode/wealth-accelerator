@@ -139,9 +139,8 @@ export const usePlaid = () => {
 
   // Launches update mode
   useEffect(() => {
-    console.log('updateMode', updateMode, linkToken);
+    console.log({ updateMode, linkToken });
     if (updateMode && linkToken && open) {
-      console.log('opening', updateMode, linkToken);
       open();
     }
   }, [updateMode, linkToken, open]);
