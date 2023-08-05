@@ -3,15 +3,16 @@ import { moneyRound } from '@/lib/utils/money-round';
 import type { DebtPayoff, SimpleDebtCalculation } from '../types';
 
 const NUM_OF_MONTHS = 12;
+const dollarsToCents = (dollars: number) => dollars * 100;
+const centsToDollars = (cents: number) => moneyRound(cents / 100);
 
 export const simple_calculate = (debts: Debt[]): SimpleDebtCalculation => {
   // Track the debt payoffs by initializing an array of the debts in a DebtPayoff object
   const debt_payoffs: DebtPayoff[] = debts.map((debt) => ({
     debt: {
       ...debt,
-      // Get the cents from the dollars to
-      amount: debt.amount * 100,
-      payment: debt.payment * 100,
+      amount: dollarsToCents(debt.amount),
+      payment: dollarsToCents(debt.payment),
     },
     months: 0,
     total: 0,
@@ -22,7 +23,7 @@ export const simple_calculate = (debts: Debt[]): SimpleDebtCalculation => {
   // with the first index being an array of 12 months
   const balance_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
   const interest_tracking: number[][] = [Array.from({ length: 12 }, () => 0)];
-  const intitial_total_debt = debts.reduce((acc, debt) => acc + debt.amount * 100, 0); // Get the cents from the dollars
+  const intitial_total_debt = debts.reduce((acc, debt) => acc + dollarsToCents(debt.amount), 0); // Get the cents from the dollars
   let balance_remaining = intitial_total_debt;
   let year = 0;
 
@@ -99,7 +100,7 @@ export const simple_calculate = (debts: Debt[]): SimpleDebtCalculation => {
    */
 
   const total_interest = debt_payoffs.reduce((acc, debtPayoff) => acc + debtPayoff.interest, 0);
-  const total_interest_dollars = moneyRound(total_interest / 100);
+  const total_interest_dollars = centsToDollars(total_interest);
   // Find the longest payoff months to determine the payoff date
   const payoff_months = debt_payoffs.reduce(
     (acc, debtPayoff) => Math.max(acc, debtPayoff.months),
@@ -107,26 +108,20 @@ export const simple_calculate = (debts: Debt[]): SimpleDebtCalculation => {
   );
   // Calculate the total amount paid for all debts with the principal and interest
   const total_amount = intitial_total_debt + total_interest;
-  const total_amount_dollars = moneyRound(total_amount / 100);
+  const total_amount_dollars = centsToDollars(total_amount);
 
   const debt_payoffs_dollars = debt_payoffs.map((debtPayoff) => ({
     ...debtPayoff,
     debt: {
       ...debtPayoff.debt,
-      amount: moneyRound(debtPayoff.debt.amount / 100),
-      payment: moneyRound(debtPayoff.debt.payment / 100),
+      amount: centsToDollars(debtPayoff.debt.amount),
+      payment: centsToDollars(debtPayoff.debt.payment),
     },
-    interest: moneyRound(debtPayoff.interest / 100),
-    payment_tracking: debtPayoff.payment_tracking.map((year) =>
-      year.map((month) => moneyRound(month / 100))
-    ),
+    interest: centsToDollars(debtPayoff.interest),
+    payment_tracking: debtPayoff.payment_tracking.map((year) => year.map(centsToDollars)),
   }));
-  const balance_tracking_dollars = balance_tracking.map((year) =>
-    year.map((month) => moneyRound(month / 100))
-  );
-  const interest_tracking_dollars = interest_tracking.map((year) =>
-    year.map((month) => moneyRound(month / 100))
-  );
+  const balance_tracking_dollars = balance_tracking.map((year) => year.map(centsToDollars));
+  const interest_tracking_dollars = interest_tracking.map((year) => year.map(centsToDollars));
 
   return {
     debt_payoffs: debt_payoffs_dollars,
