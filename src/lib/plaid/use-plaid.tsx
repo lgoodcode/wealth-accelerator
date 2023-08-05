@@ -120,9 +120,9 @@ export const usePlaid = () => {
         setLinkToken(null);
       }
 
-      // setUpdateMode(false);
+      setUpdateMode(false);
     },
-    [setUpdateMode, updateMode]
+    [updateMode]
   );
 
   const plaidConfig: PlaidLinkOptions = useMemo(

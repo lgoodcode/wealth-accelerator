@@ -21,7 +21,7 @@ const CACHE_TRANASACTIONS_FOR = 1000 * 60 * 60; // Cache transactions for an hou
  */
 const syncTransactions = async (item: ClientInstitution) => {
   const syncError = await clientSyncTransactions(item.item_id);
-
+  console.log('sync', syncError);
   if (syncError) {
     displaySyncError(syncError, item.name);
 
