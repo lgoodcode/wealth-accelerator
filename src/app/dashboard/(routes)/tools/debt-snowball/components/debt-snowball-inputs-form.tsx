@@ -218,8 +218,8 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                     control={form.control}
                     name="pay_back_loan"
                     render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <div className="flex items-center space-x-2 ">
+                      <FormItem className="flex flex-col space-y-2">
+                        <div className="flex items-center space-x-2">
                           <Checkbox
                             id="pay-back"
                             checked={field.value}
@@ -235,6 +235,32 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                         <FormDescription>
                           Displays the payments necessary to pay back the loan taken out to pay off
                           the debt.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="pay_interest"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col space-y-2">
+                        <div className="flex items-center space-x-2 ">
+                          <Checkbox
+                            id="pay-interest"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            onBlur={field.onBlur}
+                            // disabled={!canPayBackLoan}
+                            disabled
+                          />
+                          <FormLabel htmlFor="pay-interest" className="text-md cursor-pointer">
+                            Only pay interest
+                          </FormLabel>
+                        </div>
+
+                        <FormDescription>
+                          Only pay off the interest accrued on the loan taken out.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

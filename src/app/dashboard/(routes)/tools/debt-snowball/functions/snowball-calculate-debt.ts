@@ -171,8 +171,12 @@ export const snowball_calculate = (
    */
 
   if (options.pay_back_loan) {
-    let loan_balance_remaining = loan_payoffs.reduce((acc, lump_amount) => acc + lump_amount, 0);
+    // If we are only paying interest, then set to the balance to the total loan interest
+    let loan_balance_remaining = options.pay_interest
+      ? loan_interest
+      : loan_payoffs.reduce((acc, lump_amount) => acc + lump_amount, 0);
     let first = true;
+
     // If there is any loan remaining, use the monthly payments to pay it off and continue
     // tracking it in the balance tracking
     while (loan_balance_remaining) {
@@ -199,12 +203,25 @@ export const snowball_calculate = (
 
             // Make a payment towards the loan if we have any payment remaining
             if (payment) {
-              if (payment > loan_payoffs[i]) {
-                payment -= loan_payoffs[i];
-                loan_payoffs[i] = 0;
+              // If we want to only pay the interest, then only pay intereset and deduced interest from the loan payoff
+              if (options.pay_interest) {
+                if (payment > interest) {
+                  payment -= interest;
+                  loan_interest -= interest;
+                  loan_payoffs[i] -= interest;
+                } else {
+                  loan_payoffs[i] -= payment;
+                  loan_interest -= payment;
+                  payment = 0;
+                }
               } else {
-                loan_payoffs[i] -= payment;
-                payment = 0;
+                if (payment > loan_payoffs[i]) {
+                  payment -= loan_payoffs[i];
+                  loan_payoffs[i] = 0;
+                } else {
+                  loan_payoffs[i] -= payment;
+                  payment = 0;
+                }
               }
             }
           }
