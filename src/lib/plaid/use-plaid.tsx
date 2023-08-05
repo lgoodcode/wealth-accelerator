@@ -120,7 +120,7 @@ export const usePlaid = () => {
         setLinkToken(null);
       }
 
-      setUpdateMode(false);
+      // setUpdateMode(false);
     },
     [setUpdateMode, updateMode]
   );
