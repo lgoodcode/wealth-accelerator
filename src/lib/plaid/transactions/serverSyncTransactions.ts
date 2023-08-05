@@ -25,6 +25,7 @@ export const serverSyncTransactions = async (
         status: 500,
         general: filtersError,
         plaid: null,
+        access_token: null,
       },
       data: {
         hasMore: false,
@@ -41,7 +42,6 @@ export const serverSyncTransactions = async (
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
       count: PLAID_SYNC_BATCH_SIZE,
     });
-
     const addedError = await addTransactions(item.item_id, data.added, filters, supabaseAdmin);
     const updatedError = await updateTransactions(
       item.item_id,
@@ -57,6 +57,7 @@ export const serverSyncTransactions = async (
           status: 500,
           general: addedError || updatedError || removedError,
           plaid: null,
+          access_token: null,
         },
         data: {
           hasMore: false,
@@ -81,6 +82,7 @@ export const serverSyncTransactions = async (
           status: 500,
           general: cursorError,
           plaid: null,
+          access_token: null,
         },
         data: {
           hasMore: false,
@@ -107,6 +109,7 @@ export const serverSyncTransactions = async (
       error: {
         status,
         general: !errorCode ? error : null, // If not a Plaid error, return the error
+        access_token: isCredentialError ? item.access_token : null,
         plaid: {
           isRateLimitError,
           isCredentialError,

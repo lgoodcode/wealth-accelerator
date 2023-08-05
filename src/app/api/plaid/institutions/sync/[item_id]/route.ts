@@ -32,9 +32,11 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
     captureException(itemError);
     return NextResponse.json<SyncTransactionsResponse>(
       {
+        hasMore: false,
         error: {
           general: 'Failed to retrieve item',
           plaid: null,
+          access_token: null,
         },
       },
       { status: 500 }
@@ -73,8 +75,10 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
 
     return NextResponse.json<SyncTransactionsResponse>(
       {
+        hasMore: false,
         error: {
           general: 'Failed to sync transactions',
+          access_token: error.access_token,
           plaid: error.plaid,
         },
       },
@@ -82,5 +86,8 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
     );
   }
 
-  return NextResponse.json<SyncTransactionsResponse>({ hasMore: data.hasMore });
+  return NextResponse.json<SyncTransactionsResponse>({
+    error: null,
+    hasMore: data.hasMore,
+  });
 }
