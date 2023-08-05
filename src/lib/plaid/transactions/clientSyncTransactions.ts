@@ -33,8 +33,6 @@ export const clientSyncTransactions = async (
       `/api/plaid/institutions/sync/${item_id}?request_id=${Date.now()}`
     );
 
-    console.log({ error, data });
-
     if (error) {
       // If it's a rate limit error, wait a minute and continue
       if (error?.plaid?.isRateLimitError) {
