@@ -23,9 +23,11 @@ const syncTransactions = async (item: ClientInstitution) => {
   const syncError = await clientSyncTransactions(item.item_id);
   console.log('sync', syncError);
   if (syncError) {
+    console.log('trigger');
     displaySyncError(syncError, item.name);
 
     if (syncError.plaid?.isCredentialError) {
+      console.log('returening', syncError.access_token);
       return syncError.access_token;
     }
   }
