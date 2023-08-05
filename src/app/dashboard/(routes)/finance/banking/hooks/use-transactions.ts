@@ -92,7 +92,7 @@ export const useTransactions = (item: ClientInstitution) => {
    */
   const handleGetTransactions = useCallback(async () => {
     const accessTokenForUpdateMode = await syncTransactions(item);
-
+    console.log('accessTokenForUpdateMode', accessTokenForUpdateMode);
     if (accessTokenForUpdateMode) {
       setUpdateMode(true);
       setLinkToken(accessTokenForUpdateMode);
