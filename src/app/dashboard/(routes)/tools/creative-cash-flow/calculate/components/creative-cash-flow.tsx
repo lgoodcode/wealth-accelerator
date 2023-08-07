@@ -54,13 +54,13 @@ export function CreativeCashFlow({
       onValueChange={(value) => setActiveTab(value as TabsValue)}
     >
       <div className="relative mb-8 flex flex-row justify-center items-center gap-2">
-        <TabsList className="grid w-[360px] grid-cols-2">
+        <TabsList className="relative grid w-[360px] grid-cols-2">
           <TabsTrigger value={TabsValue.Inputs}>Inputs</TabsTrigger>
           <TabsTrigger value={TabsValue.Results} disabled={!results}>
             Results
           </TabsTrigger>
+          <Buttons className="absolute left-[360px]" user_id={user_id} handleReset={handleReset} />
         </TabsList>
-        <Buttons user_id={user_id} handleReset={handleReset} />
       </div>
       <TabsContent value={TabsValue.Inputs}>
         <CreativeCashFlowInputs

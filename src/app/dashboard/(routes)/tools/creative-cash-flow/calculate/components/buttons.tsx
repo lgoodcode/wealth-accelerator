@@ -4,16 +4,18 @@ import { useAtomValue } from 'jotai';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
+import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../../atoms';
 import { useSaveRecord } from '../hooks/use-save-record';
 
 interface ButtonsProps {
+  className?: string;
   user_id: string;
   handleReset: () => void;
 }
 
-export function Buttons({ user_id, handleReset }: ButtonsProps) {
+export function Buttons({ className, user_id, handleReset }: ButtonsProps) {
   const router = useRouter();
   const saveRecord = useSaveRecord();
   const [isSaving, setIsSaving] = useState(false);
@@ -50,7 +52,7 @@ export function Buttons({ user_id, handleReset }: ButtonsProps) {
   }
 
   return (
-    <div className="flex items-center gap-4 ml-4">
+    <div className={cn('flex items-center gap-4 ml-4', className)}>
       {results && (
         <>
           <Button disabled={!results} loading={isSaving} onClick={handleSave}>
