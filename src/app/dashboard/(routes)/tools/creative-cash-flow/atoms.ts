@@ -6,8 +6,6 @@ import type {
   CreativeCashFlowRecord,
 } from './types';
 
-export const isInputsOpenAtom = atom(false);
-
 const defaultValues = {
   start_date: undefined,
   end_date: undefined,
