@@ -4,50 +4,13 @@ import { useAtomValue } from 'jotai';
 import { AnimatePresence, motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import { MoveDown, MoveRight } from 'lucide-react';
-import type { CountUpProps } from 'react-countup/build/CountUp';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { createCountUpProps } from '../../utils/create-count-up-props';
+import { animationProps, animationDurations } from '../../utils/animations';
 import { resultsLabels } from '../../labels';
 import { creativeCashFlowResultAtom } from '../../atoms';
-
-const ANIMATION_PROPS = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-};
-
-type AnimationDurations = {
-  [key: `item${number}`]: {
-    duration: 1;
-    delay: number;
-  };
-};
-
-const ANIMATION_DURATIONS = Array.from({ length: 20 }).reduce(
-  (acc: any, _, i) => ({
-    ...acc,
-    [`item${i + 1}`]: {
-      duration: 1,
-      delay: (i + 1) * 0.5,
-    },
-  }),
-  {}
-) as AnimationDurations;
-
-const createCountUpProps = (end: number, delay = 0): CountUpProps => ({
-  end,
-  delay,
-  duration: 2,
-  decimalPlaces: 2,
-  prefix: '$',
-});
+import { Trends } from './trends';
 
 export function CreativeCashFlowResults() {
   const results = useAtomValue(creativeCashFlowResultAtom);
@@ -59,10 +22,11 @@ export function CreativeCashFlowResults() {
   return (
     <AnimatePresence>
       <div className="grid gap-6 w-fit mx-auto grid-cols-[auto_320px_64px_320px] lg:grid-cols-[0px_480px_64px_480px]">
+        <Trends />
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...ANIMATION_DURATIONS.item1 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item1 }}
+          {...animationProps}
         >
           <Card>
             <CardHeader className="space-y-1">
@@ -74,7 +38,7 @@ export function CreativeCashFlowResults() {
             <CardContent className="pt-4">
               <CountUp
                 className="text-2xl"
-                {...createCountUpProps(results.collections, ANIMATION_DURATIONS.item1.delay)}
+                {...createCountUpProps(results.collections, animationDurations.item1.delay)}
               />
             </CardContent>
           </Card>
@@ -82,16 +46,16 @@ export function CreativeCashFlowResults() {
 
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...ANIMATION_DURATIONS.item2 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item2 }}
+          {...animationProps}
         >
           <MoveDown className="w-16 h-16 mx-auto" />
         </motion.div>
 
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...ANIMATION_DURATIONS.item3 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item3 }}
+          {...animationProps}
         >
           <Card>
             <CardHeader className="space-y-1">
@@ -103,7 +67,7 @@ export function CreativeCashFlowResults() {
             <CardContent className="pt-4">
               <CountUp
                 className="text-2xl"
-                {...createCountUpProps(results.business_overhead, ANIMATION_DURATIONS.item3.delay)}
+                {...createCountUpProps(results.business_overhead, animationDurations.item3.delay)}
               />
             </CardContent>
           </Card>
@@ -111,16 +75,16 @@ export function CreativeCashFlowResults() {
 
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...ANIMATION_DURATIONS.item4 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item4 }}
+          {...animationProps}
         >
           <MoveDown className="w-16 h-16 mx-auto" />
         </motion.div>
 
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...ANIMATION_DURATIONS.item5 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item5 }}
+          {...animationProps}
         >
           <Card>
             <CardHeader className="space-y-1">
@@ -132,7 +96,7 @@ export function CreativeCashFlowResults() {
             <CardContent className="pt-4">
               <CountUp
                 className="text-2xl"
-                {...createCountUpProps(results.lifestyle_expenses, ANIMATION_DURATIONS.item5.delay)}
+                {...createCountUpProps(results.lifestyle_expenses, animationDurations.item5.delay)}
               />
             </CardContent>
           </Card>
@@ -140,16 +104,16 @@ export function CreativeCashFlowResults() {
 
         <motion.div
           className="col-span-1 col-start-3 row-span-1 flex items-center"
-          transition={{ ...ANIMATION_DURATIONS.item6 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item6 }}
+          {...animationProps}
         >
           <MoveRight className="w-16 h-16 mx-auto text-destructive" />
         </motion.div>
 
         <motion.div
           className="col-span-1 col-start-4 row-span-1 row-start-5 flex items-center"
-          transition={{ ...ANIMATION_DURATIONS.item7 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item7 }}
+          {...animationProps}
         >
           <Card className="flex flex-col flex-grow justify-between">
             <CardHeader className="space-y-1">
@@ -165,7 +129,7 @@ export function CreativeCashFlowResults() {
                 className="text-2xl"
                 {...createCountUpProps(
                   results.lifestyle_expenses_tax,
-                  ANIMATION_DURATIONS.item7.delay
+                  animationDurations.item7.delay
                 )}
               />
             </CardContent>
@@ -174,16 +138,16 @@ export function CreativeCashFlowResults() {
 
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...ANIMATION_DURATIONS.item8 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item8 }}
+          {...animationProps}
         >
           <MoveDown className="w-16 h-16 mx-auto" />
         </motion.div>
 
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...ANIMATION_DURATIONS.item9 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item9 }}
+          {...animationProps}
         >
           <Card className="flex flex-col flex-grow justify-between">
             <CardHeader className="space-y-1">
@@ -199,7 +163,7 @@ export function CreativeCashFlowResults() {
                 className="text-2xl"
                 {...createCountUpProps(
                   results.business_profit_before_tax,
-                  ANIMATION_DURATIONS.item9.delay
+                  animationDurations.item9.delay
                 )}
               />
             </CardContent>
@@ -208,16 +172,16 @@ export function CreativeCashFlowResults() {
 
         <motion.div
           className="col-span-1 col-start-3 row-span-1 flex items-center"
-          transition={{ ...ANIMATION_DURATIONS.item10 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item10 }}
+          {...animationProps}
         >
           <MoveRight className="w-16 h-16 mx-auto text-destructive" />
         </motion.div>
 
         <motion.div
           className="col-span-1 col-start-4 row-span-1 row-start-9 flex items-center"
-          transition={{ ...ANIMATION_DURATIONS.item11 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item11 }}
+          {...animationProps}
         >
           <Card className="flex flex-col flex-grow justify-between">
             <CardHeader className="space-y-1">
@@ -231,7 +195,7 @@ export function CreativeCashFlowResults() {
             <CardContent className="pt-4">
               <CountUp
                 className="text-2xl"
-                {...createCountUpProps(results.tax_account, ANIMATION_DURATIONS.item11.delay)}
+                {...createCountUpProps(results.tax_account, animationDurations.item11.delay)}
               />
             </CardContent>
           </Card>
@@ -239,16 +203,16 @@ export function CreativeCashFlowResults() {
 
         <motion.div
           className="col-span-1 col-start-4 row-span-1"
-          transition={{ ...ANIMATION_DURATIONS.item12 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item12 }}
+          {...animationProps}
         >
           <MoveDown className="w-16 h-16 mx-auto" />
         </motion.div>
 
         <motion.div
           className="col-span-1 col-start-4 row-span-1"
-          transition={{ ...ANIMATION_DURATIONS.item13 }}
-          {...ANIMATION_PROPS}
+          transition={{ ...animationDurations.item13 }}
+          {...animationProps}
         >
           <Card>
             <CardHeader className="space-y-1 pb-2">
@@ -258,7 +222,7 @@ export function CreativeCashFlowResults() {
             <CardContent className="pt-4">
               <CountUp
                 className="text-2xl"
-                {...createCountUpProps(results.waa, ANIMATION_DURATIONS.item13.delay)}
+                {...createCountUpProps(results.waa, animationDurations.item13.delay)}
               />
             </CardContent>
             <CardHeader className="space-y-1 pb-2">
@@ -270,131 +234,8 @@ export function CreativeCashFlowResults() {
             <CardContent className="pt-4">
               <CountUp
                 className="text-2xl"
-                {...createCountUpProps(results.total_waa, ANIMATION_DURATIONS.item13.delay)}
+                {...createCountUpProps(results.total_waa, animationDurations.item13.delay)}
               />
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          className="col-span-4"
-          transition={{ ...ANIMATION_DURATIONS.item14 }}
-          {...ANIMATION_PROPS}
-        >
-          <Card className="w-fit mx-auto">
-            <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl">{resultsLabels.trends.title}</CardTitle>
-              <CardDescription className="text-md">
-                {resultsLabels.trends.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0 space-y-4">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[120px] text-lg">Period</TableHead>
-                    <TableHead className="text-lg">Actual</TableHead>
-                    <TableHead className="text-lg">Weekly</TableHead>
-                    <TableHead className="text-lg">Annual</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody className="text-lg">
-                  <TableRow>
-                    <TableCell>30 Days</TableCell>
-                    <TableCell>
-                      <CountUp
-                        {...createCountUpProps(
-                          results.monthly_trend[0],
-                          ANIMATION_DURATIONS.item14.delay
-                        )}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <CountUp
-                        {...createCountUpProps(
-                          results.weekly_trend[0],
-                          ANIMATION_DURATIONS.item14.delay
-                        )}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <CountUp
-                        {...createCountUpProps(
-                          results.yearly_trend[0],
-                          ANIMATION_DURATIONS.item14.delay
-                        )}
-                      />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>60 Days</TableCell>
-                    <TableCell>
-                      <CountUp
-                        {...createCountUpProps(
-                          results.monthly_trend[1],
-                          ANIMATION_DURATIONS.item14.delay
-                        )}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <CountUp
-                        {...createCountUpProps(
-                          results.weekly_trend[1],
-                          ANIMATION_DURATIONS.item14.delay
-                        )}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <CountUp
-                        {...createCountUpProps(
-                          results.yearly_trend[1],
-                          ANIMATION_DURATIONS.item14.delay
-                        )}
-                      />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>90 Days</TableCell>
-                    <TableCell>
-                      <CountUp
-                        {...createCountUpProps(
-                          results.monthly_trend[2],
-                          ANIMATION_DURATIONS.item14.delay
-                        )}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <CountUp
-                        {...createCountUpProps(
-                          results.weekly_trend[2],
-                          ANIMATION_DURATIONS.item14.delay
-                        )}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <CountUp
-                        {...createCountUpProps(
-                          results.yearly_trend[2],
-                          ANIMATION_DURATIONS.item14.delay
-                        )}
-                      />
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-
-              <div>
-                <CardHeader className="space-y-1 px-0">
-                  <CardTitle className="text-2xl">{resultsLabels.year_to_date.title}</CardTitle>
-                  <CardDescription className="text-md">
-                    {resultsLabels.year_to_date.description}
-                  </CardDescription>
-                </CardHeader>
-                <CountUp
-                  className="text-2xl"
-                  {...createCountUpProps(results.year_to_date, ANIMATION_DURATIONS.item14.delay)}
-                />
-              </div>
             </CardContent>
           </Card>
         </motion.div>
