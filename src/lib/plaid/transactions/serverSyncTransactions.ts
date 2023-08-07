@@ -1,7 +1,7 @@
 import { PlaidErrorType } from 'plaid';
 
 import { PLAID_SYNC_BATCH_SIZE } from '@/config/app';
-import { plaidClient } from '@/lib/plaid/config';
+import { createLinkTokenRequest, plaidClient } from '@/lib/plaid/config';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { updateTransactions } from '@/lib/plaid/transactions/updateTransactions';
 import { addTransactions } from '@/lib/plaid/transactions/addTransactions';
@@ -12,7 +12,8 @@ import type { Filter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
 
 export const serverSyncTransactions = async (
-  item: Institution
+  item: Institution,
+  userId?: string
 ): Promise<ServerSyncTransactions> => {
   const { error: filtersError, data: filtersData } = await supabaseAdmin // Need admin to access plaid_filters for all users
     .from('plaid_filters')
@@ -25,7 +26,7 @@ export const serverSyncTransactions = async (
         status: 500,
         general: filtersError,
         plaid: null,
-        access_token: null,
+        link_token: null,
       },
       data: {
         hasMore: false,
@@ -57,7 +58,7 @@ export const serverSyncTransactions = async (
           status: 500,
           general: addedError || updatedError || removedError,
           plaid: null,
-          access_token: null,
+          link_token: null,
         },
         data: {
           hasMore: false,
@@ -82,7 +83,7 @@ export const serverSyncTransactions = async (
           status: 500,
           general: cursorError,
           plaid: null,
-          access_token: null,
+          link_token: null,
         },
         data: {
           hasMore: false,
@@ -104,12 +105,21 @@ export const serverSyncTransactions = async (
     const isCredentialError = Object.values(PlaidCredentialErrorCode).includes(errorCode as any);
     const isOtherPlaidError = Object.values(PlaidErrorType).includes(errorCode as any);
     const status = isRateLimitError ? 429 : 500;
+    let link_token = null;
+
+    // Take the access token and use it to request a new link token from Plaid for update mode
+    if (isCredentialError && userId) {
+      const response = await plaidClient.linkTokenCreate(
+        createLinkTokenRequest(userId, item.access_token)
+      );
+      link_token = response.data.link_token;
+    }
 
     return {
       error: {
         status,
         general: !errorCode ? error : null, // If not a Plaid error, return the error
-        access_token: isCredentialError ? item.access_token : null,
+        link_token,
         plaid: {
           isRateLimitError,
           isCredentialError,

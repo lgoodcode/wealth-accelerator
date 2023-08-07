@@ -67,7 +67,7 @@ export const usePlaid = () => {
 
         if (syncError.plaid?.isCredentialError) {
           setUpdateMode(true);
-          setLinkToken(syncError.access_token);
+          setLinkToken(syncError.link_token);
         }
 
         toast(

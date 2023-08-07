@@ -17,7 +17,7 @@ const CACHE_TRANASACTIONS_FOR = 1000 * 60 * 60; // Cache transactions for an hou
  * Before making a request for tranasactions, we need to make sure that the item is synced
  * and doesn't have any credential errors.
  *
- * @returns `true` if the item needs to be updated, `false` otherwise.
+ * @returns the link token created with the access token in the server for update mode
  */
 const syncTransactions = async (item: ClientInstitution) => {
   const syncError = await clientSyncTransactions(item.item_id);
@@ -26,7 +26,7 @@ const syncTransactions = async (item: ClientInstitution) => {
     displaySyncError(syncError, item.name);
 
     if (syncError.plaid?.isCredentialError) {
-      return syncError.access_token;
+      return syncError.link_token;
     }
   }
 
@@ -91,11 +91,11 @@ export const useTransactions = (item: ClientInstitution) => {
    * @returns An array of transactions
    */
   const handleGetTransactions = useCallback(async () => {
-    const accessTokenForUpdateMode = await syncTransactions(item);
+    const link_token = await syncTransactions(item);
 
-    if (accessTokenForUpdateMode) {
+    if (link_token) {
       setUpdateMode(true);
-      setLinkToken(accessTokenForUpdateMode);
+      setLinkToken(link_token);
     }
 
     return await getTransactions(item.item_id);
