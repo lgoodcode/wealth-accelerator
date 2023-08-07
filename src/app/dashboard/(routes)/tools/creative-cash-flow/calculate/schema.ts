@@ -10,14 +10,16 @@ export const inputsFormSchema = z
     }),
     all_other_income: z
       .number({
-        required_error: 'Enter a number.',
+        required_error: 'Enter an amount.',
+        invalid_type_error: 'Enter an amount.',
       })
       .nonnegative({
         message: 'Enter a positive amount',
       }),
     payroll_and_distributions: z
       .number({
-        required_error: 'Enter a number.',
+        required_error: 'Enter an amount.',
+        invalid_type_error: 'Enter an amount.',
       })
       .nonnegative({
         message: 'Enter a positive amount',
@@ -38,7 +40,7 @@ export const inputsFormSchema = z
       .max(101, 'Enter a valid percentage'),
     optimal_savings_strategy: z
       .number({
-        required_error: 'Enter a number.',
+        required_error: 'Enter an amount.',
       })
       .nonnegative({
         message: 'Enter a positive amount',
