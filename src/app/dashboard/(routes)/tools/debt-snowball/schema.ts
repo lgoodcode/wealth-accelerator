@@ -35,6 +35,7 @@ export const debtCalculationSchema = z.object({
       })
   ),
   pay_back_loan: z.boolean(),
+  pay_interest: z.boolean(),
   loan_interest_rate: z
     .number({
       required_error: 'Enter a rate',
