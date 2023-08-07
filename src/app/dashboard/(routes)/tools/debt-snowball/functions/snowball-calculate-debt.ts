@@ -297,9 +297,9 @@ export const snowball_calculate = (
     total_interest: total_interest_dollars,
     total_amount: total_amount_dollars,
     loan_payback: {
-      total: loan_interest_dollars,
-      interest: centsToDollars(loan_interest),
-      months: loan_payback_months,
+      total: options.pay_back_loan ? loan_interest_dollars : 0,
+      interest: options.pay_back_loan ? centsToDollars(loan_interest) : 0,
+      months: options.pay_back_loan ? loan_payback_months : 0,
       tracking: loan_tracking_dollars,
     },
   };

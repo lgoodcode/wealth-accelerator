@@ -240,7 +240,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                       </FormItem>
                     )}
                   />
-                  <FormField
+                  {/* <FormField
                     control={form.control}
                     name="pay_interest"
                     render={({ field }) => (
@@ -265,7 +265,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                  /> */}
                   <FormField
                     control={form.control}
                     name="loan_interest_rate"
