@@ -42,6 +42,7 @@ export const snowball_calculate = (
     : 0;
   const loan_payoffs = [...lump_amounts];
   const monthly_payment = debts.reduce((acc, debt) => acc + dollarsToCents(debt.payment), 0);
+  const loan_interest_rate = options.loan_interest_rate / 100 / 12;
   let balance_remaining = intitial_total_debt;
   let year = 0;
   let month = 0;
@@ -65,7 +66,7 @@ export const snowball_calculate = (
       if (options.isWealthAccelerator) {
         for (let i = 0; i <= year; i++) {
           if (loan_payoffs[i]) {
-            const interest = loan_payoffs[i] * (options.loan_interest_rate / 100 / 12);
+            const interest = loan_payoffs[i] * loan_interest_rate;
             loan_payoffs[i] += interest;
             loan_interest += interest;
           }
@@ -197,7 +198,7 @@ export const snowball_calculate = (
         for (let i = 0; i < loan_payoffs.length; i++) {
           // If there is any balance left for this loan, calculate the interest
           if (loan_payoffs[i]) {
-            const interest = loan_payoffs[i] * (options.loan_interest_rate / 100 / 12);
+            const interest = loan_payoffs[i] * loan_interest_rate;
             loan_payoffs[i] += interest;
             loan_interest += interest;
 
