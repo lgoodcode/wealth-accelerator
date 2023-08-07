@@ -36,14 +36,14 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
         error: {
           general: 'Failed to retrieve item',
           plaid: null,
-          access_token: null,
+          link_token: null,
         },
       },
       { status: 500 }
     );
   }
 
-  const { error, data } = await serverSyncTransactions(item);
+  const { error, data } = await serverSyncTransactions(item, user.id);
 
   if (error) {
     const transactions = !data.transactions
@@ -78,7 +78,7 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
         hasMore: false,
         error: {
           general: 'Failed to sync transactions',
-          access_token: error.access_token,
+          link_token: error.link_token,
           plaid: error.plaid,
         },
       },

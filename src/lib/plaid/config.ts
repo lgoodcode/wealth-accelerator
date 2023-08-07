@@ -21,12 +21,16 @@ export const configuration = new Configuration({
 export const plaidClient = new PlaidApi(configuration);
 
 // Configuration for the Plaid client
-export const createLinkTokenRequest = (id: string): LinkTokenCreateRequest => ({
+export const createLinkTokenRequest = (
+  id: string,
+  access_token?: string
+): LinkTokenCreateRequest => ({
   user: { client_user_id: id },
   client_id: process.env.PLAID_CLIENT_ID,
   secret: process.env.PLAID_SECRET,
   client_name: process.env.PLAID_CLIENT_NAME,
   language: 'en',
+  access_token,
   country_codes: [CountryCode.Us],
   products: [Products.Transactions],
   redirect_uri: process.env.PLAID_REDIRECT_URI,
