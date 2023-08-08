@@ -121,10 +121,10 @@ export function AddNotifierButton() {
                 control={form.control}
                 name="enabled"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Enabled</FormLabel>
-                    <FormControl>
+                  <FormItem>
+                    <div className="flex items-center space-x-2">
                       <Checkbox
+                        id="enabled"
                         name={field.name}
                         className="w-6 h-6"
                         ref={field.ref}
@@ -132,7 +132,11 @@ export function AddNotifierButton() {
                         onCheckedChange={field.onChange}
                         onBlur={field.onBlur}
                       />
-                    </FormControl>
+                      <FormLabel htmlFor="enabled" className="text-md cursor-pointer">
+                        Enabled
+                      </FormLabel>
+                    </div>
+                    <FormControl></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
