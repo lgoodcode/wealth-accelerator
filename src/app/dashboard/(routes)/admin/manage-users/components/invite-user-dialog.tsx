@@ -73,9 +73,7 @@ export function InviteUserDialog() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Invite User</DialogTitle>
-          <DialogDescription>
-            Enter the name, email, and role of the user to invite.
-          </DialogDescription>
+          <DialogDescription>Enter the name and email of the user to invite.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(handleInvite)}>
