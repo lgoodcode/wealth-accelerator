@@ -55,6 +55,15 @@ export function UpdateUserDialog({ open, onOpenChange, id, user }: UpdateUserDia
       })
       .catch((error) => {
         console.error(error);
+
+        if (error?.code === '23505') {
+          form.setError('email', {
+            type: 'manual',
+            message: 'Email is already in use',
+          });
+          return;
+        }
+
         captureException(error);
         toast.error(
           <span>
