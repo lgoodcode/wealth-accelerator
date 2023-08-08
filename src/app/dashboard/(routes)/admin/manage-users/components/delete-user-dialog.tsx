@@ -63,9 +63,7 @@ export function DeleteUserDialog({ open, onOpenChange, id, user }: DeleteUserPro
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting} onClick={() => onOpenChange(false)}>
-            Cancel
-          </AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
           <Button variant="destructive" onClick={handleDelete} loading={isDeleting}>
             Delete
           </Button>
