@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -27,11 +28,16 @@ type ServerMessage = {
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
+  const router = useRouter();
   const resetPassword = useResetPassword();
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
   const form = useForm<ResetUserPasswordFormType>({
     resolver: zodResolver(resetUserPasswordSchema),
   });
+
+  if (!window.location.hash || !window.location.hash.startsWith('#access_token')) {
+    router.replace('/login');
+  }
 
   const onSubmit = async (data: ResetUserPasswordFormType) => {
     setServerMessage(null);

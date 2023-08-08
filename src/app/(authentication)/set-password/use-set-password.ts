@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase/client';
 
 export const useSetPassword = () => {
   return async (password: string) => {
-    const items = window.location.hash.substr(1).split('&');
+    const items = window.location.hash.substring(1).split('&');
     const access_token = items?.[0].split('=')[1];
     const refresh_token = items?.[2].split('=')[1];
 

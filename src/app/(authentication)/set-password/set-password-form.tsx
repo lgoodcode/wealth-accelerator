@@ -34,6 +34,10 @@ export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
     resolver: zodResolver(setPasswordSchema),
   });
 
+  if (!window.location.hash || !window.location.hash.startsWith('#access_token')) {
+    router.replace('/login');
+  }
+
   const onSubmit = async (data: SetPasswordFormType) => {
     setServerMessage(null);
 
