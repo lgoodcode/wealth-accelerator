@@ -44,10 +44,7 @@ export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
 
     await resetPassword(data.password)
       .then(() => {
-        setServerMessage({
-          type: 'success',
-          message: 'Password reset successfully',
-        });
+        router.push('/login');
       })
       .catch((error) => {
         console.error(error);
