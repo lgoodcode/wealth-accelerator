@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FacetedFilter } from './faceted-filter';
 import { enabledOptions } from './column-options';
-import { AddNotifierButton } from '../add-notifier-button';
+import { AddNotifierDialog } from '../add-notifier-dialog';
 import type { Notifier } from '../../types';
 
 interface TableToolbarProps {
@@ -46,7 +46,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
         )}
       </div>
 
-      <AddNotifierButton />
+      <AddNotifierDialog />
     </div>
   );
 }
