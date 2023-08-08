@@ -1,10 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { setUser as setSentryUser } from '@sentry/nextjs';
 import { LogOut, User } from 'lucide-react';
 
-import { supabase } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -15,13 +12,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useLogout } from '../hooks/use-logout';
 
 interface UserNavProps {
   user: User | null;
 }
 
 export function UserNav({ user }: UserNavProps) {
-  const router = useRouter();
+  const logout = useLogout();
   // If the user only has one name, use the first two letters of that name as the profile letters.
   // Otherwise, use the first letter of the first and last name.
   const profileLetters = !user
@@ -33,14 +31,6 @@ export function UserNav({ user }: UserNavProps) {
         .map((name) => name[0])
         .join('')
     : user.name.slice(0, 2);
-
-  // On logout, clear the Sentry user context and redirect to the login page.
-  const logout = async () => {
-    setSentryUser(null);
-    await supabase.auth.signOut();
-    router.refresh();
-    router.push('/login');
-  };
 
   return (
     <DropdownMenu>
