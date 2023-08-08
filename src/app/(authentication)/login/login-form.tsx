@@ -113,7 +113,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
             href="/forgot-password"
             className="hover:underline underline-offset-4 text-blue-500"
           >
-            Reset
+            Reset password
           </Link>
         </div>
       </div>

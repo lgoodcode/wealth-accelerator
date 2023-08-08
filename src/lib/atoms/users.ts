@@ -2,6 +2,16 @@ import { atom } from 'jotai';
 
 export const usersAtom = atom<User[] | null>(null);
 
+export const addUserAtom = atom(null, (_get, set, user: User) => {
+  set(usersAtom, (users) => {
+    if (!users) {
+      throw new Error('usersAtom is not initialized');
+    }
+
+    return [...users, user];
+  });
+});
+
 export const updateUserAtom = atom(null, (_get, set, user: User) => {
   set(usersAtom, (users) => {
     if (!users) {

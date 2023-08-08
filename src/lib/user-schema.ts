@@ -50,6 +50,8 @@ export const resetUserPasswordSchema = registerUserFormSchema.pick({
   password: true,
 });
 
+export const setPasswordSchema = resetUserPasswordSchema;
+
 export type RegisterUserFormType = z.infer<typeof registerUserFormSchema>;
 
 export type UpdateUserFormType = z.infer<typeof updateUserFormSchema>;
@@ -57,3 +59,5 @@ export type UpdateUserFormType = z.infer<typeof updateUserFormSchema>;
 export type SendResetPasswordEmailFormType = z.infer<typeof sendResetPasswordEmailSchema>;
 
 export type ResetUserPasswordFormType = z.infer<typeof resetUserPasswordSchema>;
+
+export type SetPasswordFormType = ResetUserPasswordFormType;

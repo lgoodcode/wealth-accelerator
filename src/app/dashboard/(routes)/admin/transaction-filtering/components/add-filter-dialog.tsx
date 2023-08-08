@@ -91,7 +91,7 @@ export function AddFilterDialog() {
       <DialogTrigger asChild>
         <Button className="h-8 px-2 lg:px-3">
           <PlusCircle className="mr-2 h-4 w-4" />
-          Add filter
+          Add Filter
         </Button>
       </DialogTrigger>
 

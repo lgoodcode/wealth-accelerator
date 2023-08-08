@@ -41,8 +41,9 @@ export const fetcher = async <T = any, E = Error>(
       const json = await res.json();
 
       if ('error' in json) {
+        const error = typeof json.error === 'string' ? new Error(json.error) : json.error;
         return {
-          error: json.error as E,
+          error: error as E,
           data: null,
         };
       }

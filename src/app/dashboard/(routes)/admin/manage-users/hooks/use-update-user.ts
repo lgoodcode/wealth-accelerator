@@ -1,8 +1,8 @@
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
-import { updateUserAtom } from '../atoms';
-import { updateUserAtom as updateGlobalUserAtom } from '@/lib/atoms';
+import { updateUserAtom } from '@/lib/atoms/users';
+import { updateUserAtom as updateGlobalUserAtom } from '@/lib/atoms/user';
 import type { UpdateUserFormType } from '@/lib/user-schema';
 
 export const useUpdateUser = () => {
