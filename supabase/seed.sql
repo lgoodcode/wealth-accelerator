@@ -334,7 +334,21 @@ CREATE POLICY "Can delete own plaid transactions" ON public.plaid_transactions
   TO authenticated
   USING (is_own_plaid_transaction());
 
+-- Function that formats a transaction that is being inserted
+CREATE OR REPLACE FUNCTION format_transaction()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.date = NEW.date + INTERVAL '7 hours'; -- Add 7 hours to get it to proper UTC time format
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
 
+-- Trigger to format the transactions date whenever a new transaction is inserted
+DROP TRIGGER IF EXISTS on_insert_plaid_transactions ON public.plaid_transactions;
+CREATE TRIGGER on_insert_plaid_transactions
+  BEFORE INSERT ON public.plaid_transactions
+    FOR EACH ROW
+      EXECUTE FUNCTION format_transaction();
 
 
 
