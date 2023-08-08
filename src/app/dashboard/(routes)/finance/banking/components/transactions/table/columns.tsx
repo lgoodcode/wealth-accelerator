@@ -109,8 +109,8 @@ export const columns: ColumnDef<TransactionWithAccountName>[] = [
       );
     },
     filterFn: (row, id, value: DateRange) => {
-      const date = new Date(row.getValue<string>(id));
-      console.log({ row, id, value }, date);
+      const date = new Date(row.getValue<Date>(id));
+
       if (value.from && value.to) {
         return date >= value.from && date <= value.to;
       }

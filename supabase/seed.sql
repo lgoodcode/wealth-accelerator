@@ -346,7 +346,7 @@ $$ LANGUAGE plpgsql SECURITY definer;
 -- Trigger to format the transactions date whenever a new transaction is inserted
 DROP TRIGGER IF EXISTS on_insert_plaid_transactions ON public.plaid_transactions;
 CREATE TRIGGER on_insert_plaid_transactions
-  AFTER INSERT ON public.plaid_transactions
+  BEFORE INSERT ON public.plaid_transactions
     FOR EACH ROW
       EXECUTE FUNCTION format_transaction();
 
