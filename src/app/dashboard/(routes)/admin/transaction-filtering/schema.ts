@@ -12,10 +12,10 @@ export type UpdateFilterFormType = z.infer<typeof updateFilterFormSchema>;
 
 export const createFilterFormSchema = z.object({
   filter: z.string({
-    required_error: 'Please enter a filter for this filter.',
+    required_error: 'Enter the filter text',
   }),
   category: z.nativeEnum(Category, {
-    required_error: 'Please select a category for this filter.',
+    required_error: 'Select a category',
   }),
 });
 

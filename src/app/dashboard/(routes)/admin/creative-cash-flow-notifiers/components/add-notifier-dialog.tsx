@@ -91,7 +91,7 @@ export function AddNotifierDialog() {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form className="space-y-4" onSubmit={form.handleSubmit(createNotifier)}>
+          <form className="space-y-4" onSubmit={form.handleSubmit(handleCreate)}>
             <FormField
               control={form.control}
               name="name"

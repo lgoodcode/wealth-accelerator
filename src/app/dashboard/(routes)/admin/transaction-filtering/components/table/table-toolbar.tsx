@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FacetedFilter } from './faceted-filter';
 import { categoryOptions } from './column-options';
-import { AddFilterButton } from '../add-filter-button';
+import { AddFilterDialog } from '../add-filter-dialog';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
 interface TableToolbarProps {
@@ -46,7 +46,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
         )}
       </div>
 
-      <AddFilterButton />
+      <AddFilterDialog />
     </div>
   );
 }
