@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { AlertCircle, CheckCircle } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
 import {
@@ -69,11 +68,6 @@ export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
 
       {serverMessage && (
         <Alert variant={serverMessage.type === 'error' ? 'destructive' : 'success'}>
-          {serverMessage.type === 'error' ? (
-            <AlertCircle className="h-4 w-4" />
-          ) : (
-            <CheckCircle className="h-4 w-4" />
-          )}
           <AlertTitle>{serverMessage.message}</AlertTitle>
         </Alert>
       )}

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { AlertCircle } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
@@ -57,7 +56,6 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
 
       {serverError && (
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
           <AlertTitle>{serverError}</AlertTitle>
         </Alert>
       )}
