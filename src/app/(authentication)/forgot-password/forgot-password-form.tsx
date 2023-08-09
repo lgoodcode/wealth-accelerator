@@ -88,12 +88,7 @@ export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
             )}
           />
 
-          <Button
-            type="submit"
-            loading={form.formState.isSubmitting}
-            // override default spinner color for light theme
-            spinner={{ className: 'border-white border-b-primary' }}
-          >
+          <Button type="submit" loading={form.formState.isSubmitting}>
             Send email
           </Button>
         </form>

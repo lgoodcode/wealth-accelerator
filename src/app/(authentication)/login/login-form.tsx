@@ -90,12 +90,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
             )}
           />
 
-          <Button
-            type="submit"
-            loading={form.formState.isSubmitting}
-            // override default spinner color for light theme
-            spinner={{ className: 'border-white border-b-primary' }}
-          >
+          <Button type="submit" loading={!form.formState.isSubmitting}>
             Sign In
           </Button>
         </form>

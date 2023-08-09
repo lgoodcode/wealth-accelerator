@@ -1,35 +1,28 @@
+import { cva, type VariantProps } from 'class-variance-authority';
+
 import { cn } from '@/lib/utils/cn';
 
-const sizes = {
-  sm: 'h-2 w-2',
-  md: 'h-4 w-4',
-  lg: 'h-5 w-5',
-  xl: 'h-10 w-10 border-4',
-};
+const spinnerVariants = cva('', {
+  variants: {
+    size: {
+      default: 'h-6 w-6',
+      xs: 'h-3 w-3',
+      sm: 'h-4 h-4',
+      md: 'h-5 w-5',
+      lg: 'h-6 w-6',
+      xl: 'h-8 w-8',
+      xxl: 'h-10 w-10',
+    },
+  },
+  defaultVariants: {
+    size: 'default',
+  },
+});
 
-interface SpinnerProps extends React.HTMLAttributes<HTMLSpanElement> {
-  size?: keyof typeof sizes;
-  /**
-   * This is used so that the `primary` button variant, which has a white background works while
-   * all other variants have a transparent or dark background.
-   */
-  variant?: 'default' | string | undefined | null;
-}
+interface SpinnerProps
+  extends React.HTMLAttributes<HTMLSpanElement>,
+    VariantProps<typeof spinnerVariants> {}
 
-export function Spinner({ className, size = 'md', variant }: SpinnerProps) {
-  return (
-    <span
-      className={cn(
-        {
-          'border-white border-b-transparent dark:border-primary-foreground dark:border-b-transparent':
-            variant === 'default',
-          'border-primary border-b-transparent dark:border-white dark:border-b-transparent ':
-            variant !== 'default',
-        },
-        'animate-spin border-2 rounded-[50%] box-border inline-block',
-        sizes[size],
-        className
-      )}
-    ></span>
-  );
+export function Spinner({ className, size }: SpinnerProps) {
+  return <span className={cn('loading-spinner', className, spinnerVariants({ size }))}></span>;
 }
