@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { AlertCircle } from 'lucide-react';
 
-import { useLogin } from './use-login';
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Alert, AlertTitle } from '@/components/ui/alert';
 import {
   Form,
   FormControl,
@@ -18,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useLogin } from './use-login';
 
 const formSchema = z.object({
   email: z.string().nonempty('Please enter your email').email(),
@@ -54,9 +56,10 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
       </div>
 
       {serverError && (
-        <div className="p-4 text-center border rounded-md text-white bg-red-500 border-red-500 ">
-          {serverError}
-        </div>
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>{serverError}</AlertTitle>
+        </Alert>
       )}
 
       <Form {...form}>

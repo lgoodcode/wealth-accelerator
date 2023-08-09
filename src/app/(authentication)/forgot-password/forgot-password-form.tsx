@@ -4,10 +4,16 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { AlertCircle, CheckCircle } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
+import {
+  sendResetPasswordEmailSchema,
+  type SendResetPasswordEmailFormType,
+} from '@/lib/user-schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Alert, AlertTitle } from '@/components/ui/alert';
 import {
   Form,
   FormControl,
@@ -16,10 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import {
-  sendResetPasswordEmailSchema,
-  type SendResetPasswordEmailFormType,
-} from '@/lib/user-schema';
+
 import { usePasswordResetEmail } from './use-password-reset-email';
 
 type ServerMessage = {
@@ -65,14 +68,14 @@ export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
       </div>
 
       {serverMessage && (
-        <div
-          className={cn('p-4 text-center text-white border rounded-md', {
-            'bg-red-500 border-red-500 ': serverMessage.type === 'error',
-            'bg-green-500  border-green-500 ': serverMessage.type === 'success',
-          })}
-        >
-          {serverMessage.message}
-        </div>
+        <Alert variant={serverMessage.type === 'error' ? 'destructive' : 'success'}>
+          {serverMessage.type === 'error' ? (
+            <AlertCircle className="h-4 w-4" />
+          ) : (
+            <CheckCircle className="h-4 w-4" />
+          )}
+          <AlertTitle>{serverMessage.message}</AlertTitle>
+        </Alert>
       )}
 
       <Form {...form}>
