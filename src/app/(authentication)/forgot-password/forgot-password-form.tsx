@@ -10,6 +10,7 @@ import {
   sendResetPasswordEmailSchema,
   type SendResetPasswordEmailFormType,
 } from '@/lib/user-schema';
+import { usePasswordResetEmail } from '@/hooks/auth/use-password-reset-email';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertTitle } from '@/components/ui/alert';
@@ -21,9 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
-import { usePasswordResetEmail } from './use-password-reset-email';
-
 type ServerMessage = {
   type: 'error' | 'success';
   message: string;

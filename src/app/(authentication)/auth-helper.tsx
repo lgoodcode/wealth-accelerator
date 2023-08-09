@@ -3,6 +3,8 @@
 import { Fragment, useState } from 'react';
 import { Users } from 'lucide-react';
 
+import { useLogin } from '@/hooks/auth/use-login';
+import { useSignUp } from '@/hooks/auth/use-signup';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,8 +16,6 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { useLogin } from './login/use-login';
-import { useSignUp } from './signup/use-signup';
 
 type Auth = 'login' | 'signup';
 

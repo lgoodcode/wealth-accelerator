@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
 import { setPasswordSchema, type SetPasswordFormType } from '@/lib/user-schema';
+import { useSetPassword } from '@/hooks/auth/use-set-password';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertTitle } from '@/components/ui/alert';
@@ -18,7 +19,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useSetPassword } from './use-set-password';
 
 type ServerMessage = {
   type: 'error' | 'success';

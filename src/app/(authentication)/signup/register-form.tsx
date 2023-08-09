@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
+import { useSignUp } from '@/hooks/auth/use-signup';
 import { registerUserFormSchema, type RegisterUserFormType } from '@/lib/user-schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,7 +19,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useSignUp } from './use-signup';
 
 type ServerMessage = {
   type: 'error' | 'success';
