@@ -29,7 +29,7 @@ export function Trends() {
       transition={{ ...animationDurations.item1 }}
       {...animationProps}
     >
-      <Card className="w-fit mx-auto">
+      <Card className="w-full">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl">{resultsLabels.trends.title}</CardTitle>
           <CardDescription className="text-md">{resultsLabels.trends.description}</CardDescription>
