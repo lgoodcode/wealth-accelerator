@@ -96,8 +96,8 @@ export function AddFilterDialog() {
       </DialogTrigger>
 
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create filter</DialogTitle>
+        <DialogHeader className="space-y-4">
+          <DialogTitle>Create Filter</DialogTitle>
           <DialogDescription className="space-y-2">
             <p>Create a new filter to categorize transactions when received from Plaid.</p>
             <p>
