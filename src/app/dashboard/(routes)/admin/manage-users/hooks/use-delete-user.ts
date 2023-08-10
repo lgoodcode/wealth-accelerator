@@ -1,7 +1,7 @@
 import { useSetAtom } from 'jotai';
 
 import { fetcher } from '@/lib/utils/fetcher';
-import { removeUserAtom } from '../atoms';
+import { removeUserAtom } from '@/lib/atoms/users';
 
 export const useDeleteUser = () => {
   const removeUser = useSetAtom(removeUserAtom);

@@ -6,10 +6,11 @@ import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { useLogin } from './use-login';
 import { cn } from '@/lib/utils/cn';
+import { useLogin } from '@/hooks/auth/use-login';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Alert, AlertTitle } from '@/components/ui/alert';
 import {
   Form,
   FormControl,
@@ -54,9 +55,9 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
       </div>
 
       {serverError && (
-        <div className="p-4 text-center border rounded-md text-white bg-red-500 border-red-500 ">
-          {serverError}
-        </div>
+        <Alert variant="destructive">
+          <AlertTitle>{serverError}</AlertTitle>
+        </Alert>
       )}
 
       <Form {...form}>
@@ -89,12 +90,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
             )}
           />
 
-          <Button
-            type="submit"
-            loading={form.formState.isSubmitting}
-            // override default spinner color for light theme
-            spinner={{ className: 'border-white border-b-primary' }}
-          >
+          <Button type="submit" loading={form.formState.isSubmitting}>
             Sign In
           </Button>
         </form>
@@ -108,12 +104,11 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
           </Link>
         </div>
         <div className="mx-auto">
-          <span>Forgot your password?</span>{' '}
           <Link
             href="/forgot-password"
             className="hover:underline underline-offset-4 text-blue-500"
           >
-            Reset
+            Forgot your password?
           </Link>
         </div>
       </div>

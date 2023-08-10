@@ -3,8 +3,8 @@
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 
+import { usersAtom } from '@/lib/atoms/users';
 import { Loading } from '@/components/loading';
-import { usersAtom } from '../atoms';
 import { UsersTable } from './table/users-table';
 
 interface FiltersProps {

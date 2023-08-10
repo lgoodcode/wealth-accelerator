@@ -63,3 +63,18 @@ the role is not modified by checking it is the same as the current value.
 ```sql
 WITH CHECK (auth.uid() = id AND role = users.role);
 ```
+
+## Notes
+
+### Insurance Policy Feature
+
+- The `next.config.js` has the `webpack` config disabled. This is only needed for when the feature is used
+  and the PDF's need to be parsed.
+
+### Invite Users Feature
+
+- Is fully functional and working, just need to un-comment the button in the manage-users page.
+
+### Profile
+
+- Is fully functional and working, just need to un-comment the menu item in the user-nav component

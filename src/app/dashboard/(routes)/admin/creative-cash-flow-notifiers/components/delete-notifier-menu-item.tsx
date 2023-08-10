@@ -19,7 +19,7 @@ export function DeleteNotifierMenuItem({ row }: DeleteFilterMenuItemProps) {
       .then(() => {
         toast.success(
           <span>
-            Removed notifier for <span className="font-bold">{row.original.email}</span>
+            Removed notifier <span className="font-bold">{row.original.email}</span>
           </span>
         );
       })
@@ -28,7 +28,7 @@ export function DeleteNotifierMenuItem({ row }: DeleteFilterMenuItemProps) {
         captureException(error);
         toast.error(
           <span>
-            Failed to remove notifier for <span className="font-bold">{row.original.email}</span>
+            Failed to remove notifier <span className="font-bold">{row.original.email}</span>
           </span>
         );
       });

@@ -98,7 +98,11 @@ export function RatesForm({ user, rates }: RatesFormProps) {
           </CardContent>
         </Card>
 
-        <Button type="submit" loading={form.formState.isSubmitting}>
+        <Button
+          type="submit"
+          loading={form.formState.isSubmitting}
+          disabled={!form.formState.isDirty}
+        >
           Save changes
         </Button>
       </form>

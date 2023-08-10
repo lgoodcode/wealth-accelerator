@@ -6,9 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
+import { useSignUp } from '@/hooks/auth/use-signup';
 import { registerUserFormSchema, type RegisterUserFormType } from '@/lib/user-schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Alert, AlertTitle } from '@/components/ui/alert';
 import {
   Form,
   FormControl,
@@ -17,7 +19,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useSignUp } from './use-signup';
 
 type ServerMessage = {
   type: 'error' | 'success';
@@ -67,14 +68,9 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
       </div>
 
       {serverMessage && (
-        <div
-          className={cn('p-4 text-center text-white border rounded-md', {
-            'bg-red-500 border-red-500 ': serverMessage.type === 'error',
-            'bg-green-500  border-green-500 ': serverMessage.type === 'success',
-          })}
-        >
-          {serverMessage.message}
-        </div>
+        <Alert variant={serverMessage.type === 'error' ? 'destructive' : 'success'}>
+          <AlertTitle>{serverMessage.message}</AlertTitle>
+        </Alert>
       )}
 
       <Form {...form}>
@@ -121,12 +117,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
             )}
           />
 
-          <Button
-            type="submit"
-            loading={form.formState.isSubmitting}
-            // override default spinner color for light theme
-            spinner={{ className: 'border-white border-b-primary' }}
-          >
+          <Button type="submit" loading={form.formState.isSubmitting}>
             Sign Up
           </Button>
         </form>

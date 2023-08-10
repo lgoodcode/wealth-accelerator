@@ -1,16 +1,13 @@
 'use client';
 
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
-import {
-  sendResetPasswordEmailSchema,
-  type SendResetPasswordEmailFormType,
-} from '@/lib/user-schema';
-import { usePasswordResetEmail } from '@/hooks/auth/use-password-reset-email';
+import { setPasswordSchema, type SetPasswordFormType } from '@/lib/user-schema';
+import { useSetPassword } from '@/hooks/auth/use-set-password';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertTitle } from '@/components/ui/alert';
@@ -22,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+
 type ServerMessage = {
   type: 'error' | 'success';
   message: string;
@@ -29,22 +27,24 @@ type ServerMessage = {
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
-  const passwordResetEmail = usePasswordResetEmail();
+export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
+  const router = useRouter();
+  const setPassword = useSetPassword();
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
-  const form = useForm<SendResetPasswordEmailFormType>({
-    resolver: zodResolver(sendResetPasswordEmailSchema),
+  const form = useForm<SetPasswordFormType>({
+    resolver: zodResolver(setPasswordSchema),
   });
 
-  const onSubmit = async (data: SendResetPasswordEmailFormType) => {
+  if (!window.location.hash || !window.location.hash.startsWith('#access_token')) {
+    router.replace('/login');
+  }
+
+  const onSubmit = async (data: SetPasswordFormType) => {
     setServerMessage(null);
 
-    await passwordResetEmail(data.email)
+    await setPassword(data.password)
       .then(() => {
-        setServerMessage({
-          type: 'success',
-          message: 'Check your email for the password reset link',
-        });
+        router.push('/login');
       })
       .catch((error) => {
         console.error(error);
@@ -58,10 +58,8 @@ export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
   return (
     <div className={cn('grid gap-6', className)} {...props}>
       <div className="flex flex-col space-y-2 text-center">
-        <h1 className="text-2xl font-medium tracking-tight">Forgot your password</h1>
-        <p className="text-sm text-muted-foreground">
-          Enter your email and a password reset link will be sent to you
-        </p>
+        <h1 className="text-2xl font-medium tracking-tight">Set your password</h1>
+        <p className="text-sm text-muted-foreground">Set your password to access your account.</p>
       </div>
 
       {serverMessage && (
@@ -74,12 +72,12 @@ export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
         <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
           <FormField
             control={form.control}
-            name="email"
+            name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="you@example.com" {...field} />
+                  <Input type="password" placeholder="••••••••" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -87,17 +85,10 @@ export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
           />
 
           <Button type="submit" loading={form.formState.isSubmitting}>
-            Send email
+            Set password
           </Button>
         </form>
       </Form>
-
-      <div className="mx-auto">
-        <span>Already have an account?</span>{' '}
-        <Link href="/login" className="link">
-          Sign In
-        </Link>
-      </div>
     </div>
   );
 }

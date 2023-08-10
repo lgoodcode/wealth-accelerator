@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -118,20 +119,17 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
                 </FormItem>
               )}
             />
+
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="secondary" disabled={isUpdating}>
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button loading={isUpdating}>Save</Button>
+            </DialogFooter>
           </form>
         </Form>
-        <DialogFooter>
-          <Button
-            variant="secondary"
-            disabled={isUpdating}
-            onClick={() => handleUpdateDialogOpenChange(false)}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" loading={isUpdating} onClick={form.handleSubmit(handleUpdate)}>
-            Save
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

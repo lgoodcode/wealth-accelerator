@@ -1,13 +1,17 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
+import { resetUserPasswordSchema, type ResetUserPasswordFormType } from '@/lib/user-schema';
+import { useResetPassword } from '@/hooks/auth/use-reset-password';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Alert, AlertTitle } from '@/components/ui/alert';
 import {
   Form,
   FormControl,
@@ -16,8 +20,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { resetUserPasswordSchema, type ResetUserPasswordFormType } from '@/lib/user-schema';
-import { useResetPassword } from './use-reset-password';
 
 type ServerMessage = {
   type: 'error' | 'success';
@@ -27,21 +29,23 @@ type ServerMessage = {
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
+  const router = useRouter();
   const resetPassword = useResetPassword();
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
   const form = useForm<ResetUserPasswordFormType>({
     resolver: zodResolver(resetUserPasswordSchema),
   });
 
+  if (!window.location.hash || !window.location.hash.startsWith('#access_token')) {
+    router.replace('/login');
+  }
+
   const onSubmit = async (data: ResetUserPasswordFormType) => {
     setServerMessage(null);
 
     await resetPassword(data.password)
       .then(() => {
-        setServerMessage({
-          type: 'success',
-          message: 'Password reset successfully',
-        });
+        router.push('/login');
       })
       .catch((error) => {
         console.error(error);
@@ -60,14 +64,9 @@ export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
       </div>
 
       {serverMessage && (
-        <div
-          className={cn('p-4 text-center text-white border rounded-md', {
-            'bg-red-500 border-red-500 ': serverMessage.type === 'error',
-            'bg-green-500  border-green-500 ': serverMessage.type === 'success',
-          })}
-        >
-          {serverMessage.message}
-        </div>
+        <Alert variant={serverMessage.type === 'error' ? 'destructive' : 'success'}>
+          <AlertTitle>{serverMessage.message}</AlertTitle>
+        </Alert>
       )}
 
       <Form {...form}>
@@ -86,12 +85,7 @@ export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
             )}
           />
 
-          <Button
-            type="submit"
-            loading={form.formState.isSubmitting}
-            // override default spinner color for light theme
-            spinner={{ className: 'border-white border-b-primary' }}
-          >
+          <Button type="submit" loading={form.formState.isSubmitting}>
             Reset password
           </Button>
         </form>

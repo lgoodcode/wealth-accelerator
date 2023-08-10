@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/select';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -54,6 +55,15 @@ export function UpdateUserDialog({ open, onOpenChange, id, user }: UpdateUserDia
       })
       .catch((error) => {
         console.error(error);
+
+        if (error?.code === '23505') {
+          form.setError('email', {
+            type: 'manual',
+            message: 'Email is already in use',
+          });
+          return;
+        }
+
         captureException(error);
         toast.error(
           <span>
@@ -132,24 +142,17 @@ export function UpdateUserDialog({ open, onOpenChange, id, user }: UpdateUserDia
                 </FormItem>
               )}
             />
+
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="secondary" disabled={form.formState.isSubmitting}>
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button loading={form.formState.isSubmitting}>Save</Button>
+            </DialogFooter>
           </form>
         </Form>
-        <DialogFooter>
-          <Button
-            variant="secondary"
-            disabled={form.formState.isSubmitting}
-            onClick={() => onOpenChange(false)}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            loading={form.formState.isSubmitting}
-            onClick={form.handleSubmit(handleUpdate)}
-          >
-            Save
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

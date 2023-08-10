@@ -1,4 +1,5 @@
 import { captureException } from '@sentry/nextjs';
+import { MoveDown } from 'lucide-react';
 import type { Metadata } from 'next';
 
 import { getUser } from '@/lib/supabase/server/get-user';
@@ -23,9 +24,21 @@ export default async function CreativeCashFlowCalculatePage() {
 
   return (
     <div className="p-8 space-y-6">
-      <div className="space-y-1">
-        <h2 className="text-3xl font-bold">Creative Cash Flow</h2>
-        <p className="text-muted-foreground">Understanding where your money is going.</p>
+      <div className="flex flex-row justify-between">
+        <div className="space-y-1">
+          <h2 className="text-3xl font-bold">Creative Cash Flow</h2>
+          <p className="text-muted-foreground">Understanding where your money is going.</p>
+        </div>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-row items-center">
+            <MoveDown className="w-8 h-8" />
+            <span>Flow of money</span>
+          </div>
+          <div className="flex flex-row items-center">
+            <MoveDown className="w-8 h-8 text-destructive" />
+            <span>Taxes</span>
+          </div>
+        </div>
       </div>
       <Separator className="mt-6" />
       <CreativeCashFlow

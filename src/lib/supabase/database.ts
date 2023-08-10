@@ -391,6 +391,13 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      change_user_password: {
+        Args: {
+          current_password: string
+          new_password: string
+        }
+        Returns: undefined
+      }
       create_insurance_policy: {
         Args: {
           p_user_id: string
@@ -521,6 +528,13 @@ export interface Database {
           target_date: string
         }
         Returns: number
+      }
+      update_user_profile: {
+        Args: {
+          new_name: string
+          new_email: string
+        }
+        Returns: Json
       }
     }
     Enums: {

@@ -212,7 +212,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                 <CardTitle>Wealth Accelerator Options</CardTitle>
                 <CardDescription>Enter the lump sum cash to apply each year.</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-8">
+              <CardContent className="pt-0 space-y-8">
                 <div className="p-4 border space-y-8">
                   <FormField
                     control={form.control}

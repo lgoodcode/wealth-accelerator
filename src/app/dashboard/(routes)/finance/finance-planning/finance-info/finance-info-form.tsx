@@ -241,7 +241,11 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" loading={form.formState.isSubmitting}>
+        <Button
+          type="submit"
+          loading={form.formState.isSubmitting}
+          disabled={!form.formState.isDirty}
+        >
           Save changes
         </Button>
       </form>

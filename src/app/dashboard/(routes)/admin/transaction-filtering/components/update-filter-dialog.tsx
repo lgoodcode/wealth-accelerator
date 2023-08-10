@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/select';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -106,24 +107,17 @@ export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterD
                 </FormItem>
               )}
             />
+
+            <DialogFooter>
+              <DialogClose>
+                <Button variant="secondary" disabled={form.formState.isSubmitting}>
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button loading={form.formState.isSubmitting}>Save</Button>
+            </DialogFooter>
           </form>
         </Form>
-        <DialogFooter>
-          <Button
-            variant="secondary"
-            disabled={form.formState.isSubmitting}
-            onClick={() => onOpenChange(false)}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            loading={form.formState.isSubmitting}
-            onClick={form.handleSubmit(handleUpdate)}
-          >
-            Save
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
