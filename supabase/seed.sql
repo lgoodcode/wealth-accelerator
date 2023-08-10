@@ -1009,6 +1009,7 @@ DECLARE
   user_id uuid;
 BEGIN
   user_id := auth.uid();
+
   -- Check if the passwords match
   IF EXISTS (
     SELECT 1 FROM auth.users
@@ -1016,6 +1017,7 @@ BEGIN
   ) THEN
     RAISE EXCEPTION 'Incorrect password';
   END IF;
+
   -- Then set the new password
   UPDATE auth.users SET encrypted_password = crypt(new_password, gen_salt('bf'))
   WHERE id = user_id;
