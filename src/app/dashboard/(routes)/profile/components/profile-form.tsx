@@ -26,7 +26,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
   const updateProfile = useUpdateProfile();
   const form = useForm<ProfileFormType>({
     resolver: zodResolver(profileSchema),
-    values: {
+    defaultValues: {
       name: user.name,
       email: user.email,
     },
@@ -36,9 +36,10 @@ export function ProfileForm({ user }: ProfileFormProps) {
     await updateProfile(data)
       .then((profile) => {
         toast.success('Profile updated successfully');
-        form.reset();
-        form.setValue('name', profile.name);
-        form.setValue('email', profile.email);
+        form.reset({
+          name: profile.name,
+          email: profile.email,
+        });
       })
       .catch((error) => {
         console.error(error);

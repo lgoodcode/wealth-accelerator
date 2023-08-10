@@ -979,20 +979,16 @@ LANGUAGE plpgsql SECURITY definer;
 CREATE OR REPLACE function update_user_profile(new_name text, new_email text)
 RETURNS JSON AS $$
 DECLARE
-  user_id uuid; -- to store the user id from the request
+  user_id uuid;
 BEGIN
-  -- Get user by his current auth.uid and current password
   user_id := auth.uid();
-
   -- Check if the email is already in use
   IF EXISTS (SELECT 1 FROM auth.users WHERE email = new_email AND id != user_id) THEN
     RAISE EXCEPTION 'Email already in use';
   END IF;
-
   -- Update the user's profile
   UPDATE auth.users SET email = LOWER(new_email) WHERE id = user_id;
   UPDATE public.users SET name = INITCAP(new_name), email = LOWER(new_email) WHERE id = user_id;
-
   -- Return the updated user's profile
   RETURN (SELECT row_to_json(u) FROM (SELECT name, email FROM public.users WHERE id = user_id) u);
 END;
@@ -1007,20 +1003,16 @@ LANGUAGE plpgsql SECURITY definer;
 CREATE OR REPLACE function change_user_password(current_password text, new_password text)
 RETURNS VOID AS $$
 DECLARE
-  _uid uuid; -- for checking by 'is not found'
-  user_id uuid; -- to store the user id from the request
+  user_id uuid;
 BEGIN
-  -- Get user by his current auth.uid and current password
   user_id := auth.uid();
-  SELECT id INTO _uid
-  FROM auth.users
-  WHERE id = user_id AND encrypted_password = crypt(current_password::text, auth.users.encrypted_password);
-
-  -- Check the currect password
-  IF NOT FOUND THEN
+  -- Check if the passwords match
+  IF EXISTS (
+    SELECT 1 FROM auth.users
+    WHERE id = user_id AND encrypted_password = crypt(current_password::text, auth.users.encrypted_password)
+  ) THEN
     RAISE EXCEPTION 'Incorrect password';
   END IF;
-
   -- Then set the new password
   UPDATE auth.users SET encrypted_password = crypt(new_password, gen_salt('bf'))
   WHERE id = user_id;
