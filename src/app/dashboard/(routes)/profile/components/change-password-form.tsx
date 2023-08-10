@@ -99,7 +99,11 @@ export function ChangePasswordForm() {
             <Button type="button" variant="secondary" className="ml-2" onClick={() => form.reset()}>
               Cancel
             </Button>
-            <Button type="submit" loading={form.formState.isSubmitting}>
+            <Button
+              type="submit"
+              loading={form.formState.isSubmitting}
+              disabled={!form.formState.isDirty}
+            >
               Save
             </Button>
           </div>
