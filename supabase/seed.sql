@@ -973,6 +973,34 @@ LANGUAGE plpgsql SECURITY definer;
 
 
 
+-- Updates a user's profile by first checking if the provided email is already in use and if it
+-- is then it throws an exception. If it isn't then it updates the user's email and name. In
+-- both the auth.users and public.users tables for emails and name in public.users.
+CREATE OR REPLACE function update_user_profile(new_name text, new_email text)
+RETURNS JSON AS $$
+DECLARE
+  user_id uuid; -- to store the user id from the request
+BEGIN
+  -- Get user by his current auth.uid and current password
+  user_id := auth.uid();
+
+  -- Check if the email is already in use
+  IF EXISTS (SELECT 1 FROM auth.users WHERE email = new_email AND id != user_id) THEN
+    RAISE EXCEPTION 'Email already in use';
+  END IF;
+
+  -- Update the user's profile
+  UPDATE auth.users SET email = LOWER(new_email) WHERE id = user_id;
+  UPDATE public.users SET name = INITCAP(new_name), email = LOWER(new_email) WHERE id = user_id;
+
+  -- Return the updated user's profile
+  RETURN (SELECT row_to_json(u) FROM (SELECT name, email FROM public.users WHERE id = user_id) u);
+END;
+$$
+LANGUAGE plpgsql SECURITY definer;
+
+
+
 -- Changes a user password by first checking if the provided current password matches and if it
 -- doesn't then it throws an exception. If it does match then it updates the user's password
 -- with the new one.
@@ -996,34 +1024,6 @@ BEGIN
   -- Then set the new password
   UPDATE auth.users SET encrypted_password = crypt(new_password, gen_salt('bf'))
   WHERE id = user_id;
-END;
-$$
-LANGUAGE plpgsql SECURITY definer;
-
-
-
--- Updates a user's profile by first checking if the provided email is already in use and if it
--- is then it throws an exception. If it isn't then it updates the user's email and name. In
--- both the auth.users and public.users tables for emails and name in public.users.
-CREATE OR REPLACE function update_user_profile(new_name text, new_email text)
-RETURNS JSON AS $$
-DECLARE
-  user_id uuid; -- to store the user id from the request
-BEGIN
-  -- Get user by his current auth.uid and current password
-  user_id := auth.uid();
-
-  -- Check if the email is already in use
-  IF EXISTS (SELECT 1 FROM auth.users WHERE email = new_email AND id != user_id) THEN
-    RAISE EXCEPTION 'Email already in use';
-  END IF;
-
-  -- Update the user's profile
-  UPDATE auth.users SET email = LOWER(new_email) WHERE id = user_id;
-  UPDATE public.users SET name = INITCAP(new_name), email = LOWER(new_email) WHERE id = user_id;
-
-  -- Return the updated user's profile
-  RETURN (SELECT row_to_json(u) FROM (SELECT name, email FROM public.users WHERE id = user_id) u);
 END;
 $$
 LANGUAGE plpgsql SECURITY definer;
