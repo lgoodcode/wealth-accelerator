@@ -982,13 +982,16 @@ DECLARE
   user_id uuid;
 BEGIN
   user_id := auth.uid();
+
   -- Check if the email is already in use
   IF EXISTS (SELECT 1 FROM auth.users WHERE email = new_email AND id != user_id) THEN
     RAISE EXCEPTION 'Email already in use';
   END IF;
+
   -- Update the user's profile
   UPDATE auth.users SET email = LOWER(new_email) WHERE id = user_id;
   UPDATE public.users SET name = INITCAP(new_name), email = LOWER(new_email) WHERE id = user_id;
+
   -- Return the updated user's profile
   RETURN (SELECT row_to_json(u) FROM (SELECT name, email FROM public.users WHERE id = user_id) u);
 END;
