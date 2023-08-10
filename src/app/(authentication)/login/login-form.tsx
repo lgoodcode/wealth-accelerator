@@ -90,7 +90,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
             )}
           />
 
-          <Button type="submit" loading={!form.formState.isSubmitting}>
+          <Button type="submit" loading={form.formState.isSubmitting}>
             Sign In
           </Button>
         </form>
