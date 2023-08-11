@@ -43,8 +43,6 @@ export const serverSyncTransactions = async (
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
       count: PLAID_SYNC_BATCH_SIZE,
     });
-    console.log('item', item);
-    console.log('data', data);
     const addedError = await addTransactions(item.item_id, data.added, filters, supabaseAdmin);
     const updatedError = await updateTransactions(
       item.item_id,
