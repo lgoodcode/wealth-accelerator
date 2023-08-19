@@ -5,7 +5,7 @@ import { removeCreativeCashFlowRecordAtom } from '../../atoms';
 export const useDeleteRecord = () => {
   const removeRecord = useSetAtom(removeCreativeCashFlowRecordAtom);
 
-  return async (id: number) => {
+  return async (id: string) => {
     const { error } = await supabase.from('creative_cash_flow').delete().eq('id', id);
 
     if (error) {

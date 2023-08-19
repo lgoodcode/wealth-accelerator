@@ -44,9 +44,7 @@ export default async function SharedCreativeCashFlowRecordPage({
 
   const supabase = createSupabase();
   const { error, data } = await supabase
-    .rpc('get_creative_cash_flow_record', {
-      record_id: record_id,
-    })
+    .rpc('get_creative_cash_flow_record', { record_id: record_id })
     .single();
 
   if (error) {

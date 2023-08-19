@@ -11,15 +11,15 @@ export interface Database {
     Tables: {
       creative_cash_flow: {
         Row: {
-          id: number
+          id: string
           user_id: string
         }
         Insert: {
-          id?: number
+          id: string
           user_id: string
         }
         Update: {
-          id?: number
+          id?: string
           user_id?: string
         }
       }
@@ -28,7 +28,7 @@ export interface Database {
           all_other_income: number
           created_at: string
           end_date: string
-          id: number
+          id: string
           lifestyle_expenses_tax_rate: number
           optimal_savings_strategy: number
           payroll_and_distributions: number
@@ -40,7 +40,7 @@ export interface Database {
           all_other_income: number
           created_at?: string
           end_date: string
-          id: number
+          id: string
           lifestyle_expenses_tax_rate: number
           optimal_savings_strategy: number
           payroll_and_distributions: number
@@ -52,7 +52,7 @@ export interface Database {
           all_other_income?: number
           created_at?: string
           end_date?: string
-          id?: number
+          id?: string
           lifestyle_expenses_tax_rate?: number
           optimal_savings_strategy?: number
           payroll_and_distributions?: number
@@ -86,7 +86,7 @@ export interface Database {
           business_overhead: number
           business_profit_before_tax: number
           collections: number
-          id: number
+          id: string
           lifestyle_expenses: number
           lifestyle_expenses_tax: number
           monthly_trend: number[]
@@ -102,7 +102,7 @@ export interface Database {
           business_overhead: number
           business_profit_before_tax: number
           collections: number
-          id: number
+          id: string
           lifestyle_expenses: number
           lifestyle_expenses_tax: number
           monthly_trend: number[]
@@ -118,7 +118,7 @@ export interface Database {
           business_overhead?: number
           business_profit_before_tax?: number
           collections?: number
-          id?: number
+          id?: string
           lifestyle_expenses?: number
           lifestyle_expenses_tax?: number
           monthly_trend?: number[]
@@ -435,7 +435,7 @@ export interface Database {
           _yearly_trend: number[]
           _year_to_date: number
         }
-        Returns: number
+        Returns: string
       }
       create_insurance_policy: {
         Args: {
@@ -459,6 +459,7 @@ export interface Database {
           record_id: string
         }
         Returns: {
+          id: string
           inputs: Json
           results: Json
         }[]
@@ -468,7 +469,7 @@ export interface Database {
           arg_user_id: string
         }
         Returns: {
-          id: number
+          id: string
           inputs: Json
           results: Json
         }[]

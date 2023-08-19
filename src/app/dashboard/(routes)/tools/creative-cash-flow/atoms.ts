@@ -39,7 +39,7 @@ export const addCreativeCashFlowRecordAtom = atom(
   }
 );
 
-export const removeCreativeCashFlowRecordAtom = atom(null, (_get, set, id: number) => {
+export const removeCreativeCashFlowRecordAtom = atom(null, (_get, set, id: string) => {
   set(creativeCashFlowRecordsAtom, (records) => {
     if (!records) {
       throw new Error('creativeCashFlowRecordsAtom is not initialized');
