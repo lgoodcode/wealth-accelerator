@@ -21,6 +21,11 @@ export function ShareRecordButton({ record }: ShareRecordButtonProps) {
         toast.success('An email has been sent to all advisors');
       })
       .catch((error) => {
+        if (error.message === 'No notifiers found') {
+          toast.error('No advisors have been set up to receive emails');
+          return;
+        }
+
         console.error(error);
         toast.error('Failed to share record');
       })

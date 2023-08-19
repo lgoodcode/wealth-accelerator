@@ -77,18 +77,18 @@ async function ShareCreativeCashFlowRecord(
     return NextResponse.json({ error: 'No user' }, { status: 400 });
   }
 
-  const { error: notifiersError, data } = await supabaseAdmin
+  const { error: notifiersError, data: notifiers } = await supabaseAdmin
     .from('creative_cash_flow_notifiers')
     .select('name, email')
     .eq('enabled', true);
 
-  if (notifiersError || !data) {
+  if (notifiersError || !notifiers.length) {
     const error = notifiersError || new Error('No notifiers found');
     captureException(error);
     return NextResponse.json({ error: 'No notifiers found' }, { status: 500 });
   }
 
-  const emailBody = createEmailBody(record_id, user.name, data);
+  const emailBody = createEmailBody(record_id, user.name, notifiers);
   try {
     await sendEmail(emailBody);
     return NextResponse.json({ success: true });
