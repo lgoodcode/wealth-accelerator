@@ -9,12 +9,26 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      creative_cash_flow: {
+        Row: {
+          id: number
+          user_id: string
+        }
+        Insert: {
+          id?: number
+          user_id: string
+        }
+        Update: {
+          id?: number
+          user_id?: string
+        }
+      }
       creative_cash_flow_inputs: {
         Row: {
           all_other_income: number
           created_at: string
           end_date: string
-          id: string
+          id: number
           lifestyle_expenses_tax_rate: number
           optimal_savings_strategy: number
           payroll_and_distributions: number
@@ -26,7 +40,7 @@ export interface Database {
           all_other_income: number
           created_at?: string
           end_date: string
-          id: string
+          id: number
           lifestyle_expenses_tax_rate: number
           optimal_savings_strategy: number
           payroll_and_distributions: number
@@ -38,7 +52,7 @@ export interface Database {
           all_other_income?: number
           created_at?: string
           end_date?: string
-          id?: string
+          id?: number
           lifestyle_expenses_tax_rate?: number
           optimal_savings_strategy?: number
           payroll_and_distributions?: number
@@ -72,7 +86,7 @@ export interface Database {
           business_overhead: number
           business_profit_before_tax: number
           collections: number
-          id: string
+          id: number
           lifestyle_expenses: number
           lifestyle_expenses_tax: number
           monthly_trend: number[]
@@ -88,7 +102,7 @@ export interface Database {
           business_overhead: number
           business_profit_before_tax: number
           collections: number
-          id: string
+          id: number
           lifestyle_expenses: number
           lifestyle_expenses_tax: number
           monthly_trend: number[]
@@ -104,7 +118,7 @@ export interface Database {
           business_overhead?: number
           business_profit_before_tax?: number
           collections?: number
-          id?: string
+          id?: number
           lifestyle_expenses?: number
           lifestyle_expenses_tax?: number
           monthly_trend?: number[]
@@ -398,18 +412,37 @@ export interface Database {
         }
         Returns: undefined
       }
+      create_creative_cash_flow: {
+        Args: {
+          _user_id: string
+          _start_date: string
+          _end_date: string
+          _all_other_income: number
+          _payroll_and_distributions: number
+          _lifestyle_expenses_tax_rate: number
+          _tax_account_rate: number
+          _optimal_savings_strategy: number
+          _collections: number
+          _lifestyle_expenses: number
+          _lifestyle_expenses_tax: number
+          _business_profit_before_tax: number
+          _business_overhead: number
+          _tax_account: number
+          _waa: number
+          _total_waa: number
+          _weekly_trend: number[]
+          _monthly_trend: number[]
+          _yearly_trend: number[]
+          _year_to_date: number
+        }
+        Returns: number
+      }
       create_insurance_policy: {
         Args: {
           p_user_id: string
           p_company_id: number
           p_name: string
           p_policy_rows: unknown[]
-        }
-        Returns: undefined
-      }
-      delete_creative_cash_flow_record: {
-        Args: {
-          record_id: string
         }
         Returns: undefined
       }
@@ -435,6 +468,7 @@ export interface Database {
           arg_user_id: string
         }
         Returns: {
+          id: number
           inputs: Json
           results: Json
         }[]

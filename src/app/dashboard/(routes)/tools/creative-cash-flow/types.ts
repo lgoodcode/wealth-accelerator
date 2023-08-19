@@ -36,12 +36,13 @@ export type CreativeCashFlowManagementResult = {
 };
 
 export type CreativeCashFlowRecord = {
+  id: number;
   inputs: CreativeCashFlowManagementInputs & {
-    id: string;
+    id: number;
     start_date: string;
     end_date: string;
   };
   results: CreativeCashFlowManagementResult & {
-    id: string;
+    id: number;
   };
 };

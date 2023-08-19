@@ -16,7 +16,7 @@ export function ShareRecordButton({ record }: ShareRecordButtonProps) {
   const handleShare = async () => {
     setIsSharing(true);
 
-    await shareRecord(record.inputs.id)
+    await shareRecord(record.id)
       .then(() => {
         toast.success('An email has been sent to all advisors');
       })
