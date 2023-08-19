@@ -450,18 +450,18 @@ CREATE POLICY "Can view own CCF or if is admin" ON public.creative_cash_flow
   TO authenticated
   USING (auth.uid() = user_id OR is_admin(auth.uid()));
 
-CREATE POLICY "Can insert new CCF data" ON public.plaid
+CREATE POLICY "Can insert new CCF data" ON public.creative_cash_flow
   FOR INSERT
   TO authenticated
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Can update own CCF data" ON public.plaid
+CREATE POLICY "Can update own CCF data" ON public.creative_cash_flow
   FOR UPDATE
   TO authenticated
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Can delete own CCF data" ON public.plaid
+CREATE POLICY "Can delete own CCF data" ON public.creative_cash_flow
   FOR DELETE
   TO authenticated
   USING (auth.uid() = user_id);
