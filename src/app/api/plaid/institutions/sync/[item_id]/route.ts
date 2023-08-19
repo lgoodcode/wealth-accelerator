@@ -12,6 +12,7 @@ interface SyncInstitutionParams {
   };
 }
 
+export const dynamic = 'force-dynamic';
 export const GET = syncTransactions;
 
 async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitutionParams) {

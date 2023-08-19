@@ -63,6 +63,8 @@ module.exports = withBundleAnalyzer(
     {
       silent: false,
       authToken: process.env.SENTRY_AUTH_TOKEN,
+      cleanArtifacts: true,
+      debug: true,
     },
     {
       hideSourcemaps: true,

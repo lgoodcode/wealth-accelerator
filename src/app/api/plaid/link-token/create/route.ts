@@ -5,6 +5,7 @@ import { getUser } from '@/lib/supabase/server/get-user';
 import { plaidClient, createLinkTokenRequest } from '@/lib/plaid/config';
 import type { CreateLinkTokenResponse } from '@/lib/plaid/types/link-token';
 
+export const dynamic = 'force-dynamic';
 export const GET = createLinkToken;
 
 async function createLinkToken() {

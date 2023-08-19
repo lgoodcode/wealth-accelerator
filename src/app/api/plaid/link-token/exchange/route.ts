@@ -9,6 +9,7 @@ import type {
   ExchangeLinkTokenResponse,
 } from '@/lib/plaid/types/link-token';
 
+export const dynamic = 'force-dynamic';
 export const POST = exchangeLinkToken;
 
 async function exchangeLinkToken(request: Request) {

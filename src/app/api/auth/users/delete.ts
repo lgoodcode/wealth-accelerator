@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 
-import { createSupabase } from '@/lib/supabase/server/create-supabase';
+import { createSupabase } from '@/lib/supabase/api';
 import { captureException } from '@sentry/nextjs';
 
+export const dynamic = 'force-dynamic';
 export const DELETE = deleteUser;
 
 async function deleteUser(request: Request) {
@@ -13,7 +14,7 @@ async function deleteUser(request: Request) {
     return NextResponse.json({ error: 'Missing id' }, { status: 400 });
   }
 
-  const supabase = createSupabase(true);
+  const supabase = createSupabase();
   const { error: deleteUserError } = await supabase.from('users').delete().eq('id', id);
   const { error: deleteAuthUserError } = await supabase.auth.admin.deleteUser(id);
 

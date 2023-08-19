@@ -5,6 +5,7 @@ import { getUser } from '@/lib/supabase/server/get-user';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import type { Notifier } from '@/app/dashboard/(routes)/admin/creative-cash-flow-notifiers/types';
 
+export const dynamic = 'force-dynamic';
 export const GET = ShareCreativeCashFlowRecord;
 
 type SMTP2GoResponseError = {
