@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
 import { createSupabase } from '@/lib/supabase/api';
+import { formatPath } from '@/lib/utils/formatPath';
 
 export const dynamic = 'force-dynamic';
 export const GET = exchangeCodeForSession;
@@ -9,7 +10,8 @@ export const GET = exchangeCodeForSession;
 async function exchangeCodeForSession(request: Request) {
   const requestURL = new URL(request.url);
   const code = requestURL.searchParams.get('code');
-  const redirectTo = requestURL.searchParams.get('redirect_to') ?? '/login';
+  const redirectTo: `/${string}` =
+    formatPath(requestURL.searchParams.get('redirect_to')) ?? '/login';
 
   try {
     if (code) {
