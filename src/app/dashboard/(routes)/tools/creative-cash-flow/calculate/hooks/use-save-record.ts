@@ -52,7 +52,7 @@ export const useSaveRecord = () => {
         ...structuredClone(results),
         id: record_id,
       },
-    } as unknown as CreativeCashFlowRecord;
+    } as CreativeCashFlowRecord;
 
     addRecord(record);
   };
