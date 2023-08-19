@@ -41,7 +41,12 @@ export function Buttons({ className, user_id, handleReset }: ButtonsProps) {
       })
       .catch((error) => {
         console.error(error);
-        captureException(error);
+        captureException(error, {
+          extra: {
+            inputs,
+            results,
+          },
+        });
         toast.error('Failed to save the Creative Cash Flow record. Please try again.');
       })
       .finally(() => setIsSaving(false));
