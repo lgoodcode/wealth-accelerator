@@ -23,7 +23,11 @@ When adding a new theme or customizing, do the following:
 2. Update the `tailwind.config.js` file with the new colors
 3. Update variants in the `toast.tsx` and `button.tsx` files
 
-### Supabase Database
+### Supabase Backups
+
+With using the Supabase migrations through the Supbase CLI, the database schema is fully backed up with changes over time. The data itself can be retrieved from the supabase dashboard and then used to restore the data.
+
+### Supabase Database Config
 
 By default, a Supabase project will limit queries to `1000` records. This can be changed in the
 `Settings` tab of the project.
