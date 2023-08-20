@@ -63,9 +63,15 @@ export default async function SharedCreativeCashFlowRecordPage({
   return (
     <div className="p-8 space-y-6">
       <div className="space-y-1">
-        <h2 className="text-3xl font-bold">
-          {name ? `${name}'s ` : ''}Shared Creative Cash Flow Record
-        </h2>
+        <div className="flex flex-row justify-between items-center">
+          <h2 className="text-3xl font-bold">Shared Creative Cash Flow Record</h2>
+          {name && (
+            <div className="flex flex-row gap-2 text-lg">
+              <span className="text-muted-foreground">Shared by</span>
+              <span className="font-bold">{name}</span>
+            </div>
+          )}
+        </div>
         <p className="text-muted-foreground">Viewing a shared record.</p>
       </div>
       <Separator className="mt-6" />
