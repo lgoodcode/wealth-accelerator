@@ -37,25 +37,23 @@ export default async function SharedCreativeCashFlowRecordPage({
     redirect('/login');
   } else if (!isAdmin(user)) {
     redirect('/dashboard/home');
-    // If invalid UUID is passed, don't request the record and display the no record card
   } else if (!isUUID(record_id)) {
     return <NoRecordCard record_id={record_id} />;
   }
 
   const supabase = createSupabase();
   const { error, data } = await supabase
-    .rpc('get_creative_cash_flow_record', {
-      record_id: record_id,
-    })
+    .rpc('get_creative_cash_flow_record', { record_id: record_id })
     .single();
 
   if (error) {
-    // If no records returned, display the no record card
     if (error.code === 'PGRST116') {
       return <NoRecordCard record_id={record_id} />;
     } else {
-      console.error(error);
-      captureException(error);
+      console.error(error, { record_id });
+      captureException(error, {
+        extra: { record_id },
+      });
       return <PageError />;
     }
   }
@@ -65,9 +63,15 @@ export default async function SharedCreativeCashFlowRecordPage({
   return (
     <div className="p-8 space-y-6">
       <div className="space-y-1">
-        <h2 className="text-3xl font-bold">
-          {name ? `${name}'s ` : ''}Shared Creative Cash Flow Record
-        </h2>
+        <div className="flex flex-row justify-between items-center">
+          <h2 className="text-3xl font-bold">Shared Creative Cash Flow Record</h2>
+          {name && (
+            <div className="flex flex-row gap-2 text-lg">
+              <span className="text-muted-foreground">Shared by</span>
+              <span className="font-bold">{name}</span>
+            </div>
+          )}
+        </div>
         <p className="text-muted-foreground">Viewing a shared record.</p>
       </div>
       <Separator className="mt-6" />

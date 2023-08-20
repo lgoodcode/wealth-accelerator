@@ -13,9 +13,12 @@ export async function middleware(request: NextRequest) {
   const isAuthPage = authPagesRegex.test(request.nextUrl.pathname);
   const supabase = createMiddlewareClient<Database>({ req: request, res });
   const token = parseAuthCookie(request.cookies);
-  const loginRedirectUrl = new URL(`${request.nextUrl.origin}/login`);
-  // Set the redirect_to query param to the current path
-  loginRedirectUrl.searchParams.set('redirect_to', request.nextUrl.pathname);
+  const queryEntries = request.nextUrl.search ? request.nextUrl.search.substring(1) : '';
+  const loginRedirectUrl = new URL(
+    isLoginPage && queryEntries.startsWith('redirect_to') // Don't redirect to login page if already on login page
+      ? `${request.nextUrl.origin}/login?${queryEntries}`
+      : `${request.nextUrl.origin}/login?redirect_to=${request.nextUrl.pathname}&${queryEntries}`
+  );
 
   // If the auth token isn't valid (none or expired), redirect to login page
   // for all pages except auth pages

@@ -40,8 +40,16 @@ export function Buttons({ className, user_id, handleReset }: ButtonsProps) {
         router.refresh(); // Need to refresh so that the records page and ytd_collections are updated
       })
       .catch((error) => {
-        console.error(error);
-        captureException(error);
+        console.error(error, {
+          inputs,
+          results,
+        });
+        captureException(error, {
+          extra: {
+            inputs,
+            results,
+          },
+        });
         toast.error('Failed to save the Creative Cash Flow record. Please try again.');
       })
       .finally(() => setIsSaving(false));

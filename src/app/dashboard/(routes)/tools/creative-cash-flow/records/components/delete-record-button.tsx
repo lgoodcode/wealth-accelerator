@@ -30,7 +30,7 @@ export function DeleteRecordButton({ record }: DeleteRecordButtonProps) {
   const handleDelete = async () => {
     setIsDeleting(true);
 
-    await deleteRecord(record.inputs.id)
+    await deleteRecord(record.id)
       .then(() => {
         setShowDeleteDialog(false);
       })

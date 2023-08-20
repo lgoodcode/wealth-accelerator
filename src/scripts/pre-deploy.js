@@ -1,8 +1,10 @@
-const requiredEnvVars = [
+const requiredEnvList = [
   'NEXT_PUBLIC_SUPABASE_URL',
   'NEXT_PUBLIC_SUPABASE_ANON_KEY',
   'SUPABASE_SERVICE_ROLE_KEY',
   'SUPABASE_PROJECT_ID',
+  'SENTRY_PROJECT',
+  'SENTRY_ORG',
   'NEXT_PUBLIC_SENTRY_DSN',
   'SENTRY_AUTH_TOKEN',
   'PLAID_ENV',
@@ -21,7 +23,7 @@ const requiredEnvVars = [
 
 // Skip checking environment variables if in local development or running on CI
 if (process.env.NODE_ENV && process.env.NODE_ENV !== 'development' && !process.env.CircleCI) {
-  requiredEnvVars.forEach((envVar) => {
+  requiredEnvList.forEach((envVar) => {
     if (!process.env[envVar]) {
       throw new Error(`${envVar} is not defined`);
     }

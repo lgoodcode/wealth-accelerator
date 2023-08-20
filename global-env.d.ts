@@ -10,6 +10,8 @@ export declare global {
       NEXT_PUBLIC_SUPABASE_ANON_KEY: string;
       SUPABASE_SERVICE_ROLE_KEY: string;
       SUPABASE_PROJECT_ID: string;
+      SENTRY_PROJECT: string;
+      SENTRY_ORG: string;
       NEXT_PUBLIC_SENTRY_DSN: string;
       SENTRY_AUTH_TOKEN: string;
       PLAID_ENV: string;

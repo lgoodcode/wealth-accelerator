@@ -16,11 +16,16 @@ export function ShareRecordButton({ record }: ShareRecordButtonProps) {
   const handleShare = async () => {
     setIsSharing(true);
 
-    await shareRecord(record.inputs.id)
+    await shareRecord(record.id)
       .then(() => {
         toast.success('An email has been sent to all advisors');
       })
       .catch((error) => {
+        if (error.message === 'No notifiers found') {
+          toast.error('No advisors have been set up to receive emails');
+          return;
+        }
+
         console.error(error);
         toast.error('Failed to share record');
       })

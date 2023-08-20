@@ -5,10 +5,10 @@ export const metadata: Metadata = {
     default: 'Wealth Accelerator',
     template: '%s | Wealth Accelerator',
   },
-  metadataBase: new URL('https://test.chirowealth.com'),
+  metadataBase: new URL('https://app.chirowealth.com'),
   keywords: ['Wealth Accelerator'],
   description: 'Wealth Accelerator app.',
-  colorScheme: 'normal',
+  colorScheme: 'light',
   viewport: 'width=device-width, initial-scale=1',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#fff' },
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    url: 'https://test.chirowealth.com',
+    url: 'https://app.chirowealth.com',
     title: 'Wealth Accelerator',
     description: 'Wealth Accelerator app.',
     siteName: 'Wealth Accelerator',

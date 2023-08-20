@@ -31,11 +31,11 @@ export default async function CreativeCashFlowCalculatePage() {
         </div>
         <div className="flex flex-col gap-4">
           <div className="flex flex-row items-center">
-            <MoveDown className="w-8 h-8" />
+            <MoveDown className="w-7 h-7" />
             <span>Flow of money</span>
           </div>
           <div className="flex flex-row items-center">
-            <MoveDown className="w-8 h-8 text-destructive" />
+            <MoveDown className="w-7 h-7 text-destructive" />
             <span>Taxes</span>
           </div>
         </div>

@@ -76,10 +76,10 @@ CREATE TRIGGER on_auth_user_created
  * peronal_finance table
  */
 
--- Function that generates the rates array of 60 decimal(5,2)[] with a default value of 7
+-- Function that generates the rates array of 60 decimal(5,2) [] with a default value of 7
 -- and divide the value by 100 when displaying/using it
 CREATE OR REPLACE FUNCTION generate_rates()
-RETURNS decimal(5,2)[] AS $$
+RETURNS decimal(5,2) [] AS $$
 BEGIN
   RETURN ARRAY(SELECT 7::decimal(5,2) FROM generate_series(1, 60));
 END
@@ -92,7 +92,7 @@ CREATE TABLE personal_finance (
   -- Strategy start date
   start_date timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   -- Index fund rates
-  rates decimal(5,2)[] NOT NULL DEFAULT generate_rates(), -- generates an array of 60 decimal(5,2)[] with a default value of 7
+  rates decimal(5,2) [] NOT NULL DEFAULT generate_rates(), -- generates an array of 60 decimal(5,2) [] with a default value of 7
   -- Wealth accelerator
   stop_invest smallint NOT NULL DEFAULT 10,
   start_withdrawl smallint NOT NULL DEFAULT 20,
@@ -432,13 +432,92 @@ CREATE TRIGGER on_delete_filter_recategorize_transactions
 
 
 
+
+/**
+ * creative_cash_flow table
+ */
+
+DROP TABLE IF EXISTS creative_cash_flow CASCADE;
+CREATE TABLE creative_cash_flow (
+  id uuid PRIMARY KEY NOT NULL,
+  user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL
+);
+
+ALTER TABLE public.creative_cash_flow ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Can view own CCF or if is admin" ON public.creative_cash_flow
+  FOR SELECT
+  TO authenticated
+  USING (auth.uid() = user_id OR is_admin(auth.uid()));
+
+CREATE POLICY "Can insert new CCF data" ON public.creative_cash_flow
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Can update own CCF data" ON public.creative_cash_flow
+  FOR UPDATE
+  TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Can delete own CCF data" ON public.creative_cash_flow
+  FOR DELETE
+  TO authenticated
+  USING (auth.uid() = user_id);
+
+CREATE OR REPLACE function create_creative_cash_flow (
+  _user_id uuid,
+  _start_date timestamp with time zone,
+  _end_date timestamp with time zone,
+  _all_other_income integer,
+  _payroll_and_distributions integer,
+  _lifestyle_expenses_tax_rate smallint,
+  _tax_account_rate smallint,
+  _optimal_savings_strategy integer,
+  _collections decimal(10, 2),
+  _lifestyle_expenses decimal(10, 2),
+  _lifestyle_expenses_tax decimal(10, 2),
+  _business_profit_before_tax decimal(10, 2),
+  _business_overhead decimal(10, 2),
+  _tax_account decimal(10, 2),
+  _waa decimal(10, 2),
+  _total_waa decimal(10, 2),
+  _weekly_trend decimal(10, 2) [],
+  _monthly_trend decimal(10, 2) [],
+  _yearly_trend decimal(10, 2) [],
+  _year_to_date decimal(10, 2)
+) RETURNS uuid as $$
+DECLARE
+  new_id uuid;
+BEGIN
+  -- Generate a new UUID using the uuid-ossp extension
+  SELECT uuid_generate_v4() INTO new_id;
+
+  INSERT INTO creative_cash_flow (id, user_id)
+  VALUES (new_id, _user_id);
+
+  INSERT INTO creative_cash_flow_inputs (id, user_id, start_date, end_date, all_other_income, payroll_and_distributions, lifestyle_expenses_tax_rate, tax_account_rate, optimal_savings_strategy)
+  VALUES (new_id, _user_id, _start_date, _end_date, _all_other_income, _payroll_and_distributions, _lifestyle_expenses_tax_rate, _tax_account_rate, _optimal_savings_strategy);
+
+  INSERT INTO creative_cash_flow_results (id, user_id, collections, lifestyle_expenses, lifestyle_expenses_tax, business_profit_before_tax, business_overhead, tax_account, waa, total_waa, weekly_trend, monthly_trend, yearly_trend, year_to_date)
+  VALUES (new_id, _user_id, _collections, _lifestyle_expenses, _lifestyle_expenses_tax, _business_profit_before_tax, _business_overhead, _tax_account, _waa, _total_waa, _weekly_trend, _monthly_trend, _yearly_trend, _year_to_date);
+
+  RETURN new_id;
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+
+
+
+
 /**
  * creative_cash_flow_inputs table
  */
 
 DROP TABLE IF EXISTS creative_cash_flow_inputs CASCADE;
 CREATE TABLE creative_cash_flow_inputs (
-  id uuid PRIMARY KEY,
+  id uuid PRIMARY KEY NOT NULL REFERENCES public.creative_cash_flow(id) ON DELETE CASCADE,
   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   start_date timestamp with time zone NOT NULL,
@@ -477,7 +556,7 @@ CREATE POLICY "Can delete own CCF inputs" ON public.creative_cash_flow_inputs
 
 DROP TABLE IF EXISTS creative_cash_flow_results CASCADE;
 CREATE TABLE creative_cash_flow_results (
-  id uuid PRIMARY KEY,
+  id uuid PRIMARY KEY NOT NULL REFERENCES public.creative_cash_flow(id) ON DELETE CASCADE,
   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
   collections decimal(10,2) NOT NULL,
   lifestyle_expenses decimal(10,2) NOT NULL,
@@ -487,9 +566,9 @@ CREATE TABLE creative_cash_flow_results (
   tax_account decimal(10,2) NOT NULL,
   waa decimal(10,2) NOT NULL,
   total_waa decimal(10,2) NOT NULL,
-  weekly_trend decimal(10,2)[] NOT NULL,
-  monthly_trend decimal(10,2)[] NOT NULL,
-  yearly_trend decimal(10,2)[] NOT NULL,
+  weekly_trend decimal(10,2) [] NOT NULL,
+  monthly_trend decimal(10,2) [] NOT NULL,
+  yearly_trend decimal(10,2) [] NOT NULL,
   year_to_date decimal(10,2) NOT NULL
 );
 
@@ -869,34 +948,27 @@ $$ LANGUAGE plpgsql SECURITY definer;
 -- Function that retrieves the user's creative cash flow records by return a JSON object
 -- with the following structure:
 -- {
+--   "id": int,
 --   "inputs": CreativeCashFlowInputs[],
 --   "results": CreativeCashFlowResults[]
 -- }
 -- and is sorted by the created date in descending order
 CREATE OR REPLACE FUNCTION get_creative_cash_flow_records(arg_user_id uuid)
-RETURNS TABLE(inputs jsonb, results jsonb) AS
+RETURNS TABLE(id uuid, inputs jsonb, results jsonb) AS
 $BODY$
 BEGIN
     RETURN QUERY
         SELECT
-            jsonb_strip_nulls(to_jsonb(t1)) AS inputs,
-            jsonb_strip_nulls(to_jsonb(t2)) AS results
-        FROM (
-            SELECT id, created_at, start_date, end_date, all_other_income,
-            payroll_and_distributions, lifestyle_expenses_tax_rate,
-            tax_account_rate, optimal_savings_strategy
-            FROM creative_cash_flow_inputs
-            WHERE user_id = arg_user_id
-        ) AS t1
-        JOIN (
-            SELECT id, collections, lifestyle_expenses, lifestyle_expenses_tax,
-            business_profit_before_tax, business_overhead, tax_account, waa, total_waa,
-            weekly_trend, monthly_trend, yearly_trend, year_to_date
-            FROM creative_cash_flow_results
-            WHERE user_id = arg_user_id
-        ) AS t2
-        ON t1.id = t2.id
-        ORDER BY t1.created_at DESC;
+            cc.id,
+            to_jsonb(inputs.*) AS inputs,
+            to_jsonb(results.*) AS results
+        FROM creative_cash_flow AS cc
+        JOIN creative_cash_flow_inputs AS inputs
+        ON cc.id = inputs.id
+        JOIN creative_cash_flow_results AS results
+        ON cc.id = results.id
+        WHERE inputs.user_id = arg_user_id
+        ORDER BY inputs.created_at DESC;
 END;
 $BODY$
 LANGUAGE plpgsql SECURITY definer;
@@ -906,46 +978,25 @@ LANGUAGE plpgsql SECURITY definer;
 -- Function that retrieves s specific creative cash flow record in a JSON object
 -- with the following structure:
 -- {
+--   "id": uuid,
 --   "inputs": CreativeCashFlowInputs,
 --   "results": CreativeCashFlowResults
 -- }
 CREATE OR REPLACE FUNCTION get_creative_cash_flow_record(record_id uuid)
-RETURNS TABLE(inputs jsonb, results jsonb) AS
+RETURNS TABLE(id uuid, inputs jsonb, results jsonb) AS
 $BODY$
 BEGIN
     RETURN QUERY
         SELECT
-            jsonb_strip_nulls(to_jsonb(t1)) AS inputs,
-            jsonb_strip_nulls(to_jsonb(t2)) AS results
-        FROM (
-            SELECT id, created_at, start_date, end_date, all_other_income,
-            payroll_and_distributions, lifestyle_expenses_tax_rate,
-            tax_account_rate, optimal_savings_strategy
-            FROM creative_cash_flow_inputs
-            WHERE id = record_id
-        ) AS t1
-        JOIN (
-            SELECT id, collections, lifestyle_expenses, lifestyle_expenses_tax,
-            business_profit_before_tax, business_overhead, tax_account, waa, total_waa,
-            weekly_trend, monthly_trend, yearly_trend, year_to_date
-            FROM creative_cash_flow_results
-            WHERE id = record_id
-        ) AS t2
-        ON t1.id = t2.id
-        ORDER BY t1.created_at DESC;
-END;
-$BODY$
-LANGUAGE plpgsql SECURITY definer;
-
-
-
--- Removes a creative cash flow record
-CREATE OR REPLACE FUNCTION delete_creative_cash_flow_record(record_id uuid)
-RETURNS VOID AS
-$BODY$
-BEGIN
-    DELETE FROM creative_cash_flow_inputs WHERE id = record_id;
-    DELETE FROM creative_cash_flow_results WHERE id = record_id;
+            cc.id,
+            to_jsonb(inputs.*) AS inputs,
+            to_jsonb(results.*) AS results
+        FROM creative_cash_flow AS cc
+        JOIN creative_cash_flow_inputs AS inputs
+        ON cc.id = inputs.id
+        JOIN creative_cash_flow_results AS results
+        ON cc.id = results.id
+        WHERE cc.id = record_id;
 END;
 $BODY$
 LANGUAGE plpgsql SECURITY definer;

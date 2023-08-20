@@ -45,7 +45,7 @@ export const removeCreativeCashFlowRecordAtom = atom(null, (_get, set, id: strin
       throw new Error('creativeCashFlowRecordsAtom is not initialized');
     }
 
-    const index = records.findIndex((record) => record.inputs.id === id);
+    const index = records.findIndex((record) => record.id === id);
 
     if (index === -1) {
       throw new Error('Record not found');

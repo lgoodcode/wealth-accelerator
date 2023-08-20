@@ -12,6 +12,7 @@ interface RemoveInstitutionParams {
   };
 }
 
+export const dynamic = 'force-dynamic';
 export const DELETE = deleteInstitution;
 
 async function deleteInstitution(_: Request, { params: { item_id } }: RemoveInstitutionParams) {
