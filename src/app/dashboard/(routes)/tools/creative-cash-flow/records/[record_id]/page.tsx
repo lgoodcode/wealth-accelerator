@@ -37,7 +37,6 @@ export default async function SharedCreativeCashFlowRecordPage({
     redirect('/login');
   } else if (!isAdmin(user)) {
     redirect('/dashboard/home');
-    // If invalid UUID is passed, don't request the record and display the no record card
   } else if (!isUUID(record_id)) {
     return <NoRecordCard record_id={record_id} />;
   }
@@ -48,12 +47,13 @@ export default async function SharedCreativeCashFlowRecordPage({
     .single();
 
   if (error) {
-    // If no records returned, display the no record card
     if (error.code === 'PGRST116') {
       return <NoRecordCard record_id={record_id} />;
     } else {
-      console.error(error);
-      captureException(error);
+      console.error(error, { record_id });
+      captureException(error, {
+        extra: { record_id },
+      });
       return <PageError />;
     }
   }
