@@ -17,7 +17,9 @@ export async function middleware(request: NextRequest) {
   const loginRedirectUrl = new URL(
     isLoginPage && queryEntries.startsWith('redirect_to') // Don't redirect to login page if already on login page
       ? `${request.nextUrl.origin}/login?${queryEntries}`
-      : `${request.nextUrl.origin}/login?redirect_to=${request.nextUrl.pathname}&${queryEntries}`
+      : `${request.nextUrl.origin}/login?redirect_to=${request.nextUrl.pathname}${
+          queryEntries ? `&${queryEntries}` : ''
+        }`
   );
 
   // If the auth token isn't valid (none or expired), redirect to login page
