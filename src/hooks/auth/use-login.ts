@@ -21,6 +21,7 @@ export const useLogin = () => {
     }
   }
 
+  queryString = queryString === '?' ? '' : queryString;
   const redirectUrl = redirectTo ? `${redirectTo}${queryString}` : '/dashboard/home';
 
   return async (data: { email: string; password: string }) => {
