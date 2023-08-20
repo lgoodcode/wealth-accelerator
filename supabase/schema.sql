@@ -7,6 +7,7 @@
 
 DROP TYPE IF EXISTS user_role CASCADE;
 CREATE TYPE user_role AS enum ('USER', 'ADMIN');
+ALTER TYPE user_role OWNER TO postgres;
 
 DROP TABLE IF EXISTS public.users CASCADE;
 CREATE TABLE users (
@@ -18,6 +19,9 @@ CREATE TABLE users (
   updated_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
+ALTER TABLE public.users OWNER TO postgres;
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+
 CREATE OR REPLACE FUNCTION is_admin(user_id UUID)
 RETURNS BOOL AS $$
 BEGIN
@@ -28,7 +32,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
-ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+ALTER FUNCTION is_admin(UUID) OWNER TO postgres;
+
 
 CREATE POLICY "Can view their own data and admins can view all user data" ON public.users
   FOR SELECT
@@ -61,12 +66,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
+ALTER FUNCTION handle_new_user() OWNER TO postgres;
+
 -- Trigger that calls the function above
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
-  FOR EACH ROW
-  EXECUTE PROCEDURE handle_new_user();
+    FOR EACH ROW
+      EXECUTE PROCEDURE handle_new_user();
 
 
 
@@ -83,7 +90,9 @@ RETURNS decimal(5,2) [] AS $$
 BEGIN
   RETURN ARRAY(SELECT 7::decimal(5,2) FROM generate_series(1, 60));
 END
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION generate_rates() OWNER TO postgres;
 
 DROP TABLE IF EXISTS personal_finance CASCADE;
 CREATE TABLE personal_finance (
@@ -104,7 +113,8 @@ CREATE TABLE personal_finance (
   default_tax_rate smallint NOT NULL DEFAULT 25
 );
 
-ALTER TABLE public.personal_finance ENABLE ROW LEVEL SECURITY;
+ALTER TABLE personal_finance OWNER TO postgres;
+ALTER TABLE personal_finance ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Can view own personal_finance data" ON public.personal_finance
   FOR SELECT
@@ -126,6 +136,8 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION handle_init_personal_finance() OWNER TO postgres;
 
 -- Trigger the function above when a new user is created
 DROP TRIGGER IF EXISTS on_user_created_init_personal_finance ON public.users;
@@ -153,7 +165,8 @@ CREATE TABLE debts (
   months_remaining smallint NOT NULL DEFAULT 0
 );
 
-ALTER TABLE public.debts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE debts OWNER TO postgres;
+ALTER TABLE debts ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Can view own debt data or admins can view all debt data" ON public.debts
   FOR SELECT
@@ -196,7 +209,8 @@ CREATE TABLE plaid (
   cursor text -- used to track last transactions synced
 );
 
-ALTER TABLE public.plaid ENABLE ROW LEVEL SECURITY;
+ALTER TABLE plaid OWNER TO postgres;
+ALTER TABLE plaid ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Can view own institution data" ON public.plaid
   FOR SELECT
@@ -230,6 +244,7 @@ CREATE POLICY "Can delete own institutions" ON public.plaid
 
 DROP TYPE IF EXISTS account_type CASCADE;
 CREATE TYPE account_type AS enum ('personal', 'business');
+ALTER TYPE account_type OWNER TO postgres;
 
 DROP TABLE IF EXISTS plaid_accounts CASCADE;
 CREATE TABLE plaid_accounts (
@@ -239,6 +254,9 @@ CREATE TABLE plaid_accounts (
   type text NOT NULL DEFAULT 'business'::account_type,
   enabled boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE plaid_accounts OWNER TO postgres;
+ALTER TABLE plaid_accounts ENABLE ROW LEVEL SECURITY;
 
 -- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
 CREATE OR REPLACE FUNCTION is_own_plaid_account()
@@ -251,7 +269,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
-ALTER TABLE public.plaid_accounts ENABLE ROW LEVEL SECURITY;
+ALTER FUNCTION is_own_plaid_account() OWNER TO postgres;
 
 CREATE POLICY "Can view own plaid accounts data" ON public.plaid_accounts
   FOR SELECT
@@ -285,6 +303,7 @@ CREATE POLICY "Can delete own plaid accounts" ON public.plaid_accounts
 
 DROP TYPE IF EXISTS category CASCADE;
 CREATE TYPE category AS ENUM ('Transfer', 'Money-In', 'Money-Out');
+ALTER TYPE category OWNER TO postgres;
 
 DROP TABLE IF EXISTS plaid_transactions CASCADE;
 CREATE TABLE plaid_transactions (
@@ -296,6 +315,9 @@ CREATE TABLE plaid_transactions (
   category category NOT NULL,
   date timestamp with time zone NOT NULL
 );
+
+ALTER TABLE plaid_transactions OWNER TO postgres;
+ALTER TABLE plaid_transactions ENABLE ROW LEVEL SECURITY;
 
 -- Index the name column, which is text, to optimize for case-insensitive LIKE queries
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
@@ -312,7 +334,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
-ALTER TABLE public.plaid_transactions ENABLE ROW LEVEL SECURITY;
+ALTER FUNCTION is_own_plaid_transaction() OWNER TO postgres;
 
 CREATE POLICY "Can view own plaid transactions data" ON public.plaid_transactions
   FOR SELECT
@@ -343,6 +365,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
+ALTER FUNCTION format_transaction() OWNER TO postgres;
+
 -- Trigger to format the transactions date whenever a new transaction is inserted
 DROP TRIGGER IF EXISTS on_insert_plaid_transactions ON public.plaid_transactions;
 CREATE TRIGGER on_insert_plaid_transactions
@@ -365,7 +389,8 @@ CREATE TABLE plaid_filters (
   category category NOT NULL
 );
 
-ALTER TABLE public.plaid_filters ENABLE ROW LEVEL SECURITY;
+ALTER TABLE plaid_filters OWNER TO postgres;
+ALTER TABLE plaid_filters ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Admins can view plaid filters data" ON public.plaid_filters
   FOR SELECT
@@ -398,6 +423,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
+ALTER FUNCTION update_transaction_categories() OWNER TO postgres;
+
 -- Trigger to update the transactions table when a new filter is created or updated
 DROP TRIGGER IF EXISTS on_update_or_insert_filter_update_transaction_categories ON public.plaid_filters;
 CREATE TRIGGER on_update_or_insert_filter_update_transaction_categories
@@ -421,6 +448,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
+ALTER FUNCTION recategorize_transactions() OWNER TO postgres;
+
 -- Trigger to recategorize the transactions from the deleted filter when it is deleted
 DROP TRIGGER IF EXISTS on_delete_filter_recategorize_transactions ON public.plaid_filters;
 CREATE TRIGGER on_delete_filter_recategorize_transactions
@@ -443,7 +472,8 @@ CREATE TABLE creative_cash_flow (
   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL
 );
 
-ALTER TABLE public.creative_cash_flow ENABLE ROW LEVEL SECURITY;
+ALTER TABLE creative_cash_flow OWNER TO postgres;
+ALTER TABLE creative_cash_flow ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Can view own CCF or if is admin" ON public.creative_cash_flow
   FOR SELECT
@@ -507,7 +537,28 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
-
+ALTER FUNCTION create_creative_cash_flow(
+  _user_id uuid,
+  _start_date timestamp with time zone,
+  _end_date timestamp with time zone,
+  _all_other_income integer,
+  _payroll_and_distributions integer,
+  _lifestyle_expenses_tax_rate smallint,
+  _tax_account_rate smallint,
+  _optimal_savings_strategy integer,
+  _collections decimal(10, 2),
+  _lifestyle_expenses decimal(10, 2),
+  _lifestyle_expenses_tax decimal(10, 2),
+  _business_profit_before_tax decimal(10, 2),
+  _business_overhead decimal(10, 2),
+  _tax_account decimal(10, 2),
+  _waa decimal(10, 2),
+  _total_waa decimal(10, 2),
+  _weekly_trend decimal(10, 2) [],
+  _monthly_trend decimal(10, 2) [],
+  _yearly_trend decimal(10, 2) [],
+  _year_to_date decimal(10, 2)
+) OWNER TO postgres;
 
 
 
@@ -529,7 +580,8 @@ CREATE TABLE creative_cash_flow_inputs (
   optimal_savings_strategy int NOT NULL
 );
 
-ALTER TABLE public.creative_cash_flow_inputs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE creative_cash_flow_inputs OWNER TO postgres;
+ALTER TABLE creative_cash_flow_inputs ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Can view own CCF inputs data" ON public.creative_cash_flow_inputs
   FOR SELECT
@@ -572,7 +624,8 @@ CREATE TABLE creative_cash_flow_results (
   year_to_date decimal(10,2) NOT NULL
 );
 
-ALTER TABLE public.creative_cash_flow_results ENABLE ROW LEVEL SECURITY;
+ALTER TABLE creative_cash_flow_results OWNER TO postgres;
+ALTER TABLE creative_cash_flow_results ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Can view own CCF results data" ON public.creative_cash_flow_results
   FOR SELECT
@@ -605,7 +658,8 @@ CREATE TABLE creative_cash_flow_notifiers (
   enabled boolean NOT NULL DEFAULT true
 );
 
-ALTER TABLE public.creative_cash_flow_notifiers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE creative_cash_flow_notifiers OWNER TO postgres;
+ALTER TABLE creative_cash_flow_notifiers ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Admin can view plaid creative_cash_flow_notifiers data" ON public.creative_cash_flow_notifiers
   FOR SELECT
@@ -630,206 +684,212 @@ CREATE POLICY "Admin can delete plaid creative_cash_flow_notifiers" ON public.cr
 
 
 
-/**
- * insurance_companies table
- */
+-- /**
+--  * insurance_companies table
+--  */
 
-DROP TABLE IF EXISTS insurance_companies CASCADE;
-CREATE TABLE insurance_companies (
-  id int PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
-  name text UNIQUE NOT NULL
-);
+-- DROP TABLE IF EXISTS insurance_companies CASCADE;
+-- CREATE TABLE insurance_companies (
+--   id int PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
+--   name text UNIQUE NOT NULL
+-- );
 
-ALTER TABLE public.insurance_companies ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE insurance_companies OWNER TO postgres;
+-- ALTER TABLE insurance_companies ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Admins can view data." ON public.insurance_companies
-  FOR SELECT
-  TO authenticated
-  USING (is_admin(auth.uid()));
+-- CREATE POLICY "Admins can view data." ON public.insurance_companies
+--   FOR SELECT
+--   TO authenticated
+--   USING (is_admin(auth.uid()));
 
-CREATE POLICY "Admins can insert data." ON public.insurance_companies
-  FOR INSERT
-  TO authenticated
-  WITH CHECK (is_admin(auth.uid()));
+-- CREATE POLICY "Admins can insert data." ON public.insurance_companies
+--   FOR INSERT
+--   TO authenticated
+--   WITH CHECK (is_admin(auth.uid()));
 
-CREATE POLICY "Admins can update data." ON public.insurance_companies
-  FOR UPDATE
-  TO authenticated
-  USING (is_admin(auth.uid()));
+-- CREATE POLICY "Admins can update data." ON public.insurance_companies
+--   FOR UPDATE
+--   TO authenticated
+--   USING (is_admin(auth.uid()));
 
-CREATE POLICY "Admins can delete data." ON public.insurance_companies
-  FOR DELETE
-  TO authenticated
-  USING (is_admin(auth.uid()));
-
-
-
-
-
-/**
- * insurance_policies table
- */
-
-DROP TABLE IF EXISTS insurance_policies CASCADE;
-CREATE TABLE insurance_policies (
-  id int PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
-  user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
-  company_id int REFERENCES insurance_companies(id) NOT NULL,
-  name text NOT NULL
-);
-
-ALTER TABLE public.insurance_policies ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Admin can view insurance_policies data" ON public.insurance_policies
-  FOR SELECT
-  TO authenticated
-  USING (is_admin(auth.uid()));
-
-CREATE POLICY "Admin can insert insurance_policies" ON public.insurance_policies
-  FOR INSERT
-  TO authenticated
-  WITH CHECK (is_admin(auth.uid()));
-
-CREATE POLICY "Admin can update insurance_policies data" ON public.insurance_policies
-  FOR UPDATE
-  TO authenticated
-  USING (is_admin(auth.uid()));
-
-CREATE POLICY "Admin can delete insurance_policies" ON public.insurance_policies
-  FOR DELETE
-  TO authenticated
-  USING (is_admin(auth.uid()));
+-- CREATE POLICY "Admins can delete data." ON public.insurance_companies
+--   FOR DELETE
+--   TO authenticated
+--   USING (is_admin(auth.uid()));
 
 
 
 
 
-/**
- * insurance_policy_rows table
- */
+-- /**
+--  * insurance_policies table
+--  */
 
-DROP TABLE IF EXISTS insurance_policy_rows CASCADE;
-CREATE TABLE insurance_policy_rows (
-  id int PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
-  policy_id int REFERENCES insurance_policies(id) ON DELETE CASCADE NOT NULL,
-  year smallint NOT NULL,
-  premium int NOT NULL DEFAULT 0,
-  loan_interest_rate decimal(5,2) NOT NULL DEFAULT 45, -- divide by 100 -> 4.5%
-  age_end_year smallint NOT NULL,
-  net_cash_value_end_year int NOT NULL,
-  net_death_benefit_end_year int NOT NULL,
-  annual_net_outlay int NOT NULL DEFAULT 0,
-  cumulative_net_outlay int NOT NULL DEFAULT 0,
-  net_annual_cash_value_increase int NOT NULL DEFAULT 0
-);
+-- DROP TABLE IF EXISTS insurance_policies CASCADE;
+-- CREATE TABLE insurance_policies (
+--   id int PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
+--   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
+--   company_id int REFERENCES insurance_companies(id) NOT NULL,
+--   name text NOT NULL
+-- );
 
-ALTER TABLE public.insurance_policy_rows ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE insurance_policies OWNER TO postgres;
+-- ALTER TABLE insurance_policies ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Admin can view insurance_policy_rows data" ON public.insurance_policy_rows
-  FOR SELECT
-  TO authenticated
-  USING (is_admin(auth.uid()));
+-- CREATE POLICY "Admin can view insurance_policies data" ON public.insurance_policies
+--   FOR SELECT
+--   TO authenticated
+--   USING (is_admin(auth.uid()));
 
-CREATE POLICY "Admin can insert insurance_policy_rows" ON public.insurance_policy_rows
-  FOR INSERT
-  TO authenticated
-  WITH CHECK (is_admin(auth.uid()));
+-- CREATE POLICY "Admin can insert insurance_policies" ON public.insurance_policies
+--   FOR INSERT
+--   TO authenticated
+--   WITH CHECK (is_admin(auth.uid()));
 
-CREATE POLICY "Admin can update insurance_policy_rows data" ON public.insurance_policy_rows
-  FOR UPDATE
-  TO authenticated
-  USING (is_admin(auth.uid()));
+-- CREATE POLICY "Admin can update insurance_policies data" ON public.insurance_policies
+--   FOR UPDATE
+--   TO authenticated
+--   USING (is_admin(auth.uid()));
 
-CREATE POLICY "Admin can delete insurance_policy_rows" ON public.insurance_policy_rows
-  FOR DELETE
-  TO authenticated
-  USING (is_admin(auth.uid()));
+-- CREATE POLICY "Admin can delete insurance_policies" ON public.insurance_policies
+--   FOR DELETE
+--   TO authenticated
+--   USING (is_admin(auth.uid()));
 
 
 
-/**
- *
- * Insurance Policy Functions
- *
- */
 
--- Retrieves the policies and combines the user and company for viewing in the policies page
-CREATE OR REPLACE FUNCTION get_all_user_insurance_policy_views()
-RETURNS SETOF jsonb
-AS $$
-BEGIN
-  RETURN QUERY
-  SELECT jsonb_build_object(
-    'user', jsonb_build_object(
-      'id', u.id,
-      'name', u.name
-    ),
-    'policy', jsonb_build_object(
-      'id', ip.id,
-      'name', ip.name
-    ),
-    'company', jsonb_build_object(
-      'id', ic.id,
-      'name', ic.name
-    )
-  )
-  FROM users AS u
-  INNER JOIN insurance_policies AS ip ON u.id = ip.user_id
-  INNER JOIN insurance_companies AS ic ON ip.company_id = ic.id
-  ORDER BY ip.id;
-END;
-$$ LANGUAGE plpgsql SECURITY definer;
 
--- Creates the new policy then, with the new policy id, inserts all the rows for that policy
-CREATE OR REPLACE FUNCTION create_insurance_policy(
-  p_user_id uuid,
-  p_company_id int,
-  p_name text,
-  p_policy_rows insurance_policy_rows[] -- Array of insurance_policy_rows
-) RETURNS void AS $$
-DECLARE
-  my_policy_id int;
-  p_row insurance_policy_rows;
-  default_premium decimal(10,2);
-BEGIN
-  -- Get the premium_deposit value from the user's personal_finance table
-  SELECT premium_deposit INTO default_premium FROM personal_finance WHERE user_id = p_user_id;
+-- /**
+--  * insurance_policy_rows table
+--  */
 
-  -- Insert into insurance_policies table and get the generated id
-  INSERT INTO insurance_policies (user_id, company_id, name)
-  VALUES (p_user_id, p_company_id, p_name)
-  RETURNING id INTO my_policy_id;
+-- DROP TABLE IF EXISTS insurance_policy_rows CASCADE;
+-- CREATE TABLE insurance_policy_rows (
+--   id int PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
+--   policy_id int REFERENCES insurance_policies(id) ON DELETE CASCADE NOT NULL,
+--   year smallint NOT NULL,
+--   premium int NOT NULL DEFAULT 0,
+--   loan_interest_rate decimal(5,2) NOT NULL DEFAULT 45, -- divide by 100 -> 4.5%
+--   age_end_year smallint NOT NULL,
+--   net_cash_value_end_year int NOT NULL,
+--   net_death_benefit_end_year int NOT NULL,
+--   annual_net_outlay int NOT NULL DEFAULT 0,
+--   cumulative_net_outlay int NOT NULL DEFAULT 0,
+--   net_annual_cash_value_increase int NOT NULL DEFAULT 0
+-- );
 
-  -- Loop through the array and insert rows into insurance_policy_rows table
-  FOREACH p_row IN ARRAY p_policy_rows LOOP
-    INSERT INTO insurance_policy_rows (
-      policy_id,
-      year,
-      premium,
-      loan_interest_rate,
-      age_end_year,
-      net_cash_value_end_year,
-      net_death_benefit_end_year,
-      annual_net_outlay,
-      cumulative_net_outlay,
-      net_annual_cash_value_increase
-    )
-    VALUES (
-      my_policy_id,
-      p_row.year,
-      COALESCE(p_row.premium, default_premium),
-      COALESCE(p_row.loan_interest_rate, 45), -- Use default value of 45 if p_row.loan_interest_rate is null
-      p_row.age_end_year,
-      p_row.net_cash_value_end_year,
-      p_row.net_death_benefit_end_year,
-      p_row.annual_net_outlay,
-      p_row.cumulative_net_outlay,
-      p_row.net_annual_cash_value_increase
-    );
-  END LOOP;
-END;
-$$ LANGUAGE plpgsql SECURITY definer;
+-- ALTER TABLE insurance_policy_rows OWNER TO postgres;
+-- ALTER TABLE insurance_policy_rows ENABLE ROW LEVEL SECURITY;
 
+-- CREATE POLICY "Admin can view insurance_policy_rows data" ON public.insurance_policy_rows
+--   FOR SELECT
+--   TO authenticated
+--   USING (is_admin(auth.uid()));
+
+-- CREATE POLICY "Admin can insert insurance_policy_rows" ON public.insurance_policy_rows
+--   FOR INSERT
+--   TO authenticated
+--   WITH CHECK (is_admin(auth.uid()));
+
+-- CREATE POLICY "Admin can update insurance_policy_rows data" ON public.insurance_policy_rows
+--   FOR UPDATE
+--   TO authenticated
+--   USING (is_admin(auth.uid()));
+
+-- CREATE POLICY "Admin can delete insurance_policy_rows" ON public.insurance_policy_rows
+--   FOR DELETE
+--   TO authenticated
+--   USING (is_admin(auth.uid()));
+
+
+
+-- /**
+--  *
+--  * Insurance Policy Functions
+--  *
+--  */
+
+-- -- Retrieves the policies and combines the user and company for viewing in the policies page
+-- CREATE OR REPLACE FUNCTION get_all_user_insurance_policy_views()
+-- RETURNS SETOF jsonb
+-- AS $$
+-- BEGIN
+--   RETURN QUERY
+--   SELECT jsonb_build_object(
+--     'user', jsonb_build_object(
+--       'id', u.id,
+--       'name', u.name
+--     ),
+--     'policy', jsonb_build_object(
+--       'id', ip.id,
+--       'name', ip.name
+--     ),
+--     'company', jsonb_build_object(
+--       'id', ic.id,
+--       'name', ic.name
+--     )
+--   )
+--   FROM users AS u
+--   INNER JOIN insurance_policies AS ip ON u.id = ip.user_id
+--   INNER JOIN insurance_companies AS ic ON ip.company_id = ic.id
+--   ORDER BY ip.id;
+-- END;
+-- $$ LANGUAGE plpgsql SECURITY definer;
+
+-- ALTER FUNCTION get_all_user_insurance_policy_views() OWNER TO postgres;
+
+-- -- Creates the new policy then, with the new policy id, inserts all the rows for that policy
+-- CREATE OR REPLACE FUNCTION create_insurance_policy(
+--   p_user_id uuid,
+--   p_company_id int,
+--   p_name text,
+--   p_policy_rows insurance_policy_rows[] -- Array of insurance_policy_rows
+-- ) RETURNS void AS $$
+-- DECLARE
+--   my_policy_id int;
+--   p_row insurance_policy_rows;
+--   default_premium decimal(10,2);
+-- BEGIN
+--   -- Get the premium_deposit value from the user's personal_finance table
+--   SELECT premium_deposit INTO default_premium FROM personal_finance WHERE user_id = p_user_id;
+
+--   -- Insert into insurance_policies table and get the generated id
+--   INSERT INTO insurance_policies (user_id, company_id, name)
+--   VALUES (p_user_id, p_company_id, p_name)
+--   RETURNING id INTO my_policy_id;
+
+--   -- Loop through the array and insert rows into insurance_policy_rows table
+--   FOREACH p_row IN ARRAY p_policy_rows LOOP
+--     INSERT INTO insurance_policy_rows (
+--       policy_id,
+--       year,
+--       premium,
+--       loan_interest_rate,
+--       age_end_year,
+--       net_cash_value_end_year,
+--       net_death_benefit_end_year,
+--       annual_net_outlay,
+--       cumulative_net_outlay,
+--       net_annual_cash_value_increase
+--     )
+--     VALUES (
+--       my_policy_id,
+--       p_row.year,
+--       COALESCE(p_row.premium, default_premium),
+--       COALESCE(p_row.loan_interest_rate, 45), -- Use default value of 45 if p_row.loan_interest_rate is null
+--       p_row.age_end_year,
+--       p_row.net_cash_value_end_year,
+--       p_row.net_death_benefit_end_year,
+--       p_row.annual_net_outlay,
+--       p_row.cumulative_net_outlay,
+--       p_row.net_annual_cash_value_increase
+--     );
+--   END LOOP;
+-- END;
+-- $$ LANGUAGE plpgsql SECURITY definer;
+
+-- ALTER FUNCTION create_insurance_policy(p_user_id uuid, p_company_id int, p_name text, p_policy_rows insurance_policy_rows[]) OWNER TO postgres;
 
 
 
@@ -877,6 +937,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
+ALTER FUNCTION get_transactions_with_account_name(ins_item_id text, offset_val int, limit_val int) OWNER TO postgres;
 
 
 -- Retrieves all transactions for all accounts for the user except for transactions
@@ -943,6 +1004,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
+ALTER FUNCTION public.get_transactions_by_user_id(user_id uuid) OWNER TO postgres;
+
 
 
 -- Function that retrieves the user's creative cash flow records by return a JSON object
@@ -954,8 +1017,7 @@ $$ LANGUAGE plpgsql SECURITY definer;
 -- }
 -- and is sorted by the created date in descending order
 CREATE OR REPLACE FUNCTION get_creative_cash_flow_records(arg_user_id uuid)
-RETURNS TABLE(id uuid, inputs jsonb, results jsonb) AS
-$BODY$
+RETURNS TABLE(id uuid, inputs jsonb, results jsonb) AS $$
 BEGIN
     RETURN QUERY
         SELECT
@@ -970,8 +1032,9 @@ BEGIN
         WHERE inputs.user_id = arg_user_id
         ORDER BY inputs.created_at DESC;
 END;
-$BODY$
-LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION get_creative_cash_flow_records(arg_user_id uuid) OWNER TO postgres;
 
 
 
@@ -983,8 +1046,7 @@ LANGUAGE plpgsql SECURITY definer;
 --   "results": CreativeCashFlowResults
 -- }
 CREATE OR REPLACE FUNCTION get_creative_cash_flow_record(record_id uuid)
-RETURNS TABLE(id uuid, inputs jsonb, results jsonb) AS
-$BODY$
+RETURNS TABLE(id uuid, inputs jsonb, results jsonb) AS $$
 BEGIN
     RETURN QUERY
         SELECT
@@ -998,16 +1060,16 @@ BEGIN
         ON cc.id = results.id
         WHERE cc.id = record_id;
 END;
-$BODY$
-LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION get_creative_cash_flow_record(record_id uuid) OWNER TO postgres;
 
 
 
 -- Gets the running total of the user's WAA before the start date of the range used when
 -- calculating the CCF
 CREATE OR REPLACE FUNCTION total_waa_before_date(user_id uuid, target_date timestamp with time zone)
-RETURNS decimal AS
-$$
+RETURNS decimal AS $$
 DECLARE
   total_waa_sum decimal;
 BEGIN
@@ -1019,8 +1081,9 @@ BEGIN
 
   RETURN total_waa_sum;
 END;
-$$
-LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION total_waa_before_date(user_id uuid, target_date timestamp with time zone) OWNER TO postgres;
 
 
 
@@ -1046,8 +1109,9 @@ BEGIN
   -- Return the updated user's profile
   RETURN (SELECT row_to_json(u) FROM (SELECT name, email FROM public.users WHERE id = user_id) u);
 END;
-$$
-LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION update_user_profile(new_name text, new_email text) OWNER TO postgres;
 
 
 
@@ -1073,5 +1137,6 @@ BEGIN
   UPDATE auth.users SET encrypted_password = crypt(new_password, gen_salt('bf'))
   WHERE id = user_id;
 END;
-$$
-LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION change_user_password(current_password text, new_password text) OWNER TO postgres;
