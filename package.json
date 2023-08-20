@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "preview": "next build && next start",
     "typecheck": "tsc --noEmit",
-    "pre-deploy": "node ./src/scripts/pre-deploy.js",
+    "pre-deploy": "node ./src/scripts/pre-deploy.ts",
     "analyze": "cross-env ANALYZE=true next build",
     "supabase:serve": "supabase functions serve --env-file ./supabase/functions/.env.local",
     "supabase:genTypes": "supabase gen types typescript --local > ./src/lib/supabase/database.ts",
