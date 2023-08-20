@@ -6,13 +6,22 @@ import { formatPath } from '@/lib/utils/formatPath';
 export const useLogin = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  // Get all search parameters
-  const allSearchParams = Object.fromEntries(searchParams.entries());
-  // Remove redirect_to if it exists
-  const redirectTo: `/${string}` = formatPath(allSearchParams.redirect_to);
-  delete allSearchParams.redirect_to;
+  const redirectTo = formatPath(searchParams.get('redirect_to'));
+  let queryString = '?';
+  let i = 0;
 
-  const finalRedirectTo = `${redirectTo}?${new URLSearchParams(allSearchParams).toString()}`;
+  for (const [key, value] of searchParams.entries()) {
+    if (key !== 'redirect_to') {
+      queryString += `${key}=${value}`;
+      i++;
+    }
+
+    if (i > 1) {
+      queryString += '&';
+    }
+  }
+
+  const redirectUrl = redirectTo ? `${redirectTo}${queryString}` : '/dashboard/home';
 
   return async (data: { email: string; password: string }) => {
     const { error } = await supabase.auth.signInWithPassword({
@@ -24,6 +33,6 @@ export const useLogin = () => {
       throw error;
     }
 
-    router.push(finalRedirectTo || '/dashboard/home');
+    router.push(redirectUrl);
   };
 };
