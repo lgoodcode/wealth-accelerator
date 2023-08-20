@@ -40,7 +40,10 @@ export function Buttons({ className, user_id, handleReset }: ButtonsProps) {
         router.refresh(); // Need to refresh so that the records page and ytd_collections are updated
       })
       .catch((error) => {
-        console.error(error);
+        console.error(error, {
+          inputs,
+          results,
+        });
         captureException(error, {
           extra: {
             inputs,
