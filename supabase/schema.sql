@@ -34,7 +34,6 @@ $$ LANGUAGE plpgsql SECURITY definer;
 
 ALTER FUNCTION is_admin(UUID) OWNER TO postgres;
 
-
 CREATE POLICY "Can view their own data and admins can view all user data" ON public.users
   FOR SELECT
   TO authenticated
