@@ -17,13 +17,28 @@ export async function middleware(request: NextRequest) {
   const loginRedirectUrl = new URL(
     isLoginPage && queryEntries.startsWith('redirect_to') // Don't redirect to login page if already on login page
       ? `${request.nextUrl.origin}/login?${queryEntries}`
-      : `${request.nextUrl.origin}/login?redirect_to=${request.nextUrl.pathname}&${queryEntries}`
+      : `${request.nextUrl.origin}/login?redirect_to=${request.nextUrl.pathname}${
+          queryEntries ? `&${queryEntries}` : ''
+        }`
   );
 
-  // If the auth token isn't valid (none or expired), redirect to login page
-  // for all pages except auth pages
+  // If the auth token isn't valid (none or expired), redirect to login page for all pages except auth pages
   if (!token) {
     if (isAuthPage) {
+      const isPasswordResetPage = request.nextUrl.pathname === '/reset-password';
+
+      // If it's a password reset page, verify the access token and refresh token hash exists
+      if (isPasswordResetPage) {
+        if (
+          !request.nextUrl.hash ||
+          !request.nextUrl.hash.includes('access_token') ||
+          !request.nextUrl.hash.includes('refresh_token')
+        ) {
+          // If the access token or refresh token hash doesn't exist, redirect to login page without redirect_to query
+          return NextResponse.redirect(new URL(`${request.nextUrl.origin}/login`));
+        }
+        return res;
+      }
       return res;
     }
     return NextResponse.redirect(loginRedirectUrl);
@@ -79,5 +94,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/login', '/dashboard/:path*'],
+  matcher: ['/login', '/reset-password', '/dashboard/:path*'],
 };

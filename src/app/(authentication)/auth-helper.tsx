@@ -1,10 +1,10 @@
 'use client';
 
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { Users } from 'lucide-react';
 
 import { useLogin } from '@/hooks/auth/use-login';
-import { useSignUp } from '@/hooks/auth/use-signup';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,12 +12,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-
-type Auth = 'login' | 'signup';
 
 type TestUser = {
   name: string;
@@ -25,74 +19,63 @@ type TestUser = {
   password: string;
 };
 
-const TEST_USERS: TestUser[] = JSON.parse(process.env.NEXT_PUBLIC_TEST_USERS || '[]');
+const NUM_USERS = 16; // The number of test{n}@gmail.com users in the seed data
+// Hard code the names for known tests users data
+const USER_NAMES: Record<number, string> = {
+  1: 'Lawrence Doe',
+  7: 'Adam Doe',
+  10: 'Roger Doe',
+  15: 'Ken Doe',
+};
 
-interface UserLoginItemProps {
-  user: TestUser;
-  auth: Auth;
-  disabled: boolean;
-}
+const padNumber = (number: number) => {
+  if (number >= 0 && number <= 9) {
+    return '0' + number.toString();
+  } else {
+    return number.toString();
+  }
+};
 
-const TestUserItem = ({ user, auth, disabled }: UserLoginItemProps) => {
+const generateTestUsers = (): TestUser[] => {
+  const users = [];
+
+  for (let i = 1; i <= NUM_USERS; i++) {
+    users.push({
+      name: USER_NAMES[i] ?? `Test User ${i}`,
+      email: `test${padNumber(i)}@gmail.com`,
+      password: 'Password123$',
+    });
+  }
+
+  return users;
+};
+
+const TestUsers = () => {
+  const testUsers = generateTestUsers();
   const login = useLogin();
-  const signup = useSignUp();
 
-  const handleClick = async () => {
-    if (auth === 'login') {
-      login({ email: user.email, password: user.password });
-    } else {
-      await signup({ name: user.name, email: user.email, password: user.password });
-      login({ email: user.email, password: user.password });
-    }
+  const handleClick = async (user: TestUser) => {
+    login({ email: user.email, password: user.password });
   };
 
   return (
-    <DropdownMenuItem disabled={disabled} onClick={handleClick}>
-      <div className="flex flex-col space-y-1">
-        <p className="font-medium leading-none">{user.name}</p>
-        <p className="text-sm truncate text-muted-foreground">{user.email}</p>
-      </div>
-    </DropdownMenuItem>
-  );
-};
-
-const isDisabled = (auth: Auth, user: TestUser, emails: string[]) => {
-  if (auth === 'signup') {
-    return emails.includes(user.email);
-  }
-
-  return !emails.includes(user.email);
-};
-
-interface TestUsersProps {
-  auth: Auth;
-  devEmails: string[];
-}
-
-const TestUsers = ({ auth, devEmails }: TestUsersProps) => {
-  if (!TEST_USERS.length) {
-    return <div className="p-4">No users</div>;
-  }
-
-  return (
     <div>
-      {TEST_USERS.map((user, i) => (
+      {testUsers.map((user, i) => (
         <Fragment key={user.email}>
-          <TestUserItem user={user} auth={auth} disabled={isDisabled(auth, user, devEmails)} />
-          {i !== TEST_USERS.length - 1 && <DropdownMenuSeparator />}
+          <DropdownMenuItem onClick={() => handleClick(user)}>
+            <div className="flex flex-col space-y-1">
+              <p className="font-medium leading-none">{user.name}</p>
+              <p className="text-sm truncate text-muted-foreground">{user.email}</p>
+            </div>
+          </DropdownMenuItem>
+          {i !== testUsers.length - 1 && <DropdownMenuSeparator />}
         </Fragment>
       ))}
     </div>
   );
 };
 
-interface AuthHelperProps {
-  devEmails: string[];
-}
-
-export function AuthHelper({ devEmails }: AuthHelperProps) {
-  const [auth, setAuth] = useState<Auth>('login');
-
+export function AuthHelper() {
   if (process.env.NODE_ENV === 'production') {
     return null;
   }
@@ -109,21 +92,7 @@ export function AuthHelper({ devEmails }: AuthHelperProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64" align="end">
-          <div className="flex px-4 py-2 items-center justify-around">
-            <Label className="text-lg" htmlFor="login-switch">
-              Login
-            </Label>
-            <Switch
-              id="login-switch"
-              value={auth}
-              onCheckedChange={(checked) => setAuth(!checked ? 'login' : 'signup')}
-            />
-            <Label className="text-lg" htmlFor="login-switch">
-              Sign Up
-            </Label>
-          </div>
-          <Separator className="my-2" />
-          <TestUsers auth={auth} devEmails={devEmails} />
+          <TestUsers />
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

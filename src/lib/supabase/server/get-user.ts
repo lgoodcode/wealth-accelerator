@@ -27,7 +27,9 @@ export const getUser = async (): Promise<User | null> => {
   if (error) {
     console.error(error);
     // Add the auth token to the error so we can debug it
-    captureException(error, { extra: { authToken } });
+    captureException(error, {
+      extra: { authToken },
+    });
   }
 
   if (error || !user) {

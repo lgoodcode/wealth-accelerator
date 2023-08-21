@@ -26,6 +26,8 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA "extensions";
 
 CREATE EXTENSION IF NOT EXISTS "pgjwt" WITH SCHEMA "extensions";
 
+CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
+
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 CREATE TYPE "public"."account_type" AS ENUM (
@@ -553,7 +555,7 @@ ALTER TABLE "public"."plaid_transactions" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."users" (
     "id" "uuid" NOT NULL,
-    "name" "text",
+    "name" "text" NOT NULL,
     "role" "public"."user_role" DEFAULT 'USER'::"public"."user_role" NOT NULL,
     "email" "text" NOT NULL,
     "created_at" timestamp with time zone DEFAULT "timezone"('utc'::"text", "now"()) NOT NULL,
@@ -645,7 +647,7 @@ ALTER TABLE ONLY "public"."plaid"
     ADD CONSTRAINT "plaid_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id");
 
 ALTER TABLE ONLY "public"."users"
-    ADD CONSTRAINT "users_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id");
+    ADD CONSTRAINT "users_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
 CREATE POLICY "Admin can delete plaid creative_cash_flow_notifiers" ON "public"."creative_cash_flow_notifiers" FOR DELETE TO "authenticated" USING ("public"."is_admin"("auth"."uid"()));
 

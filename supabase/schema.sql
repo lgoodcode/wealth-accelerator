@@ -11,7 +11,7 @@ ALTER TYPE user_role OWNER TO postgres;
 
 DROP TABLE IF EXISTS public.users CASCADE;
 CREATE TABLE users (
-  id uuid PRIMARY KEY NOT NULL REFERENCES auth.users(id),
+  id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   name text NOT NULL,
   role user_role NOT NULL DEFAULT 'USER'::user_role,
   email text UNIQUE NOT NULL,
@@ -33,7 +33,6 @@ END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
 ALTER FUNCTION is_admin(UUID) OWNER TO postgres;
-
 
 CREATE POLICY "Can view their own data and admins can view all user data" ON public.users
   FOR SELECT

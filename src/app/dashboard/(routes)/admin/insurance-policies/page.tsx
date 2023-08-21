@@ -15,13 +15,14 @@ export const metadata: Metadata = {
 
 export default async function InsurancePoliciesPage() {
   const supabase = createSupabase();
-  const { error, data } = await supabase.rpc('get_all_user_insurance_policy_views');
+  const data = {};
+  // const { error, data } = await supabase.rpc('get_all_user_insurance_policy_views');
 
-  if (error) {
-    console.error(error);
-    captureException(error);
-    return <PageError />;
-  }
+  // if (error) {
+  //   console.error(error);
+  //   captureException(error);
+  //   return <PageError />;
+  // }
 
   const userInsurancePolicyViews = data as unknown as UserInsurancePolicyView[];
 

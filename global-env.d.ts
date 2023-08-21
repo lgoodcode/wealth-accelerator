@@ -34,7 +34,7 @@ export declare global {
     id: string;
     email: string;
     name: string;
-    role: Role;
+    role: 'ADMIN' | 'USER';
     created_at: string;
     updated_at: string;
   };

@@ -23,6 +23,18 @@ When adding a new theme or customizing, do the following:
 2. Update the `tailwind.config.js` file with the new colors
 3. Update variants in the `toast.tsx` and `button.tsx` files
 
+### Supabase Schema
+
+When creating tables or functions you need to set the owner to `postgres` so that when using the
+Supabase CLI it will work because it will default to `supabase_admin` but `postgres` is used in
+the CLI.
+
+```sql
+ALTER TABLE users OWNER TO postgres;
+
+ALTER FUNCTION do_something(string text, value integer) OWNER TO postgres;
+```
+
 ### Supabase Backups
 
 With using the Supabase migrations through the Supbase CLI, the database schema is fully backed up with changes over time. The data itself can be retrieved from the supabase dashboard and then used to restore the data.
