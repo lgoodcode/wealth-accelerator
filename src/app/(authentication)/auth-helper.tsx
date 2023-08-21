@@ -1,10 +1,10 @@
 'use client';
 
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { Users } from 'lucide-react';
 
 import { useLogin } from '@/hooks/auth/use-login';
-import { useSignUp } from '@/hooks/auth/use-signup';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,12 +12,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-
-type Auth = 'login' | 'signup';
 
 type TestUser = {
   name: string;
@@ -56,46 +50,24 @@ const generateTestUsers = (): TestUser[] => {
   return users;
 };
 
-interface TestUserItemProps {
-  user: TestUser;
-  auth: Auth;
-}
-
-const TestUserItem = ({ user, auth }: TestUserItemProps) => {
-  const login = useLogin();
-  const signup = useSignUp();
-
-  const handleClick = async () => {
-    if (auth === 'login') {
-      login({ email: user.email, password: user.password });
-    } else {
-      await signup({ name: user.name, email: user.email, password: user.password });
-      login({ email: user.email, password: user.password });
-    }
-  };
-
-  return (
-    <DropdownMenuItem onClick={handleClick}>
-      <div className="flex flex-col space-y-1">
-        <p className="font-medium leading-none">{user.name}</p>
-        <p className="text-sm truncate text-muted-foreground">{user.email}</p>
-      </div>
-    </DropdownMenuItem>
-  );
-};
-
-interface TestUsersProps {
-  auth: Auth;
-}
-
-const TestUsers = ({ auth }: TestUsersProps) => {
+const TestUsers = () => {
   const testUsers = generateTestUsers();
+  const login = useLogin();
+
+  const handleClick = async (user: TestUser) => {
+    login({ email: user.email, password: user.password });
+  };
 
   return (
     <div>
       {testUsers.map((user, i) => (
         <Fragment key={user.email}>
-          <TestUserItem user={user} auth={auth} />
+          <DropdownMenuItem onClick={() => handleClick(user)}>
+            <div className="flex flex-col space-y-1">
+              <p className="font-medium leading-none">{user.name}</p>
+              <p className="text-sm truncate text-muted-foreground">{user.email}</p>
+            </div>
+          </DropdownMenuItem>
           {i !== testUsers.length - 1 && <DropdownMenuSeparator />}
         </Fragment>
       ))}
@@ -104,8 +76,6 @@ const TestUsers = ({ auth }: TestUsersProps) => {
 };
 
 export function AuthHelper() {
-  const [auth, setAuth] = useState<Auth>('login');
-
   if (process.env.NODE_ENV === 'production') {
     return null;
   }
@@ -122,17 +92,7 @@ export function AuthHelper() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64" align="end">
-          <div className="flex px-4 py-2 items-center justify-around">
-            <Label className="text-lg" htmlFor="login-switch">
-              Login
-            </Label>
-            <Switch id="login-switch" value={auth} onCheckedChange={() => setAuth('login')} />
-            <Label className="text-lg opacity-50 cursor-not-allowed" htmlFor="login-switch">
-              Sign Up
-            </Label>
-          </div>
-          <Separator className="my-2" />
-          <TestUsers auth={auth} />
+          <TestUsers />
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
