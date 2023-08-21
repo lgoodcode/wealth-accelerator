@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
-import { createSupabase } from '@/lib/supabase/api';
+import { supabaseAdmin } from '@/lib/supabase/server/admin';
+import { getUser } from '@/lib/supabase/server/get-user';
 import { captureException } from '@sentry/nextjs';
 
 export const dynamic = 'force-dynamic';
@@ -14,14 +15,19 @@ async function deleteUser(request: Request) {
     return NextResponse.json({ error: 'Missing id' }, { status: 400 });
   }
 
-  const supabase = createSupabase();
-  const { error: deleteUserError } = await supabase.from('users').delete().eq('id', id);
-  const { error: deleteAuthUserError } = await supabase.auth.admin.deleteUser(id);
+  const user = await getUser();
 
-  if (deleteUserError || deleteAuthUserError) {
-    const error = deleteUserError || deleteAuthUserError;
-    console.error(error);
-    captureException(error);
+  if (!user) {
+    return NextResponse.json({ error: 'User not found' }, { status: 404 });
+  } else if (user.role !== 'ADMIN') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { error: deleteAuthUserError } = await supabaseAdmin.auth.admin.deleteUser(id);
+
+  if (deleteAuthUserError) {
+    console.error(deleteAuthUserError);
+    captureException(deleteAuthUserError);
     return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
   }
 
