@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 
@@ -32,6 +33,21 @@ interface UserLoginItemProps {
   auth: Auth;
   disabled: boolean;
 }
+
+export const useDevEmails = async () => {
+  if (process.env.NODE_ENV === 'production') {
+    return [];
+  }
+
+  const { error, data } = await supabaseAdmin.from('users').select('email');
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return data.map((user) => user.email);
+};
 
 const TestUserItem = ({ user, auth, disabled }: UserLoginItemProps) => {
   const login = useLogin();
