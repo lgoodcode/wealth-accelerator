@@ -22,8 +22,7 @@ export async function middleware(request: NextRequest) {
         }`
   );
 
-  // If the auth token isn't valid (none or expired), redirect to login page
-  // for all pages except auth pages
+  // If the auth token isn't valid (none or expired), redirect to login page for all pages except auth pages
   if (!token) {
     if (isAuthPage) {
       const isPasswordResetPage = request.nextUrl.pathname === '/reset-password';
