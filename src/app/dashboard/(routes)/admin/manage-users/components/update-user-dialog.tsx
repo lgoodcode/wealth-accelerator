@@ -45,7 +45,7 @@ export function UpdateUserDialog({ open, onOpenChange, id, user }: UpdateUserDia
   const updateUser = useUpdateUser();
   const form = useForm<UpdateUserFormType>({
     resolver: zodResolver(updateUserFormSchema),
-    values: user,
+    values: user as UpdateUserFormType,
   });
 
   const handleUpdate = async (data: UpdateUserFormType) => {

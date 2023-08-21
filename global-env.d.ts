@@ -1,8 +1,3 @@
-enum Role {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-}
-
 export declare global {
   declare namespace NodeJS {
     export interface ProcessEnv {
@@ -39,7 +34,7 @@ export declare global {
     id: string;
     email: string;
     name: string;
-    role: Role;
+    role: 'ADMIN' | 'USER';
     created_at: string;
     updated_at: string;
   };

@@ -3,7 +3,7 @@ export type Json =
   | number
   | boolean
   | null
-  | { [key: string]: Json }
+  | { [key: string]: Json | undefined }
   | Json[]
 
 export interface Database {
@@ -22,6 +22,14 @@ export interface Database {
           id?: string
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "creative_cash_flow_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       creative_cash_flow_inputs: {
         Row: {
@@ -60,6 +68,14 @@ export interface Database {
           tax_account_rate?: number
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "creative_cash_flow_inputs_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       creative_cash_flow_notifiers: {
         Row: {
@@ -80,6 +96,7 @@ export interface Database {
           id?: number
           name?: string
         }
+        Relationships: []
       }
       creative_cash_flow_results: {
         Row: {
@@ -130,6 +147,14 @@ export interface Database {
           year_to_date?: number
           yearly_trend?: number[]
         }
+        Relationships: [
+          {
+            foreignKeyName: "creative_cash_flow_results_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       debts: {
         Row: {
@@ -159,81 +184,14 @@ export interface Database {
           payment?: number
           user_id?: string
         }
-      }
-      insurance_companies: {
-        Row: {
-          id: number
-          name: string
-        }
-        Insert: {
-          id?: number
-          name: string
-        }
-        Update: {
-          id?: number
-          name?: string
-        }
-      }
-      insurance_policies: {
-        Row: {
-          company_id: number
-          id: number
-          name: string
-          user_id: string
-        }
-        Insert: {
-          company_id: number
-          id?: number
-          name: string
-          user_id: string
-        }
-        Update: {
-          company_id?: number
-          id?: number
-          name?: string
-          user_id?: string
-        }
-      }
-      insurance_policy_rows: {
-        Row: {
-          age_end_year: number
-          annual_net_outlay: number
-          cumulative_net_outlay: number
-          id: number
-          loan_interest_rate: number
-          net_annual_cash_value_increase: number
-          net_cash_value_end_year: number
-          net_death_benefit_end_year: number
-          policy_id: number
-          premium: number
-          year: number
-        }
-        Insert: {
-          age_end_year: number
-          annual_net_outlay?: number
-          cumulative_net_outlay?: number
-          id?: number
-          loan_interest_rate?: number
-          net_annual_cash_value_increase?: number
-          net_cash_value_end_year: number
-          net_death_benefit_end_year: number
-          policy_id: number
-          premium?: number
-          year: number
-        }
-        Update: {
-          age_end_year?: number
-          annual_net_outlay?: number
-          cumulative_net_outlay?: number
-          id?: number
-          loan_interest_rate?: number
-          net_annual_cash_value_increase?: number
-          net_cash_value_end_year?: number
-          net_death_benefit_end_year?: number
-          policy_id?: number
-          premium?: number
-          year?: number
-        }
+        Relationships: [
+          {
+            foreignKeyName: "debts_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       personal_finance: {
         Row: {
@@ -278,6 +236,14 @@ export interface Database {
           user_id?: string
           ytd_collections?: number
         }
+        Relationships: [
+          {
+            foreignKeyName: "personal_finance_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       plaid: {
         Row: {
@@ -304,6 +270,14 @@ export interface Database {
           name?: string
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "plaid_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       plaid_accounts: {
         Row: {
@@ -311,22 +285,30 @@ export interface Database {
           enabled: boolean
           item_id: string
           name: string
-          type: string
+          type: Database["public"]["Enums"]["account_type"]
         }
         Insert: {
           account_id: string
           enabled?: boolean
           item_id: string
           name: string
-          type?: string
+          type?: Database["public"]["Enums"]["account_type"]
         }
         Update: {
           account_id?: string
           enabled?: boolean
           item_id?: string
           name?: string
-          type?: string
+          type?: Database["public"]["Enums"]["account_type"]
         }
+        Relationships: [
+          {
+            foreignKeyName: "plaid_accounts_item_id_fkey"
+            columns: ["item_id"]
+            referencedRelation: "plaid"
+            referencedColumns: ["item_id"]
+          }
+        ]
       }
       plaid_filters: {
         Row: {
@@ -344,6 +326,7 @@ export interface Database {
           filter?: string
           id?: number
         }
+        Relationships: []
       }
       plaid_transactions: {
         Row: {
@@ -373,6 +356,20 @@ export interface Database {
           item_id?: string
           name?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "plaid_transactions_account_id_fkey"
+            columns: ["account_id"]
+            referencedRelation: "plaid_accounts"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "plaid_transactions_item_id_fkey"
+            columns: ["item_id"]
+            referencedRelation: "plaid"
+            referencedColumns: ["item_id"]
+          }
+        ]
       }
       users: {
         Row: {
@@ -399,6 +396,14 @@ export interface Database {
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "users_id_fkey"
+            columns: ["id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
@@ -437,22 +442,9 @@ export interface Database {
         }
         Returns: string
       }
-      create_insurance_policy: {
-        Args: {
-          p_user_id: string
-          p_company_id: number
-          p_name: string
-          p_policy_rows: unknown[]
-        }
-        Returns: undefined
-      }
       generate_rates: {
         Args: Record<PropertyKey, never>
-        Returns: number[]
-      }
-      get_all_user_insurance_policy_views: {
-        Args: Record<PropertyKey, never>
-        Returns: Json[]
+        Returns: unknown
       }
       get_creative_cash_flow_record: {
         Args: {
@@ -555,7 +547,7 @@ export interface Database {
         Args: {
           "": string
         }
-        Returns: string[]
+        Returns: unknown
       }
       total_waa_before_date: {
         Args: {
@@ -585,7 +577,10 @@ export interface Database {
     Tables: {
       buckets: {
         Row: {
+          allowed_mime_types: string[] | null
+          avif_autodetection: boolean | null
           created_at: string | null
+          file_size_limit: number | null
           id: string
           name: string
           owner: string | null
@@ -593,7 +588,10 @@ export interface Database {
           updated_at: string | null
         }
         Insert: {
+          allowed_mime_types?: string[] | null
+          avif_autodetection?: boolean | null
           created_at?: string | null
+          file_size_limit?: number | null
           id: string
           name: string
           owner?: string | null
@@ -601,13 +599,24 @@ export interface Database {
           updated_at?: string | null
         }
         Update: {
+          allowed_mime_types?: string[] | null
+          avif_autodetection?: boolean | null
           created_at?: string | null
+          file_size_limit?: number | null
           id?: string
           name?: string
           owner?: string | null
           public?: boolean | null
           updated_at?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "buckets_owner_fkey"
+            columns: ["owner"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       migrations: {
         Row: {
@@ -628,6 +637,7 @@ export interface Database {
           id?: number
           name?: string
         }
+        Relationships: []
       }
       objects: {
         Row: {
@@ -640,6 +650,7 @@ export interface Database {
           owner: string | null
           path_tokens: string[] | null
           updated_at: string | null
+          version: string | null
         }
         Insert: {
           bucket_id?: string | null
@@ -651,6 +662,7 @@ export interface Database {
           owner?: string | null
           path_tokens?: string[] | null
           updated_at?: string | null
+          version?: string | null
         }
         Update: {
           bucket_id?: string | null
@@ -662,13 +674,31 @@ export interface Database {
           owner?: string | null
           path_tokens?: string[] | null
           updated_at?: string | null
+          version?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "objects_bucketId_fkey"
+            columns: ["bucket_id"]
+            referencedRelation: "buckets"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      can_insert_object: {
+        Args: {
+          bucketid: string
+          name: string
+          owner: string
+          metadata: Json
+        }
+        Returns: undefined
+      }
       extension: {
         Args: {
           name: string
@@ -685,7 +715,7 @@ export interface Database {
         Args: {
           name: string
         }
-        Returns: string[]
+        Returns: unknown
       }
       get_size_by_bucket: {
         Args: Record<PropertyKey, never>
