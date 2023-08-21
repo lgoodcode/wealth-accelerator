@@ -36,14 +36,10 @@ export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
     resolver: zodResolver(resetUserPasswordSchema),
   });
 
-  if (!window.location.hash || !window.location.hash.startsWith('#access_token')) {
-    router.replace('/login');
-  }
-
   const onSubmit = async (data: ResetUserPasswordFormType) => {
     setServerMessage(null);
 
-    await resetPassword(data.password)
+    await resetPassword(window.location.hash.substring(1), data.password)
       .then(() => {
         router.push('/login');
       })
