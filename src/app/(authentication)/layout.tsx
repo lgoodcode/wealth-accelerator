@@ -2,6 +2,7 @@ import Image from 'next/image';
 // import Link from 'next/link';
 
 import { ThemeProvider } from '@/components/theme-provider';
+import { AuthHelper } from './auth-helper';
 
 interface AuthenticationLayoutProps {
   children: React.ReactNode;
@@ -10,6 +11,8 @@ interface AuthenticationLayoutProps {
 export default async function AuthenticationLayout({ children }: AuthenticationLayoutProps) {
   return (
     <ThemeProvider attribute="class" forcedTheme="light">
+      <AuthHelper />
+
       <div className="container relative flex flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
         <div className="hidden -z-10 absolute w-full h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
           <Image
