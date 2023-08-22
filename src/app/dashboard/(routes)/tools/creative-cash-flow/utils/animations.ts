@@ -16,7 +16,13 @@ export const animationDurations = Array.from({ length: 20 }).reduce(
   {}
 ) as AnimationDurations;
 
-export const animationProps = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-};
+export const animationProps = (axis: 'x' | 'y' = 'y') => ({
+  initial: {
+    opacity: 0,
+    [axis]: axis === 'y' ? 20 : -20,
+  },
+  animate: {
+    opacity: 1,
+    [axis]: 0,
+  },
+});
