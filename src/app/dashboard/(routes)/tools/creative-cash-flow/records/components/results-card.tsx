@@ -45,11 +45,6 @@ export function ResultsCard({ record }: InputsCardProps) {
             <span>{resultsLabels.total_waa.title}</span>
             <span>{dollarFormatter(record.results.total_waa)}</span>
           </div>
-
-          <div className="flex py-4 justify-between border-b font-bold">
-            <span>{resultsLabels.year_to_date.title}</span>
-            <span>{dollarFormatter(record.results.year_to_date)}</span>
-          </div>
         </div>
       </CardContent>
     </Card>
