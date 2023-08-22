@@ -113,7 +113,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-4 row-span-1 row-start-5 flex items-center"
           transition={{ ...animationDurations.item7 }}
-          {...animationProps()}
+          {...animationProps('x')}
         >
           <Card className="flex flex-col flex-grow justify-between">
             <CardHeader className="space-y-1">
@@ -181,7 +181,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-4 row-span-1 row-start-9 flex items-center"
           transition={{ ...animationDurations.item11 }}
-          {...animationProps()}
+          {...animationProps('x')}
         >
           <Card className="flex flex-col flex-grow justify-between">
             <CardHeader className="space-y-1">
