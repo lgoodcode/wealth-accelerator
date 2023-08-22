@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import { useAtomValue } from 'jotai';
 import { AnimatePresence, motion } from 'framer-motion';
 import CountUp from 'react-countup';
@@ -11,9 +12,11 @@ import { animationProps, animationDurations } from '../../utils/animations';
 import { resultsLabels } from '../../labels';
 import { creativeCashFlowResultAtom } from '../../atoms';
 import { Trends } from './trends';
+import { UpdateWaa } from './update-waa';
 
 export function CreativeCashFlowResults() {
   const results = useAtomValue(creativeCashFlowResultAtom);
+  const originalWaaRef = useRef(results?.waa ?? 0);
 
   if (!results) {
     return null;
@@ -220,11 +223,11 @@ export function CreativeCashFlowResults() {
               <CardDescription className="text-md">{resultsLabels.waa.description}</CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
-              <CountUp
-                className="text-2xl"
-                {...createCountUpProps(results.waa, animationDurations.item13.delay)}
-              />
+              <span className="text-2xl">${originalWaaRef.current}</span>
             </CardContent>
+
+            <UpdateWaa originalWaa={originalWaaRef.current} />
+
             <CardHeader className="space-y-1 pb-2">
               <CardTitle className="text-2xl">{resultsLabels.total_waa.title}</CardTitle>
               <CardDescription className="text-md">
@@ -232,10 +235,7 @@ export function CreativeCashFlowResults() {
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
-              <CountUp
-                className="text-2xl"
-                {...createCountUpProps(results.total_waa, animationDurations.item13.delay)}
-              />
+              <span className="text-2xl">${results.total_waa}</span>
             </CardContent>
           </Card>
         </motion.div>

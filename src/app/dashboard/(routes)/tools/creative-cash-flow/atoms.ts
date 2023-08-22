@@ -57,3 +57,27 @@ export const removeCreativeCashFlowRecordAtom = atom(null, (_get, set, id: strin
     return newRecords;
   });
 });
+
+type UpdateWaa = {
+  originalWaa: number;
+  newWaa: number;
+};
+
+export const updatecreativeCashFlowResultWaaAtom = atom(
+  null,
+  (get, set, { originalWaa, newWaa }: UpdateWaa) => {
+    const results = get(creativeCashFlowResultAtom);
+
+    if (!results) {
+      throw new Error('creativeCashFlowResultAtom is not initialized');
+    }
+
+    const value = Number.isNaN(newWaa) ? 0 : newWaa;
+
+    set(creativeCashFlowResultAtom, {
+      ...results,
+      waa: newWaa,
+      total_waa: originalWaa + value,
+    });
+  }
+);
