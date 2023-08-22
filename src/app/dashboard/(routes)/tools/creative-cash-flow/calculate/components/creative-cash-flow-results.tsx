@@ -26,7 +26,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
           transition={{ ...animationDurations.item1 }}
-          {...animationProps}
+          {...animationProps()}
         >
           <Card>
             <CardHeader className="space-y-1">
@@ -47,7 +47,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
           transition={{ ...animationDurations.item2 }}
-          {...animationProps}
+          {...animationProps()}
         >
           <MoveDown className="w-16 h-16 mx-auto" />
         </motion.div>
@@ -55,7 +55,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
           transition={{ ...animationDurations.item3 }}
-          {...animationProps}
+          {...animationProps()}
         >
           <Card>
             <CardHeader className="space-y-1">
@@ -76,7 +76,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
           transition={{ ...animationDurations.item4 }}
-          {...animationProps}
+          {...animationProps()}
         >
           <MoveDown className="w-16 h-16 mx-auto" />
         </motion.div>
@@ -84,7 +84,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
           transition={{ ...animationDurations.item5 }}
-          {...animationProps}
+          {...animationProps()}
         >
           <Card>
             <CardHeader className="space-y-1">
@@ -105,7 +105,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-3 row-span-1 flex items-center"
           transition={{ ...animationDurations.item6 }}
-          {...animationProps}
+          {...animationProps('x')}
         >
           <MoveRight className="w-16 h-16 mx-auto text-destructive" />
         </motion.div>
@@ -113,7 +113,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-4 row-span-1 row-start-5 flex items-center"
           transition={{ ...animationDurations.item7 }}
-          {...animationProps}
+          {...animationProps()}
         >
           <Card className="flex flex-col flex-grow justify-between">
             <CardHeader className="space-y-1">
@@ -139,7 +139,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
           transition={{ ...animationDurations.item8 }}
-          {...animationProps}
+          {...animationProps()}
         >
           <MoveDown className="w-16 h-16 mx-auto" />
         </motion.div>
@@ -147,7 +147,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-2 row-span-1"
           transition={{ ...animationDurations.item9 }}
-          {...animationProps}
+          {...animationProps()}
         >
           <Card className="flex flex-col flex-grow justify-between">
             <CardHeader className="space-y-1">
@@ -173,7 +173,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-3 row-span-1 flex items-center"
           transition={{ ...animationDurations.item10 }}
-          {...animationProps}
+          {...animationProps('x')}
         >
           <MoveRight className="w-16 h-16 mx-auto text-destructive" />
         </motion.div>
@@ -181,7 +181,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-4 row-span-1 row-start-9 flex items-center"
           transition={{ ...animationDurations.item11 }}
-          {...animationProps}
+          {...animationProps()}
         >
           <Card className="flex flex-col flex-grow justify-between">
             <CardHeader className="space-y-1">
@@ -204,7 +204,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-4 row-span-1"
           transition={{ ...animationDurations.item12 }}
-          {...animationProps}
+          {...animationProps()}
         >
           <MoveDown className="w-16 h-16 mx-auto" />
         </motion.div>
@@ -212,7 +212,7 @@ export function CreativeCashFlowResults() {
         <motion.div
           className="col-span-1 col-start-4 row-span-1"
           transition={{ ...animationDurations.item13 }}
-          {...animationProps}
+          {...animationProps()}
         >
           <Card>
             <CardHeader className="space-y-1 pb-2">

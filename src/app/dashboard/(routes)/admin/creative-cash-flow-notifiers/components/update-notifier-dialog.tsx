@@ -108,11 +108,16 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Enabled</FormLabel>
+
                   <FormControl>
                     <Checkbox
+                      id="enabled"
+                      name={field.name}
                       className="w-6 h-6"
+                      ref={field.ref}
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      onBlur={field.onBlur}
                     />
                   </FormControl>
                   <FormMessage />

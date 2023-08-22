@@ -122,8 +122,9 @@ export function AddNotifierDialog() {
               control={form.control}
               name="enabled"
               render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center space-x-2">
+                <FormItem className="flex flex-col">
+                  <FormLabel>Enabled</FormLabel>
+                  <FormControl>
                     <Checkbox
                       id="enabled"
                       name={field.name}
@@ -133,11 +134,7 @@ export function AddNotifierDialog() {
                       onCheckedChange={field.onChange}
                       onBlur={field.onBlur}
                     />
-                    <FormLabel htmlFor="enabled" className="text-md cursor-pointer">
-                      Enabled
-                    </FormLabel>
-                  </div>
-                  <FormControl></FormControl>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

@@ -27,7 +27,7 @@ export function Trends() {
     <motion.div
       className="col-start-4 row-start-1 row-span-3"
       transition={{ ...animationDurations.item1 }}
-      {...animationProps}
+      {...animationProps()}
     >
       <Card className="w-full">
         <CardHeader className="space-y-1">
