@@ -7,9 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { CurrencyInput } from '@/components/ui/currency-input';
+import { PercentInput } from '@/components/ui/percent-input';
 import {
   Form,
   FormDescription,
@@ -24,7 +24,6 @@ import { getTotalWAA } from '../functions/get-total-waa';
 import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../../atoms';
 import { inputsFormSchema, type InputsFormSchemaType } from '../schema';
 import type { Transaction } from '@/lib/plaid/types/transactions';
-import { moneyRound } from '@/lib/utils/money-round';
 
 interface CcfInputsFormProps {
   user_id: string;
@@ -59,6 +58,9 @@ export function CreativeCashFlowInputs({
       );
       return;
     }
+
+    // Wait 1 second to simulate a loading state
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const total_waa = await getTotalWAA(user_id, data.start_date);
 
@@ -116,15 +118,11 @@ export function CreativeCashFlowInputs({
               name="all_other_income"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>
-                    {inputLabels.all_other_income.title}
-                    <span className="ml-1 text-muted-foreground">($)</span>
-                  </FormLabel>
-                  <Input
-                    type="number"
-                    placeholder="$30,000"
+                  <FormLabel>{inputLabels.all_other_income.title}</FormLabel>
+                  <CurrencyInput
+                    placeholder="$100,000"
                     value={field.value}
-                    onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
+                    onValueChange={field.onChange}
                   />
                   <FormDescription>{inputLabels.all_other_income.description}</FormDescription>
                   <FormMessage />
@@ -136,15 +134,11 @@ export function CreativeCashFlowInputs({
               name="payroll_and_distributions"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>
-                    {inputLabels.payroll_and_distributions.title}
-                    <span className="ml-1 text-muted-foreground">($)</span>
-                  </FormLabel>
-                  <Input
-                    type="number"
+                  <FormLabel>{inputLabels.payroll_and_distributions.title}</FormLabel>
+                  <CurrencyInput
                     placeholder="$100,000"
                     value={field.value}
-                    onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
+                    onValueChange={field.onChange}
                   />
                   <FormDescription>
                     {inputLabels.payroll_and_distributions.description}
@@ -158,15 +152,11 @@ export function CreativeCashFlowInputs({
               name="lifestyle_expenses_tax_rate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>
-                    {inputLabels.lifestyle_expenses_tax_rate.title}
-                    <span className="ml-1 text-muted-foreground">(%)</span>
-                  </FormLabel>
-                  <CurrencyInput
+                  <FormLabel>{inputLabels.lifestyle_expenses_tax_rate.title}</FormLabel>
+                  <PercentInput
                     placeholder="25%"
-                    suffix="%"
                     value={field.value}
-                    onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                    onValueChange={field.onChange}
                   />
                   <FormDescription>
                     {inputLabels.lifestyle_expenses_tax_rate.description}
@@ -180,15 +170,11 @@ export function CreativeCashFlowInputs({
               name="tax_account_rate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>
-                    {inputLabels.tax_account_rate.title}
-                    <span className="ml-1 text-muted-foreground">(%)</span>
-                  </FormLabel>
-                  <CurrencyInput
+                  <FormLabel>{inputLabels.tax_account_rate.title}</FormLabel>
+                  <PercentInput
                     placeholder="25%"
-                    suffix="%"
                     value={field.value}
-                    onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                    onValueChange={field.onChange}
                   />
                   <FormDescription>{inputLabels.tax_account_rate.description}</FormDescription>
                   <FormMessage />
@@ -200,15 +186,11 @@ export function CreativeCashFlowInputs({
               name="optimal_savings_strategy"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>
-                    {inputLabels.optimal_savings_strategy.title}
-                    <span className="ml-1 text-muted-foreground">($)</span>
-                  </FormLabel>
-                  <Input
-                    type="number"
+                  <FormLabel>{inputLabels.optimal_savings_strategy.title}</FormLabel>
+                  <CurrencyInput
                     placeholder="$50,000"
                     value={field.value}
-                    onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
+                    onChange={field.onChange}
                   />
                   <FormDescription>
                     {inputLabels.optimal_savings_strategy.description}
@@ -218,8 +200,7 @@ export function CreativeCashFlowInputs({
               )}
             />
             <div className="flex justify-end">
-              <Button type="submit" className="w-full">
-                {/* <Button type="submit" loading={form.formState.isSubmitting}> */}
+              <Button type="submit" className="w-full" loading={form.formState.isSubmitting}>
                 Calculate
               </Button>
             </div>

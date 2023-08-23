@@ -1,18 +1,20 @@
+import { useState } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
 
-import { Input } from '@/components/ui/input';
 import { CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CurrencyInput } from '@/components/ui/currency-input';
 import { resultsLabels } from '../../labels';
 import { creativeCashFlowResultAtom, updatecreativeCashFlowResultWaaAtom } from '../../atoms';
 
 interface UpdateWaaProps {
-  originalWaa: number;
+  originalTotalWaa: number;
 }
 
-export function UpdateWaa({ originalWaa }: UpdateWaaProps) {
+export function UpdateWaa({ originalTotalWaa }: UpdateWaaProps) {
   const results = useAtomValue(creativeCashFlowResultAtom);
   const updateWaa = useSetAtom(updatecreativeCashFlowResultWaaAtom);
-
+  const [waa, setWaa] = useState(results?.waa.toString() ?? '');
+  console.log(results);
   if (!results) {
     return null;
   }
@@ -26,18 +28,17 @@ export function UpdateWaa({ originalWaa }: UpdateWaaProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
-        <Input
-          type="number"
-          min={0}
-          step={1}
+        <CurrencyInput
           placeholder="$100,000"
-          value={results.waa.toString()}
-          onChange={(e) =>
+          value={waa}
+          className="text-lg h-12"
+          onValueChange={(value) => setWaa(value ?? '')}
+          onBlur={() => {
             updateWaa({
-              originalWaa,
-              newWaa: parseInt(e.target.value) || 0,
-            })
-          }
+              originalTotalWaa,
+              newWaa: parseFloat(waa),
+            });
+          }}
         />
       </CardContent>
     </>

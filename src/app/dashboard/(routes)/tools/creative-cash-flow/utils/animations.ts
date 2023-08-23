@@ -5,7 +5,7 @@ type AnimationDurations = {
   };
 };
 
-export const animationDurations = Array.from({ length: 20 }).reduce(
+export const countUpProps = Array.from({ length: 20 }).reduce(
   (acc: any, _, i) => ({
     ...acc,
     [`item${i + 1}`]: {
@@ -17,12 +17,17 @@ export const animationDurations = Array.from({ length: 20 }).reduce(
 ) as AnimationDurations;
 
 export const animationProps = (axis: 'x' | 'y' = 'y') => ({
-  initial: {
-    opacity: 0,
-    [axis]: axis === 'y' ? 20 : -20,
+  transition: {
+    duration: 1,
   },
-  animate: {
-    opacity: 1,
-    [axis]: 0,
+  variants: {
+    initial: {
+      opacity: 0,
+      [axis]: axis === 'y' ? 20 : -20,
+    },
+    animate: {
+      opacity: 1,
+      [axis]: 0,
+    },
   },
 });

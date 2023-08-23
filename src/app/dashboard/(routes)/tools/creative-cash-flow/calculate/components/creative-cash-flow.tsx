@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { creativeCashFlowResultAtom, resetCreativeCashFlowInputsAtom } from '../../atoms';
+import {
+  creativeCashFlowResultAtom,
+  hasAnimatedAtom,
+  resetCreativeCashFlowInputsAtom,
+} from '../../atoms';
 import { Buttons } from './buttons';
 import { CreativeCashFlowInputs } from './creative-cash-flow-inputs';
 import { CreativeCashFlowResults } from './creative-cash-flow-results';
@@ -34,11 +38,22 @@ export function CreativeCashFlow({
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
   const [results, setResults] = useAtom(creativeCashFlowResultAtom);
   const resetCreativeCashFlowInput = useSetAtom(resetCreativeCashFlowInputsAtom);
+  const setHasAnimated = useSetAtom(hasAnimatedAtom);
 
   const handleReset = () => {
     setActiveTab(TabsValue.Inputs);
     setResults(null);
     resetCreativeCashFlowInput();
+    setHasAnimated(false);
+  };
+
+  const onTabChange = (value: string) => {
+    const tab = value === TabsValue.Inputs ? TabsValue.Inputs : TabsValue.Results;
+    setActiveTab(tab);
+    // When changing tabs, set the animation to be completed
+    if (activeTab === TabsValue.Results) {
+      setHasAnimated(true);
+    }
   };
 
   useEffect(() => {
@@ -48,11 +63,7 @@ export function CreativeCashFlow({
   }, [results]);
 
   return (
-    <Tabs
-      className="w-full"
-      value={activeTab}
-      onValueChange={(value) => setActiveTab(value as TabsValue)}
-    >
+    <Tabs className="w-full" value={activeTab} onValueChange={onTabChange}>
       <div className="relative mb-8 flex flex-row justify-center items-center gap-2">
         <TabsList className="relative grid w-[360px] grid-cols-2">
           <TabsTrigger value={TabsValue.Inputs}>Inputs</TabsTrigger>

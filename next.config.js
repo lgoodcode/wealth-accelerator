@@ -61,9 +61,9 @@ module.exports = withBundleAnalyzer(
   withSentryConfig(
     nextConfig,
     {
+      ignore: [],
       silent: false,
       cleanArtifacts: true,
-      ignore: [],
       authToken: process.env.SENTRY_AUTH_TOKEN,
     },
     {

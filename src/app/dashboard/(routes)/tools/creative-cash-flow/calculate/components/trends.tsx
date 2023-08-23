@@ -11,12 +11,16 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { createCountUpProps } from '../../utils/create-count-up-props';
-import { animationProps, animationDurations } from '../../utils/animations';
+import { animationProps, countUpProps } from '../../utils/animations';
 import { resultsLabels } from '../../labels';
 import { creativeCashFlowResultAtom } from '../../atoms';
+import type { CreateCountUp } from '../../utils/create-count-up-props';
 
-export function Trends() {
+interface TrendsProps {
+  createCountUpProps: CreateCountUp;
+}
+
+export function Trends({ createCountUpProps }: TrendsProps) {
   const results = useAtomValue(creativeCashFlowResultAtom);
 
   if (!results) {
@@ -24,11 +28,7 @@ export function Trends() {
   }
 
   return (
-    <motion.div
-      className="col-start-4 row-start-1 row-span-3"
-      transition={{ ...animationDurations.item1 }}
-      {...animationProps()}
-    >
+    <motion.div className="col-start-4 row-start-1 row-span-3" {...animationProps()}>
       <Card className="w-full">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl">{resultsLabels.trends.title}</CardTitle>
@@ -49,20 +49,17 @@ export function Trends() {
                 <TableCell>30 Days</TableCell>
                 <TableCell>
                   <CountUp
-                    {...createCountUpProps(
-                      results.monthly_trend[0],
-                      animationDurations.item1.delay
-                    )}
+                    {...createCountUpProps(results.monthly_trend[0], countUpProps.item1.delay)}
                   />
                 </TableCell>
                 <TableCell>
                   <CountUp
-                    {...createCountUpProps(results.weekly_trend[0], animationDurations.item1.delay)}
+                    {...createCountUpProps(results.weekly_trend[0], countUpProps.item1.delay)}
                   />
                 </TableCell>
                 <TableCell>
                   <CountUp
-                    {...createCountUpProps(results.yearly_trend[0], animationDurations.item1.delay)}
+                    {...createCountUpProps(results.yearly_trend[0], countUpProps.item1.delay)}
                   />
                 </TableCell>
               </TableRow>
@@ -70,20 +67,17 @@ export function Trends() {
                 <TableCell>60 Days</TableCell>
                 <TableCell>
                   <CountUp
-                    {...createCountUpProps(
-                      results.monthly_trend[1],
-                      animationDurations.item1.delay
-                    )}
+                    {...createCountUpProps(results.monthly_trend[1], countUpProps.item1.delay)}
                   />
                 </TableCell>
                 <TableCell>
                   <CountUp
-                    {...createCountUpProps(results.weekly_trend[1], animationDurations.item1.delay)}
+                    {...createCountUpProps(results.weekly_trend[1], countUpProps.item1.delay)}
                   />
                 </TableCell>
                 <TableCell>
                   <CountUp
-                    {...createCountUpProps(results.yearly_trend[1], animationDurations.item1.delay)}
+                    {...createCountUpProps(results.yearly_trend[1], countUpProps.item1.delay)}
                   />
                 </TableCell>
               </TableRow>
@@ -91,20 +85,17 @@ export function Trends() {
                 <TableCell>90 Days</TableCell>
                 <TableCell>
                   <CountUp
-                    {...createCountUpProps(
-                      results.monthly_trend[2],
-                      animationDurations.item1.delay
-                    )}
+                    {...createCountUpProps(results.monthly_trend[2], countUpProps.item1.delay)}
                   />
                 </TableCell>
                 <TableCell>
                   <CountUp
-                    {...createCountUpProps(results.weekly_trend[2], animationDurations.item1.delay)}
+                    {...createCountUpProps(results.weekly_trend[2], countUpProps.item1.delay)}
                   />
                 </TableCell>
                 <TableCell>
                   <CountUp
-                    {...createCountUpProps(results.yearly_trend[2], animationDurations.item1.delay)}
+                    {...createCountUpProps(results.yearly_trend[2], countUpProps.item1.delay)}
                   />
                 </TableCell>
               </TableRow>
@@ -120,7 +111,7 @@ export function Trends() {
             </CardHeader>
             <CountUp
               className="text-2xl"
-              {...createCountUpProps(results.year_to_date, animationDurations.item1.delay)}
+              {...createCountUpProps(results.year_to_date, countUpProps.item1.delay)}
             />
           </div>
         </CardContent>
