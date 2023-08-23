@@ -49,11 +49,8 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
           <QueryProvider>
             <Header height={HEADER_HEIGHT} />
             <div
-              className="absolute -z-10 opacity-40 w-full hidden dark:flex flex-col flex-grow bg-right-top bg-no-repeat"
-              style={{
-                height: `calc(100% - ${HEADER_HEIGHT}px)`,
-                backgroundImage: 'url(/img/bg-gradient.svg)',
-              }}
+              className="fixed inset-0 -z-10 opacity-40 w-full hidden dark:flex flex-col flex-grow bg-right-top bg-no-repeat"
+              style={{ backgroundImage: 'url(/img/bg-gradient.svg)' }}
             />
             {children}
           </QueryProvider>
