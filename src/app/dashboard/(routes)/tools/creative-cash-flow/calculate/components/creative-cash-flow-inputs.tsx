@@ -119,11 +119,7 @@ export function CreativeCashFlowInputs({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>{inputLabels.all_other_income.title}</FormLabel>
-                  <CurrencyInput
-                    placeholder="$100,000"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  />
+                  <CurrencyInput placeholder="$100,000" {...field} />
                   <FormDescription>{inputLabels.all_other_income.description}</FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -135,11 +131,7 @@ export function CreativeCashFlowInputs({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>{inputLabels.payroll_and_distributions.title}</FormLabel>
-                  <CurrencyInput
-                    placeholder="$100,000"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  />
+                  <CurrencyInput placeholder="$100,000" {...field} />
                   <FormDescription>
                     {inputLabels.payroll_and_distributions.description}
                   </FormDescription>
@@ -153,11 +145,7 @@ export function CreativeCashFlowInputs({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>{inputLabels.lifestyle_expenses_tax_rate.title}</FormLabel>
-                  <PercentInput
-                    placeholder="25%"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  />
+                  <PercentInput placeholder="25%" {...field} />
                   <FormDescription>
                     {inputLabels.lifestyle_expenses_tax_rate.description}
                   </FormDescription>
@@ -171,11 +159,7 @@ export function CreativeCashFlowInputs({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>{inputLabels.tax_account_rate.title}</FormLabel>
-                  <PercentInput
-                    placeholder="25%"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  />
+                  <PercentInput placeholder="25%" {...field} />
                   <FormDescription>{inputLabels.tax_account_rate.description}</FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -187,11 +171,7 @@ export function CreativeCashFlowInputs({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>{inputLabels.optimal_savings_strategy.title}</FormLabel>
-                  <CurrencyInput
-                    placeholder="$50,000"
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
+                  <CurrencyInput placeholder="$50,000" {...field} />
                   <FormDescription>
                     {inputLabels.optimal_savings_strategy.description}
                   </FormDescription>
