@@ -71,9 +71,10 @@ export const RatesFormSchema = (numOfYears: number) =>
   z.object({
     rates: z
       .array(
-        z
+        z.coerce
           .number({
             required_error: 'Enter a rate',
+            invalid_type_error: 'Enter a rate',
           })
           .refine((value) => /^-?\d{1,2}(\.\d{1,2})?$/.test(value.toString()), {
             message: 'Enter a valid percentage (-99.99 to 99.99)',

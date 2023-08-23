@@ -34,16 +34,18 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
   const updateFinanceInfo = useUpdateFinanceInfo();
   const form = useForm<FinanceInfoSchemaType>({
     resolver: zodResolver(FinanceInfoSchema),
-    defaultValues: {
+    values: {
       ...initialValues,
+      // @ts-ignore
       start_date: initialValues?.start_date ? new Date(initialValues.start_date) : undefined,
     },
   });
 
   const onSubmit = async (data: FinanceInfoSchemaType) => {
     await updateFinanceInfo(user.id, data)
-      .then(() => {
+      .then((data) => {
         toast.success('Your information has been saved');
+        form.reset(data);
       })
       .catch((error) => {
         console.error(error);
@@ -126,7 +128,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Money Needed To Live</FormLabel>
-                  <CurrencyInput placeholder="$100,000" {...field} />
+                  <CurrencyInput placeholder="$100,000" decimals={false} {...field} />
                   <FormDescription>
                     Index Fund ROR Needed to Equal Life Insurance Income Distributions
                   </FormDescription>
@@ -140,11 +142,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Tax Bracket</FormLabel>
-                  <PercentInput
-                    placeholder="25%"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  />
+                  <PercentInput placeholder="25%" {...field} />
                   <FormDescription>Your current tax bracket.</FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -155,15 +153,8 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
               name="tax_bracket_future"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>
-                    Future Tax Bracket
-                    <span className="ml-1 text-muted-foreground">(%)</span>
-                  </FormLabel>
-                  <PercentInput
-                    placeholder="30%"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  />
+                  <FormLabel>Future Tax Bracket</FormLabel>
+                  <PercentInput placeholder="30%" {...field} />
                   <FormDescription>Your future predicted tax bracket.</FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -174,15 +165,8 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
               name="premium_deposit"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>
-                    Premium Deposit
-                    <span className="ml-1 text-muted-foreground">($)</span>
-                  </FormLabel>
-                  <CurrencyInput
-                    placeholder="$20,000"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  />
+                  <FormLabel>Premium Deposit</FormLabel>
+                  <CurrencyInput placeholder="$20,000" decimals={false} {...field} />
                   <FormDescription>
                     The amount of money you want to deposit into your life insurance policy.
                   </FormDescription>
@@ -195,15 +179,8 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
               name="ytd_collections"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>
-                    Year to Date Collections
-                    <span className="ml-1 text-muted-foreground">($)</span>
-                  </FormLabel>
-                  <CurrencyInput
-                    placeholder="$30,000"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  />
+                  <FormLabel>Year to Date Collections</FormLabel>
+                  <CurrencyInput placeholder="$30,000" decimals={false} {...field} />
                   <FormDescription>
                     The amount of money you want you have that is not included in the transactions.
                   </FormDescription>
@@ -216,15 +193,8 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
               name="default_tax_rate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>
-                    Default Tax Bracket
-                    <span className="ml-1 text-muted-foreground">(%)</span>
-                  </FormLabel>
-                  <PercentInput
-                    placeholder="25%"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  />
+                  <FormLabel>Default Tax Bracket</FormLabel>
+                  <PercentInput placeholder="25%" {...field} />
                   <FormDescription>Default tax account rate for the CCF inputs.</FormDescription>
                   <FormMessage />
                 </FormItem>
