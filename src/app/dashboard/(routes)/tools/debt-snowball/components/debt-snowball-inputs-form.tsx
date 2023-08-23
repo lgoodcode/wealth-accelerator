@@ -83,8 +83,12 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
 
   // Update the monthly payment when the additional payment changes
   useEffect(() => {
-    form.setValue('monthly_payment', paymentsSum + (additional_payment ?? 0));
-  }, [paymentsSum, additional_payment]);
+    form.setValue(
+      'monthly_payment',
+      // Parse in case the value is a string from the CurrencyInput
+      paymentsSum + parseFloat((additional_payment ?? '0').toString())
+    );
+  }, [additional_payment]);
 
   // Reset the lump amounts whenever the strategy changes and isn't a Wealth Accelerator strategy
   useEffect(() => {
@@ -129,12 +133,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Current monthly payment</FormLabel>
-                    <Input
-                      readOnly
-                      value={dollarFormatter(field.value, {
-                        maximumFractionDigits: 0,
-                      })}
-                    />
+                    <Input readOnly value={dollarFormatter(field.value)} />
                     <FormDescription className="flex flex-col gap-1">
                       <span>The amount of money you can put towards your debt each month.</span>
                       <span>
