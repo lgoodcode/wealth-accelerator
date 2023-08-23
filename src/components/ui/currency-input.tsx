@@ -12,7 +12,7 @@ interface CurrencyInputOverrideProps extends Omit<CurrencyInputProps, 'onChange'
 export const CurrencyInput = forwardRef<
   Omit<HTMLInputElement, 'onChange'>,
   CurrencyInputOverrideProps
->(({ className, decimals, onValueChange, onChange, ...props }, ref) => {
+>(({ className, decimals = true, onValueChange, onChange, ...props }, ref) => {
   return (
     <Input
       ref={ref}
