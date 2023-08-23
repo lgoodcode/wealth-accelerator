@@ -21,20 +21,20 @@ export const FinanceInfoSchema = z.object({
   money_needed_to_live: z.coerce
     .number({
       required_error: 'Enter the amount',
-      invalid_type_error: 'Enter a number',
+      invalid_type_error: 'Enter the amount',
     })
     .min(1, 'Enter an amount greater than 0'),
   tax_bracket: z.coerce
     .number({
       required_error: 'Enter the tax bracket percentage',
-      invalid_type_error: 'Enter a percentage',
+      invalid_type_error: 'Enter the tax bracket percentage',
     })
     .min(0, 'Enter a positive percentage')
     .max(101, 'Enter a valid percentage'),
   tax_bracket_future: z.coerce
     .number({
       required_error: 'Enter the tax bracket percentage',
-      invalid_type_error: 'Enter a percentage',
+      invalid_type_error: 'Enter the tax bracket percentage',
     })
     .positive({
       message: 'Enter a positive percentage',
@@ -43,7 +43,7 @@ export const FinanceInfoSchema = z.object({
   premium_deposit: z.coerce
     .number({
       required_error: 'Enter the amount',
-      invalid_type_error: 'Enter a number',
+      invalid_type_error: 'Enter  the amount',
     })
     .positive({
       message: 'Enter a positive amount',
@@ -51,7 +51,7 @@ export const FinanceInfoSchema = z.object({
   ytd_collections: z.coerce
     .number({
       required_error: 'Enter the amount',
-      invalid_type_error: 'Enter a number',
+      invalid_type_error: 'Enter  the amount',
     })
     .nonnegative({
       message: 'Enter a positive amount',
@@ -59,7 +59,7 @@ export const FinanceInfoSchema = z.object({
   default_tax_rate: z.coerce
     .number({
       required_error: 'Enter the tax rate percentage',
-      invalid_type_error: 'Enter a percentage',
+      invalid_type_error: 'Enter the tax rate percentage',
     })
     .positive({
       message: 'Enter a positive percentage',
