@@ -39,7 +39,7 @@ export function CreativeCashFlowResults() {
       <motion.div
         initial="initial"
         animate="animate"
-        className="grid gap-6 w-fit mx-auto grid-cols-[auto_320px_64px_320px] lg:grid-cols-[0px_480px_64px_480px]"
+        className="grid gap-6 w-fit mx-auto grid-cols-[auto_240px_64px_428px] lg:grid-cols-[0px_500px_64px_500px]"
         transition={{
           staggerChildren: 0.5,
         }}
