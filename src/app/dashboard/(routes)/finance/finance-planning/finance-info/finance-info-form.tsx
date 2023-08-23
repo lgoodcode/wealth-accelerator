@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DatePicker } from '@/components/ui/date-picker';
 import { CurrencyInput } from '@/components/ui/currency-input';
+import { PercentInput } from '@/components/ui/percent-input';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Form,
@@ -20,7 +21,6 @@ import {
 } from '@/components/ui/form';
 import { useUpdateFinanceInfo } from '../hooks/use-update-finance-info';
 import { FinanceInfoSchema, type FinanceInfoSchemaType as FinanceInfoSchemaType } from '../schema';
-import { moneyRound } from '@/lib/utils/money-round';
 
 // Override the type for the start_date because Supabase returns a string.
 interface FinanceInfoFormProps {
@@ -81,7 +81,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
             <FormField
               control={form.control}
               name="stop_invest"
-              render={({ field }) => (
+              render={({ field: { onChange, ...field } }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>
                     Stop Invest <span className="ml-1 text-muted-foreground">(year)</span>
@@ -89,8 +89,8 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                   <Input
                     type="number"
                     placeholder="10"
-                    value={field.value}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    onChange={(e) => onChange(parseInt(e.target.value))}
+                    {...field}
                   />
                   <FormDescription>
                     The number of years that you want to invest for.
@@ -102,7 +102,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
             <FormField
               control={form.control}
               name="start_withdrawl"
-              render={({ field }) => (
+              render={({ field: { onChange, ...field } }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>
                     Start Withdrawl<span className="ml-1 text-muted-foreground">(year)</span>
@@ -110,8 +110,8 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                   <Input
                     type="number"
                     placeholder="15"
-                    value={field.value}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    onChange={(e) => onChange(parseInt(e.target.value))}
+                    {...field}
                   />
                   <FormDescription>
                     The number of years to wait after stopped investing.
@@ -125,16 +125,8 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
               name="money_needed_to_live"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>
-                    Money Needed To Live
-                    <span className="ml-1 text-muted-foreground">($)</span>
-                  </FormLabel>
-                  <Input
-                    type="number"
-                    placeholder="$100,000"
-                    value={field.value}
-                    onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
-                  />
+                  <FormLabel>Money Needed To Live</FormLabel>
+                  <CurrencyInput placeholder="$100,000" {...field} />
                   <FormDescription>
                     Index Fund ROR Needed to Equal Life Insurance Income Distributions
                   </FormDescription>
@@ -147,15 +139,11 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
               name="tax_bracket"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>
-                    Tax Bracket
-                    <span className="ml-1 text-muted-foreground">(%)</span>
-                  </FormLabel>
-                  <CurrencyInput
+                  <FormLabel>Tax Bracket</FormLabel>
+                  <PercentInput
                     placeholder="25%"
-                    suffix="%"
                     value={field.value}
-                    onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                    onValueChange={field.onChange}
                   />
                   <FormDescription>Your current tax bracket.</FormDescription>
                   <FormMessage />
@@ -171,11 +159,10 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                     Future Tax Bracket
                     <span className="ml-1 text-muted-foreground">(%)</span>
                   </FormLabel>
-                  <CurrencyInput
+                  <PercentInput
                     placeholder="30%"
-                    suffix="%"
                     value={field.value}
-                    onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                    onValueChange={field.onChange}
                   />
                   <FormDescription>Your future predicted tax bracket.</FormDescription>
                   <FormMessage />
@@ -191,11 +178,10 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                     Premium Deposit
                     <span className="ml-1 text-muted-foreground">($)</span>
                   </FormLabel>
-                  <Input
-                    type="number"
+                  <CurrencyInput
                     placeholder="$20,000"
                     value={field.value}
-                    onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
+                    onValueChange={field.onChange}
                   />
                   <FormDescription>
                     The amount of money you want to deposit into your life insurance policy.
@@ -213,11 +199,10 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                     Year to Date Collections
                     <span className="ml-1 text-muted-foreground">($)</span>
                   </FormLabel>
-                  <Input
-                    type="number"
+                  <CurrencyInput
                     placeholder="$30,000"
                     value={field.value}
-                    onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value)))}
+                    onValueChange={field.onChange}
                   />
                   <FormDescription>
                     The amount of money you want you have that is not included in the transactions.
@@ -235,11 +220,10 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
                     Default Tax Bracket
                     <span className="ml-1 text-muted-foreground">(%)</span>
                   </FormLabel>
-                  <CurrencyInput
+                  <PercentInput
                     placeholder="25%"
-                    suffix="%"
                     value={field.value}
-                    onValueChange={(value) => field.onChange(parseInt(value || '0'))}
+                    onValueChange={field.onChange}
                   />
                   <FormDescription>Default tax account rate for the CCF inputs.</FormDescription>
                   <FormMessage />
