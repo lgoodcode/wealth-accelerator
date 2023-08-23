@@ -15,7 +15,7 @@ import { creativeCashFlowResultAtom, hasAnimatedAtom } from '../../atoms';
 import { Trends } from './trends';
 import { UpdateWaa } from './update-waa';
 
-const NUM_ITEMS = 10;
+const NUM_ITEMS = 11;
 
 export function CreativeCashFlowResults() {
   const results = useAtomValue(creativeCashFlowResultAtom);
