@@ -31,6 +31,7 @@ export const structuredCloneShim = () => {
 
     if (shouldShim) {
       window.structuredClone = shim;
+      console.warn('Using structured clone shim');
     }
   }
 };
