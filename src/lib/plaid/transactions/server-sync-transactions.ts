@@ -10,7 +10,6 @@ import { PlaidRateLimitErrorCode, PlaidCredentialErrorCode } from '@/lib/plaid/t
 import type { Institution } from '@/lib/plaid/types/institutions';
 import type { Filter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
-import { captureMessage } from '@sentry/nextjs';
 
 export const serverSyncTransactions = async (
   item: Institution,
