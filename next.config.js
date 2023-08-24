@@ -63,13 +63,12 @@ module.exports = withBundleAnalyzer(
     {
       ignore: [],
       silent: false,
-      cleanArtifacts: true,
       authToken: process.env.SENTRY_AUTH_TOKEN,
     },
     {
+      tunnelRoute: '/sentry',
       hideSourcemaps: true,
       widenClientFileUploads: true,
-      tunnelRoute: '/sentry',
     }
   )
 );
