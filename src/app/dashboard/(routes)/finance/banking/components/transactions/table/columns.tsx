@@ -1,10 +1,10 @@
 'use client';
 
+import { format } from 'date-fns';
 import type { DateRange } from 'react-day-picker';
 import type { ColumnDef } from '@tanstack/react-table';
 
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
-import { formattedDate } from '@/lib/utils/formatted-date';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
 import { CategoryColumn } from './category-column';
@@ -104,7 +104,7 @@ export const columns: ColumnDef<TransactionWithAccountName>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
-          {formattedDate(new Date(row.getValue<string>('date')))}
+          {format(new Date(row.getValue<string>('date')), 'M/d/yyyy')}
         </div>
       );
     },

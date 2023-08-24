@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
 import { getUser } from '@/lib/supabase/server/get-user';
-import { getItemFromItemId } from '@/lib/plaid/getItemFromItemId';
+import { getItemFromItemId } from '@/lib/plaid/get-item-from-item-id';
 import { serverSyncTransactions } from '@/lib/plaid/transactions/server-sync-transactions';
 import type { SyncTransactionsResponse } from '@/lib/plaid/types/sync';
 
