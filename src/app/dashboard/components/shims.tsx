@@ -6,6 +6,7 @@ import { structuredCloneShim } from '@/lib/utils/structured-clone-shim';
 
 export function Shims() {
   useEffect(() => {
+    console.log('shimmy');
     structuredCloneShim();
   }, []);
 
