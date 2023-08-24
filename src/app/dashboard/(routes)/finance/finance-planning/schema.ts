@@ -4,54 +4,62 @@ export const FinanceInfoSchema = z.object({
   start_date: z.date({
     required_error: 'Select a date.',
   }),
-  stop_invest: z
+  stop_invest: z.coerce
     .number({
       required_error: 'Enter the year',
+      invalid_type_error: 'Enter a year',
     })
     .min(1, 'Enter a number greater than 0')
     .max(100, 'Enter a number less than or equal to 100'),
-  start_withdrawl: z
+  start_withdrawl: z.coerce
     .number({
       required_error: 'Enter the year',
+      invalid_type_error: 'Enter a year',
     })
     .min(1, 'Enter a number greater than 0')
     .max(100, 'Enter a number less than or equal to 100'),
-  money_needed_to_live: z
+  money_needed_to_live: z.coerce
     .number({
       required_error: 'Enter the amount',
+      invalid_type_error: 'Enter the amount',
     })
     .min(1, 'Enter an amount greater than 0'),
-  tax_bracket: z
+  tax_bracket: z.coerce
     .number({
       required_error: 'Enter the tax bracket percentage',
+      invalid_type_error: 'Enter the tax bracket percentage',
     })
     .min(0, 'Enter a positive percentage')
     .max(101, 'Enter a valid percentage'),
-  tax_bracket_future: z
+  tax_bracket_future: z.coerce
     .number({
       required_error: 'Enter the tax bracket percentage',
+      invalid_type_error: 'Enter the tax bracket percentage',
     })
     .positive({
       message: 'Enter a positive percentage',
     })
     .max(101, 'Enter a valid percentage'),
-  premium_deposit: z
+  premium_deposit: z.coerce
     .number({
       required_error: 'Enter the amount',
+      invalid_type_error: 'Enter  the amount',
     })
     .positive({
       message: 'Enter a positive amount',
     }),
-  ytd_collections: z
+  ytd_collections: z.coerce
     .number({
       required_error: 'Enter the amount',
+      invalid_type_error: 'Enter  the amount',
     })
     .nonnegative({
       message: 'Enter a positive amount',
     }),
-  default_tax_rate: z
+  default_tax_rate: z.coerce
     .number({
       required_error: 'Enter the tax rate percentage',
+      invalid_type_error: 'Enter the tax rate percentage',
     })
     .positive({
       message: 'Enter a positive percentage',
@@ -63,9 +71,10 @@ export const RatesFormSchema = (numOfYears: number) =>
   z.object({
     rates: z
       .array(
-        z
+        z.coerce
           .number({
             required_error: 'Enter a rate',
+            invalid_type_error: 'Enter a rate',
           })
           .refine((value) => /^-?\d{1,2}(\.\d{1,2})?$/.test(value.toString()), {
             message: 'Enter a valid percentage (-99.99 to 99.99)',

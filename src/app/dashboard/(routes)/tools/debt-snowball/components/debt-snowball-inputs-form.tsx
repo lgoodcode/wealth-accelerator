@@ -7,7 +7,6 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { Plus, X } from 'lucide-react';
 
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
-import { moneyRound } from '@/lib/utils/money-round';
 import {
   Form,
   FormDescription,
@@ -27,6 +26,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CurrencyInput } from '@/components/ui/currency-input';
+import { PercentInput } from '@/components/ui/percent-input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { debtCalculationInputsAtom, sortDebtsAtom } from '../atoms';
 import { Strategies } from '../strategies';
@@ -83,8 +83,12 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
 
   // Update the monthly payment when the additional payment changes
   useEffect(() => {
-    form.setValue('monthly_payment', paymentsSum + (additional_payment ?? 0));
-  }, [paymentsSum, additional_payment]);
+    form.setValue(
+      'monthly_payment',
+      // Parse in case the value is a string from the CurrencyInput
+      paymentsSum + parseFloat((additional_payment ?? '0').toString())
+    );
+  }, [additional_payment]);
 
   // Reset the lump amounts whenever the strategy changes and isn't a Wealth Accelerator strategy
   useEffect(() => {
@@ -115,13 +119,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                       Additional monthly payment{' '}
                       <span className="text-muted-foreground">(optional)</span>
                     </FormLabel>
-                    <CurrencyInput
-                      placeholder="$500"
-                      prefix="$"
-                      onValueChange={(value) => field.onChange(parseInt(value || '0'))}
-                      {...field}
-                      onChange={undefined}
-                    />
+                    <CurrencyInput placeholder="$500" {...field} />
                     <FormDescription>
                       Additional amount of money you can put towards your debt each month.
                     </FormDescription>
@@ -135,12 +133,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Current monthly payment</FormLabel>
-                    <Input
-                      readOnly
-                      value={dollarFormatter(field.value, {
-                        maximumFractionDigits: 0,
-                      })}
-                    />
+                    <Input readOnly value={dollarFormatter(field.value)} />
                     <FormDescription className="flex flex-col gap-1">
                       <span>The amount of money you can put towards your debt each month.</span>
                       <span>
@@ -157,16 +150,8 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                 name="opportunity_rate"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>
-                      Opportunity cost recovery rate{' '}
-                      <span className="text-muted-foreground">(%)</span>
-                    </FormLabel>
-                    <Input
-                      type="number"
-                      placeholder="5%"
-                      value={field.value}
-                      onChange={(e) => field.onChange(moneyRound(parseFloat(e.target.value) || 0))}
-                    />
+                    <FormLabel>Opportunity cost recovery rate</FormLabel>
+                    <PercentInput placeholder="5%" {...field} />
                     <FormDescription>
                       The rate to compound your savings for each month from the debt snowball.
                     </FormDescription>
@@ -271,18 +256,8 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                     name="loan_interest_rate"
                     render={({ field }) => (
                       <FormItem className="flex flex-col">
-                        <FormLabel>
-                          Loan interest rate <span className="text-muted-foreground">(%)</span>
-                        </FormLabel>
-                        <Input
-                          type="number"
-                          placeholder="7%"
-                          value={field.value}
-                          disabled={!canPayBackLoan}
-                          onChange={(e) =>
-                            field.onChange(moneyRound(parseFloat(e.target.value) || 0))
-                          }
-                        />
+                        <FormLabel>Loan interest rate</FormLabel>
+                        <PercentInput placeholder="7%" disabled={!canPayBackLoan} {...field} />
                         <FormDescription>
                           The rate to compound the loan amounts taken, beginning when each lump sum
                           is taken out.
@@ -304,11 +279,11 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                           <FormLabel>Year {i + 1}</FormLabel>
                           <div className="flex flex-row gap-3">
                             <CurrencyInput
+                              ref={field.ref}
                               placeholder="$20,000"
-                              prefix="$"
                               value={form.getValues(`lump_amounts.${i}`)}
-                              onValueChange={(value) => field.onChange(parseInt(value || '0'))}
-                              onChange={undefined}
+                              onValueChange={field.onChange}
+                              onBlur={field.onBlur}
                             />
                             {i > 0 && (
                               <Button type="button" variant="outline" onClick={() => removeLump(i)}>
@@ -323,7 +298,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                   ))}
                 </div>
 
-                <Button type="button" variant="ghost" className="w-full" onClick={addLump}>
+                <Button type="button" variant="outline" className="w-full" onClick={addLump}>
                   <Plus className="mr-1" />
                   Add Year
                 </Button>

@@ -1,33 +1,52 @@
 'use client';
 
-import { useAtomValue } from 'jotai';
+import { useEffect, useRef } from 'react';
+import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import { MoveDown, MoveRight } from 'lucide-react';
 
+import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { createCountUpProps } from '../../utils/create-count-up-props';
-import { animationProps, animationDurations } from '../../utils/animations';
+import { createCountUpPropsFactory } from '../../utils/create-count-up-props';
+import { animationProps, countUpProps } from '../../utils/animations';
 import { resultsLabels } from '../../labels';
-import { creativeCashFlowResultAtom } from '../../atoms';
+import { creativeCashFlowResultAtom, hasAnimatedAtom } from '../../atoms';
 import { Trends } from './trends';
+import { UpdateWaa } from './update-waa';
+
+const NUM_ITEMS = 11;
 
 export function CreativeCashFlowResults() {
   const results = useAtomValue(creativeCashFlowResultAtom);
+  const [hasAnimated, setHasAnimated] = useAtom(hasAnimatedAtom);
+  const originalWaaRef = useRef(results?.waa ?? 0);
+  const originalTotalWaaRef = useRef((results?.total_waa ?? 0) - (results?.waa ?? 0));
+  const createCountUpProps = createCountUpPropsFactory(!hasAnimated);
+
+  useEffect(() => {
+    if (!hasAnimated) {
+      setTimeout(() => setHasAnimated(true), NUM_ITEMS * 1000);
+    }
+  }, []);
 
   if (!results) {
     return null;
   }
 
   return (
-    <AnimatePresence>
-      <div className="grid gap-6 w-fit mx-auto grid-cols-[auto_320px_64px_320px] lg:grid-cols-[0px_480px_64px_480px]">
-        <Trends />
-        <motion.div
-          className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...animationDurations.item1 }}
-          {...animationProps()}
-        >
+    <AnimatePresence initial={!hasAnimated}>
+      <motion.div
+        initial="initial"
+        animate="animate"
+        className="grid gap-6 w-fit mx-auto grid-cols-[auto_240px_64px_428px] lg:grid-cols-[0px_500px_64px_500px]"
+        transition={{
+          staggerChildren: 0.5,
+        }}
+      >
+        <Trends createCountUpProps={createCountUpProps} />
+
+        <motion.div className="col-span-1 col-start-2 row-span-1" {...animationProps()}>
           <Card>
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl">{resultsLabels.collections.title}</CardTitle>
@@ -38,25 +57,17 @@ export function CreativeCashFlowResults() {
             <CardContent className="pt-4">
               <CountUp
                 className="text-2xl"
-                {...createCountUpProps(results.collections, animationDurations.item1.delay)}
+                {...createCountUpProps(results.collections, countUpProps.item1.delay)}
               />
             </CardContent>
           </Card>
         </motion.div>
 
-        <motion.div
-          className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...animationDurations.item2 }}
-          {...animationProps()}
-        >
+        <motion.div className="col-span-1 col-start-2 row-span-1" {...animationProps()}>
           <MoveDown className="w-16 h-16 mx-auto" />
         </motion.div>
 
-        <motion.div
-          className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...animationDurations.item3 }}
-          {...animationProps()}
-        >
+        <motion.div className="col-span-1 col-start-2 row-span-1" {...animationProps()}>
           <Card>
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl">{resultsLabels.business_overhead.title}</CardTitle>
@@ -67,25 +78,17 @@ export function CreativeCashFlowResults() {
             <CardContent className="pt-4">
               <CountUp
                 className="text-2xl"
-                {...createCountUpProps(results.business_overhead, animationDurations.item3.delay)}
+                {...createCountUpProps(results.business_overhead, countUpProps.item3.delay)}
               />
             </CardContent>
           </Card>
         </motion.div>
 
-        <motion.div
-          className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...animationDurations.item4 }}
-          {...animationProps()}
-        >
+        <motion.div className="col-span-1 col-start-2 row-span-1" {...animationProps()}>
           <MoveDown className="w-16 h-16 mx-auto" />
         </motion.div>
 
-        <motion.div
-          className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...animationDurations.item5 }}
-          {...animationProps()}
-        >
+        <motion.div className="col-span-1 col-start-2 row-span-1" {...animationProps()}>
           <Card>
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl">{resultsLabels.lifestyle_expenses.title}</CardTitle>
@@ -96,7 +99,7 @@ export function CreativeCashFlowResults() {
             <CardContent className="pt-4">
               <CountUp
                 className="text-2xl"
-                {...createCountUpProps(results.lifestyle_expenses, animationDurations.item5.delay)}
+                {...createCountUpProps(results.lifestyle_expenses, countUpProps.item5.delay)}
               />
             </CardContent>
           </Card>
@@ -104,7 +107,6 @@ export function CreativeCashFlowResults() {
 
         <motion.div
           className="col-span-1 col-start-3 row-span-1 flex items-center"
-          transition={{ ...animationDurations.item6 }}
           {...animationProps('x')}
         >
           <MoveRight className="w-16 h-16 mx-auto text-destructive" />
@@ -112,8 +114,7 @@ export function CreativeCashFlowResults() {
 
         <motion.div
           className="col-span-1 col-start-4 row-span-1 row-start-5 flex items-center"
-          transition={{ ...animationDurations.item7 }}
-          {...animationProps()}
+          {...animationProps('x')}
         >
           <Card className="flex flex-col flex-grow justify-between">
             <CardHeader className="space-y-1">
@@ -127,28 +128,17 @@ export function CreativeCashFlowResults() {
             <CardContent className="pt-4">
               <CountUp
                 className="text-2xl"
-                {...createCountUpProps(
-                  results.lifestyle_expenses_tax,
-                  animationDurations.item7.delay
-                )}
+                {...createCountUpProps(results.lifestyle_expenses_tax, countUpProps.item7.delay)}
               />
             </CardContent>
           </Card>
         </motion.div>
 
-        <motion.div
-          className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...animationDurations.item8 }}
-          {...animationProps()}
-        >
+        <motion.div className="col-span-1 col-start-2 row-span-1" {...animationProps()}>
           <MoveDown className="w-16 h-16 mx-auto" />
         </motion.div>
 
-        <motion.div
-          className="col-span-1 col-start-2 row-span-1"
-          transition={{ ...animationDurations.item9 }}
-          {...animationProps()}
-        >
+        <motion.div className="col-span-1 col-start-2 row-span-1" {...animationProps()}>
           <Card className="flex flex-col flex-grow justify-between">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl">
@@ -163,7 +153,7 @@ export function CreativeCashFlowResults() {
                 className="text-2xl"
                 {...createCountUpProps(
                   results.business_profit_before_tax,
-                  animationDurations.item9.delay
+                  countUpProps.item9.delay
                 )}
               />
             </CardContent>
@@ -172,7 +162,6 @@ export function CreativeCashFlowResults() {
 
         <motion.div
           className="col-span-1 col-start-3 row-span-1 flex items-center"
-          transition={{ ...animationDurations.item10 }}
           {...animationProps('x')}
         >
           <MoveRight className="w-16 h-16 mx-auto text-destructive" />
@@ -180,8 +169,7 @@ export function CreativeCashFlowResults() {
 
         <motion.div
           className="col-span-1 col-start-4 row-span-1 row-start-9 flex items-center"
-          transition={{ ...animationDurations.item11 }}
-          {...animationProps()}
+          {...animationProps('x')}
         >
           <Card className="flex flex-col flex-grow justify-between">
             <CardHeader className="space-y-1">
@@ -195,36 +183,32 @@ export function CreativeCashFlowResults() {
             <CardContent className="pt-4">
               <CountUp
                 className="text-2xl"
-                {...createCountUpProps(results.tax_account, animationDurations.item11.delay)}
+                {...createCountUpProps(results.tax_account, countUpProps.item11.delay)}
               />
             </CardContent>
           </Card>
         </motion.div>
 
-        <motion.div
-          className="col-span-1 col-start-4 row-span-1"
-          transition={{ ...animationDurations.item12 }}
-          {...animationProps()}
-        >
+        <motion.div className="col-span-1 col-start-4 row-span-1" {...animationProps()}>
           <MoveDown className="w-16 h-16 mx-auto" />
         </motion.div>
 
-        <motion.div
-          className="col-span-1 col-start-4 row-span-1"
-          transition={{ ...animationDurations.item13 }}
-          {...animationProps()}
-        >
+        <motion.div className="col-span-1 col-start-4 row-span-1" {...animationProps()}>
           <Card>
             <CardHeader className="space-y-1 pb-2">
               <CardTitle className="text-2xl">{resultsLabels.waa.title}</CardTitle>
               <CardDescription className="text-md">{resultsLabels.waa.description}</CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
-              <CountUp
-                className="text-2xl"
-                {...createCountUpProps(results.waa, animationDurations.item13.delay)}
-              />
+              <span className="text-2xl">
+                {dollarFormatter(originalWaaRef.current, {
+                  maximumFractionDigits: 0,
+                })}
+              </span>
             </CardContent>
+
+            <UpdateWaa originalTotalWaa={originalTotalWaaRef.current} />
+
             <CardHeader className="space-y-1 pb-2">
               <CardTitle className="text-2xl">{resultsLabels.total_waa.title}</CardTitle>
               <CardDescription className="text-md">
@@ -232,14 +216,15 @@ export function CreativeCashFlowResults() {
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
-              <CountUp
-                className="text-2xl"
-                {...createCountUpProps(results.total_waa, animationDurations.item13.delay)}
-              />
+              <span className="text-2xl">
+                {dollarFormatter(results.total_waa, {
+                  maximumFractionDigits: 0,
+                })}
+              </span>
             </CardContent>
           </Card>
         </motion.div>
-      </div>
+      </motion.div>
     </AnimatePresence>
   );
 }

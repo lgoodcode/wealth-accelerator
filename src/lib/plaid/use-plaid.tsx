@@ -12,8 +12,8 @@ import { toast } from 'react-toastify';
 
 import { createLinkToken } from '@/lib/plaid/create-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
-import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
-import { displaySyncError } from '@/lib/plaid/transactions/displaySyncError';
+import { clientSyncTransactions } from '@/lib/plaid/transactions/client-sync-transactions';
+import { displaySyncError } from '@/lib/plaid/transactions/display-sync-error';
 import {
   linkTokenAtom,
   updateModeAtom,

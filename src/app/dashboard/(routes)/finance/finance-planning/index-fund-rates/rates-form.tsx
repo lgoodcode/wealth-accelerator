@@ -8,11 +8,11 @@ import { toast } from 'react-toastify';
 import { Copy } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useUpdateRates } from '../hooks/use-update-rates';
 import { RatesFormSchema, type RatesFormSchemaType } from '../schema';
+import { PercentInput } from '@/components/ui/percent-input';
 
 const NUM_RATE_YEARS = 60;
 
@@ -24,7 +24,7 @@ interface RatesFormProps {
 
 export function RatesForm({ user, rates }: RatesFormProps) {
   const updateRates = useUpdateRates();
-  const [allRates, setAllRates] = useState<number>();
+  const [allRates, setAllRates] = useState<string>();
   const form = useForm<RatesFormSchemaType>({
     resolver: zodResolver(RatesFormSchema(NUM_RATE_YEARS)),
     values: { rates: rates ?? [] },
@@ -50,11 +50,10 @@ export function RatesForm({ user, rates }: RatesFormProps) {
             <FormLabel>
               Set All Rates <span className="ml-1 text-muted-foreground">(%)</span>
             </FormLabel>
-            <Input
-              type="number"
-              placeholder="7.25"
+            <PercentInput
+              placeholder="7.25%"
               value={allRates}
-              onChange={(e) => setAllRates(parseFloat(e.target.value))}
+              onValueChange={(value = '0') => setAllRates(value)}
             />
           </FormItem>
           <Button
@@ -62,7 +61,9 @@ export function RatesForm({ user, rates }: RatesFormProps) {
             variant="outline"
             className="ml-2"
             onClick={() => {
-              form.setValue('rates', Array(NUM_RATE_YEARS).fill(allRates));
+              form.setValue('rates', Array(NUM_RATE_YEARS).fill(allRates), {
+                shouldDirty: true,
+              });
             }}
           >
             <Copy size={20} />
@@ -83,12 +84,7 @@ export function RatesForm({ user, rates }: RatesFormProps) {
                         {`Year ${i + 1}`}
                         <span className="ml-1 text-muted-foreground">(%)</span>
                       </FormLabel>
-                      <Input
-                        type="number"
-                        placeholder={`Rate For Year ${i + 1}`}
-                        value={field.value}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                      />
+                      <PercentInput placeholder={`Rate For Year ${i + 1}`} {...field} />
                       <FormMessage />
                     </FormItem>
                   )}

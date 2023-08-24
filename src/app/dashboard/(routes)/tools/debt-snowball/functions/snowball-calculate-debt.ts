@@ -168,10 +168,13 @@ export const snowball_calculate = (
   } // End of years - no more balance remaining
 
   /**
-   * If paying the loan back, use any remainder snowball and the monthly payments to pay back the loan
+   * If paying the loan back, use any remainder snowball and the monthly payments to pay
+   * back the loan. Otherwise, set the loan payment tracking to an empty array
    */
 
-  if (options.pay_back_loan) {
+  if (!options.pay_back_loan) {
+    loan_payment_tracking[year] = [];
+  } else {
     // If we are only paying interest, then set to the balance to the total loan interest
     let loan_balance_remaining = options.pay_interest
       ? loan_interest

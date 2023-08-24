@@ -3,9 +3,10 @@ import { z } from 'zod';
 import { Strategies } from './strategies';
 
 export const debtCalculationSchema = z.object({
-  additional_payment: z
+  additional_payment: z.coerce
     .number({
       required_error: 'Enter the amount you can pay each month',
+      invalid_type_error: 'Enter the amount you can pay each month',
     })
     .nonnegative({
       message: 'Enter a positive amount',
@@ -15,9 +16,10 @@ export const debtCalculationSchema = z.object({
   strategy: z.nativeEnum(Strategies, {
     required_error: 'Select a strategy',
   }),
-  opportunity_rate: z
+  opportunity_rate: z.coerce
     .number({
       required_error: 'Enter a rate',
+      invalid_type_error: 'Enter a rate',
     })
     .nonnegative({
       message: 'Enter a positive rate',
@@ -26,9 +28,10 @@ export const debtCalculationSchema = z.object({
       message: 'Enter a rate less than 100%',
     }),
   lump_amounts: z.array(
-    z
+    z.coerce
       .number({
         required_error: 'Enter a lump amount',
+        invalid_type_error: 'Enter a lump amount',
       })
       .nonnegative({
         message: 'Enter a positive amount',
@@ -36,9 +39,10 @@ export const debtCalculationSchema = z.object({
   ),
   pay_back_loan: z.boolean(),
   pay_interest: z.boolean(),
-  loan_interest_rate: z
+  loan_interest_rate: z.coerce
     .number({
       required_error: 'Enter a rate',
+      invalid_type_error: 'Enter a rate',
     })
     .nonnegative({
       message: 'Enter a positive rate',

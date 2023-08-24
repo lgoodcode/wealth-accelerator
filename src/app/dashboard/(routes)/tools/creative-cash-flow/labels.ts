@@ -52,10 +52,14 @@ export const resultsLabels = {
   },
   waa: {
     title: 'WAA',
-    description: 'The amount to deposit to your WAA account.',
+    description: 'The recommended amount to deposit into your WAA account.',
+  },
+  actual_waa: {
+    title: 'Actual WAA',
+    description: 'Enter the actual amount you will deposit into your WAA account.',
   },
   total_waa: {
-    title: 'Total WAA',
+    title: 'Year To Date WAA',
     description: 'Running total of your WAA.',
   },
   collections: {

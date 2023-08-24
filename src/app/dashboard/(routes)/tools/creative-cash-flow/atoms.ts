@@ -16,6 +16,8 @@ const defaultValues = {
   optimal_savings_strategy: 0,
 };
 
+export const hasAnimatedAtom = atom(false);
+
 export const creativeCashFlowInputsAtom = atom<CreativeCashFlowManagementInputs>(defaultValues);
 
 export const resetCreativeCashFlowInputsAtom = atom(null, (_, set) => {
@@ -57,3 +59,25 @@ export const removeCreativeCashFlowRecordAtom = atom(null, (_get, set, id: strin
     return newRecords;
   });
 });
+
+type UpdateWaa = {
+  originalTotalWaa: number;
+  newWaa: number;
+};
+
+export const updatecreativeCashFlowResultWaaAtom = atom(
+  null,
+  (get, set, { originalTotalWaa, newWaa }: UpdateWaa) => {
+    const results = get(creativeCashFlowResultAtom);
+
+    if (!results) {
+      throw new Error('creativeCashFlowResultAtom is not initialized');
+    }
+
+    set(creativeCashFlowResultAtom, {
+      ...results,
+      waa: newWaa,
+      total_waa: originalTotalWaa + newWaa,
+    });
+  }
+);
