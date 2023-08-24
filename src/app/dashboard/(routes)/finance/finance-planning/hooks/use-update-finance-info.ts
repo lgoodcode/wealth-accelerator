@@ -11,7 +11,7 @@ export const useUpdateFinanceInfo = () => {
       })
       .eq('user_id', user_id);
 
-    if (error) {
+    if (!error) {
       throw error;
     }
 
