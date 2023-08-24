@@ -2,10 +2,10 @@ import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 
 import { getUser } from '@/lib/supabase/server/get-user';
+import { useShims } from '@/hooks/use-shims';
 import { ThemeProvider } from '@/components/theme-provider';
 import { JotaiProvider } from './components/jotai-provider';
 import { UserProvider } from '@/components/user-provider';
-import { Shims } from './components/shims';
 import { Header } from './components/header';
 import { QueryProvider } from './components/query-provider';
 import { ToastProvider } from './components/toast-provider';
@@ -33,6 +33,7 @@ interface DashboardLayoutProps {
  */
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
   const user = await getUser();
+  useShims();
 
   if (!user) {
     redirect('/login');
@@ -48,7 +49,6 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
       <JotaiProvider>
         <UserProvider user={user}>
           <QueryProvider>
-            <Shims />
             <Header height={HEADER_HEIGHT} />
             <div
               className="fixed inset-0 -z-10 opacity-40 w-full hidden dark:flex flex-col flex-grow bg-right-top bg-no-repeat"
