@@ -17,7 +17,7 @@ export const structuredCloneShim = () => {
 
       case 'chrome':
       case 'edge':
-        if (browserVersion.version < 98) {
+        if (browserVersion.version > 98) {
           shouldShim = true;
         }
         break;
