@@ -6,8 +6,8 @@ import { captureException } from '@sentry/nextjs';
 import { SUPABASE_QUERY_LIMIT } from '@/config/app';
 import { supabase } from '@/lib/supabase/client';
 import { updateModeAtom, linkTokenAtom } from '@/lib/plaid/atoms';
-import { clientSyncTransactions } from '@/lib/plaid/transactions/clientSyncTransactions';
-import { displaySyncError } from '@/lib/plaid/transactions/displaySyncError';
+import { clientSyncTransactions } from '@/lib/plaid/transactions/client-sync-transactions';
+import { displaySyncError } from '@/lib/plaid/transactions/display-sync-error';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 

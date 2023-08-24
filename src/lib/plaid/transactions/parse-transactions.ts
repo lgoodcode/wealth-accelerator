@@ -1,6 +1,6 @@
 import type { Transaction } from 'plaid';
 
-import { parseCategory } from './parseCategory';
+import { parseCategory } from './parse-category';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
 /**

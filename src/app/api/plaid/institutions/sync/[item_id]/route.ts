@@ -3,7 +3,7 @@ import { captureException } from '@sentry/nextjs';
 
 import { getUser } from '@/lib/supabase/server/get-user';
 import { getItemFromItemId } from '@/lib/plaid/getItemFromItemId';
-import { serverSyncTransactions } from '@/lib/plaid/transactions/serverSyncTransactions';
+import { serverSyncTransactions } from '@/lib/plaid/transactions/server-sync-transactions';
 import type { SyncTransactionsResponse } from '@/lib/plaid/types/sync';
 
 interface SyncInstitutionParams {

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 import { getItemFromItemId } from '@/lib/plaid/getItemFromItemId';
-import { serverSyncTransactions } from '@/lib/plaid/transactions/serverSyncTransactions';
+import { serverSyncTransactions } from '@/lib/plaid/transactions/server-sync-transactions';
 
 export const dynamic = 'force-dynamic';
 export const POST = syncTransactionsWebhook;

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
 import { createSupabase } from '@/lib/supabase/api';
-import { formatPath } from '@/lib/utils/formatPath';
+import { formatPath } from '@/lib/utils/format-path';
 
 export const dynamic = 'force-dynamic';
 export const GET = exchangeCodeForSession;

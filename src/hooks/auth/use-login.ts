@@ -1,7 +1,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { supabase } from '@/lib/supabase/client';
-import { formatPath } from '@/lib/utils/formatPath';
+import { formatPath } from '@/lib/utils/format-path';
 
 export const useLogin = () => {
   const router = useRouter();
