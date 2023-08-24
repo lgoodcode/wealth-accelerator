@@ -4,8 +4,10 @@ import { useEffect } from 'react';
 
 import { structuredCloneShim } from '@/lib/utils/structured-clone-shim';
 
-export function useShims() {
+export function Shims() {
   useEffect(() => {
     structuredCloneShim();
   }, []);
+
+  return null;
 }
