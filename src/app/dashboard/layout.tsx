@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 
-import { getUser } from '@/lib/supabase/server/get-user';
 import { useShims } from '@/hooks/use-shims';
+import { getUser } from '@/lib/supabase/server/get-user';
 import { ThemeProvider } from '@/components/theme-provider';
 import { JotaiProvider } from './components/jotai-provider';
 import { UserProvider } from '@/components/user-provider';
@@ -33,6 +33,7 @@ interface DashboardLayoutProps {
  */
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
   const user = await getUser();
+
   useShims();
 
   if (!user) {
