@@ -10,6 +10,7 @@ import { PlaidRateLimitErrorCode, PlaidCredentialErrorCode } from '@/lib/plaid/t
 import type { Institution } from '@/lib/plaid/types/institutions';
 import type { Filter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
+import { captureMessage } from '@sentry/nextjs';
 
 export const serverSyncTransactions = async (
   item: Institution,
@@ -42,6 +43,11 @@ export const serverSyncTransactions = async (
       access_token: item.access_token,
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
       count: PLAID_SYNC_BATCH_SIZE,
+    });
+    captureMessage('transactions', {
+      extra: {
+        data: data.added.slice(-5),
+      },
     });
     const addedError = await addTransactions(item.item_id, data.added, filters, supabaseAdmin);
     const updatedError = await updateTransactions(
