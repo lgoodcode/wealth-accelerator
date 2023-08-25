@@ -59,11 +59,12 @@ const nextConfig = {
 
 module.exports = withBundleAnalyzer(
   withSentryConfig(
-    nextConfig,
     {
-      ignore: [],
-      silent: false,
-      authToken: process.env.SENTRY_AUTH_TOKEN,
+      ...nextConfig,
+      sentry: {
+        silent: false,
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+      },
     },
     {
       tunnelRoute: '/sentry',
