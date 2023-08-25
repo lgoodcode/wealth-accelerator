@@ -44,16 +44,16 @@ export function CreativeCashFlow({
   };
 
   const onTabChange = (value: string) => {
-    const tab = value === TabsValue.Inputs ? TabsValue.Inputs : TabsValue.Results;
-    setActiveTab(tab);
+    const newTab = value === TabsValue.Inputs ? TabsValue.Inputs : TabsValue.Results;
+    setActiveTab(newTab);
     // When changing tab back to inputs, set hasAnimated to true
-    if (!hasAnimated && activeTab === TabsValue.Inputs) {
+    if (!hasAnimated && newTab === TabsValue.Inputs) {
       setHasAnimated(true);
     }
   };
 
   useEffect(() => {
-    if (results) {
+    if (activeTab === TabsValue.Inputs && results) {
       setActiveTab(TabsValue.Results);
     }
   }, [results]);

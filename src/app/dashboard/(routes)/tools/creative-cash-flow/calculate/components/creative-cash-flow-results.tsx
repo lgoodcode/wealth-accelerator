@@ -24,7 +24,7 @@ export function CreativeCashFlowResults({ hasAnimated }: CreativeCashFlowResults
   const originalWaaRef = useRef(results?.waa ?? 0);
   const originalTotalWaaRef = useRef((results?.total_waa ?? 0) - (results?.waa ?? 0));
   const createCountUpProps = createCountUpPropsFactory(!hasAnimated);
-
+  console.log('CreativeCashFlowResults', results);
   if (!results) {
     return null;
   }
