@@ -499,23 +499,23 @@ CREATE OR REPLACE function create_creative_cash_flow (
   _user_id uuid,
   _start_date timestamp with time zone,
   _end_date timestamp with time zone,
-  _all_other_income integer,
-  _payroll_and_distributions integer,
-  _lifestyle_expenses_tax_rate smallint,
-  _tax_account_rate smallint,
-  _optimal_savings_strategy integer,
-  _collections decimal(10, 2),
-  _lifestyle_expenses decimal(10, 2),
-  _lifestyle_expenses_tax decimal(10, 2),
-  _business_profit_before_tax decimal(10, 2),
-  _business_overhead decimal(10, 2),
-  _tax_account decimal(10, 2),
-  _waa decimal(10, 2),
-  _total_waa decimal(10, 2),
-  _weekly_trend decimal(10, 2) [],
-  _monthly_trend decimal(10, 2) [],
-  _yearly_trend decimal(10, 2) [],
-  _year_to_date decimal(10, 2)
+  _all_other_income numeric(12,2),
+  _payroll_and_distributions numeric(12,2),
+  _lifestyle_expenses_tax_rate numeric(5,2),
+  _tax_account_rate numeric(5,2),
+  _optimal_savings_strategy numeric(12,2),
+  _collections numeric(12,2),
+  _lifestyle_expenses numeric(12,2),
+  _lifestyle_expenses_tax numeric(12,2),
+  _business_profit_before_tax numeric(12,2),
+  _business_overhead numeric(12,2),
+  _tax_account numeric(12,2),
+  _waa numeric(12,2),
+  _total_waa numeric(12,2),
+  _weekly_trend numeric(12,2)[],
+  _monthly_trend numeric(12,2)[],
+  _yearly_trend numeric(12,2)[],
+  _year_to_date numeric(12,2)
 ) RETURNS uuid as $$
 DECLARE
   new_id uuid;
@@ -540,23 +540,23 @@ ALTER FUNCTION create_creative_cash_flow(
   _user_id uuid,
   _start_date timestamp with time zone,
   _end_date timestamp with time zone,
-  _all_other_income integer,
-  _payroll_and_distributions integer,
-  _lifestyle_expenses_tax_rate smallint,
-  _tax_account_rate smallint,
-  _optimal_savings_strategy integer,
-  _collections decimal(10, 2),
-  _lifestyle_expenses decimal(10, 2),
-  _lifestyle_expenses_tax decimal(10, 2),
-  _business_profit_before_tax decimal(10, 2),
-  _business_overhead decimal(10, 2),
-  _tax_account decimal(10, 2),
-  _waa decimal(10, 2),
-  _total_waa decimal(10, 2),
-  _weekly_trend decimal(10, 2) [],
-  _monthly_trend decimal(10, 2) [],
-  _yearly_trend decimal(10, 2) [],
-  _year_to_date decimal(10, 2)
+  _all_other_income numeric(12,2),
+  _payroll_and_distributions numeric(12,2),
+  _lifestyle_expenses_tax_rate numeric(5,2),
+  _tax_account_rate numeric(5,2),
+  _optimal_savings_strategy numeric(12,2),
+  _collections numeric(12,2),
+  _lifestyle_expenses numeric(12,2),
+  _lifestyle_expenses_tax numeric(12,2),
+  _business_profit_before_tax numeric(12,2),
+  _business_overhead numeric(12,2),
+  _tax_account numeric(12,2),
+  _waa numeric(12,2),
+  _total_waa numeric(12,2),
+  _weekly_trend numeric(12,2)[],
+  _monthly_trend numeric(12,2)[],
+  _yearly_trend numeric(12,2)[],
+  _year_to_date numeric(12,2)
 ) OWNER TO postgres;
 
 
@@ -567,16 +567,16 @@ ALTER FUNCTION create_creative_cash_flow(
 
 DROP TABLE IF EXISTS creative_cash_flow_inputs CASCADE;
 CREATE TABLE creative_cash_flow_inputs (
-  id uuid PRIMARY KEY NOT NULL REFERENCES public.creative_cash_flow(id) ON DELETE CASCADE,
+  id uuid PRIMARY KEY NOT NULL REFERENCES creative_cash_flow(id) ON DELETE CASCADE,
   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   start_date timestamp with time zone NOT NULL,
   end_date timestamp with time zone NOT NULL,
-  all_other_income int NOT NULL,
-  payroll_and_distributions int NOT NULL,
-  lifestyle_expenses_tax_rate smallint NOT NULL,
-  tax_account_rate smallint NOT NULL,
-  optimal_savings_strategy int NOT NULL
+  all_other_income numeric(12,2) NOT NULL,
+  payroll_and_distributions numeric(12,2) NOT NULL,
+  lifestyle_expenses_tax_rate numeric(5,2) NOT NULL,
+  tax_account_rate numeric(5,2) NOT NULL,
+  optimal_savings_strategy numeric(12,2) NOT NULL
 );
 
 ALTER TABLE creative_cash_flow_inputs OWNER TO postgres;
@@ -607,20 +607,20 @@ CREATE POLICY "Can delete own CCF inputs" ON public.creative_cash_flow_inputs
 
 DROP TABLE IF EXISTS creative_cash_flow_results CASCADE;
 CREATE TABLE creative_cash_flow_results (
-  id uuid PRIMARY KEY NOT NULL REFERENCES public.creative_cash_flow(id) ON DELETE CASCADE,
+  id uuid PRIMARY KEY NOT NULL REFERENCES creative_cash_flow(id) ON DELETE CASCADE,
   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
-  collections decimal(10,2) NOT NULL,
-  lifestyle_expenses decimal(10,2) NOT NULL,
-  lifestyle_expenses_tax decimal(10,2) NOT NULL,
-  business_profit_before_tax decimal(10,2) NOT NULL,
-  business_overhead decimal(10,2) NOT NULL,
-  tax_account decimal(10,2) NOT NULL,
-  waa decimal(10,2) NOT NULL,
-  total_waa decimal(10,2) NOT NULL,
-  weekly_trend decimal(10,2) [] NOT NULL,
-  monthly_trend decimal(10,2) [] NOT NULL,
-  yearly_trend decimal(10,2) [] NOT NULL,
-  year_to_date decimal(10,2) NOT NULL
+  collections numeric(12,2) NOT NULL,
+  lifestyle_expenses numeric(12,2) NOT NULL,
+  lifestyle_expenses_tax numeric(12,2) NOT NULL,
+  business_profit_before_tax numeric(12,2) NOT NULL,
+  business_overhead numeric(12,2) NOT NULL,
+  tax_account numeric(12,2) NOT NULL,
+  waa numeric(12,2) NOT NULL,
+  total_waa numeric(12,2) NOT NULL,
+  weekly_trend numeric(12,2)[] NOT NULL,
+  monthly_trend numeric(12,2)[] NOT NULL,
+  yearly_trend numeric(12,2)[] NOT NULL,
+  year_to_date numeric(12,2) NOT NULL
 );
 
 ALTER TABLE creative_cash_flow_results OWNER TO postgres;

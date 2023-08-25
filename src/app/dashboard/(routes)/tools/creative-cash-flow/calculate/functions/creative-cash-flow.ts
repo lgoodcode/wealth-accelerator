@@ -1,3 +1,4 @@
+import { centsToDollars, dollarsToCents } from '@/lib/utils/currency';
 import type { CreativeCashFlowManagementArgs, CreativeCashFlowManagementResult } from '../../types';
 
 const MONTH_LENGTH = 30;
@@ -17,8 +18,23 @@ export function creativeCashFlowManagement({
   tax_account_rate,
   total_waa,
 }: CreativeCashFlowManagementArgs): CreativeCashFlowManagementResult {
+  // Convert the tax rates to decimal values
   lifestyle_expenses_tax_rate /= 100;
   tax_account_rate /= 100;
+
+  // Convert the dollars to cents
+  business_transactions = business_transactions.map((transaction) => ({
+    ...transaction,
+    amount: dollarsToCents(transaction.amount),
+  }));
+  personal_transactions = personal_transactions.map((transaction) => ({
+    ...transaction,
+    amount: dollarsToCents(transaction.amount),
+  }));
+  ytd_collections = dollarsToCents(ytd_collections);
+  all_other_income = dollarsToCents(all_other_income);
+  payroll_and_distributions = dollarsToCents(payroll_and_distributions);
+  total_waa = dollarsToCents(total_waa);
 
   // Verify the tax rates are decimal values.
   if (lifestyle_expenses_tax_rate > 1 || tax_account_rate > 1) {
@@ -101,7 +117,6 @@ export function creativeCashFlowManagement({
     }
   }
 
-  console.log('lifestyle_expenses', life);
   console.groupEnd();
 
   const lifestyle_expenses_tax = lifestyle_expenses * lifestyle_expenses_tax_rate;
@@ -151,21 +166,19 @@ export function creativeCashFlowManagement({
     monthly_trend[1] / (MONTH_LENGTH * 2),
     monthly_trend[2] / (MONTH_LENGTH * 3),
   ];
-  const weekly_trend = daily_trend.map((trend) => trend * DAYS_IN_WEEK);
-  const yearly_trend = daily_trend.map((trend) => trend * DAYS_IN_YEAR);
 
   return {
-    collections,
-    lifestyle_expenses,
-    lifestyle_expenses_tax,
-    business_profit_before_tax,
-    business_overhead,
-    tax_account,
-    waa: waa,
-    total_waa: total_waa + waa,
-    weekly_trend,
-    monthly_trend,
-    yearly_trend,
-    year_to_date: year_to_date + ytd_collections,
+    collections: centsToDollars(collections),
+    lifestyle_expenses: centsToDollars(lifestyle_expenses),
+    lifestyle_expenses_tax: centsToDollars(lifestyle_expenses_tax),
+    business_profit_before_tax: centsToDollars(business_profit_before_tax),
+    business_overhead: centsToDollars(business_overhead),
+    tax_account: centsToDollars(tax_account),
+    waa: centsToDollars(waa),
+    total_waa: centsToDollars(total_waa + waa),
+    weekly_trend: daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_WEEK)),
+    monthly_trend: daily_trend.map((trend) => centsToDollars(trend)),
+    yearly_trend: daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_YEAR)),
+    year_to_date: centsToDollars(year_to_date + ytd_collections),
   };
 }

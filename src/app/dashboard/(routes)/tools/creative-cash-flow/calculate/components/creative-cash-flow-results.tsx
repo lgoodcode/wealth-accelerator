@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
+import { useRef } from 'react';
+import { useAtomValue } from 'jotai';
 import { AnimatePresence, motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import { MoveDown, MoveRight } from 'lucide-react';
@@ -11,24 +11,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { createCountUpPropsFactory } from '../../utils/create-count-up-props';
 import { animationProps, countUpProps } from '../../utils/animations';
 import { resultsLabels } from '../../labels';
-import { creativeCashFlowResultAtom, hasAnimatedAtom } from '../../atoms';
+import { creativeCashFlowResultAtom } from '../../atoms';
 import { Trends } from './trends';
 import { UpdateWaa } from './update-waa';
 
-const NUM_ITEMS = 11;
+interface CreativeCashFlowResultsProps {
+  hasAnimated: boolean;
+}
 
-export function CreativeCashFlowResults() {
+export function CreativeCashFlowResults({ hasAnimated }: CreativeCashFlowResultsProps) {
   const results = useAtomValue(creativeCashFlowResultAtom);
-  const [hasAnimated, setHasAnimated] = useAtom(hasAnimatedAtom);
   const originalWaaRef = useRef(results?.waa ?? 0);
   const originalTotalWaaRef = useRef((results?.total_waa ?? 0) - (results?.waa ?? 0));
   const createCountUpProps = createCountUpPropsFactory(!hasAnimated);
-
-  useEffect(() => {
-    if (!hasAnimated) {
-      setTimeout(() => setHasAnimated(true), NUM_ITEMS * 1000);
-    }
-  }, []);
 
   if (!results) {
     return null;
@@ -200,11 +195,7 @@ export function CreativeCashFlowResults() {
               <CardDescription className="text-md">{resultsLabels.waa.description}</CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
-              <span className="text-2xl">
-                {dollarFormatter(originalWaaRef.current, {
-                  maximumFractionDigits: 0,
-                })}
-              </span>
+              <span className="text-2xl">{dollarFormatter(originalWaaRef.current)}</span>
             </CardContent>
 
             <UpdateWaa originalTotalWaa={originalTotalWaaRef.current} />
@@ -216,11 +207,7 @@ export function CreativeCashFlowResults() {
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
-              <span className="text-2xl">
-                {dollarFormatter(results.total_waa, {
-                  maximumFractionDigits: 0,
-                })}
-              </span>
+              <span className="text-2xl">{dollarFormatter(results.total_waa)}</span>
             </CardContent>
           </Card>
         </motion.div>
