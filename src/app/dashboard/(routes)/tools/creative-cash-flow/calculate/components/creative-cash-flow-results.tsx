@@ -23,7 +23,7 @@ export function CreativeCashFlowResults() {
   const originalWaaRef = useRef(results?.waa ?? 0);
   const originalTotalWaaRef = useRef((results?.total_waa ?? 0) - (results?.waa ?? 0));
   const createCountUpProps = createCountUpPropsFactory(!hasAnimated);
-  console.log('results', results);
+
   useEffect(() => {
     if (!hasAnimated) {
       setTimeout(() => setHasAnimated(true), NUM_ITEMS * 1000);
