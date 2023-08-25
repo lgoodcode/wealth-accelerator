@@ -4,11 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  creativeCashFlowResultAtom,
-  hasAnimatedAtom,
-  resetCreativeCashFlowInputsAtom,
-} from '../../atoms';
+import { creativeCashFlowResultAtom, resetCreativeCashFlowInputsAtom } from '../../atoms';
 import { Buttons } from './buttons';
 import { CreativeCashFlowInputs } from './creative-cash-flow-inputs';
 import { CreativeCashFlowResults } from './creative-cash-flow-results';
@@ -38,7 +34,7 @@ export function CreativeCashFlow({
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
   const [results, setResults] = useAtom(creativeCashFlowResultAtom);
   const resetCreativeCashFlowInput = useSetAtom(resetCreativeCashFlowInputsAtom);
-  const setHasAnimated = useSetAtom(hasAnimatedAtom);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   const handleReset = () => {
     setActiveTab(TabsValue.Inputs);
@@ -50,8 +46,8 @@ export function CreativeCashFlow({
   const onTabChange = (value: string) => {
     const tab = value === TabsValue.Inputs ? TabsValue.Inputs : TabsValue.Results;
     setActiveTab(tab);
-    // When changing tabs, set the animation to be completed
-    if (activeTab === TabsValue.Results) {
+    // When changing tab back to inputs, set hasAnimated to true
+    if (!hasAnimated && activeTab === TabsValue.Inputs) {
       setHasAnimated(true);
     }
   };
@@ -82,7 +78,7 @@ export function CreativeCashFlow({
         />
       </TabsContent>
       <TabsContent value={TabsValue.Results}>
-        <CreativeCashFlowResults />
+        <CreativeCashFlowResults hasAnimated={hasAnimated} />
       </TabsContent>
     </Tabs>
   );

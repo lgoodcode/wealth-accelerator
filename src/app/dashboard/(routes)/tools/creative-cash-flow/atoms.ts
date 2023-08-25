@@ -16,8 +16,6 @@ const defaultValues = {
   optimal_savings_strategy: 0,
 };
 
-export const hasAnimatedAtom = atom(false);
-
 export const creativeCashFlowInputsAtom = atom<CreativeCashFlowManagementInputs>(defaultValues);
 
 export const resetCreativeCashFlowInputsAtom = atom(null, (_, set) => {

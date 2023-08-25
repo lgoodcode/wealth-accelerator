@@ -14,7 +14,7 @@ export function UpdateWaa({ originalTotalWaa }: UpdateWaaProps) {
   const results = useAtomValue(creativeCashFlowResultAtom);
   const updateWaa = useSetAtom(updatecreativeCashFlowResultWaaAtom);
   const [waa, setWaa] = useState(results?.waa.toString() ?? '');
-  console.log(results);
+
   if (!results) {
     return null;
   }
