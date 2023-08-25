@@ -117,7 +117,6 @@ export function creativeCashFlowManagement({
     }
   }
 
-  console.log('lifestyle_expenses', life);
   console.groupEnd();
 
   const lifestyle_expenses_tax = lifestyle_expenses * lifestyle_expenses_tax_rate;
@@ -163,12 +162,12 @@ export function creativeCashFlowManagement({
   }
 
   const daily_trend = [
-    centsToDollars(monthly_trend[0]) / MONTH_LENGTH,
-    centsToDollars(monthly_trend[1]) / (MONTH_LENGTH * 2),
-    centsToDollars(monthly_trend[2]) / (MONTH_LENGTH * 3),
+    monthly_trend[0] / MONTH_LENGTH,
+    monthly_trend[1] / (MONTH_LENGTH * 2),
+    monthly_trend[2] / (MONTH_LENGTH * 3),
   ];
-  const weekly_trend = daily_trend.map((trend) => centsToDollars(trend) * DAYS_IN_WEEK);
-  const yearly_trend = daily_trend.map((trend) => centsToDollars(trend) * DAYS_IN_YEAR);
+  const weekly_trend = daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_WEEK));
+  const yearly_trend = daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_YEAR));
 
   return {
     collections: centsToDollars(collections),
