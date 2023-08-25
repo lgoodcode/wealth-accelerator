@@ -23,7 +23,7 @@ export function CreativeCashFlowResults() {
   const originalWaaRef = useRef(results?.waa ?? 0);
   const originalTotalWaaRef = useRef((results?.total_waa ?? 0) - (results?.waa ?? 0));
   const createCountUpProps = createCountUpPropsFactory(!hasAnimated);
-
+  console.log('results', results);
   useEffect(() => {
     if (!hasAnimated) {
       setTimeout(() => setHasAnimated(true), NUM_ITEMS * 1000);
@@ -200,11 +200,7 @@ export function CreativeCashFlowResults() {
               <CardDescription className="text-md">{resultsLabels.waa.description}</CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
-              <span className="text-2xl">
-                {dollarFormatter(originalWaaRef.current, {
-                  maximumFractionDigits: 0,
-                })}
-              </span>
+              <span className="text-2xl">{dollarFormatter(originalWaaRef.current)}</span>
             </CardContent>
 
             <UpdateWaa originalTotalWaa={originalTotalWaaRef.current} />
@@ -216,11 +212,7 @@ export function CreativeCashFlowResults() {
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
-              <span className="text-2xl">
-                {dollarFormatter(results.total_waa, {
-                  maximumFractionDigits: 0,
-                })}
-              </span>
+              <span className="text-2xl">{dollarFormatter(results.total_waa)}</span>
             </CardContent>
           </Card>
         </motion.div>
