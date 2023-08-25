@@ -1,7 +1,5 @@
 import type { CountUpProps } from 'react-countup/build/CountUp';
 
-import { dollarFormatter } from '@/lib/utils/dollar-formatter';
-
 export type CreateCountUp = (end: number, delay?: number) => CountUpProps;
 
 export const createCountUpPropsFactory =
@@ -11,6 +9,7 @@ export const createCountUpPropsFactory =
     end,
     delay,
     duration: animate ? 2 : 0,
+    decimals: 2,
+    prefix: '$',
     preserveValue: true,
-    formattingFn: dollarFormatter,
   });
