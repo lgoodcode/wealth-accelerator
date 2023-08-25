@@ -173,7 +173,7 @@ export function creativeCashFlowManagement({
   return {
     collections: centsToDollars(collections),
     lifestyle_expenses: centsToDollars(lifestyle_expenses),
-    lifestyle_expenses_tax,
+    lifestyle_expenses_tax: centsToDollars(lifestyle_expenses_tax),
     business_profit_before_tax: centsToDollars(business_profit_before_tax),
     business_overhead: centsToDollars(business_overhead),
     tax_account: centsToDollars(tax_account),
