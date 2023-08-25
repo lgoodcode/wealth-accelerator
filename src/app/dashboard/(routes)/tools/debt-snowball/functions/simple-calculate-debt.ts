@@ -1,10 +1,8 @@
+import { centsToDollars, dollarsToCents } from '@/lib/utils/currency';
 import type { Debt } from '@/lib/types/debts';
-import { moneyRound } from '@/lib/utils/money-round';
 import type { DebtPayoff, SimpleDebtCalculation } from '../types';
 
 const NUM_OF_MONTHS = 12;
-const dollarsToCents = (dollars: number) => dollars * 100;
-const centsToDollars = (cents: number) => moneyRound(cents / 100);
 
 export const simple_calculate = (debts: Debt[]): SimpleDebtCalculation => {
   // Track the debt payoffs by initializing an array of the debts in a DebtPayoff object
