@@ -166,8 +166,6 @@ export function creativeCashFlowManagement({
     monthly_trend[1] / (MONTH_LENGTH * 2),
     monthly_trend[2] / (MONTH_LENGTH * 3),
   ];
-  const weekly_trend = daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_WEEK));
-  const yearly_trend = daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_YEAR));
 
   return {
     collections: centsToDollars(collections),
@@ -178,9 +176,9 @@ export function creativeCashFlowManagement({
     tax_account: centsToDollars(tax_account),
     waa: centsToDollars(waa),
     total_waa: centsToDollars(total_waa + waa),
-    weekly_trend,
-    monthly_trend,
-    yearly_trend,
+    weekly_trend: daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_WEEK)),
+    monthly_trend: daily_trend.map((trend) => centsToDollars(trend)),
+    yearly_trend: daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_YEAR)),
     year_to_date: centsToDollars(year_to_date + ytd_collections),
   };
 }
