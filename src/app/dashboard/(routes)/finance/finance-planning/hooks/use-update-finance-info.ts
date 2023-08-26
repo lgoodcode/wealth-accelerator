@@ -11,9 +11,8 @@ export const useUpdateFinanceInfo = () => {
       })
       .eq('user_id', user_id);
 
-    if (!error) {
-      throw new Error('Update test');
-      // throw error;
+    if (error) {
+      throw error;
     }
 
     return data;
