@@ -5,6 +5,7 @@ import { captureException } from '@sentry/nextjs';
 import { parseAuthCookie } from '@/lib/supabase/server/parse-auth-cookie';
 import type { Database } from '@/lib/supabase/database';
 
+const PROJECT_ID = process.env.SUPABASE_PROJECT_ID;
 const authPagesRegex = /^\/(login|signup|forgot-password|reset-password)/;
 
 export async function middleware(request: NextRequest) {
@@ -22,8 +23,14 @@ export async function middleware(request: NextRequest) {
         }`
   );
 
-  // If the auth token isn't valid (none or expired), redirect to login page for all pages except auth pages
+  // If the auth token isn't valid (none or expired), destory the session cookie and
+  // redirect to login page for all pages except auth pages
   if (!token) {
+    request.cookies.set({
+      name: `sb-${PROJECT_ID}-auth-token`,
+      value: '',
+    });
+
     if (isAuthPage) {
       const isPasswordResetPage = request.nextUrl.pathname === '/reset-password';
 
