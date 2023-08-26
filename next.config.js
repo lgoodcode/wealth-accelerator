@@ -62,6 +62,7 @@ module.exports = withBundleAnalyzer(
     nextConfig,
     {
       ignore: [],
+      include: ['./src', './node_modules'],
       silent: true,
       authToken: process.env.SENTRY_AUTH_TOKEN,
     },
