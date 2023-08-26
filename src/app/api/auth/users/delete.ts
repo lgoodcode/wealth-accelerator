@@ -23,6 +23,7 @@ async function deleteUser(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // The public.user table record is cascade deleted when the auth.users record is deleted
   const { error: deleteAuthUserError } = await supabaseAdmin.auth.admin.deleteUser(id);
 
   if (deleteAuthUserError) {

@@ -21,6 +21,7 @@ export function UserProvider({ user, children }: UserProviderProps) {
 
     setSentryUser({
       id: user.id,
+      email: user.email,
       username: user.name,
     });
   }, [user]);

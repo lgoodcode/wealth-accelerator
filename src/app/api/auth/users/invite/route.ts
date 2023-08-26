@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { AuthError } from '@supabase/supabase-js';
 import { captureException } from '@sentry/nextjs';
 
+import { JsonParseApiRequest } from '@/lib/utils/json-parse-api-request';
 import { createSupabase } from '@/lib/supabase/api';
 
 export const dynamic = 'force-dynamic';
@@ -9,8 +10,13 @@ export const POST = inviteUser;
 
 async function inviteUser(request: Request) {
   try {
-    const body = await request.json();
-    const { name, email } = body as { name: string; email: string };
+    const body = await JsonParseApiRequest<{ name: string; email: string }>(request);
+
+    if (body instanceof Error) {
+      return NextResponse.json({ error: body.message }, { status: 400 });
+    }
+
+    const { name, email } = body;
 
     if (!name) {
       return NextResponse.json({ error: 'Missing name' }, { status: 400 });
