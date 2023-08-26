@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
+
+import { JsonParseApiRequest } from '@/lib/utils/json-parse-api-request';
 import { getItemFromItemId } from '@/lib/plaid/get-item-from-item-id';
 import { serverSyncTransactions } from '@/lib/plaid/transactions/server-sync-transactions';
+import { supabaseAdmin } from '@/lib/supabase/server/admin';
 
 export const dynamic = 'force-dynamic';
 export const POST = syncTransactionsWebhook;
 
 async function syncTransactionsWebhook(request: Request) {
-  const body = await request.json().catch((err) => err);
+  const body = await JsonParseApiRequest(request);
 
   if (!body) {
     return NextResponse.json({ error: 'Missing body' }, { status: 400 });
@@ -48,6 +51,25 @@ async function syncTransactionsWebhook(request: Request) {
 
       break;
     }
+
+    case 'TRANSACTIONS_REMOVED':
+      const removed_transactions = body.removed_transactions as string[];
+      const { error } = await supabaseAdmin
+        .from('plaid_transactions')
+        .delete()
+        .in('id', removed_transactions);
+
+      if (error) {
+        console.error(error);
+        captureException(error, {
+          extra: {
+            item_id,
+            removed_transactions,
+          },
+        });
+
+        return NextResponse.json({ error: 'Failed to remove transactions' }, { status: 500 });
+      }
 
     // Ignore - not needed if using sync endpoint + webhook
     case 'DEFAULT_UPDATE':
