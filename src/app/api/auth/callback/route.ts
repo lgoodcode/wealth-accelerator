@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
-import { createSupabase } from '@/lib/supabase/api';
 import { formatPath } from '@/lib/utils/format-path';
+import { supabaseAdmin } from '@/lib/supabase/server/admin';
 
 export const dynamic = 'force-dynamic';
 export const GET = exchangeCodeForSession;
@@ -15,11 +15,10 @@ async function exchangeCodeForSession(request: Request) {
 
   try {
     if (code) {
-      const supabase = createSupabase();
       const {
         error,
         data: { session },
-      } = await supabase.auth.exchangeCodeForSession(code);
+      } = await supabaseAdmin.auth.exchangeCodeForSession(code);
 
       if (error) {
         throw error;
