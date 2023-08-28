@@ -95,7 +95,9 @@ export const serverSyncTransactions = async (
     return {
       error: null,
       data: {
-        hasMore: data.has_more,
+        // If it's the first sync, has_more will be false, so we need to set it to true
+        // so that the client will continue to make requests until has_more is false
+        hasMore: !item.cursor && !data.has_more ? true : data.has_more,
         transactions: null,
       },
     };
