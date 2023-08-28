@@ -2,5 +2,5 @@
 .circleci
 .github
 .vscode
-supabase/functions
+supabase
 email
