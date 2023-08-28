@@ -10,6 +10,7 @@ import { clientSyncTransactions } from '@/lib/plaid/transactions/client-sync-tra
 import { displaySyncError } from '@/lib/plaid/transactions/display-sync-error';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
+import type { SyncTransactionsResponseError } from '@/lib/plaid/types/sync';
 
 const CACHE_TRANASACTIONS_FOR = 1000 * 60 * 60; // Cache transactions for an hour
 
@@ -20,17 +21,21 @@ const CACHE_TRANASACTIONS_FOR = 1000 * 60 * 60; // Cache transactions for an hou
  * @returns the link token created with the access token in the server for update mode
  */
 const syncTransactions = async (item: ClientInstitution) => {
-  const syncError = await clientSyncTransactions(item.item_id);
+  try {
+    return await clientSyncTransactions(item.item_id);
+  } catch (error: any) {
+    const syncError = error as SyncTransactionsResponseError;
 
-  if (syncError) {
-    displaySyncError(syncError, item.name);
+    if (syncError) {
+      displaySyncError(syncError, item.name);
 
-    if (syncError.plaid?.isCredentialError) {
-      return syncError.link_token;
+      if (syncError.plaid?.isCredentialError) {
+        return syncError.link_token;
+      }
     }
-  }
 
-  return null;
+    return null;
+  }
 };
 
 /**

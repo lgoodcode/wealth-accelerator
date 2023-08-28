@@ -21,6 +21,7 @@ import {
   isInsItemIdSyncingOrLoadingAtom,
 } from '@/lib/plaid/atoms';
 import { Toast } from '@/components/ui/toast';
+import type { SyncTransactionsResponseError } from './types/sync';
 
 export const usePlaid = () => {
   const [linkToken, setLinkToken] = useAtom(linkTokenAtom);
@@ -59,23 +60,9 @@ export const usePlaid = () => {
       addInstitution(institution);
       setIsInsItemIdSyncingOrLoading(institution.item_id);
 
-      const syncError = await clientSyncTransactions(institution.item_id);
-      // If there is a sync error, display it and if it's a credential error, set update mode
-      // and display a simple toast that the institution was connected
-      if (syncError) {
-        displaySyncError(syncError, metadata.institution?.name ?? 'Unknown institution');
+      try {
+        await clientSyncTransactions(institution.item_id);
 
-        if (syncError.plaid?.isCredentialError) {
-          setUpdateMode(true);
-          setLinkToken(syncError.link_token);
-        }
-
-        toast(
-          <Toast title="Connected institution">
-            Connected <span className="font-bold">{institutionName}</span>
-          </Toast>
-        );
-      } else {
         toast.success(
           <Toast title="Connected institution">
             <div className="flex flex-col space-y-3">
@@ -88,9 +75,67 @@ export const usePlaid = () => {
             </div>
           </Toast>
         );
+      } catch (error: any) {
+        const initSyncError = error as SyncTransactionsResponseError;
+        // If there is a sync error, display it and if it's a credential error, set update mode
+        // and display a simple toast that the institution was connected
+        if (initSyncError) {
+          displaySyncError(initSyncError, metadata.institution?.name ?? 'Unknown institution');
+
+          if (initSyncError.plaid?.isCredentialError) {
+            setUpdateMode(true);
+            setLinkToken(initSyncError.link_token);
+          }
+
+          toast(
+            <Toast title="Connected institution">
+              Connected <span className="font-bold">{institutionName}</span>
+            </Toast>
+          );
+          setIsInsItemIdSyncingOrLoading(null);
+          return;
+        }
       }
 
-      setIsInsItemIdSyncingOrLoading(null);
+      /**
+       * Run the sync again because the first sync only gets the last 30 days of transactions, which
+       * we want to have ready and display to the user as soon as possible. The second sync will get
+       * sync the rest of the transactions.
+       */
+      setTimeout(() => {
+        clientSyncTransactions(institution.item_id)
+          .then(() => {
+            toast.success(
+              <Toast title="Synced institution">
+                <div className="flex flex-col space-y-3">
+                  <span>
+                    <span className="font-bold">{institutionName}</span> transaction data is now
+                    fully synced. Refresh the pgae to get the latest transactions.
+                  </span>
+                </div>
+              </Toast>
+            );
+          })
+          .catch((syncError) => {
+            // If there is a sync error, display it and if it's a credential error, set update mode
+            // and display a simple toast that the institution was connected
+            if (syncError) {
+              displaySyncError(syncError, metadata.institution?.name ?? 'Unknown institution');
+
+              if (syncError.plaid?.isCredentialError) {
+                setUpdateMode(true);
+                setLinkToken(syncError.link_token);
+              }
+
+              toast(
+                <Toast title="Connected institution">
+                  Connected <span className="font-bold">{institutionName}</span>
+                </Toast>
+              );
+            }
+          })
+          .finally(() => setIsInsItemIdSyncingOrLoading(null));
+      }, 1000);
     },
     [addInstitution, setIsInsItemIdSyncingOrLoading, setUpdateMode, updateMode]
   );

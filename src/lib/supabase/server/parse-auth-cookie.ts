@@ -16,17 +16,15 @@ type Token = {
 
 /**
  * Parses the Supabase auth cookie and returns the token and whether it's expired
- * or `null` if the cookie is invalid and destroys the cookie.
+ * or `null` if the cookie is invalid
  *
  * Can only be used in middleware or on the server.
  */
 export const parseAuthCookie = (cookies: RequestCookies | ReadonlyRequestCookies) => {
   const cookie = cookies.get(`sb-${PROJECT_ID}-auth-token`)?.value;
   const isInvalidCookie = !cookie || cookie === 'undefined';
-  const destoryCookie = () => cookies.set(`sb-${PROJECT_ID}-auth-token`, '', { maxAge: -1 });
 
   if (isInvalidCookie) {
-    destoryCookie();
     return null;
   }
 
@@ -36,7 +34,6 @@ export const parseAuthCookie = (cookies: RequestCookies | ReadonlyRequestCookies
     : null;
 
   if (!supabaseAuthTokenString) {
-    destoryCookie();
     return null;
   }
 
@@ -44,7 +41,6 @@ export const parseAuthCookie = (cookies: RequestCookies | ReadonlyRequestCookies
   const expired = Date.now() >= (supabaseAuthToken?.exp || Infinity) * 1000;
 
   if (expired) {
-    destoryCookie();
     return null;
   }
 

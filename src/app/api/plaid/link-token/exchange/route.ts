@@ -2,7 +2,8 @@ import { captureException } from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 
 import { getUser } from '@/lib/supabase/server/get-user';
-import { createSupabase } from '@/lib/supabase/server/create-supabase';
+import { JsonParseApiRequest } from '@/lib/utils/json-parse-api-request';
+import { createSupabase } from '@/lib/supabase/api';
 import { plaidClient } from '@/lib/plaid/config';
 import type {
   ExchangeLinkTokenBody,
@@ -19,7 +20,7 @@ async function exchangeLinkToken(request: Request) {
     return NextResponse.json({ error: 'No user found' }, { status: 401 });
   }
 
-  const body = await request.json().catch((err) => err);
+  const body = await JsonParseApiRequest(request);
 
   if (!body) {
     return NextResponse.json({ error: 'Invalid body' }, { status: 400 });

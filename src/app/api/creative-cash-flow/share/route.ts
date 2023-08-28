@@ -4,9 +4,10 @@ import { captureException } from '@sentry/nextjs';
 import { getUser } from '@/lib/supabase/server/get-user';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import type { Notifier } from '@/app/dashboard/(routes)/admin/creative-cash-flow-notifiers/types';
+import { JsonParseApiRequest } from '@/lib/utils/json-parse-api-request';
 
 export const dynamic = 'force-dynamic';
-export const GET = ShareCreativeCashFlowRecord;
+export const POST = ShareCreativeCashFlowRecord;
 
 type SMTP2GoResponseError = {
   request_id: string;
@@ -61,16 +62,15 @@ const sendEmail = async (emailBody: string): Promise<SMTP2GoResponseSuccess> => 
   }
 };
 
-interface ShareCreativeCashFlowRecordParams {
-  params: {
-    record_id: string;
-  };
-}
+async function ShareCreativeCashFlowRecord(request: Request) {
+  const body = await JsonParseApiRequest<{ record_id: string }>(request);
 
-async function ShareCreativeCashFlowRecord(
-  _: Request,
-  { params: { record_id } }: ShareCreativeCashFlowRecordParams
-) {
+  if (body instanceof Error) {
+    return NextResponse.json({ error: body.message }, { status: 400 });
+  } else if (!body.record_id) {
+    return NextResponse.json({ error: 'Missing record_id' }, { status: 400 });
+  }
+
   const user = await getUser();
 
   if (!user) {
@@ -88,7 +88,7 @@ async function ShareCreativeCashFlowRecord(
     return NextResponse.json({ error: 'No notifiers found' }, { status: 500 });
   }
 
-  const emailBody = createEmailBody(record_id, user.name, notifiers);
+  const emailBody = createEmailBody(body.record_id, user.name, notifiers);
   try {
     await sendEmail(emailBody);
     return NextResponse.json({ success: true });
