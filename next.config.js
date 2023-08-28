@@ -34,6 +34,12 @@ const nextConfig = {
         destination: '/dashboard/tools/creative-cash-flow/:path*',
         permanent: true,
       },
+      {
+        // Redirects the old build home page to the new home page
+        source: '/statistics',
+        destination: '/',
+        permanent: true,
+      },
     ];
   },
   rewrites: async () => {
