@@ -41,8 +41,7 @@ export const serverSyncTransactions = async (
     const { data } = await plaidClient.transactionsSync({
       access_token: item.access_token,
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
-      // count: PLAID_SYNC_BATCH_SIZE,
-      count: 50,
+      count: PLAID_SYNC_BATCH_SIZE,
     });
     const addedError = await addTransactions(item.item_id, data.added, filters, supabaseAdmin);
     const updatedError = await updateTransactions(
@@ -72,8 +71,6 @@ export const serverSyncTransactions = async (
       };
     }
 
-    console.log('cursor', item.cursor);
-
     // Update the item's cursor
     const { error: cursorError } = await supabaseAdmin
       .from('plaid')
@@ -95,9 +92,6 @@ export const serverSyncTransactions = async (
       };
     }
 
-    console.log('has_more', data.has_more);
-
-    console.log('returning', !item.cursor && !data.has_more ? true : data.has_more);
     return {
       error: null,
       data: {
