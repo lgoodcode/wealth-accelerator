@@ -36,7 +36,7 @@ const nextConfig = {
       },
       {
         // Redirects the old build home page to the new home page
-        source: '/statistic',
+        source: '/statistics',
         destination: '/',
         permanent: true,
       },
