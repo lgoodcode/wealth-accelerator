@@ -71,6 +71,8 @@ export const serverSyncTransactions = async (
       };
     }
 
+    console.log('cursor', item.cursor);
+
     // Update the item's cursor
     const { error: cursorError } = await supabaseAdmin
       .from('plaid')
@@ -91,6 +93,8 @@ export const serverSyncTransactions = async (
         },
       };
     }
+
+    console.log('has_more', data.has_more);
 
     return {
       error: null,
