@@ -55,23 +55,20 @@ const nextConfig = {
   //   config.resolve.alias.encoding = false;
   //   return config;
   // },
-  productionBrowserSourceMaps: true,
 };
 
 module.exports = withBundleAnalyzer(
   withSentryConfig(
     nextConfig,
     {
-      silent: true,
-      // ignore: [],
+      silent: false,
+      ignore: [],
       authToken: process.env.SENTRY_AUTH_TOKEN,
     },
     {
-      disableClientWebpackPlugin: true,
-      disableServerWebpackPlugin: true,
       tunnelRoute: '/sentry',
       hideSourcemaps: true,
-      // widenClientFileUploads: true,
+      widenClientFileUploads: true,
     }
   )
 );
