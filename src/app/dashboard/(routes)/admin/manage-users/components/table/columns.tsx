@@ -77,9 +77,7 @@ export const columns: ColumnDef<ManageUser>[] = [
         return (
           <div className="flex items-center">
             <span>
-              <Badge size="lg" variant="warning">
-                Unconfirmed
-              </Badge>
+              <Badge variant="warning">Unconfirmed</Badge>
             </span>
           </div>
         );
@@ -88,7 +86,7 @@ export const columns: ColumnDef<ManageUser>[] = [
       return (
         <div className="flex items-center">
           <span>
-            <Badge size="lg">Confirmed</Badge>
+            <Badge>Confirmed</Badge>
           </span>
         </div>
       );

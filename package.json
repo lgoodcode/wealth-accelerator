@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run pre-deploy && next build && sentry-cli sourcemaps inject .next && sentry-cli sourcemaps upload --release=test .next",
+    "build": "npm run pre-deploy && next build && sentry-cli sourcemaps inject .next && sentry-cli sourcemaps upload --release=test-2 --org=wealth-accelerator --project=wealth-accelerator .next",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
