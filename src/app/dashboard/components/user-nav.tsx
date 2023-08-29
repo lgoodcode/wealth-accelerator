@@ -21,8 +21,6 @@ interface UserNavProps {
 
 export function UserNav({ user }: UserNavProps) {
   const logout = useLogout();
-  // If the user only has one name, use the first two letters of that name as the profile letters.
-  // Otherwise, use the first letter of the first and last name.
   const profileLetters = !user
     ? ''
     : user.name.includes(' ')
@@ -31,7 +29,7 @@ export function UserNav({ user }: UserNavProps) {
         .slice(0, 2)
         .map((name) => name[0])
         .join('')
-    : user.name.slice(0, 2);
+    : user.name.substring(0, 1);
 
   return (
     <DropdownMenu>
