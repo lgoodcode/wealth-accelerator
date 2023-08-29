@@ -446,6 +446,18 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: unknown
       }
+      get_auth_users: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          name: string
+          email: string
+          role: Database["public"]["Enums"]["user_role"]
+          email_confirmed: boolean
+          created_at: string
+          updated_at: string
+        }[]
+      }
       get_creative_cash_flow_record: {
         Args: {
           record_id: string

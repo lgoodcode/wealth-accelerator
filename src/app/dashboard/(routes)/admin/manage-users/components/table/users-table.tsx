@@ -27,9 +27,10 @@ import {
 import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
+import type { ManageUser } from '@/lib/types';
 
 interface UsersTableProps {
-  users: User[] | null;
+  users: ManageUser[] | null;
 }
 
 export function UsersTable({ users }: UsersTableProps) {

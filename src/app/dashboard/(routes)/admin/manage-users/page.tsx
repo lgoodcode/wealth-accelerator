@@ -5,6 +5,7 @@ import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { Users } from './components/users';
+import type { ManageUser } from '@/lib/types';
 
 export const metadata: Metadata = {
   title: 'Manage Users',
@@ -12,16 +13,15 @@ export const metadata: Metadata = {
 
 export default async function ManageUsersPage() {
   const supabase = createSupabase();
-  const { error, data } = await supabase
-    .from('users')
-    .select('*')
-    .order('created_at', { ascending: true });
+  const { error, data: users } = await supabase.rpc('get_auth_users');
 
   if (error) {
     console.error(error);
     captureException(error);
     return <PageError />;
   }
+
+  const data = users as unknown as ManageUser[];
 
   return (
     <div className="p-8">

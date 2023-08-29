@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FacetedFilter } from './faceted-filter';
 import { roleOptions } from './column-options';
-// import { InviteUserDialog } from '../invite-user-dialog';
+import { InviteUserDialog } from '../invite-user-dialog';
 
 interface TableToolbarProps {
   table: Table<User>;
@@ -41,7 +41,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
         )}
       </div>
 
-      {/* <InviteUserDialog /> */}
+      <InviteUserDialog />
     </div>
   );
 }

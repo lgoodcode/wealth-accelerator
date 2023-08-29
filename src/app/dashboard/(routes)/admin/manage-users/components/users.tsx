@@ -6,9 +6,10 @@ import { useEffect } from 'react';
 import { usersAtom } from '@/lib/atoms/users';
 import { Loading } from '@/components/loading';
 import { UsersTable } from './table/users-table';
+import type { ManageUser } from '@/lib/types';
 
 interface FiltersProps {
-  usersData: User[] | null;
+  usersData: ManageUser[] | null;
 }
 
 export function Users({ usersData }: FiltersProps) {

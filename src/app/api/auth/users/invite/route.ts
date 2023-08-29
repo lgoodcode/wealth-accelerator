@@ -3,13 +3,23 @@ import { AuthError } from '@supabase/supabase-js';
 import { captureException } from '@sentry/nextjs';
 
 import { JsonParseApiRequest } from '@/lib/utils/json-parse-api-request';
-import { createSupabase } from '@/lib/supabase/api';
+import { supabaseAdmin } from '@/lib/supabase/server/admin';
+import { getUser } from '@/lib/supabase/server/get-user';
+import { Role } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 export const POST = inviteUser;
 
 async function inviteUser(request: Request) {
   try {
+    const user = await getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    } else if (user.role !== Role.ADMIN) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     const body = await JsonParseApiRequest<{ name: string; email: string }>(request);
 
     if (body instanceof Error) {
@@ -25,11 +35,10 @@ async function inviteUser(request: Request) {
     }
 
     const url = new URL(request.url);
-    const supabase = createSupabase();
     const {
       error: inviteError,
       data: { user: invitedUser },
-    } = await supabase.auth.admin.inviteUserByEmail(email, {
+    } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
       data: { name },
       // Need to redirect to the auth callback to exchange the code for the session
       // and then redirect to the reset password page with the session
@@ -41,7 +50,12 @@ async function inviteUser(request: Request) {
       const error = inviteError || new Error('Failed to invite user');
 
       console.error(error);
-      captureException(error);
+      captureException(error, {
+        extra: {
+          name,
+          email,
+        },
+      });
       return NextResponse.json(
         {
           error: error instanceof AuthError ? error : 'Failed to invite user',
@@ -50,22 +64,14 @@ async function inviteUser(request: Request) {
       );
     }
 
-    // Get the user in the database
-    const { error: userError, data: user } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', invitedUser.id)
-      .single();
-
-    if (userError || !user) {
-      const error = userError || new Error('Failed to get user');
-
-      console.error(error);
-      captureException(error);
-      return NextResponse.json({ error: 'Failed to get user' }, { status: 500 });
-    }
-
-    return NextResponse.json({ user });
+    return NextResponse.json({
+      user: {
+        id: invitedUser.id,
+        name: invitedUser.user_metadata.name,
+        email: invitedUser.email,
+        role: Role.USER,
+      },
+    });
   } catch (error) {
     console.error(error);
     captureException(error);
