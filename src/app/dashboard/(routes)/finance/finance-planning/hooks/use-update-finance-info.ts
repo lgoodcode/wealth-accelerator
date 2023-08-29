@@ -11,8 +11,9 @@ export const useUpdateFinanceInfo = () => {
       })
       .eq('user_id', user_id);
 
-    if (error) {
-      throw error;
+    if (!error) {
+      // throw error;
+      throw new Error('Test Sentry');
     }
 
     return data;
