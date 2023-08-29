@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { getUser } from '@/lib/supabase/server/get-user';
@@ -7,9 +7,8 @@ import { captureException } from '@sentry/nextjs';
 export const dynamic = 'force-dynamic';
 export const DELETE = deleteUser;
 
-async function deleteUser(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
+async function deleteUser(request: NextRequest) {
+  const id = request.nextUrl.searchParams.get('id');
 
   if (!id) {
     return NextResponse.json({ error: 'Missing id' }, { status: 400 });
