@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { AuthError } from '@supabase/supabase-js';
 import { captureException } from '@sentry/nextjs';
 
@@ -10,7 +10,7 @@ import { Role } from '@/lib/types';
 export const dynamic = 'force-dynamic';
 export const POST = inviteUser;
 
-async function inviteUser(request: Request) {
+async function inviteUser(request: NextRequest) {
   try {
     const user = await getUser();
 
@@ -34,7 +34,6 @@ async function inviteUser(request: Request) {
       return NextResponse.json({ error: 'Missing email' }, { status: 400 });
     }
 
-    const url = new URL(request.url);
     const {
       error: inviteError,
       data: { user: invitedUser },
@@ -43,7 +42,7 @@ async function inviteUser(request: Request) {
       // Need to redirect to the auth callback to exchange the code for the session
       // and then redirect to the reset password page with the session
       // so the user can reset their password
-      redirectTo: `${url.origin}/api/auth/callback?redirect_to=/set-password`,
+      redirectTo: `${request.nextUrl.origin}/api/auth/callback?redirect_to=/set-password`,
     });
 
     if (inviteError || !invitedUser) {
