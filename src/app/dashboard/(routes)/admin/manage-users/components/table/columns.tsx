@@ -21,7 +21,6 @@ import { Badge } from '@/components/ui/badge';
 export const columns: ColumnDef<ManageUser>[] = [
   {
     accessorKey: 'name',
-    enableHiding: false,
     enableGlobalFilter: true,
     header: ({ column }) => <ColumnHeader column={column} title="Name" />,
     cell: ({ row }) => {
@@ -31,14 +30,9 @@ export const columns: ColumnDef<ManageUser>[] = [
         </div>
       );
     },
-    filterFn: (row, id, value) => {
-      const valueToCompare = row.getValue<string>(id).toLowerCase();
-      return valueToCompare.includes(value.toLowerCase());
-    },
   },
   {
     accessorKey: 'email',
-    enableHiding: false,
     enableGlobalFilter: true,
     header: ({ column }) => <ColumnHeader column={column} title="Email" />,
     cell: ({ row }) => {
@@ -50,13 +44,10 @@ export const columns: ColumnDef<ManageUser>[] = [
         </div>
       );
     },
-    filterFn: (row, id, value) => {
-      const valueToCompare = row.getValue<string>(id).toLowerCase();
-      return valueToCompare.includes(value.toLowerCase());
-    },
   },
   {
     accessorKey: 'role',
+    enableGlobalFilter: false,
     header: ({ column }) => <ColumnHeader column={column} title="Role" />,
     cell: ({ row }) => {
       const category = roleOptions.find((option) => option.value === row.getValue<Role>('role'));
@@ -77,6 +68,7 @@ export const columns: ColumnDef<ManageUser>[] = [
   },
   {
     accessorKey: 'confirmed_email',
+    enableGlobalFilter: false,
     header: ({ column }) => <ColumnHeader column={column} title="Confirmed Email" />,
     cell: ({ row }) => {
       const confirmed = row.getValue<boolean>('confirmed_email');

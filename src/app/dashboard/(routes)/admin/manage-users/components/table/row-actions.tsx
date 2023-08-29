@@ -25,7 +25,7 @@ export function RowActions({ row }: RowActionsProps) {
   const user = useUser();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  console.log('row', row);
+
   const handleUpdateDialogOpenChange = useCallback((open?: boolean) => {
     setShowUpdateDialog((prev) => open ?? !prev);
   }, []);

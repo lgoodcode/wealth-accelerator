@@ -12,9 +12,11 @@ import type { ManageUser } from '@/lib/types';
 
 interface TableToolbarProps {
   table: Table<ManageUser>;
+  globalFilter: string;
+  handleGlobalFilter: (value: string) => void;
 }
 
-export function TableToolbar({ table }: TableToolbarProps) {
+export function TableToolbar({ table, globalFilter, handleGlobalFilter }: TableToolbarProps) {
   const isFiltered =
     table.getPreFilteredRowModel().rows.length > table.getFilteredRowModel().rows.length;
 
@@ -23,8 +25,8 @@ export function TableToolbar({ table }: TableToolbarProps) {
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Filter users..."
-          value={(table.getColumn('email')?.getFilterValue() as string) || ''}
-          onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
+          value={globalFilter}
+          onChange={(event) => handleGlobalFilter(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
         {table.getColumn('role') && (
