@@ -35,6 +35,9 @@
     --success: 120 80% 40%;
     --success-foreground: 0 0% 100%;
 
+    --warning: 48 100% 47.06%;
+    --warning-foreground: 210 40% 98%;
+
     --ring: 215 20.2% 65.1%;
 
     --radius: 0.5rem;
@@ -74,6 +77,9 @@
 
     --success: 123 45% 35%; /* From 45% to 35% */
     --success-foreground: 210 40% 88%; /* From 98% to 88% */
+
+    --warning: 48 100% 47.06%;
+    --warning-foreground: 210 40% 98%;
 
     --ring: 216 34% 17%;
 
