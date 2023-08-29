@@ -9,9 +9,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import type { ManageUser } from '@/lib/types';
 
 interface ColumnHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  column: Column<User>;
+  column: Column<ManageUser>;
   title: string;
 }
 

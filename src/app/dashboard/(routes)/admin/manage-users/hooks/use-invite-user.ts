@@ -7,19 +7,16 @@ import type { InviteUserFormType } from '../schema';
 export const useInviteUser = () => {
   const addUser = useSetAtom(addUserAtom);
 
-  return async (data: InviteUserFormType) => {
-    const {
-      error,
-      data: { user },
-    } = await fetcher('/api/auth/users/invite', {
+  return async (inviteUser: InviteUserFormType) => {
+    const { error, data } = await fetcher('/api/auth/users/invite', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(inviteUser),
     });
 
     if (error) {
       throw error;
     }
 
-    addUser(user);
+    addUser(data.user);
   };
 };

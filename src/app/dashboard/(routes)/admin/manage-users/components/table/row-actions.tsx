@@ -15,16 +15,17 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { UpdateUserDialog } from '../update-user-dialog';
 import { DeleteUserDialog } from '../delete-user-dialog';
+import type { ManageUser } from '@/lib/types';
 
 interface RowActionsProps {
-  row: Row<User>;
+  row: Row<ManageUser>;
 }
 
 export function RowActions({ row }: RowActionsProps) {
   const user = useUser();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
+  console.log('row', row);
   const handleUpdateDialogOpenChange = useCallback((open?: boolean) => {
     setShowUpdateDialog((prev) => open ?? !prev);
   }, []);
@@ -43,7 +44,10 @@ export function RowActions({ row }: RowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem onClick={() => setShowUpdateDialog(true)}>
+          <DropdownMenuItem
+            onClick={() => setShowUpdateDialog(true)}
+            disabled={!row.original.confirmed_email}
+          >
             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Edit
           </DropdownMenuItem>

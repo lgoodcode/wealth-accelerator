@@ -6,6 +6,8 @@ import { Role } from '@/lib/types';
 import { roleOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
+import type { ManageUser } from '@/lib/types';
+import { Badge } from '@/components/ui/badge';
 
 /**
  * NOTES
@@ -16,7 +18,7 @@ import { RowActions } from './row-actions';
  * The filterFn `value` is the value set from the table.getColumn('date')?.setFilterValue() call.
  */
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<ManageUser>[] = [
   {
     accessorKey: 'name',
     enableHiding: false,
@@ -66,6 +68,36 @@ export const columns: ColumnDef<User>[] = [
       return (
         <div className="flex items-center">
           <span>{category.label}</span>
+        </div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: 'confirmed_email',
+    header: ({ column }) => <ColumnHeader column={column} title="Confirmed Email" />,
+    cell: ({ row }) => {
+      const confirmed = row.getValue<boolean>('confirmed_email');
+
+      if (!confirmed) {
+        return (
+          <div className="flex items-center">
+            <span>
+              <Badge size="lg" variant="warning">
+                Unconfirmed
+              </Badge>
+            </span>
+          </div>
+        );
+      }
+
+      return (
+        <div className="flex items-center">
+          <span>
+            <Badge size="lg">Confirmed</Badge>
+          </span>
         </div>
       );
     },

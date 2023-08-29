@@ -22,7 +22,7 @@ RETURNS TABLE (
   name text,
   email text,
   role user_role,
-  email_confirmed boolean,
+  confirmed_email boolean,
   created_at timestamp with time zone,
   updated_at timestamp with time zone
 ) AS $$
@@ -32,11 +32,14 @@ BEGIN
       u.id,
       u.raw_user_meta_data->>'name' AS name,
       u.email::text,
-      COALESCE(UPPER(u.raw_user_meta_data->>'role')::user_role, 'USER'::user_role) AS role,
+      COALESCE(UPPER(u.raw_user_meta_data->>'role')::user_role, 'USER'::user_role) AS role, -- I don't know why but it won't work without COALESCE
+      (u.email_confirmed_at IS NOT NULL) AS confirmed_email,
       u.created_at,
-      (u.email_confirmed_at IS NOT NULL) AS email_confirmed
+      u.updated_at
     FROM
-      auth.users u;
+      auth.users u
+    ORDER BY
+      u.created_at ASC;
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 

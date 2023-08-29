@@ -38,7 +38,7 @@ export function UsersTable({ users }: UsersTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const table = useReactTable<User>({
+  const table = useReactTable<ManageUser>({
     data: users || [],
     columns,
     state: {
@@ -60,7 +60,7 @@ export function UsersTable({ users }: UsersTableProps) {
   });
 
   return (
-    <div className="space-y-4 mt-8 w-full">
+    <div className="space-y-4 w-full">
       <TableToolbar table={table} />
       <div className="rounded-md border">
         <Table>

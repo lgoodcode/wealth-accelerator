@@ -8,9 +8,10 @@ import { Input } from '@/components/ui/input';
 import { FacetedFilter } from './faceted-filter';
 import { roleOptions } from './column-options';
 import { InviteUserDialog } from '../invite-user-dialog';
+import type { ManageUser } from '@/lib/types';
 
 interface TableToolbarProps {
-  table: Table<User>;
+  table: Table<ManageUser>;
 }
 
 export function TableToolbar({ table }: TableToolbarProps) {

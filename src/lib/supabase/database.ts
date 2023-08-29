@@ -453,7 +453,7 @@ export interface Database {
           name: string
           email: string
           role: Database["public"]["Enums"]["user_role"]
-          email_confirmed: boolean
+          confirmed_email: boolean
           created_at: string
           updated_at: string
         }[]

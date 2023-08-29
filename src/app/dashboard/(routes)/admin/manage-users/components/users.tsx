@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 
 import { usersAtom } from '@/lib/atoms/users';
 import { Loading } from '@/components/loading';
+import { Card, CardContent } from '@/components/ui/card';
 import { UsersTable } from './table/users-table';
 import type { ManageUser } from '@/lib/types';
 
@@ -25,7 +26,11 @@ export function Users({ usersData }: FiltersProps) {
 
   return (
     <div className="flex justify-center mx-auto lg:w-[1024px]">
-      <UsersTable users={users} />
+      <Card className="w-full mt-8">
+        <CardContent>
+          <UsersTable users={users} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
