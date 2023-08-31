@@ -10,8 +10,6 @@ if (process.env.NODE_ENV === 'production' && SENTRY_DSN) {
   Sentry.init({
     dsn: SENTRY_DSN,
 
-    // release: process.env.NEXT_PUBLIC_COMMIT_SHA,
-
     // Adjust this value in production, or use tracesSampler for greater control
     tracesSampleRate: 1,
 
