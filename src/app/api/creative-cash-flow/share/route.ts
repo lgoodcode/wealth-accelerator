@@ -3,7 +3,7 @@ import { captureException } from '@sentry/nextjs';
 
 import { getUser } from '@/lib/supabase/server/get-user';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
-import type { Notifier } from '@/app/dashboard/(routes)/admin/creative-cash-flow-notifiers/types';
+import type { Notifier } from '@/app/dashboard/admin/creative-cash-flow-notifiers/types';
 import { JsonParseApiRequest } from '@/lib/utils/json-parse-api-request';
 
 export const dynamic = 'force-dynamic';
