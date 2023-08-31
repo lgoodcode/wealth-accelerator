@@ -13,7 +13,7 @@ SET raw_user_meta_data = jsonb_set(
   '"ADMIN"',
   true
 )
-WHERE id = '04b9a09f-dad2-4013-a28b-b2771c5bba03';
+WHERE id = '04b9a09f-dad2-4013-a28b-b2771c5bba03' OR '8d18fc14-2a51-44cc-8273-2e5ecb0718e7';
 
 
 CREATE OR REPLACE FUNCTION get_auth_users()
