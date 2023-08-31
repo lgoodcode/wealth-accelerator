@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { Loading } from '@/components/loading';
 import { notifiersAtom } from '../atoms';
 import { NotifiersTable } from './table/notifiers-table';
-import type { Notifier } from '../types';
+import type { Notifier } from '@/lib/types';
 
 interface NotifiersProps {
   notifiersData: Notifier[];

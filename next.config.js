@@ -65,18 +65,16 @@ const nextConfig = {
 
 module.exports = withBundleAnalyzer(
   withSentryConfig(
-    {
-      ...nextConfig,
-      sentry: {
-        tunnelRoute: '/sentry',
-        hideSourcemaps: true,
-        widenClientFileUploads: true,
-      },
-    },
+    nextConfig,
     {
       ignore: [],
-      silent: false,
+      silent: true,
       authToken: process.env.SENTRY_AUTH_TOKEN,
+    },
+    {
+      tunnelRoute: '/sentry',
+      hideSourcemaps: true,
+      widenClientFileUploads: true,
     }
   )
 );

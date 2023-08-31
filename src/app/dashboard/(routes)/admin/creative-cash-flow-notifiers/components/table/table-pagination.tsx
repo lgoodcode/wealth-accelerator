@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Notifier } from '../../types';
+import type { Notifier } from '@/lib/types';
 
 interface TablePaginationProps {
   table: Table<Notifier>;
