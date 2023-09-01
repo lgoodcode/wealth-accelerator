@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import type { Database } from '../database';
 
 /**
  * This uses the service role key and should only be used for server-side calls
@@ -10,7 +11,7 @@ import { createClient } from '@supabase/supabase-js';
  * with the notifiers. This is done on the server but because the Supabase NextJS helpers
  * use the user's JWT, it takes precedence over the service role key.
  */
-export const supabaseAdmin = createClient(
+export const supabaseAdmin = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY,
   {
