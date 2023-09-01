@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
@@ -35,10 +35,6 @@ export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
     resolver: zodResolver(setPasswordSchema),
   });
 
-  if (!window.location.hash || !window.location.hash.startsWith('#access_token')) {
-    router.replace('/login');
-  }
-
   const onSubmit = async (data: SetPasswordFormType) => {
     setServerMessage(null);
 
@@ -54,6 +50,12 @@ export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
         });
       });
   };
+
+  useEffect(() => {
+    if ((window && !window.location.hash) || !window.location.hash.startsWith('#access_token')) {
+      router.replace('/login');
+    }
+  }, []);
 
   return (
     <div className={cn('grid gap-6', className)} {...props}>

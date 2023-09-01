@@ -15,21 +15,17 @@ async function exchangeCodeForSession(request: NextRequest) {
   try {
     if (code) {
       const supabase = createSupabase();
-      const {
-        error,
-        data: { session },
-      } = await supabase.auth.exchangeCodeForSession(code);
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
 
       if (error) {
         throw error;
       }
 
-      if (redirectTo === '/reset-password') {
-        return NextResponse.redirect(
-          `${url.origin}${redirectTo}#access_token=${session?.access_token}&refresh_token=${session?.refresh_token}`
-        );
-      }
-      return NextResponse.redirect(`${url.origin}${redirectTo}`);
+      // if (redirectTo === '/reset-password') {
+      //   return NextResponse.redirect(
+      //     `${url.origin}${redirectTo}#access_token=${session?.access_token}&refresh_token=${session?.refresh_token}`
+      //   );
+      // }
     }
   } catch (error) {
     console.error(error);
@@ -38,7 +34,7 @@ async function exchangeCodeForSession(request: NextRequest) {
         code,
       },
     });
-
-    return NextResponse.redirect(`${url.origin}/login`);
   }
+
+  return NextResponse.redirect(`${url.origin}${redirectTo}`);
 }
