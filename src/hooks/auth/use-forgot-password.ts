@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase/client';
 
-export const usePasswordResetEmail = () => {
+export const useForgotPassword = () => {
   return async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       // Need to redirect to the auth callback to exchange the code for the session

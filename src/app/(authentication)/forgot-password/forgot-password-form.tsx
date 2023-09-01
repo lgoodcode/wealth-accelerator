@@ -10,7 +10,7 @@ import {
   sendResetPasswordEmailSchema,
   type SendResetPasswordEmailFormType,
 } from '@/lib/user-schema';
-import { usePasswordResetEmail } from '@/hooks/auth/use-password-reset-email';
+import { useForgotPassword } from '@/hooks/auth/use-forgot-password';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertTitle } from '@/components/ui/alert';
@@ -30,7 +30,7 @@ type ServerMessage = {
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
-  const passwordResetEmail = usePasswordResetEmail();
+  const sendPasswordResetEmail = useForgotPassword();
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
   const form = useForm<SendResetPasswordEmailFormType>({
     resolver: zodResolver(sendResetPasswordEmailSchema),
@@ -39,7 +39,7 @@ export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: SendResetPasswordEmailFormType) => {
     setServerMessage(null);
 
-    await passwordResetEmail(data.email)
+    await sendPasswordResetEmail(data.email)
       .then(() => {
         setServerMessage({
           type: 'success',
