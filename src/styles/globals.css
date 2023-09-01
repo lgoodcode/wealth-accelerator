@@ -72,13 +72,13 @@
     --accent-foreground: 210 40% 98%;
 
     /* --destructive: 0 63% 31%; */
-    --destructive: 0 76.66% 57.25%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 78% 57%;
+    --destructive-foreground: 210 35% 97%;
 
     --success: 123 45% 35%; /* From 45% to 35% */
     --success-foreground: 210 40% 88%; /* From 98% to 88% */
 
-    --warning: 48 100% 47.06%;
+    --warning: 45 100% 50%;
     --warning-foreground: 210 40% 98%;
 
     --ring: 216 34% 17%;
