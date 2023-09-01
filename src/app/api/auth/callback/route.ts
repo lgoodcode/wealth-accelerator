@@ -20,12 +20,6 @@ async function exchangeCodeForSession(request: NextRequest) {
       if (error) {
         throw error;
       }
-
-      // if (redirectTo === '/reset-password') {
-      //   return NextResponse.redirect(
-      //     `${url.origin}${redirectTo}#access_token=${session?.access_token}&refresh_token=${session?.refresh_token}`
-      //   );
-      // }
     }
   } catch (error) {
     console.error(error);
