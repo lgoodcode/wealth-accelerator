@@ -446,18 +446,6 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: unknown
       }
-      get_auth_users: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          id: string
-          name: string
-          email: string
-          role: Database["public"]["Enums"]["user_role"]
-          confirmed_email: boolean
-          created_at: string
-          updated_at: string
-        }[]
-      }
       get_creative_cash_flow_record: {
         Args: {
           record_id: string
@@ -476,6 +464,18 @@ export interface Database {
           id: string
           inputs: Json
           results: Json
+        }[]
+      }
+      get_manage_users: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          name: string
+          email: string
+          role: Database["public"]["Enums"]["user_role"]
+          confirmed_email: boolean
+          created_at: string
+          updated_at: string
         }[]
       }
       get_transactions_by_user_id: {

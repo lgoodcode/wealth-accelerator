@@ -48,7 +48,7 @@ export function UserNav({ user }: UserNavProps) {
             <p className="text-sm truncate text-muted-foreground">{user?.email}</p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        {/* <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Link href="/dashboard/profile">
@@ -56,7 +56,7 @@ export function UserNav({ user }: UserNavProps) {
               <span>Profile</span>
             </Link>
           </DropdownMenuItem>
-        </DropdownMenuGroup>
+        </DropdownMenuGroup> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout}>
           <LogOut className="mr-2 h-5 w-5" />

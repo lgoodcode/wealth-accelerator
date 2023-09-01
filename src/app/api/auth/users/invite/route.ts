@@ -5,6 +5,7 @@ import { captureException } from '@sentry/nextjs';
 import { JsonParseApiRequest } from '@/lib/utils/json-parse-api-request';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { getUser } from '@/lib/supabase/server/get-user';
+import { initcap } from '@/lib/utils/initcap';
 import { Role } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -85,7 +86,8 @@ async function inviteUser(request: NextRequest) {
     return NextResponse.json({
       user: {
         id: invitedUser.id,
-        name: invitedUser.user_metadata.name,
+        // Capitalize the name before sending it back because it's from auth.users
+        name: initcap(invitedUser.user_metadata.name),
         email: invitedUser.email,
         role: Role.USER,
       },

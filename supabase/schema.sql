@@ -1152,3 +1152,47 @@ END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
 ALTER FUNCTION change_user_password(current_password text, new_password text) OWNER TO postgres;
+
+
+
+-- Checks if an email is in the auth.users table, when inviting users to prevent duplicate emails
+CREATE OR REPLACE FUNCTION is_email_used(email text)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (SELECT 1 FROM auth.users as a WHERE a.email = $1);
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION is_email_used(email text) OWNER TO postgres;
+
+
+
+-- Retrieves the users from the auth.users table for the Manage Users
+CREATE OR REPLACE FUNCTION get_manage_users()
+RETURNS TABLE (
+  id uuid,
+  name text,
+  email text,
+  role user_role,
+  confirmed_email boolean,
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone
+) AS $$
+BEGIN
+  RETURN QUERY
+    SELECT
+      u.id,
+      u.name,
+      u.email,
+      u.role,
+      (au.email_confirmed_at IS NOT NULL),
+      u.created_at,
+      u.updated_at
+    FROM public.users u
+    JOIN auth.users au ON u.id = au.id
+    ORDER BY
+      u.created_at ASC;
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION get_manage_users() OWNER TO postgres;

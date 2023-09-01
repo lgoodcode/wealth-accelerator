@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function ManageUsersPage() {
   const supabase = createSupabase();
-  const { error, data: users } = await supabase.rpc('get_auth_users');
+  const { error, data: users } = await supabase.rpc('get_manage_users');
 
   if (error) {
     console.error(error);
