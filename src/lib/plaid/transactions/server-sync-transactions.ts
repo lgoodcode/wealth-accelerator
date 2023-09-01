@@ -15,7 +15,7 @@ import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
 
 export const serverSyncTransactions = async (
   item: Institution,
-  userId?: string
+  user_id?: string
 ): Promise<ServerSyncTransactions> => {
   const { error: filtersError, data: filtersData } = await supabaseAdmin // Need admin to access plaid_filters for all users
     .from('plaid_filters')
@@ -114,9 +114,9 @@ export const serverSyncTransactions = async (
     let resetCursor = false;
 
     // Take the access token and use it to request a new link token from Plaid for update mode
-    if (isCredentialError && userId) {
+    if (isCredentialError && user_id) {
       const response = await plaidClient.linkTokenCreate(
-        createLinkTokenRequest(userId, item.access_token)
+        createLinkTokenRequest(user_id, item.access_token)
       );
       link_token = response.data.link_token;
       // If it's a sync mutation error, then we need to reset the cursor and try again
