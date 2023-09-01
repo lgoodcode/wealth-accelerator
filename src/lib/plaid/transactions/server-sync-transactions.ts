@@ -108,7 +108,8 @@ export const serverSyncTransactions = async (
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
     const isSyncMutationError = errorCode === PlaidTransactionsSyncMutationErrorCode;
     const isCredentialError = Object.values(PlaidCredentialErrorCode).includes(errorCode as any);
-    const status = isRateLimitError ? 429 : 500;
+    let generalError = !errorCode ? error : null;
+    let status = isRateLimitError ? 429 : 500;
     let link_token = null;
     let resetCursor = false;
 
@@ -126,33 +127,23 @@ export const serverSyncTransactions = async (
         .eq('item_id', item.item_id);
 
       if (cursorError) {
-        return {
-          error: {
-            status: 500,
-            general: cursorError,
-            plaid: null,
-            link_token: null,
-          },
-          data: {
-            hasMore: false,
-            transactions: null,
-          },
-        };
+        generalError = cursorError;
+        status = 500;
+      } else {
+        resetCursor = true;
       }
-
-      resetCursor = true;
     }
 
     return {
       error: {
         status,
-        general: !errorCode ? error : null, // If not a Plaid error, return the error
+        general: generalError,
         link_token,
         plaid: {
           isRateLimitError,
           isCredentialError,
           isSyncMutationError,
-          isOtherPlaidError: !!errorCode,
+          isOtherPlaidError: !generalError && !!errorCode,
         },
       },
       data: {
