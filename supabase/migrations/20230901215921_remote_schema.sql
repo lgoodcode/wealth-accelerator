@@ -119,28 +119,6 @@ $$;
 
 ALTER FUNCTION "public"."generate_rates"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_auth_users"() RETURNS TABLE("id" "uuid", "name" "text", "email" "text", "role" "public"."user_role", "confirmed_email" boolean, "created_at" timestamp with time zone, "updated_at" timestamp with time zone)
-    LANGUAGE "plpgsql" SECURITY DEFINER
-    AS $$
-BEGIN
-  RETURN QUERY
-    SELECT
-      u.id,
-      INITCAP(u.raw_user_meta_data->>'name') AS name,
-      LOWER(u.email::text),
-      COALESCE(UPPER(u.raw_user_meta_data->>'role')::user_role, 'USER'::user_role) AS role, -- I don't know why but it won't work without COALESCE
-      (u.email_confirmed_at IS NOT NULL) AS confirmed_email,
-      u.created_at,
-      u.updated_at
-    FROM
-      auth.users u
-    ORDER BY
-      u.created_at ASC;
-END;
-$$;
-
-ALTER FUNCTION "public"."get_auth_users"() OWNER TO "postgres";
-
 CREATE OR REPLACE FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") RETURNS TABLE("id" "uuid", "inputs" "jsonb", "results" "jsonb")
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -181,6 +159,28 @@ END;
 $$;
 
 ALTER FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."get_manage_users"() RETURNS TABLE("id" "uuid", "name" "text", "email" "text", "role" "public"."user_role", "confirmed_email" boolean, "created_at" timestamp with time zone, "updated_at" timestamp with time zone)
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
+BEGIN
+  RETURN QUERY
+    SELECT
+      u.id,
+      u.name,
+      u.email,
+      u.role,
+      (au.email_confirmed_at IS NOT NULL),
+      u.created_at,
+      u.updated_at
+    FROM public.users u
+    JOIN auth.users au ON u.id = au.id
+    ORDER BY
+      u.created_at ASC;
+END;
+$$;
+
+ALTER FUNCTION "public"."get_manage_users"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."get_transactions_by_user_id"("user_id" "uuid") RETURNS "json"
     LANGUAGE "plpgsql" SECURITY DEFINER
@@ -810,10 +810,6 @@ GRANT ALL ON FUNCTION "public"."generate_rates"() TO "anon";
 GRANT ALL ON FUNCTION "public"."generate_rates"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."generate_rates"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_auth_users"() TO "anon";
-GRANT ALL ON FUNCTION "public"."get_auth_users"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_auth_users"() TO "service_role";
-
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") TO "service_role";
@@ -821,6 +817,10 @@ GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."get_manage_users"() TO "anon";
+GRANT ALL ON FUNCTION "public"."get_manage_users"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_manage_users"() TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."get_transactions_by_user_id"("user_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_transactions_by_user_id"("user_id" "uuid") TO "authenticated";
