@@ -23,7 +23,7 @@ ALTER TABLE public.users OWNER TO postgres;
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
 CREATE OR REPLACE FUNCTION is_admin(user_id UUID)
-RETURNS BOOL AS $$
+RETURNS BOOLEAN AS $$
 BEGIN
   PERFORM
   FROM public.users
@@ -900,6 +900,18 @@ CREATE POLICY "Admin can delete plaid creative_cash_flow_notifiers" ON public.cr
  *
  */
 
+-- Used to check if an email is used when inviting users in the Manager Users section
+CREATE OR REPLACE FUNCTION is_email_used(email text)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (SELECT 1 FROM auth.users as a WHERE a.email = $1);
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION is_email_used(email text) OWNER TO postgres;
+
+
+
 CREATE OR REPLACE FUNCTION get_transactions_with_account_name(ins_item_id text, offset_val int, limit_val int)
 RETURNS TABLE (
     id text,
@@ -1069,9 +1081,9 @@ ALTER FUNCTION get_creative_cash_flow_record(record_id uuid) OWNER TO postgres;
 -- Gets the running total of the user's WAA before the start date of the range used when
 -- calculating the CCF
 CREATE OR REPLACE FUNCTION total_waa_before_date(user_id uuid, target_date timestamp with time zone)
-RETURNS decimal AS $$
+RETURNS NUMERIC AS $$
 DECLARE
-  total_waa_sum decimal;
+  total_waa_sum numeric;
 BEGIN
   SELECT COALESCE(SUM(cfr.waa), 0)
   INTO total_waa_sum

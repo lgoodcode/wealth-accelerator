@@ -49,8 +49,8 @@ ALTER FUNCTION get_auth_users() OWNER TO postgres;
 
 
 
-ALTER TABLE creative_cash_flow_results
-RENAME COLUMN monthly_trend TO daily_trend;
+-- ALTER TABLE creative_cash_flow_results
+-- RENAME COLUMN monthly_trend TO daily_trend;
 
 
 
@@ -119,3 +119,35 @@ ALTER FUNCTION create_creative_cash_flow(
   _yearly_trend numeric(12,2)[],
   _year_to_date numeric(12,2)
 ) OWNER TO postgres;
+
+
+
+CREATE OR REPLACE FUNCTION total_waa_before_date(user_id uuid, target_date timestamp with time zone)
+RETURNS NUMERIC AS $$
+DECLARE
+  total_waa_sum numeric;
+BEGIN
+  SELECT COALESCE(SUM(cfr.waa), 0)
+  INTO total_waa_sum
+  FROM creative_cash_flow_results cfr
+  JOIN creative_cash_flow_inputs cci ON cfr.id = cci.id
+  WHERE cfr.user_id = $1 AND cci.end_date <= target_date;
+
+  RETURN total_waa_sum;
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION total_waa_before_date(user_id uuid, target_date timestamp with time zone) OWNER TO postgres;
+
+
+
+
+
+CREATE OR REPLACE FUNCTION is_email_used(email text)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (SELECT 1 FROM auth.users as a WHERE a.email = $1);
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION is_email_used(email text) OWNER TO postgres;

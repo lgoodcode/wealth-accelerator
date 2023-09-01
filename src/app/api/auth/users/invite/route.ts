@@ -34,6 +34,26 @@ async function inviteUser(request: NextRequest) {
       return NextResponse.json({ error: 'Missing email' }, { status: 400 });
     }
 
+    const { error: emailInUseError, data: emailInUse } = await supabaseAdmin.rpc('is_email_used', {
+      email,
+    });
+
+    if (emailInUseError) {
+      console.error(emailInUseError);
+      captureException(emailInUseError, {
+        extra: {
+          name,
+          email,
+        },
+      });
+
+      return NextResponse.json({ error: emailInUseError.message }, { status: 500 });
+    }
+
+    if (emailInUse) {
+      return NextResponse.json({ error: 'Email is already in use' }, { status: 422 });
+    }
+
     const {
       error: inviteError,
       data: { user: invitedUser },
@@ -55,10 +75,9 @@ async function inviteUser(request: NextRequest) {
           email,
         },
       });
+
       return NextResponse.json(
-        {
-          error: error instanceof AuthError ? error : 'Failed to invite user',
-        },
+        { error },
         { status: error instanceof AuthError ? error.status : 500 }
       );
     }

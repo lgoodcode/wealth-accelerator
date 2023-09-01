@@ -537,6 +537,12 @@ export interface Database {
         }
         Returns: boolean
       }
+      is_email_used: {
+        Args: {
+          email: string
+        }
+        Returns: boolean
+      }
       is_own_plaid_account: {
         Args: Record<PropertyKey, never>
         Returns: boolean
