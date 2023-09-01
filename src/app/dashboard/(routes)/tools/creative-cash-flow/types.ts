@@ -29,8 +29,8 @@ export type CreativeCashFlowManagementResult = {
   tax_account: number;
   waa: number;
   total_waa: number;
+  daily_trend: number[];
   weekly_trend: number[];
-  monthly_trend: number[];
   yearly_trend: number[];
   year_to_date: number;
 };

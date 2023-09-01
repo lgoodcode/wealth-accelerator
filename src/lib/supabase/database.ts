@@ -435,8 +435,8 @@ export interface Database {
           _tax_account: number
           _waa: number
           _total_waa: number
+          _daily_trend: number[]
           _weekly_trend: number[]
-          _monthly_trend: number[]
           _yearly_trend: number[]
           _year_to_date: number
         }

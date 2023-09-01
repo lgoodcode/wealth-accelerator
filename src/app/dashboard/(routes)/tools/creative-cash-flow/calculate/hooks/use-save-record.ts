@@ -33,8 +33,8 @@ export const useSaveRecord = () => {
       _tax_account: results.tax_account,
       _waa: results.waa,
       _total_waa: results.total_waa,
+      _daily_trend: results.daily_trend,
       _weekly_trend: results.weekly_trend,
-      _monthly_trend: results.monthly_trend,
       _yearly_trend: results.yearly_trend,
       _year_to_date: results.year_to_date,
     });
