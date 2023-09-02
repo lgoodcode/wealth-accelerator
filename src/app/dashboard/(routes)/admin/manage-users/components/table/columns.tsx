@@ -6,6 +6,8 @@ import { Role } from '@/lib/types';
 import { roleOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
+import type { ManageUser } from '@/lib/types';
+import { Badge } from '@/components/ui/badge';
 
 /**
  * NOTES
@@ -16,10 +18,9 @@ import { RowActions } from './row-actions';
  * The filterFn `value` is the value set from the table.getColumn('date')?.setFilterValue() call.
  */
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<ManageUser>[] = [
   {
     accessorKey: 'name',
-    enableHiding: false,
     enableGlobalFilter: true,
     header: ({ column }) => <ColumnHeader column={column} title="Name" />,
     cell: ({ row }) => {
@@ -29,14 +30,9 @@ export const columns: ColumnDef<User>[] = [
         </div>
       );
     },
-    filterFn: (row, id, value) => {
-      const valueToCompare = row.getValue<string>(id).toLowerCase();
-      return valueToCompare.includes(value.toLowerCase());
-    },
   },
   {
     accessorKey: 'email',
-    enableHiding: false,
     enableGlobalFilter: true,
     header: ({ column }) => <ColumnHeader column={column} title="Email" />,
     cell: ({ row }) => {
@@ -48,13 +44,10 @@ export const columns: ColumnDef<User>[] = [
         </div>
       );
     },
-    filterFn: (row, id, value) => {
-      const valueToCompare = row.getValue<string>(id).toLowerCase();
-      return valueToCompare.includes(value.toLowerCase());
-    },
   },
   {
     accessorKey: 'role',
+    enableGlobalFilter: false,
     header: ({ column }) => <ColumnHeader column={column} title="Role" />,
     cell: ({ row }) => {
       const category = roleOptions.find((option) => option.value === row.getValue<Role>('role'));
@@ -66,6 +59,35 @@ export const columns: ColumnDef<User>[] = [
       return (
         <div className="flex items-center">
           <span>{category.label}</span>
+        </div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: 'confirmed_email',
+    enableGlobalFilter: false,
+    header: ({ column }) => <ColumnHeader column={column} title="Confirmed Email" />,
+    cell: ({ row }) => {
+      const confirmed = row.getValue<boolean>('confirmed_email');
+
+      if (!confirmed) {
+        return (
+          <div className="flex items-center">
+            <span>
+              <Badge variant="warning">Unconfirmed</Badge>
+            </span>
+          </div>
+        );
+      }
+
+      return (
+        <div className="flex items-center">
+          <span>
+            <Badge>Confirmed</Badge>
+          </span>
         </div>
       );
     },

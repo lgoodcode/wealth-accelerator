@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DeleteNotifierMenuItem } from '../delete-notifier-menu-item';
 import { UpdateNotifierDialog } from '../update-notifier-dialog';
-import type { Notifier } from '../../types';
+import type { Notifier } from '@/lib/types';
 
 interface RowActionsProps {
   row: Row<Notifier>;

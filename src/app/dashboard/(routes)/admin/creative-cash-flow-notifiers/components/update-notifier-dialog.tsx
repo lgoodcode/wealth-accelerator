@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/form';
 import { useUpdateNotifier } from '../hooks/use-update-notifier';
 import { notifierFormSchema, type NotifierFormType } from '../schema';
-import type { Notifier } from '../types';
+import type { Notifier } from '@/lib/types';
 
 interface UpdateNotifierDialogProps {
   open: boolean;

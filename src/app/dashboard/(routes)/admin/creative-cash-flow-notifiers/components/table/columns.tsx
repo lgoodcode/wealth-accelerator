@@ -5,7 +5,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { enabledOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
-import type { Notifier } from '../../types';
+import type { Notifier } from '@/lib/types';
 
 /**
  * NOTES

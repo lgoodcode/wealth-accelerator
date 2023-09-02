@@ -74,7 +74,7 @@ $$;
 
 ALTER FUNCTION "public"."change_user_password"("current_password" "text", "new_password" "text") OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" integer, "_payroll_and_distributions" integer, "_lifestyle_expenses_tax_rate" smallint, "_tax_account_rate" smallint, "_optimal_savings_strategy" integer, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_weekly_trend" numeric[], "_monthly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) RETURNS "uuid"
+CREATE OR REPLACE FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" numeric, "_payroll_and_distributions" numeric, "_lifestyle_expenses_tax_rate" numeric, "_tax_account_rate" numeric, "_optimal_savings_strategy" numeric, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_daily_trend" numeric[], "_weekly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) RETURNS "uuid"
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
 DECLARE
@@ -90,13 +90,13 @@ BEGIN
   VALUES (new_id, _user_id, _start_date, _end_date, _all_other_income, _payroll_and_distributions, _lifestyle_expenses_tax_rate, _tax_account_rate, _optimal_savings_strategy);
 
   INSERT INTO creative_cash_flow_results (id, user_id, collections, lifestyle_expenses, lifestyle_expenses_tax, business_profit_before_tax, business_overhead, tax_account, waa, total_waa, weekly_trend, monthly_trend, yearly_trend, year_to_date)
-  VALUES (new_id, _user_id, _collections, _lifestyle_expenses, _lifestyle_expenses_tax, _business_profit_before_tax, _business_overhead, _tax_account, _waa, _total_waa, _weekly_trend, _monthly_trend, _yearly_trend, _year_to_date);
+  VALUES (new_id, _user_id, _collections, _lifestyle_expenses, _lifestyle_expenses_tax, _business_profit_before_tax, _business_overhead, _tax_account, _waa, _total_waa, _weekly_trend, _daily_trend, _yearly_trend, _year_to_date);
 
   RETURN new_id;
 END;
 $$;
 
-ALTER FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" integer, "_payroll_and_distributions" integer, "_lifestyle_expenses_tax_rate" smallint, "_tax_account_rate" smallint, "_optimal_savings_strategy" integer, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_weekly_trend" numeric[], "_monthly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) OWNER TO "postgres";
+ALTER FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" numeric, "_payroll_and_distributions" numeric, "_lifestyle_expenses_tax_rate" numeric, "_tax_account_rate" numeric, "_optimal_savings_strategy" numeric, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_daily_trend" numeric[], "_weekly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."format_transaction"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
@@ -159,6 +159,28 @@ END;
 $$;
 
 ALTER FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."get_manage_users"() RETURNS TABLE("id" "uuid", "name" "text", "email" "text", "role" "public"."user_role", "confirmed_email" boolean, "created_at" timestamp with time zone, "updated_at" timestamp with time zone)
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
+BEGIN
+  RETURN QUERY
+    SELECT
+      u.id,
+      u.name,
+      u.email,
+      u.role,
+      (au.email_confirmed_at IS NOT NULL),
+      u.created_at,
+      u.updated_at
+    FROM public.users u
+    JOIN auth.users au ON u.id = au.id
+    ORDER BY
+      u.created_at ASC;
+END;
+$$;
+
+ALTER FUNCTION "public"."get_manage_users"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."get_transactions_by_user_id"("user_id" "uuid") RETURNS "json"
     LANGUAGE "plpgsql" SECURITY DEFINER
@@ -292,6 +314,16 @@ $$;
 
 ALTER FUNCTION "public"."is_admin"("user_id" "uuid") OWNER TO "postgres";
 
+CREATE OR REPLACE FUNCTION "public"."is_email_used"("email" "text") RETURNS boolean
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $_$
+BEGIN
+  RETURN EXISTS (SELECT 1 FROM auth.users as a WHERE a.email = $1);
+END;
+$_$;
+
+ALTER FUNCTION "public"."is_email_used"("email" "text") OWNER TO "postgres";
+
 CREATE OR REPLACE FUNCTION "public"."is_own_plaid_account"() RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -340,7 +372,7 @@ CREATE OR REPLACE FUNCTION "public"."total_waa_before_date"("user_id" "uuid", "t
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $_$
 DECLARE
-  total_waa_sum decimal;
+  total_waa_sum numeric;
 BEGIN
   SELECT COALESCE(SUM(cfr.waa), 0)
   INTO total_waa_sum
@@ -408,11 +440,11 @@ CREATE TABLE IF NOT EXISTS "public"."creative_cash_flow_inputs" (
     "created_at" timestamp with time zone DEFAULT "timezone"('utc'::"text", "now"()) NOT NULL,
     "start_date" timestamp with time zone NOT NULL,
     "end_date" timestamp with time zone NOT NULL,
-    "all_other_income" integer NOT NULL,
-    "payroll_and_distributions" integer NOT NULL,
-    "lifestyle_expenses_tax_rate" smallint NOT NULL,
-    "tax_account_rate" smallint NOT NULL,
-    "optimal_savings_strategy" integer NOT NULL
+    "all_other_income" numeric(12,2) NOT NULL,
+    "payroll_and_distributions" numeric(12,2) NOT NULL,
+    "lifestyle_expenses_tax_rate" numeric(5,2) NOT NULL,
+    "tax_account_rate" numeric(5,2) NOT NULL,
+    "optimal_savings_strategy" numeric(12,2) NOT NULL
 );
 
 ALTER TABLE "public"."creative_cash_flow_inputs" OWNER TO "postgres";
@@ -438,18 +470,18 @@ ALTER TABLE "public"."creative_cash_flow_notifiers" ALTER COLUMN "id" ADD GENERA
 CREATE TABLE IF NOT EXISTS "public"."creative_cash_flow_results" (
     "id" "uuid" NOT NULL,
     "user_id" "uuid" NOT NULL,
-    "collections" numeric(10,2) NOT NULL,
-    "lifestyle_expenses" numeric(10,2) NOT NULL,
-    "lifestyle_expenses_tax" numeric(10,2) NOT NULL,
-    "business_profit_before_tax" numeric(10,2) NOT NULL,
-    "business_overhead" numeric(10,2) NOT NULL,
-    "tax_account" numeric(10,2) NOT NULL,
-    "waa" numeric(10,2) NOT NULL,
-    "total_waa" numeric(10,2) NOT NULL,
-    "weekly_trend" numeric(10,2)[] NOT NULL,
-    "monthly_trend" numeric(10,2)[] NOT NULL,
-    "yearly_trend" numeric(10,2)[] NOT NULL,
-    "year_to_date" numeric(10,2) NOT NULL
+    "collections" numeric(12,2) NOT NULL,
+    "lifestyle_expenses" numeric(12,2) NOT NULL,
+    "lifestyle_expenses_tax" numeric(12,2) NOT NULL,
+    "business_profit_before_tax" numeric(12,2) NOT NULL,
+    "business_overhead" numeric(12,2) NOT NULL,
+    "tax_account" numeric(12,2) NOT NULL,
+    "waa" numeric(12,2) NOT NULL,
+    "total_waa" numeric(12,2) NOT NULL,
+    "weekly_trend" numeric(12,2)[] NOT NULL,
+    "daily_trend" numeric(12,2)[] NOT NULL,
+    "yearly_trend" numeric(12,2)[] NOT NULL,
+    "year_to_date" numeric(12,2) NOT NULL
 );
 
 ALTER TABLE "public"."creative_cash_flow_results" OWNER TO "postgres";
@@ -766,9 +798,9 @@ GRANT ALL ON FUNCTION "public"."change_user_password"("current_password" "text",
 GRANT ALL ON FUNCTION "public"."change_user_password"("current_password" "text", "new_password" "text") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."change_user_password"("current_password" "text", "new_password" "text") TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" integer, "_payroll_and_distributions" integer, "_lifestyle_expenses_tax_rate" smallint, "_tax_account_rate" smallint, "_optimal_savings_strategy" integer, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_weekly_trend" numeric[], "_monthly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) TO "anon";
-GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" integer, "_payroll_and_distributions" integer, "_lifestyle_expenses_tax_rate" smallint, "_tax_account_rate" smallint, "_optimal_savings_strategy" integer, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_weekly_trend" numeric[], "_monthly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" integer, "_payroll_and_distributions" integer, "_lifestyle_expenses_tax_rate" smallint, "_tax_account_rate" smallint, "_optimal_savings_strategy" integer, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_weekly_trend" numeric[], "_monthly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) TO "service_role";
+GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" numeric, "_payroll_and_distributions" numeric, "_lifestyle_expenses_tax_rate" numeric, "_tax_account_rate" numeric, "_optimal_savings_strategy" numeric, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_daily_trend" numeric[], "_weekly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) TO "anon";
+GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" numeric, "_payroll_and_distributions" numeric, "_lifestyle_expenses_tax_rate" numeric, "_tax_account_rate" numeric, "_optimal_savings_strategy" numeric, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_daily_trend" numeric[], "_weekly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" numeric, "_payroll_and_distributions" numeric, "_lifestyle_expenses_tax_rate" numeric, "_tax_account_rate" numeric, "_optimal_savings_strategy" numeric, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_daily_trend" numeric[], "_weekly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."format_transaction"() TO "anon";
 GRANT ALL ON FUNCTION "public"."format_transaction"() TO "authenticated";
@@ -785,6 +817,10 @@ GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."get_manage_users"() TO "anon";
+GRANT ALL ON FUNCTION "public"."get_manage_users"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_manage_users"() TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."get_transactions_by_user_id"("user_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_transactions_by_user_id"("user_id" "uuid") TO "authenticated";
@@ -870,6 +906,10 @@ GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "service_role";
 GRANT ALL ON FUNCTION "public"."is_admin"("user_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."is_admin"("user_id" "uuid") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."is_admin"("user_id" "uuid") TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."is_email_used"("email" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."is_email_used"("email" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."is_email_used"("email" "text") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."is_own_plaid_account"() TO "anon";
 GRANT ALL ON FUNCTION "public"."is_own_plaid_account"() TO "authenticated";

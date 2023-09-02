@@ -3,6 +3,9 @@ import type { RemovedTransaction, Transaction } from 'plaid';
 
 export const PlaidRateLimitErrorCode = 'TRANSACTIONS_SYNC_LIMIT';
 
+export const PlaidTransactionsSyncMutationErrorCode =
+  'TRANSACTIONS_SYNC_MUTATION_DURING_PAGINATION';
+
 export enum PlaidCredentialErrorCode {
   ItemLoginRequired = 'ITEM_LOGIN_REQUIRED',
   PendingExpiration = 'PENDING_EXPIRATION',
@@ -20,6 +23,7 @@ export type ServerSyncTransactions = {
     plaid: {
       isRateLimitError: boolean;
       isCredentialError: boolean;
+      isSyncMutationError: boolean;
       isOtherPlaidError: boolean;
     } | null;
   } | null;

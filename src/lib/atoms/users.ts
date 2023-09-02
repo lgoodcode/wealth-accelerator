@@ -1,8 +1,9 @@
 import { atom } from 'jotai';
+import type { ManageUser } from '@/lib/types';
 
-export const usersAtom = atom<User[] | null>(null);
+export const usersAtom = atom<ManageUser[] | null>(null);
 
-export const addUserAtom = atom(null, (_get, set, user: User) => {
+export const addUserAtom = atom(null, (_get, set, user: ManageUser) => {
   set(usersAtom, (users) => {
     if (!users) {
       throw new Error('usersAtom is not initialized');
@@ -12,7 +13,7 @@ export const addUserAtom = atom(null, (_get, set, user: User) => {
   });
 });
 
-export const updateUserAtom = atom(null, (_get, set, user: User) => {
+export const updateUserAtom = atom(null, (_get, set, user: ManageUser) => {
   set(usersAtom, (users) => {
     if (!users) {
       throw new Error('usersAtom is not initialized');

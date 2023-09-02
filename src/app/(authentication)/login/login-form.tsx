@@ -97,12 +97,12 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
       </Form>
 
       <div className="space-y-2 text-center">
-        <div className="mx-auto">
+        {/* <div className="mx-auto">
           <span>Dont&apos;t have an account?</span>{' '}
           <Link href="/signup" className="hover:underline underline-offset-4 text-blue-500">
             Sign up
           </Link>
-        </div>
+        </div> */}
         <div className="mx-auto">
           <Link
             href="/forgot-password"

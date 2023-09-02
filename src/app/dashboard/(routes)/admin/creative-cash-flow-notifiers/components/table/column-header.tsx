@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { Notifier } from '../../types';
+import type { Notifier } from '@/lib/types';
 
 interface ColumnHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<Notifier>;

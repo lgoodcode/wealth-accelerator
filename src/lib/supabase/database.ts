@@ -435,8 +435,8 @@ export interface Database {
           _tax_account: number
           _waa: number
           _total_waa: number
+          _daily_trend: number[]
           _weekly_trend: number[]
-          _monthly_trend: number[]
           _yearly_trend: number[]
           _year_to_date: number
         }
@@ -464,6 +464,18 @@ export interface Database {
           id: string
           inputs: Json
           results: Json
+        }[]
+      }
+      get_manage_users: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          name: string
+          email: string
+          role: Database["public"]["Enums"]["user_role"]
+          confirmed_email: boolean
+          created_at: string
+          updated_at: string
         }[]
       }
       get_transactions_by_user_id: {
@@ -522,6 +534,12 @@ export interface Database {
       is_admin: {
         Args: {
           user_id: string
+        }
+        Returns: boolean
+      }
+      is_email_used: {
+        Args: {
+          email: string
         }
         Returns: boolean
       }

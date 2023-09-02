@@ -39,7 +39,7 @@ export function Trends({ createCountUpProps }: TrendsProps) {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[120px] text-lg">Period</TableHead>
-                <TableHead className="text-lg">Actual</TableHead>
+                <TableHead className="text-lg">Daily</TableHead>
                 <TableHead className="text-lg">Weekly</TableHead>
                 <TableHead className="text-lg">Annual</TableHead>
               </TableRow>
@@ -49,7 +49,7 @@ export function Trends({ createCountUpProps }: TrendsProps) {
                 <TableCell className="whitespace-nowrap">30 Days</TableCell>
                 <TableCell>
                   <CountUp
-                    {...createCountUpProps(results.monthly_trend[0], countUpProps.item1.delay)}
+                    {...createCountUpProps(results.daily_trend[0], countUpProps.item1.delay)}
                   />
                 </TableCell>
                 <TableCell>
@@ -67,7 +67,7 @@ export function Trends({ createCountUpProps }: TrendsProps) {
                 <TableCell className="whitespace-nowrap">60 Days</TableCell>
                 <TableCell>
                   <CountUp
-                    {...createCountUpProps(results.monthly_trend[1], countUpProps.item1.delay)}
+                    {...createCountUpProps(results.daily_trend[1], countUpProps.item1.delay)}
                   />
                 </TableCell>
                 <TableCell>
@@ -85,7 +85,7 @@ export function Trends({ createCountUpProps }: TrendsProps) {
                 <TableCell className="whitespace-nowrap">90 Days</TableCell>
                 <TableCell>
                   <CountUp
-                    {...createCountUpProps(results.monthly_trend[2], countUpProps.item1.delay)}
+                    {...createCountUpProps(results.daily_trend[2], countUpProps.item1.delay)}
                   />
                 </TableCell>
                 <TableCell>

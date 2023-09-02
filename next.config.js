@@ -40,6 +40,12 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      {
+        // Prevent users from accessing the signup page - invite only
+        source: '/signup',
+        destination: '/login',
+        permanent: true,
+      },
     ];
   },
   rewrites: async () => {
@@ -67,6 +73,7 @@ module.exports = withBundleAnalyzer(
   withSentryConfig(
     nextConfig,
     {
+      ignore: [],
       silent: true,
       authToken: process.env.SENTRY_AUTH_TOKEN,
     },

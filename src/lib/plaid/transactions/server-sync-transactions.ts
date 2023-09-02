@@ -1,19 +1,21 @@
-import { PlaidErrorType } from 'plaid';
-
 import { PLAID_SYNC_BATCH_SIZE } from '@/config/app';
 import { createLinkTokenRequest, plaidClient } from '@/lib/plaid/config';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { updateTransactions } from '@/lib/plaid/transactions/update-transactions';
 import { addTransactions } from '@/lib/plaid/transactions/add-transactions';
 import { removeTransactions } from '@/lib/plaid/transactions/remove-transactions';
-import { PlaidRateLimitErrorCode, PlaidCredentialErrorCode } from '@/lib/plaid/types/sync';
+import {
+  PlaidRateLimitErrorCode,
+  PlaidCredentialErrorCode,
+  PlaidTransactionsSyncMutationErrorCode,
+} from '@/lib/plaid/types/sync';
 import type { Institution } from '@/lib/plaid/types/institutions';
 import type { Filter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
 
 export const serverSyncTransactions = async (
   item: Institution,
-  userId?: string
+  user_id?: string
 ): Promise<ServerSyncTransactions> => {
   const { error: filtersError, data: filtersData } = await supabaseAdmin // Need admin to access plaid_filters for all users
     .from('plaid_filters')
@@ -104,32 +106,48 @@ export const serverSyncTransactions = async (
   } catch (error: any) {
     const errorCode = error?.response?.data?.error_code as string;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
+    const isSyncMutationError = errorCode === PlaidTransactionsSyncMutationErrorCode;
     const isCredentialError = Object.values(PlaidCredentialErrorCode).includes(errorCode as any);
-    const isOtherPlaidError = Object.values(PlaidErrorType).includes(errorCode as any);
-    const status = isRateLimitError ? 429 : 500;
+    let generalError = !errorCode ? error : null;
+    let status = isRateLimitError ? 429 : 500;
     let link_token = null;
+    let resetCursor = false;
 
     // Take the access token and use it to request a new link token from Plaid for update mode
-    if (isCredentialError && userId) {
+    if (isCredentialError && user_id) {
       const response = await plaidClient.linkTokenCreate(
-        createLinkTokenRequest(userId, item.access_token)
+        createLinkTokenRequest(user_id, item.access_token)
       );
       link_token = response.data.link_token;
+      // If it's a sync mutation error, then we need to reset the cursor and try again
+    } else if (isSyncMutationError) {
+      const { error: cursorError } = await supabaseAdmin
+        .from('plaid')
+        .update({ cursor: null })
+        .eq('item_id', item.item_id);
+
+      if (cursorError) {
+        generalError = cursorError;
+        status = 500;
+      } else {
+        resetCursor = true;
+      }
     }
 
     return {
       error: {
         status,
-        general: !errorCode ? error : null, // If not a Plaid error, return the error
+        general: generalError,
         link_token,
         plaid: {
           isRateLimitError,
           isCredentialError,
-          isOtherPlaidError,
+          isSyncMutationError,
+          isOtherPlaidError: !generalError && !!errorCode,
         },
       },
       data: {
-        hasMore: false,
+        hasMore: isSyncMutationError && resetCursor ? true : false,
         transactions: null,
       },
     };

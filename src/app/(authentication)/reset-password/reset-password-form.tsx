@@ -39,7 +39,7 @@ export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: ResetUserPasswordFormType) => {
     setServerMessage(null);
 
-    await resetPassword(window.location.hash.substring(1), data.password)
+    await resetPassword(data.password)
       .then(() => {
         router.push('/login');
       })
@@ -47,7 +47,7 @@ export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
         console.error(error);
         setServerMessage({
           type: 'error',
-          message: error.message,
+          message: 'An error has occurred. Please try sending a new password reset email.',
         });
       });
   };

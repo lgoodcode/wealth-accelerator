@@ -27,7 +27,7 @@ import {
 import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
-import type { Notifier } from '../../types';
+import type { Notifier } from '@/lib/types';
 
 interface NotifiersTableProps {
   notifiers: Notifier[] | null;

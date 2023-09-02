@@ -1,5 +1,11 @@
 import { supabase } from '@/lib/supabase/client';
 
+/**
+ * The inviteUser from Supabase doesn't support the PKCE flow, which is what the
+ * helpers use, and instead uses the Implicit flow, which places the access_token
+ * and such in the URL hash, so we need that to verify the user before setting
+ * their password for the first time.
+ */
 export const useSetPassword = () => {
   return async (password: string) => {
     const items = window.location.hash.substring(1).split('&');

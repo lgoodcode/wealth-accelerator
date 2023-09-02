@@ -176,8 +176,8 @@ export function creativeCashFlowManagement({
     tax_account: centsToDollars(tax_account),
     waa: centsToDollars(waa),
     total_waa: centsToDollars(total_waa + waa),
+    daily_trend: daily_trend.map((trend) => centsToDollars(trend)),
     weekly_trend: daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_WEEK)),
-    monthly_trend: daily_trend.map((trend) => centsToDollars(trend)),
     yearly_trend: daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_YEAR)),
     year_to_date: centsToDollars(year_to_date + ytd_collections),
   };

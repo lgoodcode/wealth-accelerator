@@ -16,9 +16,10 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
+import type { ManageUser } from '@/lib/types';
 
 interface FacetedFilterProps {
-  column?: Column<User>;
+  column?: Column<ManageUser>;
   title?: string;
   options: {
     label: string;

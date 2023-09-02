@@ -27,7 +27,7 @@ export function TrendsCard({ record }: TrendsCardProps) {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[120px] text-lg">Period</TableHead>
-              <TableHead className="text-lg">Actual</TableHead>
+              <TableHead className="text-lg">Daily</TableHead>
               <TableHead className="text-lg">Weekly</TableHead>
               <TableHead className="text-lg">Annual</TableHead>
             </TableRow>
@@ -35,19 +35,19 @@ export function TrendsCard({ record }: TrendsCardProps) {
           <TableBody className="text-lg">
             <TableRow>
               <TableCell className="whitespace-nowrap">30 Days</TableCell>
-              <TableCell>{dollarFormatter(record.results.monthly_trend[0])}</TableCell>
+              <TableCell>{dollarFormatter(record.results.daily_trend[0])}</TableCell>
               <TableCell>{dollarFormatter(record.results.weekly_trend[0])}</TableCell>
               <TableCell>{dollarFormatter(record.results.yearly_trend[0])}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="whitespace-nowrap">60 Days</TableCell>
-              <TableCell>{dollarFormatter(record.results.monthly_trend[1])}</TableCell>
+              <TableCell>{dollarFormatter(record.results.daily_trend[1])}</TableCell>
               <TableCell>{dollarFormatter(record.results.weekly_trend[1])}</TableCell>
               <TableCell>{dollarFormatter(record.results.yearly_trend[1])}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="whitespace-nowrap">90 Days</TableCell>
-              <TableCell>{dollarFormatter(record.results.monthly_trend[2])}</TableCell>
+              <TableCell>{dollarFormatter(record.results.daily_trend[2])}</TableCell>
               <TableCell>{dollarFormatter(record.results.weekly_trend[2])}</TableCell>
               <TableCell>{dollarFormatter(record.results.yearly_trend[2])}</TableCell>
             </TableRow>

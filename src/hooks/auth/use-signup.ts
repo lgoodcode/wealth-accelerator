@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase/client';
+import { Role } from '@/lib/types';
 import type { RegisterUserFormType } from '@/lib/user-schema';
 
 export const useSignUp = () => {
@@ -7,7 +8,10 @@ export const useSignUp = () => {
       email: data.email.toLowerCase(),
       password: data.password,
       options: {
-        data: { name: data.name },
+        data: {
+          name: data.name,
+          role: Role.USER,
+        },
         emailRedirectTo: `${location.origin}/api/auth/callback`,
       },
     });

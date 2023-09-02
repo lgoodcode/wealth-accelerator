@@ -44,7 +44,7 @@ export function InviteUserDialog() {
       .catch((error) => {
         console.error(error);
 
-        if (error?.status === 422) {
+        if (error.message === 'Email is already in use') {
           form.setError('email', {
             type: 'manual',
             message: 'Email is already in use',

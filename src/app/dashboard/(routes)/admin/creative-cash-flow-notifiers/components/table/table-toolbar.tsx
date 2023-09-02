@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { FacetedFilter } from './faceted-filter';
 import { enabledOptions } from './column-options';
 import { AddNotifierDialog } from '../add-notifier-dialog';
-import type { Notifier } from '../../types';
+import type { Notifier } from '@/lib/types';
 
 interface TableToolbarProps {
   table: Table<Notifier>;

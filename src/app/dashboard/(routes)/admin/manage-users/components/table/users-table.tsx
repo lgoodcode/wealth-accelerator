@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   ColumnFiltersState,
   SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -27,29 +26,35 @@ import {
 import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
+import type { ManageUser } from '@/lib/types';
 
 interface UsersTableProps {
-  users: User[] | null;
+  users: ManageUser[] | null;
 }
 
 export function UsersTable({ users }: UsersTableProps) {
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState<string>('');
+  const handleGlobalFilter = (value: string) => setGlobalFilter(value);
 
-  const table = useReactTable<User>({
+  const table = useReactTable<ManageUser>({
     data: users || [],
     columns,
     state: {
       sorting,
-      columnVisibility,
       columnFilters,
+      globalFilter,
     },
+    globalFilterFn: (row, id, value) => {
+      return row.getValue<string>(id).toLowerCase().includes(value.toLowerCase());
+    },
+    enableGlobalFilter: true,
     enableHiding: false,
     autoResetPageIndex: false,
+    onGlobalFilterChange: setGlobalFilter,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -59,8 +64,12 @@ export function UsersTable({ users }: UsersTableProps) {
   });
 
   return (
-    <div className="space-y-4 mt-8 w-full">
-      <TableToolbar table={table} />
+    <div className="space-y-4 w-full">
+      <TableToolbar
+        table={table}
+        globalFilter={globalFilter}
+        handleGlobalFilter={handleGlobalFilter}
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

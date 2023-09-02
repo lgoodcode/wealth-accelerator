@@ -21,7 +21,12 @@ export const useUpdateUser = () => {
       throw error;
     }
 
-    updateUser(user);
+    // If the user exists in the public.users table, then the email is confirmed so we can
+    // can manually set the ManageUser confirmed_email to true
+    updateUser({
+      ...user,
+      confirmed_email: true,
+    });
 
     if (isCurrentUser) {
       updateGlobalUser(user);

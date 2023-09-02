@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { LogOut, User } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -20,10 +20,7 @@ interface UserNavProps {
 }
 
 export function UserNav({ user }: UserNavProps) {
-  const router = useRouter();
   const logout = useLogout();
-  // If the user only has one name, use the first two letters of that name as the profile letters.
-  // Otherwise, use the first letter of the first and last name.
   const profileLetters = !user
     ? ''
     : user.name.includes(' ')
@@ -32,7 +29,7 @@ export function UserNav({ user }: UserNavProps) {
         .slice(0, 2)
         .map((name) => name[0])
         .join('')
-    : user.name.slice(0, 2);
+    : user.name.substring(0, 1);
 
   return (
     <DropdownMenu>
@@ -53,9 +50,11 @@ export function UserNav({ user }: UserNavProps) {
         </DropdownMenuLabel>
         {/* <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push('/dashboard/profile')}>
-            <User className="mr-2 h-5 w-5" />
-            <span>Profile</span>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/profile">
+              <User className="mr-2 h-5 w-5" />
+              <span>Profile</span>
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup> */}
         <DropdownMenuSeparator />

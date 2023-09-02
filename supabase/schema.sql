@@ -23,7 +23,7 @@ ALTER TABLE public.users OWNER TO postgres;
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
 CREATE OR REPLACE FUNCTION is_admin(user_id UUID)
-RETURNS BOOL AS $$
+RETURNS BOOLEAN AS $$
 BEGIN
   PERFORM
   FROM public.users
@@ -512,8 +512,8 @@ CREATE OR REPLACE function create_creative_cash_flow (
   _tax_account numeric(12,2),
   _waa numeric(12,2),
   _total_waa numeric(12,2),
+  _daily_trend numeric(12,2)[],
   _weekly_trend numeric(12,2)[],
-  _monthly_trend numeric(12,2)[],
   _yearly_trend numeric(12,2)[],
   _year_to_date numeric(12,2)
 ) RETURNS uuid as $$
@@ -529,8 +529,8 @@ BEGIN
   INSERT INTO creative_cash_flow_inputs (id, user_id, start_date, end_date, all_other_income, payroll_and_distributions, lifestyle_expenses_tax_rate, tax_account_rate, optimal_savings_strategy)
   VALUES (new_id, _user_id, _start_date, _end_date, _all_other_income, _payroll_and_distributions, _lifestyle_expenses_tax_rate, _tax_account_rate, _optimal_savings_strategy);
 
-  INSERT INTO creative_cash_flow_results (id, user_id, collections, lifestyle_expenses, lifestyle_expenses_tax, business_profit_before_tax, business_overhead, tax_account, waa, total_waa, weekly_trend, monthly_trend, yearly_trend, year_to_date)
-  VALUES (new_id, _user_id, _collections, _lifestyle_expenses, _lifestyle_expenses_tax, _business_profit_before_tax, _business_overhead, _tax_account, _waa, _total_waa, _weekly_trend, _monthly_trend, _yearly_trend, _year_to_date);
+  INSERT INTO creative_cash_flow_results (id, user_id, collections, lifestyle_expenses, lifestyle_expenses_tax, business_profit_before_tax, business_overhead, tax_account, waa, total_waa, daily_trend, weekly_trend, yearly_trend, year_to_date)
+  VALUES (new_id, _user_id, _collections, _lifestyle_expenses, _lifestyle_expenses_tax, _business_profit_before_tax, _business_overhead, _tax_account, _waa, _total_waa, _weekly_trend, _daily_trend, _yearly_trend, _year_to_date);
 
   RETURN new_id;
 END;
@@ -553,11 +553,12 @@ ALTER FUNCTION create_creative_cash_flow(
   _tax_account numeric(12,2),
   _waa numeric(12,2),
   _total_waa numeric(12,2),
+  _daily_trend numeric(12,2)[],
   _weekly_trend numeric(12,2)[],
-  _monthly_trend numeric(12,2)[],
   _yearly_trend numeric(12,2)[],
   _year_to_date numeric(12,2)
 ) OWNER TO postgres;
+
 
 
 
@@ -617,8 +618,8 @@ CREATE TABLE creative_cash_flow_results (
   tax_account numeric(12,2) NOT NULL,
   waa numeric(12,2) NOT NULL,
   total_waa numeric(12,2) NOT NULL,
+  daily_trend numeric(12,2)[] NOT NULL,
   weekly_trend numeric(12,2)[] NOT NULL,
-  monthly_trend numeric(12,2)[] NOT NULL,
   yearly_trend numeric(12,2)[] NOT NULL,
   year_to_date numeric(12,2) NOT NULL
 );
@@ -899,6 +900,18 @@ CREATE POLICY "Admin can delete plaid creative_cash_flow_notifiers" ON public.cr
  *
  */
 
+-- Used to check if an email is used when inviting users in the Manager Users section
+CREATE OR REPLACE FUNCTION is_email_used(email text)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (SELECT 1 FROM auth.users as a WHERE a.email = $1);
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION is_email_used(email text) OWNER TO postgres;
+
+
+
 CREATE OR REPLACE FUNCTION get_transactions_with_account_name(ins_item_id text, offset_val int, limit_val int)
 RETURNS TABLE (
     id text,
@@ -1068,9 +1081,9 @@ ALTER FUNCTION get_creative_cash_flow_record(record_id uuid) OWNER TO postgres;
 -- Gets the running total of the user's WAA before the start date of the range used when
 -- calculating the CCF
 CREATE OR REPLACE FUNCTION total_waa_before_date(user_id uuid, target_date timestamp with time zone)
-RETURNS decimal AS $$
+RETURNS NUMERIC AS $$
 DECLARE
-  total_waa_sum decimal;
+  total_waa_sum numeric;
 BEGIN
   SELECT COALESCE(SUM(cfr.waa), 0)
   INTO total_waa_sum
@@ -1139,3 +1152,47 @@ END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
 ALTER FUNCTION change_user_password(current_password text, new_password text) OWNER TO postgres;
+
+
+
+-- Checks if an email is in the auth.users table, when inviting users to prevent duplicate emails
+CREATE OR REPLACE FUNCTION is_email_used(email text)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (SELECT 1 FROM auth.users as a WHERE a.email = $1);
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION is_email_used(email text) OWNER TO postgres;
+
+
+
+-- Retrieves the users from the auth.users table for the Manage Users
+CREATE OR REPLACE FUNCTION get_manage_users()
+RETURNS TABLE (
+  id uuid,
+  name text,
+  email text,
+  role user_role,
+  confirmed_email boolean,
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone
+) AS $$
+BEGIN
+  RETURN QUERY
+    SELECT
+      u.id,
+      u.name,
+      u.email,
+      u.role,
+      (au.email_confirmed_at IS NOT NULL),
+      u.created_at,
+      u.updated_at
+    FROM public.users u
+    JOIN auth.users au ON u.id = au.id
+    ORDER BY
+      u.created_at ASC;
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION get_manage_users() OWNER TO postgres;

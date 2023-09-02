@@ -9,9 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import type { ManageUser } from '@/lib/types';
 
 interface TablePaginationProps {
-  table: Table<User>;
+  table: Table<ManageUser>;
 }
 
 export function TablePagination({ table }: TablePaginationProps) {
@@ -34,7 +35,7 @@ export function TablePagination({ table }: TablePaginationProps) {
   }
 
   return (
-    <div className="flex items-center justify-between px-2">
+    <div className="flex items-center justify-between gap-4 px-2">
       <div className="flex-1 text-sm text-muted-foreground">
         Displaying {startRecord} through {endRecord} of {filteredRowsLength} row(s)
       </div>

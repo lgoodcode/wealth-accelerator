@@ -32,20 +32,6 @@ export async function middleware(request: NextRequest) {
     });
 
     if (isAuthPage) {
-      const isPasswordResetPage = request.nextUrl.pathname === '/reset-password';
-
-      // If it's a password reset page, verify the access token and refresh token hash exists
-      if (isPasswordResetPage) {
-        if (
-          !request.nextUrl.hash ||
-          !request.nextUrl.hash.includes('access_token') ||
-          !request.nextUrl.hash.includes('refresh_token')
-        ) {
-          // If the access token or refresh token hash doesn't exist, redirect to login page without redirect_to query
-          return NextResponse.redirect(new URL(`${request.nextUrl.origin}/login`));
-        }
-        return res;
-      }
       return res;
     }
     return NextResponse.redirect(loginRedirectUrl);
