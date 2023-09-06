@@ -164,7 +164,7 @@ INSERT INTO "public"."creative_cash_flow_notifiers" ("id", "name", "email", "ena
 -- Data for Name: creative_cash_flow_results; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."creative_cash_flow_results" ("id", "user_id", "collections", "lifestyle_expenses", "lifestyle_expenses_tax", "business_profit_before_tax", "business_overhead", "tax_account", "waa", "total_waa", "weekly_trend", "monthly_trend", "yearly_trend", "year_to_date") VALUES
+INSERT INTO "public"."creative_cash_flow_results" ("id", "user_id", "collections", "lifestyle_expenses", "lifestyle_expenses_tax", "business_profit_before_tax", "business_overhead", "tax_account", "waa", "total_waa", "weekly_trend", "daily_trend", "yearly_trend", "year_to_date") VALUES
 	('f2027310-0437-4ab0-bf4b-d60ad7a6b4d8', '97945679-28a3-41a9-85b7-df92e9ffd3de', 7753.84, 1469.88, 323.37, 3364.53, 2596.06, 841.13, 2523.39, 0.00, '{9892.52,12090.62,11926.58}', '{42396.51,103633.92,153341.76}', '{515824.21,630439.68,621886.03}', 192194.02),
 	('a2065cfa-d87f-4ba4-bf30-d44f7e59c55b', '97945679-28a3-41a9-85b7-df92e9ffd3de', 7753.84, 1469.88, 338.07, 3349.83, 2596.06, 837.46, 2512.37, 0.00, '{9892.52,12090.62,11926.58}', '{42396.51,103633.92,153341.76}', '{515824.21,630439.68,621886.03}', 192194.02),
 	('1c7be7b6-2f26-4231-98e2-845b28796a07', '345cb497-d01d-432c-b8ef-40b70af14dbd', 9404.15, 5016.67, 1254.17, 0.00, 17383.47, 0.00, 940.42, 0.00, '{4388.08,2194.31,1463.22}', '{18806.06,18808.38,18812.79}', '{228807.06,114417.65,76296.31}', 18812.79),

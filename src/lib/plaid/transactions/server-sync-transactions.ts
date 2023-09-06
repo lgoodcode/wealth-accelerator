@@ -12,6 +12,7 @@ import {
 import type { Institution } from '@/lib/plaid/types/institutions';
 import type { Filter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
+import { captureException } from '@sentry/nextjs';
 
 export const serverSyncTransactions = async (
   item: Institution,
@@ -104,6 +105,9 @@ export const serverSyncTransactions = async (
       },
     };
   } catch (error: any) {
+    console.error(error);
+    captureException(error);
+
     const errorCode = error?.response?.data?.error_code as string;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
     const isSyncMutationError = errorCode === PlaidTransactionsSyncMutationErrorCode;
