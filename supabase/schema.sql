@@ -6,7 +6,7 @@
  */
 
 DROP TYPE IF EXISTS user_role CASCADE;
-CREATE TYPE user_role AS enum ('USER', 'ADMIN', 'SUPER_USER');
+CREATE TYPE user_role AS enum ('USER', 'ADMIN');
 ALTER TYPE user_role OWNER TO postgres;
 
 DROP TABLE IF EXISTS public.users CASCADE;
