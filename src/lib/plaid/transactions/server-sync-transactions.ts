@@ -106,6 +106,7 @@ export const serverSyncTransactions = async (
     };
   } catch (error: any) {
     console.error(error);
+    captureException(error);
 
     const errorCode = error?.response?.data?.error_code as string;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
@@ -137,12 +138,6 @@ export const serverSyncTransactions = async (
       }
     }
 
-    const isOtherPlaidError = !generalError && !!errorCode;
-
-    if (generalError || isOtherPlaidError) {
-      captureException(error);
-    }
-
     return {
       error: {
         status,
@@ -152,7 +147,7 @@ export const serverSyncTransactions = async (
           isRateLimitError,
           isCredentialError,
           isSyncMutationError,
-          isOtherPlaidError,
+          isOtherPlaidError: !generalError && !!errorCode,
         },
       },
       data: {
