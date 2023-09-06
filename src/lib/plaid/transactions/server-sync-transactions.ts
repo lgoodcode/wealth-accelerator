@@ -12,6 +12,7 @@ import {
 import type { Institution } from '@/lib/plaid/types/institutions';
 import type { Filter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
+import { captureException } from '@sentry/nextjs';
 
 export const serverSyncTransactions = async (
   item: Institution,
@@ -136,6 +137,12 @@ export const serverSyncTransactions = async (
       }
     }
 
+    const isOtherPlaidError = !generalError && !!errorCode;
+
+    if (generalError || isOtherPlaidError) {
+      captureException(error);
+    }
+
     return {
       error: {
         status,
@@ -145,7 +152,7 @@ export const serverSyncTransactions = async (
           isRateLimitError,
           isCredentialError,
           isSyncMutationError,
-          isOtherPlaidError: !generalError && !!errorCode,
+          isOtherPlaidError,
         },
       },
       data: {
