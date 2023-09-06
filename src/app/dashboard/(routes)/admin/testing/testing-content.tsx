@@ -44,15 +44,15 @@ export function TestingContent() {
       <CardContent className="space-y-8">
         <h3 className="text-xl font-semibold">Errors</h3>
         <div className="flex flex-row justify-between gap-8 items-center">
-          <span>Get Error</span>
+          <span>Server</span>
           <Button variant="destructive" onClick={getError}>
-            Get Error
+            Generate
           </Button>
         </div>
         <div className="flex flex-row justify-between gap-8 items-center">
-          <span>Create Error</span>
+          <span>Client</span>
           <Button variant="destructive" onClick={createError}>
-            Create Error
+            Generate
           </Button>
         </div>
       </CardContent>
