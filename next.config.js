@@ -67,20 +67,39 @@ const nextConfig = {
   //   config.resolve.alias.encoding = false;
   //   return config;
   // },
+  sentry: {
+    tunnelRoute: '/sentry',
+    hideSourceMaps: true,
+    widenClientFileUpload: true,
+  },
+};
+
+//Outside of module.exports define sentryWebpackPluginOptions
+const sentryWebpackPluginOptions = {
+  ignore: [],
+  // silent: true,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
 };
 
 module.exports = withBundleAnalyzer(
   withSentryConfig(
     nextConfig,
-    {
-      ignore: [],
-      silent: true,
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-    },
-    {
-      tunnelRoute: '/sentry',
-      hideSourcemaps: true,
-      widenClientFileUploads: true,
-    }
+    sentryWebpackPluginOptions //add sentryWebpackPluginOptions here separately
   )
 );
+
+// module.exports = withBundleAnalyzer(
+//   withSentryConfig(
+//     nextConfig,
+//     {
+//       ignore: [],
+//       silent: true,
+//       authToken: process.env.SENTRY_AUTH_TOKEN,
+//     },
+//     {
+//       tunnelRoute: '/sentry',
+//       hideSourcemaps: true,
+//       widenClientFileUploads: true,
+//     }
+//   )
+// );
