@@ -80,7 +80,6 @@ module.exports = withBundleAnalyzer(
       },
     },
     {
-      // ignore: [],
       silent: true,
       authToken: process.env.SENTRY_AUTH_TOKEN,
     }
