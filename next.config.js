@@ -67,6 +67,11 @@ const nextConfig = {
   //   config.resolve.alias.encoding = false;
   //   return config;
   // },
+  sentry: {
+    tunnelRoute: '/sentry',
+    hideSourceMaps: true,
+    widenClientFileUpload: true,
+  },
 };
 
 //Outside of module.exports define sentryWebpackPluginOptions
@@ -78,14 +83,7 @@ const sentryWebpackPluginOptions = {
 
 module.exports = withBundleAnalyzer(
   withSentryConfig(
-    {
-      ...nextConfig,
-      sentry: {
-        tunnelRoute: '/sentry',
-        hideSourceMaps: true,
-        widenClientFileUpload: true,
-      },
-    },
+    nextConfig,
     sentryWebpackPluginOptions //add sentryWebpackPluginOptions here separately
   )
 );

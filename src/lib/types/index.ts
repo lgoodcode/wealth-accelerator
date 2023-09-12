@@ -1,7 +1,6 @@
 export enum Role {
   USER = 'USER',
   ADMIN = 'ADMIN',
-  // SUPER_USER = 'SUPER_USER',
 }
 
 export type ManageUser = User & {
