@@ -69,13 +69,6 @@ const nextConfig = {
   // },
 };
 
-//Outside of module.exports define sentryWebpackPluginOptions
-const sentryWebpackPluginOptions = {
-  ignore: [],
-  // silent: true,
-  authToken: process.env.SENTRY_AUTH_TOKEN,
-};
-
 module.exports = withBundleAnalyzer(
   withSentryConfig(
     {
@@ -83,25 +76,13 @@ module.exports = withBundleAnalyzer(
       sentry: {
         tunnelRoute: '/sentry',
         hideSourceMaps: true,
-        widenClientFileUpload: true,
+        // widenClientFileUpload: true,
       },
     },
-    sentryWebpackPluginOptions //add sentryWebpackPluginOptions here separately
+    {
+      ignore: [],
+      silent: true,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+    }
   )
 );
-
-// module.exports = withBundleAnalyzer(
-//   withSentryConfig(
-//     nextConfig,
-//     {
-//       ignore: [],
-//       silent: true,
-//       authToken: process.env.SENTRY_AUTH_TOKEN,
-//     },
-//     {
-//       tunnelRoute: '/sentry',
-//       hideSourcemaps: true,
-//       widenClientFileUploads: true,
-//     }
-//   )
-// );
