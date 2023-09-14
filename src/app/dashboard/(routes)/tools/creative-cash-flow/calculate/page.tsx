@@ -42,7 +42,7 @@ export default async function CreativeCashFlowCalculatePage() {
       </div>
       <Separator className="mt-6" />
       <CreativeCashFlow
-        user_id={user.id}
+        userId={user.id}
         transactions={data.transactions}
         ytd_collections={data.ytd_collections}
         default_tax_rate={data.default_tax_rate}
