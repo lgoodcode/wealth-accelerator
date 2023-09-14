@@ -17,9 +17,9 @@ export function DebtSnowballResults({ totalDebt }: DebtSnowballResultsProps) {
   return (
     <div className="flex flex-col lg:grid grid-cols-2 gap-8">
       <ResultsCard
-        totalDebt={totalDebt}
         title="Current Strategy"
         monthly_payment={inputs.monthly_payment - (inputs?.additional_payment ?? 0)}
+        totalDebt={totalDebt}
         data={results.currentResults}
         cost={comparison.currentCost}
         saved={comparison.currentSaved}
