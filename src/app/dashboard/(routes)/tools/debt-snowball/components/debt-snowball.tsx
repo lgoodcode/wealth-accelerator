@@ -9,7 +9,12 @@ import { SaveButton } from './save-button';
 import { DebtSnowballInputs } from './debt-snowball-inputs';
 import { DebtSnowballResults } from './debt-snowball-results';
 import { PaymentScheduleTable } from './payment-schedule-table';
-import { debtsAtom, debtCalculationResultsAtom } from '../atoms';
+import {
+  debtsAtom,
+  debtCalculationInputsAtom,
+  debtCalculationResultsAtom,
+  debtSnowballComparisonAtom,
+} from '../atoms';
 import type { Debt } from '@/lib/types/debts';
 
 enum TabsValue {
@@ -24,9 +29,12 @@ interface DebtSnowballProps {
 }
 
 export function DebtSnowball({ debtsData, userId }: DebtSnowballProps) {
-  const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
+  const inputs = useAtomValue(debtCalculationInputsAtom);
+  const results = useAtomValue(debtCalculationResultsAtom);
+  const comparison = useAtomValue(debtSnowballComparisonAtom);
   const [debts, setDebts] = useAtom(debtsAtom);
   const debtCalculationResults = useAtomValue(debtCalculationResultsAtom);
+  const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
   const totalDebt = debts?.reduce((a, b) => a + b.amount, 0) ?? 0;
 
   useEffect(() => {
@@ -73,7 +81,12 @@ export function DebtSnowball({ debtsData, userId }: DebtSnowballProps) {
         <DebtSnowballInputs debts={debts!} />
       </TabsContent>
       <TabsContent value={TabsValue.Results}>
-        <DebtSnowballResults totalDebt={totalDebt} />
+        <DebtSnowballResults
+          totalDebt={totalDebt}
+          inputs={inputs}
+          results={results}
+          comparison={comparison}
+        />
       </TabsContent>
       <TabsContent value={TabsValue.PaymentSchedule}>
         <PaymentScheduleTable />

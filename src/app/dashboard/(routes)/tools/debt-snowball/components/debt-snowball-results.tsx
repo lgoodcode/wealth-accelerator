@@ -1,11 +1,5 @@
-import { useAtomValue } from 'jotai';
-
 import { ResultsCard } from './results-card';
-import {
-  debtCalculationInputsAtom,
-  debtCalculationResultsAtom,
-  debtSnowballComparisonAtom,
-} from '../atoms';
+
 import type {
   DebtCalculationInputs,
   DebtCalculationResults,
@@ -14,12 +8,20 @@ import type {
 
 interface DebtSnowballResultsProps {
   totalDebt: number;
+  inputs: DebtCalculationInputs | null;
+  results: DebtCalculationResults | null;
+  comparison: DebtSnowballComparison | null;
 }
 
-export function DebtSnowballResults({ totalDebt }: DebtSnowballResultsProps) {
-  const inputs = useAtomValue(debtCalculationInputsAtom) as DebtCalculationInputs;
-  const results = useAtomValue(debtCalculationResultsAtom) as DebtCalculationResults;
-  const comparison = useAtomValue(debtSnowballComparisonAtom) as DebtSnowballComparison;
+export function DebtSnowballResults({
+  totalDebt,
+  inputs,
+  results,
+  comparison,
+}: DebtSnowballResultsProps) {
+  if (!inputs || !results || !comparison) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col lg:grid grid-cols-2 gap-8">
