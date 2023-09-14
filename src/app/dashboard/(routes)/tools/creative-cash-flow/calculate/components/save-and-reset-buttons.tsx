@@ -17,7 +17,7 @@ interface SaveAndResetButtonsProps {
 
 export function SaveAndResetButtons({ className, userId, handleReset }: SaveAndResetButtonsProps) {
   const router = useRouter();
-  const saveRecord = useSaveCcfRecord();
+  const saveCcfRecord = useSaveCcfRecord();
   const [isSaving, setIsSaving] = useState(false);
   const inputs = useAtomValue(creativeCashFlowInputsAtom);
   const results = useAtomValue(creativeCashFlowResultAtom);
@@ -29,7 +29,7 @@ export function SaveAndResetButtons({ className, userId, handleReset }: SaveAndR
 
     setIsSaving(true);
 
-    await saveRecord(userId, inputs, results)
+    await saveCcfRecord(userId, inputs, results)
       .then(async () => {
         // Wait 1 second
         await new Promise((resolve) => setTimeout(resolve, 1000));
