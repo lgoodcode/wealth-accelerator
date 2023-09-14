@@ -1,9 +1,16 @@
 import { useAtomValue } from 'jotai';
 
-import { compare_strategies } from '../functions/compare-strategies';
 import { ResultsCard } from './results-card';
-import { debtCalculationInputsAtom, debtCalculationResultsAtom } from '../atoms';
-import type { DebtCalculationInputs, DebtCalculationResults } from '../types';
+import {
+  debtCalculationInputsAtom,
+  debtCalculationResultsAtom,
+  debtSnowballComparisonAtom,
+} from '../atoms';
+import type {
+  DebtCalculationInputs,
+  DebtCalculationResults,
+  DebtSnowballComparison,
+} from '../types';
 
 interface DebtSnowballResultsProps {
   totalDebt: number;
@@ -12,7 +19,7 @@ interface DebtSnowballResultsProps {
 export function DebtSnowballResults({ totalDebt }: DebtSnowballResultsProps) {
   const inputs = useAtomValue(debtCalculationInputsAtom) as DebtCalculationInputs;
   const results = useAtomValue(debtCalculationResultsAtom) as DebtCalculationResults;
-  const comparison = compare_strategies(inputs, results);
+  const comparison = useAtomValue(debtSnowballComparisonAtom) as DebtSnowballComparison;
 
   return (
     <div className="flex flex-col lg:grid grid-cols-2 gap-8">

@@ -2,13 +2,19 @@ import { atom } from 'jotai';
 
 import { Strategies } from './strategies';
 import type { Debt } from '@/lib/types/debts';
-import type { DebtCalculationInputs, DebtCalculationResults } from './types';
+import type {
+  DebtCalculationInputs,
+  DebtCalculationResults,
+  DebtSnowballComparison,
+} from './types';
 
 export const debtsAtom = atom<Debt[] | null>(null);
 
 export const debtCalculationInputsAtom = atom<DebtCalculationInputs | null>(null);
 
 export const debtCalculationResultsAtom = atom<DebtCalculationResults | null>(null);
+
+export const debtSnowballComparisonAtom = atom<DebtSnowballComparison | null>(null);
 
 export const sortDebtsAtom = atom(null, (get, set, strategy: Strategies) => {
   if (!strategy) {
