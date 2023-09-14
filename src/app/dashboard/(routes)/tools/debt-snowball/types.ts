@@ -44,3 +44,14 @@ export type DebtCalculationResults = {
   currentResults: SimpleDebtCalculation;
   strategyResults: SnowballDebtCalculation;
 };
+
+export type DebtSnowballComparison = {
+  currentSaved: number;
+  currentCost: number;
+  strategySaved: number;
+  strategyCost: number;
+  currentDateDiff: number;
+  strategyDateDiff: number;
+  currentOppCost: number;
+  strategyOppCost: number;
+};
