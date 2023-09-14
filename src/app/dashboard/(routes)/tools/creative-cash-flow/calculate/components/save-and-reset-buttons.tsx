@@ -7,17 +7,17 @@ import { toast } from 'react-toastify';
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../../atoms';
-import { useSaveRecord } from '../hooks/use-save-record';
+import { useSaveCcfRecord } from '../hooks/use-save-ccf-record';
 
-interface ButtonsProps {
+interface SaveAndResetButtonsProps {
   className?: string;
   userId: string;
   handleReset: () => void;
 }
 
-export function Buttons({ className, userId, handleReset }: ButtonsProps) {
+export function SaveAndResetButtons({ className, userId, handleReset }: SaveAndResetButtonsProps) {
   const router = useRouter();
-  const saveRecord = useSaveRecord();
+  const saveRecord = useSaveCcfRecord();
   const [isSaving, setIsSaving] = useState(false);
   const inputs = useAtomValue(creativeCashFlowInputsAtom);
   const results = useAtomValue(creativeCashFlowResultAtom);

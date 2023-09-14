@@ -8,7 +8,7 @@ import type {
   CreativeCashFlowRecord,
 } from '../../types';
 
-export const useSaveRecord = () => {
+export const useSaveCcfRecord = () => {
   const addRecord = useSetAtom(addCreativeCashFlowRecordAtom);
 
   return async (
