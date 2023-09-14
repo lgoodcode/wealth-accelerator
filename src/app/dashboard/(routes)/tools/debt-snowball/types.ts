@@ -30,13 +30,13 @@ export type SnowballDebtCalculation = SimpleDebtCalculation & {
 };
 
 export type DebtCalculationInputs = {
-  additional_payment?: number;
+  additional_payment: number;
   monthly_payment: number;
   opportunity_rate: number;
   strategy: Strategies;
   lump_amounts: number[];
   pay_back_loan: boolean;
-  pay_interest: boolean;
+  pay_interest: boolean; // Currently unused
   loan_interest_rate: number;
 };
 

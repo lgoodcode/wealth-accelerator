@@ -27,7 +27,10 @@ export const useDebtCalculate = () => {
         loan_interest_rate: data.loan_interest_rate,
       });
 
-      setDebtCaluclationInputs(data);
+      setDebtCaluclationInputs({
+        ...data,
+        additional_payment: data.additional_payment ?? 0,
+      });
       setDebtCalculationResults({
         currentResults,
         strategyResults,

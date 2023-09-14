@@ -174,6 +174,7 @@ export const snowball_calculate = (
     loan_payment_tracking[year] = [];
   } else {
     // If we are only paying interest, then set to the balance to the total loan interest
+    //// Note: This is currently unused
     let loan_balance_remaining = options.pay_interest
       ? loan_interest
       : loan_payoffs.reduce((acc, lump_amount) => acc + lump_amount, 0);
