@@ -17,10 +17,10 @@ interface SaveAndResetButtonsProps {
 
 export function SaveAndResetButtons({ className, userId, handleReset }: SaveAndResetButtonsProps) {
   const router = useRouter();
-  const saveCcfRecord = useSaveCcfRecord();
-  const [isSaving, setIsSaving] = useState(false);
   const inputs = useAtomValue(creativeCashFlowInputsAtom);
   const results = useAtomValue(creativeCashFlowResultAtom);
+  const saveCcfRecord = useSaveCcfRecord();
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
     if (!results) {
