@@ -12,12 +12,12 @@ export const useSaveCcfRecord = () => {
   const addRecord = useSetAtom(addCreativeCashFlowRecordAtom);
 
   return async (
-    user_id: string,
+    userId: string,
     inputs: CreativeCashFlowManagementInputs,
     results: CreativeCashFlowManagementResult
   ) => {
     const { error, data: record_id } = await supabase.rpc('create_creative_cash_flow', {
-      _user_id: user_id,
+      _user_id: userId,
       _start_date: inputs.start_date!.toUTCString(),
       _end_date: inputs.end_date!.toUTCString(),
       _all_other_income: inputs.all_other_income,
