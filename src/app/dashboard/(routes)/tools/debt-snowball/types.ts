@@ -55,3 +55,9 @@ export type DebtSnowballComparison = {
   currentOppCost: number;
   strategyOppCost: number;
 };
+
+export type DebtSnowballRecord = {
+  debts: Debt[];
+  inputs: { id: string } & DebtCalculationInputs;
+  results: { id: string } & DebtCalculationResults;
+};
