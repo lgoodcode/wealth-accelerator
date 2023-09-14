@@ -38,8 +38,8 @@ export const useDebtCalculate = () => {
         additional_payment: data.additional_payment ?? 0,
       };
       const results = {
-        currentResults,
-        strategyResults,
+        current: currentResults,
+        strategy: strategyResults,
       };
 
       setDebtCaluclationInputs(inputs);

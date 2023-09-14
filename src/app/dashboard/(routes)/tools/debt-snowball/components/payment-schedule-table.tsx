@@ -83,7 +83,7 @@ export function PaymentScheduleTable({ inputs, results }: PaymentScheduleTablePr
     return null;
   }
 
-  const { strategyResults } = results;
+  const { strategy: strategyResults } = results;
   const numYears = Math.max(
     strategyResults.balance_tracking.length,
     strategyResults.loan_payback.tracking.length

@@ -47,8 +47,8 @@ export type DebtCalculationInputs = {
 };
 
 export type DebtCalculationResults = {
-  currentResults: SimpleDebtCalculation;
-  strategyResults: SnowballDebtCalculation;
+  current: SimpleDebtCalculation;
+  strategy: SnowballDebtCalculation;
 };
 
 export type DebtSnowballComparison = {
@@ -67,7 +67,8 @@ export type DebtSnowballComparison = {
 };
 
 export type DebtSnowballRecord = {
+  id: string;
   debts: Debt[];
-  inputs: { id: string } & DebtCalculationInputs;
-  results: { id: string } & DebtCalculationResults;
+  inputs: DebtCalculationInputs;
+  results: DebtCalculationResults;
 };

@@ -28,7 +28,7 @@ export function DebtSnowballResults({
         title="Current Strategy"
         monthly_payment={inputs.monthly_payment - (inputs?.additional_payment ?? 0)}
         totalDebt={totalDebt}
-        data={results.currentResults}
+        data={results.current}
         cost={comparison.current.cost}
         saved={comparison.current.saved}
         dateDiff={comparison.current.dateDiff}
@@ -44,13 +44,13 @@ export function DebtSnowballResults({
         title={inputs.strategy}
         monthly_payment={inputs.monthly_payment}
         totalDebt={totalDebt}
-        data={results.strategyResults}
+        data={results.strategy}
         cost={comparison.strategy.cost}
         saved={comparison.strategy.saved}
         dateDiff={comparison.strategy.dateDiff}
         opportunity_rate={inputs.opportunity_rate}
         opportunity_cost={comparison.strategy.oppCost}
-        loan_payback={results.strategyResults.loan_payback}
+        loan_payback={results.strategy.loan_payback}
         lump_amounts={inputs.lump_amounts}
       />
     </div>
