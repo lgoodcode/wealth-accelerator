@@ -1,56 +1,55 @@
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useAtomValue } from 'jotai';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
+import { useSaveDebtSnowballRecord } from '../hooks/use-save-debt-snowball-record';
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { debtCalculationInputsAtom, debtCalculationResultsAtom } from '../atoms';
-// import { useSaveRecord } from '../hooks/use-save-record';
+import type { Debt } from '@/lib/types/debts';
 
 interface SaveButtonsProps {
   className?: string;
   userId: string;
+  debts: Debt[];
 }
 
-export function SaveButton({ className, userId }: SaveButtonsProps) {
-  const router = useRouter();
-  // const saveRecord = useSaveRecord();
-  const [isSaving, setIsSaving] = useState(false);
+export function SaveButton({ className, userId, debts }: SaveButtonsProps) {
   const inputs = useAtomValue(debtCalculationInputsAtom);
   const results = useAtomValue(debtCalculationResultsAtom);
+  const saveDebtSnowballRecord = useSaveDebtSnowballRecord();
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
-    if (!results) {
+    if (!inputs || !results) {
       return;
     }
 
     setIsSaving(true);
 
-    // await saveRecord(userId, inputs, results)
-    //   .then(async () => {
-    //     // Wait 1 second
-    //     await new Promise((resolve) => setTimeout(resolve, 1000));
-    //     toast.success(
-    //       'The Creative Cash Flow record has been saved and can be shared with the advisors'
-    //     );
-    //     router.refresh(); // Need to refresh so that the records page and ytd_collections are updated
-    //   })
-    //   .catch((error) => {
-    //     console.error(error, {
-    //       inputs,
-    //       results,
-    //     });
-    //     captureException(error, {
-    //       extra: {
-    //         inputs,
-    //         results,
-    //       },
-    //     });
-    //     toast.error('Failed to save the Creative Cash Flow record. Please try again.');
-    //   })
-    //   .finally(() => setIsSaving(false));
+    await saveDebtSnowballRecord(userId, debts, inputs, results)
+      .then(async () => {
+        // Wait 1 second
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        toast.success(
+          'The Debt Snowball record has been saved and can be shared with the advisors'
+        );
+      })
+      .catch((error) => {
+        console.error(error, {
+          inputs,
+          results,
+        });
+        captureException(error, {
+          extra: {
+            inputs,
+            results,
+          },
+        });
+        toast.error('Failed to save the Debt Snowball record. Please try again.');
+      })
+      .finally(() => setIsSaving(false));
   };
 
   if (!results) {

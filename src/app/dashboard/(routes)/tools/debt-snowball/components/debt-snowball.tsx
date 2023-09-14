@@ -74,7 +74,7 @@ export function DebtSnowball({ debtsData, userId }: DebtSnowballProps) {
           <TabsTrigger value={TabsValue.PaymentSchedule} disabled={!debtCalculationResults}>
             Payment Schedule
           </TabsTrigger>
-          <SaveButton className="absolute left-[480px]" userId={userId} />
+          <SaveButton className="absolute left-[480px]" userId={userId} debts={debts} />
         </TabsList>
       </div>
       <TabsContent value={TabsValue.Inputs}>
