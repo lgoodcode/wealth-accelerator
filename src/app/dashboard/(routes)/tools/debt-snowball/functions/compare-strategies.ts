@@ -1,4 +1,5 @@
 import { moneyRound } from '@/lib/utils/money-round';
+import { currencyOperation } from '@/lib/utils/currency-operations';
 import type {
   DebtCalculationInputs,
   DebtCalculationResults,
@@ -21,12 +22,20 @@ export const compare_strategies = (
   let strategyOppCost = 0;
 
   if (results.currentResults.total_amount < results.strategyResults.total_amount) {
-    const val = results.strategyResults.total_amount - results.currentResults.total_amount;
+    const val = currencyOperation(
+      'subtract',
+      results.strategyResults.total_amount,
+      results.currentResults.total_amount
+    );
     currentSaved = strategyCost = val;
     currentDateDiff = -diff_in_months;
     strategyDateDiff = diff_in_months;
   } else if (results.currentResults.total_amount > results.strategyResults.total_amount) {
-    const val = results.currentResults.total_amount - results.strategyResults.total_amount;
+    const val = currencyOperation(
+      'subtract',
+      results.currentResults.total_amount,
+      results.strategyResults.total_amount
+    );
     currentCost = strategySaved = val;
     currentDateDiff = diff_in_months;
     strategyDateDiff = -diff_in_months;
