@@ -11,7 +11,13 @@ export type DebtPayoff = {
 };
 
 export type SimpleDebtCalculation = {
-  debt_payoffs: DebtPayoff[];
+  debt_payoffs: {
+    // Strip the debt data down to only the sorted descriptions to save space in the database
+    debt: {
+      description: string;
+    };
+    payment_tracking: number[][];
+  }[];
   balance_tracking: number[][];
   interest_tracking: number[][];
   payoff_months: number;

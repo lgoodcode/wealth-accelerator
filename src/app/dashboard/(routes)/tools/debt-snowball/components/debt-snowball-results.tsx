@@ -29,11 +29,11 @@ export function DebtSnowballResults({
         monthly_payment={inputs.monthly_payment - (inputs?.additional_payment ?? 0)}
         totalDebt={totalDebt}
         data={results.currentResults}
-        cost={comparison.currentCost}
-        saved={comparison.currentSaved}
-        dateDiff={comparison.currentDateDiff}
+        cost={comparison.current.cost}
+        saved={comparison.current.saved}
+        dateDiff={comparison.current.dateDiff}
         opportunity_rate={inputs.opportunity_rate}
-        opportunity_cost={comparison.currentOppCost}
+        opportunity_cost={comparison.current.oppCost}
         loan_payback={{
           total: 0,
           interest: 0,
@@ -45,11 +45,11 @@ export function DebtSnowballResults({
         monthly_payment={inputs.monthly_payment}
         totalDebt={totalDebt}
         data={results.strategyResults}
-        cost={comparison.strategyCost}
-        saved={comparison.strategySaved}
-        dateDiff={comparison.strategyDateDiff}
+        cost={comparison.strategy.cost}
+        saved={comparison.strategy.saved}
+        dateDiff={comparison.strategy.dateDiff}
         opportunity_rate={inputs.opportunity_rate}
-        opportunity_cost={comparison.strategyOppCost}
+        opportunity_cost={comparison.strategy.oppCost}
         loan_payback={results.strategyResults.loan_payback}
         lump_amounts={inputs.lump_amounts}
       />
