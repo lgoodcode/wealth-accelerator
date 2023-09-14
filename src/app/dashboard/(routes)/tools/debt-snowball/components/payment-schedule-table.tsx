@@ -20,7 +20,7 @@ interface PaymentScheduleHeadersProps {
   debtPayoffs: SnowballDebtCalculation['debt_payoffs'];
 }
 
-const PaymentScheduleHeaders = ({ debtPayoffs }: PaymentScheduleHeadersProps): JSX.Element => {
+const PaymentScheduleHeaders = ({ debtPayoffs }: PaymentScheduleHeadersProps) => {
   return (
     <>
       {debtPayoffs.map((debtPayoff, index) => (

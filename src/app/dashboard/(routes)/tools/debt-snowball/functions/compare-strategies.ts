@@ -93,13 +93,17 @@ export const compare_strategies = (
   }
 
   return {
-    currentSaved,
-    currentCost,
-    strategySaved,
-    strategyCost,
-    currentDateDiff,
-    strategyDateDiff,
-    currentOppCost,
-    strategyOppCost,
+    current: {
+      saved: currentSaved,
+      cost: currentCost,
+      dateDiff: currentDateDiff,
+      oppCost: currentOppCost,
+    },
+    strategy: {
+      saved: strategySaved,
+      cost: strategyCost,
+      dateDiff: strategyDateDiff,
+      oppCost: strategyOppCost,
+    },
   };
 };

@@ -103,10 +103,10 @@ export interface Database {
           business_overhead: number
           business_profit_before_tax: number
           collections: number
+          daily_trend: number[]
           id: string
           lifestyle_expenses: number
           lifestyle_expenses_tax: number
-          monthly_trend: number[]
           tax_account: number
           total_waa: number
           user_id: string
@@ -119,10 +119,10 @@ export interface Database {
           business_overhead: number
           business_profit_before_tax: number
           collections: number
+          daily_trend: number[]
           id: string
           lifestyle_expenses: number
           lifestyle_expenses_tax: number
-          monthly_trend: number[]
           tax_account: number
           total_waa: number
           user_id: string
@@ -135,10 +135,10 @@ export interface Database {
           business_overhead?: number
           business_profit_before_tax?: number
           collections?: number
+          daily_trend?: number[]
           id?: string
           lifestyle_expenses?: number
           lifestyle_expenses_tax?: number
-          monthly_trend?: number[]
           tax_account?: number
           total_waa?: number
           user_id?: string
@@ -551,6 +551,12 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      is_super_user: {
+        Args: {
+          user_id: string
+        }
+        Returns: boolean
+      }
       set_limit: {
         Args: {
           "": number
@@ -585,6 +591,7 @@ export interface Database {
     Enums: {
       account_type: "personal" | "business"
       category: "Transfer" | "Money-In" | "Money-Out"
+      temp_role: "USER" | "ADMIN" | "SUPER_USER"
       user_role: "USER" | "ADMIN"
     }
     CompositeTypes: {

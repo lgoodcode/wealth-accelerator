@@ -46,14 +46,18 @@ export type DebtCalculationResults = {
 };
 
 export type DebtSnowballComparison = {
-  currentSaved: number;
-  currentCost: number;
-  strategySaved: number;
-  strategyCost: number;
-  currentDateDiff: number;
-  strategyDateDiff: number;
-  currentOppCost: number;
-  strategyOppCost: number;
+  current: {
+    saved: number;
+    cost: number;
+    dateDiff: number;
+    oppCost: number;
+  };
+  strategy: {
+    saved: number;
+    cost: number;
+    dateDiff: number;
+    oppCost: number;
+  };
 };
 
 export type DebtSnowballRecord = {
