@@ -37,7 +37,7 @@ export default async function DebtSnowballPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <DebtSnowball debtsData={debts} />
+      <DebtSnowball debtsData={debts} userId={user.id} />
     </div>
   );
 }

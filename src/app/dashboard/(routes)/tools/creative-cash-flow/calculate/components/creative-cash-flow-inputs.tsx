@@ -26,7 +26,7 @@ import { inputsFormSchema, type InputsFormSchemaType } from '../schema';
 import type { Transaction } from '@/lib/plaid/types/transactions';
 
 interface CcfInputsFormProps {
-  user_id: string;
+  userId: string;
   transactions: {
     business: Transaction[];
     personal: Transaction[];
@@ -36,7 +36,7 @@ interface CcfInputsFormProps {
 }
 
 export function CreativeCashFlowInputs({
-  user_id,
+  userId,
   transactions,
   ytd_collections,
   default_tax_rate,
@@ -62,7 +62,7 @@ export function CreativeCashFlowInputs({
     // Wait 1 second to simulate a loading state
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const total_waa = await getTotalWAA(user_id, data.start_date);
+    const total_waa = await getTotalWAA(userId, data.start_date);
 
     if (total_waa === null) {
       toast.error(

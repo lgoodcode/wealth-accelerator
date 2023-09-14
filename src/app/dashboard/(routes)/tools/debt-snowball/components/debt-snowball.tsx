@@ -5,6 +5,7 @@ import { useAtomValue, useAtom } from 'jotai';
 
 import { Loading } from '@/components/loading';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { SaveButton } from './save-button';
 import { DebtSnowballInputs } from './debt-snowball-inputs';
 import { DebtSnowballResults } from './debt-snowball-results';
 import { PaymentScheduleTable } from './payment-schedule-table';
@@ -19,9 +20,10 @@ enum TabsValue {
 
 interface DebtSnowballProps {
   debtsData: Debt[];
+  userId: string;
 }
 
-export function DebtSnowball({ debtsData }: DebtSnowballProps) {
+export function DebtSnowball({ debtsData, userId }: DebtSnowballProps) {
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
   const [debts, setDebts] = useAtom(debtsAtom);
   const debtCalculationResults = useAtomValue(debtCalculationResultsAtom);
@@ -55,15 +57,18 @@ export function DebtSnowball({ debtsData }: DebtSnowballProps) {
       value={activeTab}
       onValueChange={(value) => setActiveTab(value as TabsValue)}
     >
-      <TabsList className="grid w-[480px] mx-auto grid-cols-3 mb-8">
-        <TabsTrigger value={TabsValue.Inputs}>Inputs</TabsTrigger>
-        <TabsTrigger value={TabsValue.Results} disabled={!debtCalculationResults}>
-          Results
-        </TabsTrigger>
-        <TabsTrigger value={TabsValue.PaymentSchedule} disabled={!debtCalculationResults}>
-          Payment Schedule
-        </TabsTrigger>
-      </TabsList>
+      <div className="relative mb-8 flex flex-row justify-center items-center gap-2">
+        <TabsList className="relative grid w-[480px] mx-auto grid-cols-3 mb-8">
+          <TabsTrigger value={TabsValue.Inputs}>Inputs</TabsTrigger>
+          <TabsTrigger value={TabsValue.Results} disabled={!debtCalculationResults}>
+            Results
+          </TabsTrigger>
+          <TabsTrigger value={TabsValue.PaymentSchedule} disabled={!debtCalculationResults}>
+            Payment Schedule
+          </TabsTrigger>
+          <SaveButton className="absolute left-[480px]" userId={userId} />
+        </TabsList>
+      </div>
       <TabsContent value={TabsValue.Inputs}>
         <DebtSnowballInputs debts={debts!} />
       </TabsContent>
