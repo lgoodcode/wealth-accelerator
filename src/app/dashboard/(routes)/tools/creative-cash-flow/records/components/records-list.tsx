@@ -25,9 +25,9 @@ export function RecordsList({ records }: RecordsListProps) {
       {records.map((record) => (
         <AccordionItem key={record.inputs.id} value={String(record.id)}>
           <AccordionTrigger className="text-xl pl-6 py-8">
-            {format(new Date(record.inputs.start_date), 'LLL dd, y') +
+            {format(new Date(record.inputs.start_date), 'LLL d, y') +
               ' - ' +
-              format(new Date(record.inputs.end_date), 'LLL dd, y')}
+              format(new Date(record.inputs.end_date), 'LLL d, y')}
           </AccordionTrigger>
           <AccordionContent className="p-6">
             <div className="flex flex-row justify-center w-full gap-6 flex-wrap">
