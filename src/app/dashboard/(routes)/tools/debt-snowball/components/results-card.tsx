@@ -41,7 +41,7 @@ interface InfoHoverCardProps {
 
 const InfoHoverCard = ({ children }: InfoHoverCardProps) => {
   return (
-    <HoverCard>
+    <HoverCard openDelay={100} closeDelay={100}>
       <HoverCardTrigger asChild>
         <Info className="ml-2 w-5 h-5 cursor-pointer" />
       </HoverCardTrigger>
