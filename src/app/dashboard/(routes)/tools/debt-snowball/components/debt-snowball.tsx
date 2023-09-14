@@ -89,7 +89,7 @@ export function DebtSnowball({ debtsData, userId }: DebtSnowballProps) {
         />
       </TabsContent>
       <TabsContent value={TabsValue.PaymentSchedule}>
-        <PaymentScheduleTable />
+        <PaymentScheduleTable inputs={inputs} results={results} />
       </TabsContent>
     </Tabs>
   );

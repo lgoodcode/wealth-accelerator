@@ -1,4 +1,3 @@
-import { useAtomValue } from 'jotai';
 import { format, addMonths } from 'date-fns';
 
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
@@ -11,7 +10,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
-import { debtCalculationInputsAtom, debtCalculationResultsAtom } from '../atoms';
 import type {
   DebtCalculationInputs,
   DebtCalculationResults,
@@ -75,9 +73,17 @@ const PaymentScheduleHeadersLeft = ({
   );
 };
 
-export function PaymentScheduleTable() {
-  const inputs = useAtomValue(debtCalculationInputsAtom) as DebtCalculationInputs;
-  const { strategyResults } = useAtomValue(debtCalculationResultsAtom) as DebtCalculationResults;
+interface PaymentScheduleTableProps {
+  inputs: DebtCalculationInputs | null;
+  results: DebtCalculationResults | null;
+}
+
+export function PaymentScheduleTable({ inputs, results }: PaymentScheduleTableProps) {
+  if (!inputs || !results) {
+    return null;
+  }
+
+  const { strategyResults } = results;
   const numYears = Math.max(
     strategyResults.balance_tracking.length,
     strategyResults.loan_payback.tracking.length
