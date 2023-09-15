@@ -66,16 +66,12 @@ export type DebtSnowballComparison = {
   };
 };
 
-export type DebtSnowballRecordDebt = {
-  description: string;
-  amount: number;
-  payment: number;
-  interest: number;
-  months_remaining: number;
-};
+// The Debt type but with the id and user_id stripped to save space in the database
+export type DebtSnowballRecordDebt = Omit<Debt, 'id' | 'user_id'>;
 
 export type DebtSnowballRecord = {
   id: string;
+  created_at: string;
   debts: DebtSnowballRecordDebt[];
   inputs: DebtCalculationInputs;
   results: DebtCalculationResults;
