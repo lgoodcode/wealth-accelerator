@@ -9,13 +9,19 @@ import { Button } from '@/components/ui/button';
 import { debtCalculationInputsAtom, debtCalculationResultsAtom } from '../atoms';
 import type { Debt } from '@/lib/types/debts';
 
-interface SaveButtonsProps {
+interface SaveAndResetButtonsProps {
   className?: string;
   userId: string;
   debts: Debt[];
+  handleReset: () => void;
 }
 
-export function SaveButton({ className, userId, debts }: SaveButtonsProps) {
+export function SaveAndResetButtons({
+  className,
+  userId,
+  debts,
+  handleReset,
+}: SaveAndResetButtonsProps) {
   const inputs = useAtomValue(debtCalculationInputsAtom);
   const results = useAtomValue(debtCalculationResultsAtom);
   const saveDebtSnowballRecord = useSaveDebtSnowballRecord();
@@ -35,6 +41,7 @@ export function SaveButton({ className, userId, debts }: SaveButtonsProps) {
         toast.success(
           'The Debt Snowball record has been saved and can be shared with the advisors'
         );
+        handleReset();
       })
       .catch((error) => {
         console.error(error, {
@@ -66,6 +73,9 @@ export function SaveButton({ className, userId, debts }: SaveButtonsProps) {
         onClick={handleSave}
       >
         Save
+      </Button>
+      <Button size="sm" variant="outline" disabled={!results} onClick={handleReset}>
+        Reset
       </Button>
     </div>
   );
