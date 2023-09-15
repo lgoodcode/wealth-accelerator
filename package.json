@@ -14,7 +14,7 @@
     "pre-deploy": "node ./src/scripts/pre-deploy.js",
     "analyze": "cross-env ANALYZE=true next build",
     "supabase:serve": "supabase functions serve --env-file ./supabase/functions/.env.local",
-    "supabase:genTypes": "supabase gen types typescript --local > ./src/lib/supabase/database.ts",
+    "supabase:gen-types": "supabase gen types typescript --local > ./src/lib/supabase/database.ts",
     "supabase:reset": "supabase stop && supabase start && npm run genTypes",
     "git:reset": "git stash && git checkout main && git pull && git branch -D staging && git checkout -b staging && git push -uf origin staging && git stash pop"
   },
