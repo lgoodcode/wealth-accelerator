@@ -185,7 +185,12 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                 )}
               />
 
-              <Button type="submit" className="w-full" loading={form.formState.isSubmitting}>
+              <Button
+                type="submit"
+                className="w-full"
+                loading={form.formState.isSubmitting}
+                disabled={!debts.length}
+              >
                 Calculate
               </Button>
             </CardContent>

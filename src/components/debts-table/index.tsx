@@ -107,8 +107,8 @@ export function DebtsTable({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={tableColumns.length} className="h-24 text-center">
-                  No results
+                <TableCell colSpan={tableColumns.length} className="h-24 text-lg text-center">
+                  No debts
                 </TableCell>
               </TableRow>
             )}
