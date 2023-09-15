@@ -66,9 +66,17 @@ export type DebtSnowballComparison = {
   };
 };
 
+export type DebtSnowballRecordDebt = {
+  description: string;
+  amount: number;
+  payment: number;
+  interest: number;
+  months_remaining: number;
+};
+
 export type DebtSnowballRecord = {
   id: string;
-  debts: Debt[];
+  debts: DebtSnowballRecordDebt[];
   inputs: DebtCalculationInputs;
   results: DebtCalculationResults;
 };

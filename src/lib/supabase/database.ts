@@ -156,6 +156,102 @@ export interface Database {
           }
         ]
       }
+      debt_snowball: {
+        Row: {
+          created_at: string
+          debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
+          id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          debts?: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "debt_snowball_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      debt_snowball_inputs: {
+        Row: {
+          additional_payment: number
+          id: string
+          loan_interest_rate: number
+          lump_amounts: number[]
+          monthly_payment: number
+          opportunity_rate: number
+          pay_back_loan: boolean
+          pay_interest: boolean
+          strategy: string
+        }
+        Insert: {
+          additional_payment: number
+          id: string
+          loan_interest_rate: number
+          lump_amounts: number[]
+          monthly_payment: number
+          opportunity_rate: number
+          pay_back_loan: boolean
+          pay_interest: boolean
+          strategy: string
+        }
+        Update: {
+          additional_payment?: number
+          id?: string
+          loan_interest_rate?: number
+          lump_amounts?: number[]
+          monthly_payment?: number
+          opportunity_rate?: number
+          pay_back_loan?: boolean
+          pay_interest?: boolean
+          strategy?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "debt_snowball_inputs_id_fkey"
+            columns: ["id"]
+            referencedRelation: "debt_snowball"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      debt_snowball_results: {
+        Row: {
+          current: Database["public"]["CompositeTypes"]["current_calculation_results"]
+          id: string
+          strategy: Database["public"]["CompositeTypes"]["strategy_calculation_results"]
+        }
+        Insert: {
+          current: Database["public"]["CompositeTypes"]["current_calculation_results"]
+          id: string
+          strategy: Database["public"]["CompositeTypes"]["strategy_calculation_results"]
+        }
+        Update: {
+          current?: Database["public"]["CompositeTypes"]["current_calculation_results"]
+          id?: string
+          strategy?: Database["public"]["CompositeTypes"]["strategy_calculation_results"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "debt_snowball_results_id_fkey"
+            columns: ["id"]
+            referencedRelation: "debt_snowball"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       debts: {
         Row: {
           amount: number
@@ -442,6 +538,15 @@ export interface Database {
         }
         Returns: string
       }
+      create_debt_snowball_record: {
+        Args: {
+          user_id: string
+          debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
+          inputs: Database["public"]["CompositeTypes"]["debt_snowball_inputs_data"]
+          results: Database["public"]["CompositeTypes"]["debt_snowball_results_data"]
+        }
+        Returns: string
+      }
       generate_rates: {
         Args: Record<PropertyKey, never>
         Returns: unknown
@@ -465,6 +570,12 @@ export interface Database {
           inputs: Json
           results: Json
         }[]
+      }
+      get_debt_snowball_data_records: {
+        Args: {
+          _user_id: string
+        }
+        Returns: Json
       }
       get_manage_users: {
         Args: Record<PropertyKey, never>
@@ -531,12 +642,17 @@ export interface Database {
         }
         Returns: unknown
       }
-      is_admin: {
-        Args: {
-          user_id: string
-        }
-        Returns: boolean
-      }
+      is_admin:
+        | {
+            Args: {
+              user_id: string
+            }
+            Returns: boolean
+          }
+        | {
+            Args: Record<PropertyKey, never>
+            Returns: boolean
+          }
       is_email_used: {
         Args: {
           email: string
@@ -551,10 +667,12 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
-      is_super_user: {
-        Args: {
-          user_id: string
-        }
+      owns_debt_snowball_inputs_record: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      owns_debt_snowball_results_record: {
+        Args: Record<PropertyKey, never>
         Returns: boolean
       }
       set_limit: {
@@ -591,11 +709,67 @@ export interface Database {
     Enums: {
       account_type: "personal" | "business"
       category: "Transfer" | "Money-In" | "Money-Out"
-      temp_role: "USER" | "ADMIN" | "SUPER_USER"
       user_role: "USER" | "ADMIN"
     }
     CompositeTypes: {
-      [_ in never]: never
+      current_calculation_results: {
+        debt_payoffs: unknown
+        balance_tracking: unknown
+        interest_tracking: unknown
+        payoff_months: number
+        total_interest: number
+        total_amount: number
+      }
+      debt_snowball_debt: {
+        description: string
+        amount: number
+        payment: number
+        interest: number
+        months_remaining: number
+      }
+      debt_snowball_debt_payoff: {
+        debt: Database["public"]["CompositeTypes"]["debt_snowball_debt_payoff_debt"]
+        payment_tracking: unknown
+      }
+      debt_snowball_debt_payoff_debt: {
+        description: string
+      }
+      debt_snowball_inputs_data: {
+        additional_payment: number
+        monthly_payment: number
+        opportunity_rate: number
+        strategy: string
+        lump_amounts: unknown
+        pay_back_loan: boolean
+        pay_interest: boolean
+        loan_interest_rate: number
+      }
+      debt_snowball_record: {
+        id: string
+        debts: unknown
+        inputs: Database["public"]["CompositeTypes"]["debt_snowball_inputs_data"]
+        results: Database["public"]["CompositeTypes"]["debt_snowball_results_data"]
+      }
+      debt_snowball_results_data: {
+        current: Database["public"]["CompositeTypes"]["current_calculation_results"]
+        strategy: Database["public"]["CompositeTypes"]["strategy_calculation_results"]
+      }
+      loan_payback_type: {
+        total: number
+        interest: number
+        months: number
+        tracking: unknown
+      }
+      strategy_calculation_results: {
+        debt_payoffs: unknown
+        balance_tracking: unknown
+        interest_tracking: unknown
+        payoff_months: number
+        total_interest: number
+        total_amount: number
+        snowball_tracking: unknown
+        loan_payback: Database["public"]["CompositeTypes"]["loan_payback_type"]
+      }
     }
   }
   storage: {
