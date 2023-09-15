@@ -26,14 +26,12 @@ export default async function DebtSnowballRecordsPage() {
   }
 
   const records = data as unknown as DebtSnowballRecord[];
-  console.log({ records });
+
   return (
     <div className="p-8 space-y-6">
       <div className="space-y-1">
-        <h2 className="text-3xl font-bold">Creative Cash Flow Records</h2>
-        <p className="text-muted-foreground">
-          View records saved from the Creative Cash Flow page.
-        </p>
+        <h2 className="text-3xl font-bold">Debt Snowball Records</h2>
+        <p className="text-muted-foreground">View records saved from the Debt Snowball page.</p>
       </div>
       <Separator className="mt-6" />
       <DebtSnowballRecords recordsData={records} />

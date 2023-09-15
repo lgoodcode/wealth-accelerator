@@ -25,7 +25,7 @@ export function DebtSnowballRecordsList({ records }: RecordsListProps) {
       {records.map((record) => (
         <AccordionItem key={record.id} value={String(record.id)}>
           <AccordionTrigger className="text-xl pl-6 py-8">
-            {format(new Date(record.created_at), 'LLL d, y h:mm a')}
+            {format(new Date(record.created_at), 'LLL d, y - h:mm a')}
           </AccordionTrigger>
           <AccordionContent className="p-6">
             {/* <div className="flex flex-row justify-center w-full gap-6 flex-wrap">

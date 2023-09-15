@@ -7,7 +7,7 @@ import type { Debt } from '@/lib/types/debts';
 import type { DebtCalculationInputs, DebtCalculationResults, DebtSnowballRecord } from '../types';
 
 export const useSaveDebtSnowballRecord = () => {
-  // const addRecord = useSetAtom(addDebtSnowballRecordAtom);
+  const addRecord = useSetAtom(addDebtSnowballRecordAtom);
 
   return async (
     userId: string,
@@ -30,28 +30,31 @@ export const useSaveDebtSnowballRecord = () => {
     padLastArrayWithZeros(results.strategy.balance_tracking);
     padLastArrayWithZeros(results.strategy.loan_payback.tracking);
 
-    const { error, data: record_id } = await supabase.rpc('create_debt_snowball_record', {
-      user_id: userId,
-      debts: strippedDebts,
-      inputs,
-      results,
-    });
+    const { error, data } = await supabase
+      .rpc('create_debt_snowball_record', {
+        user_id: userId,
+        debts: strippedDebts,
+        inputs,
+        results,
+      })
+      .single();
 
     if (error) {
       throw error;
-    } else if (!record_id) {
-      throw new Error('No record id returned from database');
+    } else if (!data) {
+      throw new Error('No record returned from database');
     }
 
-    // const record: DebtSnowballRecord = {
-    //   id: record_id,
-    //   debts: strippedDebts,
-    //   inputs: structuredClone(inputs),
-    //   results: structuredClone(results),
-    // };
+    const record: DebtSnowballRecord = {
+      id: data.new_id,
+      created_at: data.new_created_at,
+      debts: strippedDebts,
+      inputs: structuredClone(inputs),
+      results: structuredClone(results),
+    };
 
-    // console.log({ record });
+    console.log({ record });
 
-    // addRecord(record);
+    addRecord(record);
   };
 };

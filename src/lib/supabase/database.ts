@@ -545,7 +545,10 @@ export interface Database {
           inputs: Database["public"]["CompositeTypes"]["debt_snowball_inputs_data"]
           results: Database["public"]["CompositeTypes"]["debt_snowball_results_data"]
         }
-        Returns: string
+        Returns: {
+          new_id: string
+          new_created_at: string
+        }[]
       }
       generate_rates: {
         Args: Record<PropertyKey, never>
