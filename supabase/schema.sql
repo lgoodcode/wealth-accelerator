@@ -1034,7 +1034,7 @@ ALTER FUNCTION get_transactions_with_account_name(ins_item_id text, offset_val i
 --   "personal": Transaction[],
 --   "business": Transaction[]
 -- }
-CREATE OR REPLACE FUNCTION public.get_transactions_by_user_id(user_id uuid)
+CREATE OR REPLACE FUNCTION get_transactions_by_user_id(user_id uuid)
 RETURNS JSON AS $$
 DECLARE
   personal_transactions JSON;
@@ -1131,18 +1131,16 @@ ALTER FUNCTION get_creative_cash_flow_records(arg_user_id uuid) OWNER TO postgre
 --   "results": CreativeCashFlowResults
 -- }
 CREATE OR REPLACE FUNCTION get_creative_cash_flow_record(record_id uuid)
-RETURNS TABLE(id uuid, inputs jsonb, results jsonb) AS $$
+RETURNS TABLE (id uuid, inputs jsonb, results jsonb) AS $$
 BEGIN
     RETURN QUERY
         SELECT
             cc.id,
-            to_jsonb(inputs.*) AS inputs,
-            to_jsonb(results.*) AS results
-        FROM creative_cash_flow AS cc
-        JOIN creative_cash_flow_inputs AS inputs
-        ON cc.id = inputs.id
-        JOIN creative_cash_flow_results AS results
-        ON cc.id = results.id
+            to_jsonb(ccfi.*) AS inputs,
+            to_jsonb(ccfr.*) AS results
+        FROM creative_cash_flow cc
+        JOIN creative_cash_flow_inputs ccfi ON cc.id = inputs.id
+        JOIN creative_cash_flow_results ccfr ON cc.id = results.id
         WHERE cc.id = record_id;
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
