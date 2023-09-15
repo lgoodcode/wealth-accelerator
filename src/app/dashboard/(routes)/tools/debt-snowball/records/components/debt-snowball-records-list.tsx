@@ -1,19 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { format } from 'date-fns';
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-// import { InputsCard } from './inputs-card';
-// import { ResultsCard } from './results-card';
-// import { TrendsCard } from './trends-card';
-// import { ShareRecordButton } from './share-record-button';
-// import { DeleteRecordButton } from './delete-record-button';
 import type { DebtSnowballRecord } from '../../types';
+import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 
 interface RecordsListProps {
   records: DebtSnowballRecord[];
@@ -21,27 +12,20 @@ interface RecordsListProps {
 
 export function DebtSnowballRecordsList({ records }: RecordsListProps) {
   return (
-    <Accordion type="single" collapsible className="w-full space-y-6">
+    <div className="w-full space-y-6">
       {records.map((record) => (
-        <AccordionItem key={record.id} value={String(record.id)}>
-          <AccordionTrigger className="text-xl pl-6 py-8">
-            {format(new Date(record.created_at), 'LLL d, y - h:mm a')}
-          </AccordionTrigger>
-          <AccordionContent className="p-6">
-            {/* <div className="flex flex-row justify-center w-full gap-6 flex-wrap">
-              <InputsCard record={record} />
-              <ResultsCard record={record} />
-              <TrendsCard record={record} />
+        <div
+          key={record.id}
+          className="max-w-lg mx-auto py-8 pl-6 px-4 bg-card/50 hover:bg-card/80 cursor-pointer hover:underline"
+        >
+          <Link href={`/dashboard/tools/debt-snowball/records/${record.id}`}>
+            <div className="flex flex-row justify-between gap-4 text-xl font-medium">
+              <h3>{format(new Date(record.created_at), 'LLL d, y - h:mm a')}</h3>
+              <h3>{dollarFormatter(record.debts.reduce((acc, debt) => acc + debt.amount, 0))}</h3>
             </div>
-
-            <div className="flex justify-end pt-8 gap-4">
-              <ShareRecordButton record={record} />
-              <DeleteRecordButton record={record} />
-            </div>
-            */}
-          </AccordionContent>
-        </AccordionItem>
+          </Link>
+        </div>
       ))}
-    </Accordion>
+    </div>
   );
 }

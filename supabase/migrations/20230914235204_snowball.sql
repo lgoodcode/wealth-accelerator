@@ -292,7 +292,7 @@ BEGIN
       json_build_object(
         'id', ds.id,
         'created_at', ds.created_at,
-        'debt', ds.debts,
+        'debts', ds.debts,
         'inputs', json_build_object(
           'additional_payment', dsi.additional_payment,
           'monthly_payment', dsi.monthly_payment,
