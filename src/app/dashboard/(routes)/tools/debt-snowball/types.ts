@@ -71,8 +71,9 @@ export type DebtSnowballRecordDebt = Omit<Debt, 'id' | 'user_id'>;
 
 export type DebtSnowballRecord = {
   id: string;
+  user_id: string;
+  created_at: string;
   debts: DebtSnowballRecordDebt[];
   inputs: DebtCalculationInputs;
   results: DebtCalculationResults;
-  created_at: string;
 };

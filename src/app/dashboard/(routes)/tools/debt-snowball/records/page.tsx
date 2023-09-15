@@ -9,7 +9,7 @@ import { DebtSnowballRecords } from './components/debt-snowball-records';
 import type { DebtSnowballRecord } from '../types';
 
 export const metadata: Metadata = {
-  title: 'Debt Snowball Records',
+  title: 'Records | Debt Snowball',
 };
 
 export default async function DebtSnowballRecordsPage() {
@@ -31,7 +31,7 @@ export default async function DebtSnowballRecordsPage() {
     <div className="p-8 space-y-6">
       <div className="space-y-1">
         <h2 className="text-3xl font-bold">Debt Snowball Records</h2>
-        <p className="text-muted-foreground">View records saved from the Debt Snowball page.</p>
+        <p className="text-muted-foreground">View saved calculations from the Debt Snowball.</p>
       </div>
       <Separator className="mt-6" />
       <DebtSnowballRecords recordsData={records} />

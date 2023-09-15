@@ -236,10 +236,10 @@ CREATE OR REPLACE FUNCTION create_debt_snowball_record (
   debts debt_snowball_debt[],
   inputs debt_snowball_inputs_data,
   results debt_snowball_results_data
-) RETURNS TABLE (new_id uuid, new_created_at timestamp) AS $$
+) RETURNS TABLE (new_id uuid, new_created_at timestamp with time zone) AS $$
 DECLARE
   new_id uuid;
-  new_created_at timestamp;
+  new_created_at timestamp with time zone;
 BEGIN
   -- Generate a new UUID using the uuid-ossp extension
   SELECT uuid_generate_v4() INTO new_id;
@@ -259,7 +259,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 ALTER FUNCTION create_debt_snowball_record(
-  _user_id uuid,
+  user_id uuid,
   debts debt_snowball_debt[],
   inputs debt_snowball_inputs_data,
   results debt_snowball_results_data
@@ -271,6 +271,8 @@ ALTER FUNCTION create_debt_snowball_record(
 DROP TYPE IF EXISTS debt_snowball_record;
 CREATE TYPE debt_snowball_record AS (
   id uuid,
+  user_id uuid,
+  created_at timestamp with time zone,
   debts debt_snowball_debt[],
   inputs debt_snowball_inputs_data,
   results debt_snowball_results_data
@@ -291,6 +293,7 @@ BEGIN
     json_agg(
       json_build_object(
         'id', ds.id,
+        'user_id', ds.user_id,
         'created_at', ds.created_at,
         'debts', ds.debts,
         'inputs', json_build_object(
@@ -318,6 +321,52 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION get_debt_snowball_data_records OWNER TO postgres;
+ALTER FUNCTION get_debt_snowball_data_records(_user_id uuid) OWNER TO postgres;
 
+
+
+
+-- When retrieving the data, on the client you will need to use the restoreLastArrayToLastZero
+-- util function to restore the array to its original state for the following properties:
+--     results.current.balance_tracking
+--     results.strategy.balance_tracking
+--     results.strategy.loan_payback.tracking
+CREATE OR REPLACE FUNCTION get_debt_snowball_data_record(record_id uuid)
+RETURNS TABLE (
+  id uuid,
+  user_id uuid,
+  created_at timestamp with time zone,
+  debts debt_snowball_debt[],
+  inputs json,
+  results json
+) AS $$
+BEGIN
+  RETURN QUERY
+    SELECT
+      ds.id,
+      ds.user_id,
+      ds.created_at,
+      ds.debts,
+      json_build_object(
+        'additional_payment', dsi.additional_payment,
+        'monthly_payment', dsi.monthly_payment,
+        'opportunity_rate', dsi.opportunity_rate,
+        'strategy', dsi.strategy,
+        'lump_amounts', dsi.lump_amounts,
+        'pay_back_loan', dsi.pay_back_loan,
+        'pay_interest', dsi.pay_interest,
+        'loan_interest_rate', dsi.loan_interest_rate
+      ) AS debt_snowball_inputs_data,
+      json_build_object(
+        'current', dsr.current,
+        'strategy', dsr.strategy
+      ) AS debt_snowball_results_data
+  FROM debt_snowball ds
+  JOIN debt_snowball_inputs dsi ON ds.id = dsi.id
+  JOIN debt_snowball_results dsr ON ds.id = dsr.id
+  WHERE ds.id = record_id;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION get_debt_snowball_data_record(record_id uuid) OWNER TO postgres;
 

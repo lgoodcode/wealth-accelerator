@@ -34,6 +34,18 @@ $$ LANGUAGE plpgsql SECURITY definer;
 
 ALTER FUNCTION is_admin(UUID) OWNER TO postgres;
 
+CREATE OR REPLACE FUNCTION is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.users
+    WHERE auth.uid() = id AND role = 'ADMIN'::user_role
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION is_admin() OWNER TO postgres;
+
 CREATE POLICY "Can view their own data and admins can view all user data" ON public.users
   FOR SELECT
   TO authenticated

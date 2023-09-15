@@ -47,13 +47,12 @@ export const useSaveDebtSnowballRecord = () => {
 
     const record: DebtSnowballRecord = {
       id: data.new_id,
+      user_id: userId,
       created_at: data.new_created_at,
       debts: strippedDebts,
       inputs: structuredClone(inputs),
       results: structuredClone(results),
     };
-
-    console.log({ record });
 
     addRecord(record);
   };

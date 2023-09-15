@@ -574,6 +574,19 @@ export interface Database {
           results: Json
         }[]
       }
+      get_debt_snowball_data_record: {
+        Args: {
+          record_id: string
+        }
+        Returns: {
+          id: string
+          user_id: string
+          created_at: string
+          debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
+          inputs: Json
+          results: Json
+        }[]
+      }
       get_debt_snowball_data_records: {
         Args: {
           _user_id: string
@@ -749,6 +762,8 @@ export interface Database {
       }
       debt_snowball_record: {
         id: string
+        user_id: string
+        created_at: string
         debts: unknown
         inputs: Database["public"]["CompositeTypes"]["debt_snowball_inputs_data"]
         results: Database["public"]["CompositeTypes"]["debt_snowball_results_data"]
