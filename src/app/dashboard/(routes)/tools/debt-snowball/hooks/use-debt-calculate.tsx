@@ -21,7 +21,7 @@ export const useDebtCalculate = () => {
 
   return async (data: DebtCalculationSchemaType) => {
     if (!debts.length) {
-      toast.error('You must have at least one debt entry to calculate.');
+      toast.error('You must have at least one debt entry to calculate');
       return;
     }
 
