@@ -20,6 +20,11 @@ export const useDebtCalculate = () => {
   const setDebtSnowballComparison = useSetAtom(debtSnowballComparisonAtom);
 
   return async (data: DebtCalculationSchemaType) => {
+    if (!debts.length) {
+      toast.error('You must have at least one debt entry to calculate.');
+      return;
+    }
+
     // Simulate loading by waiting 1 seconds
     await new Promise((resolve) => setTimeout(resolve, 1000));
 

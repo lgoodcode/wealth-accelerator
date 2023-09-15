@@ -38,6 +38,13 @@ export function DebtSnowball({ debtsData, userId }: DebtSnowballProps) {
   const totalDebt = debts?.reduce((a, b) => a + b.amount, 0) ?? 0;
 
   useEffect(() => {
+    if (!debtsData.length) {
+      toast.error('You must have at least one debt entry to calculate.');
+      return;
+    }
+  }, []);
+
+  useEffect(() => {
     if (debtCalculationResults) {
       setActiveTab(TabsValue.Results);
     }

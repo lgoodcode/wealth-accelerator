@@ -1104,20 +1104,18 @@ ALTER FUNCTION public.get_transactions_by_user_id(user_id uuid) OWNER TO postgre
 -- }
 -- and is sorted by the created date in descending order
 CREATE OR REPLACE FUNCTION get_creative_cash_flow_records(arg_user_id uuid)
-RETURNS TABLE(id uuid, inputs jsonb, results jsonb) AS $$
+RETURNS TABLE (id uuid, inputs jsonb, results jsonb) AS $$
 BEGIN
     RETURN QUERY
         SELECT
             cc.id,
-            to_jsonb(inputs.*) AS inputs,
-            to_jsonb(results.*) AS results
-        FROM creative_cash_flow AS cc
-        JOIN creative_cash_flow_inputs AS inputs
-        ON cc.id = inputs.id
-        JOIN creative_cash_flow_results AS results
-        ON cc.id = results.id
-        WHERE inputs.user_id = arg_user_id
-        ORDER BY inputs.created_at DESC;
+            to_jsonb(ccfi.*) AS ccfi,
+            to_jsonb(ccfr.*) AS ccfr
+        FROM creative_cash_flow cc
+        JOIN creative_cash_flow_inputs ccfi ON cc.id = ccfi.id
+        JOIN creative_cash_flow_results ccfr ON cc.id = ccfr.id
+        WHERE ccfi.user_id = arg_user_id
+        ORDER BY ccfi.created_at DESC;
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
