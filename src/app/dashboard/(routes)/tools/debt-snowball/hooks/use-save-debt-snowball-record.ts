@@ -18,7 +18,9 @@ export const useSaveDebtSnowballRecord = () => {
     if (error) {
       throw error;
     }
+
     const record = {
+      id: record_id,
       debts,
       inputs: {
         ...structuredClone(inputs),

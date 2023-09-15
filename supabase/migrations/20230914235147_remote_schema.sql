@@ -490,8 +490,8 @@ CREATE TABLE IF NOT EXISTS "public"."debts" (
     "id" integer NOT NULL,
     "user_id" "uuid" NOT NULL,
     "description" "text" NOT NULL,
-    "amount" numeric(10,2) NOT NULL,
-    "payment" numeric(10,2) NOT NULL,
+    "amount" numeric(12,2) NOT NULL,
+    "payment" numeric(12,2) NOT NULL,
     "interest" numeric(5,2) NOT NULL,
     "months_remaining" smallint DEFAULT '0'::smallint NOT NULL
 );
@@ -576,7 +576,7 @@ CREATE TABLE IF NOT EXISTS "public"."plaid_transactions" (
     "item_id" "text" NOT NULL,
     "account_id" "text" NOT NULL,
     "name" "text" NOT NULL,
-    "amount" numeric(10,2) NOT NULL,
+    "amount" numeric(12,2) NOT NULL,
     "category" "public"."category" NOT NULL,
     "date" timestamp with time zone NOT NULL
 );
