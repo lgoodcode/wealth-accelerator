@@ -5,14 +5,12 @@ import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { getUser } from '@/lib/supabase/server/get-user';
 import { isUUID } from '@/lib/utils/is-uuid';
 import { isAdmin } from '@/lib/utils/is-admin';
+import { restoreLastArrayToLastZero } from '../../utils/multi-dim-arr-padding';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
-// import { InputsCard } from '../components/inputs-card';
-// import { ResultsCard } from '../components/results-card';
-// import { TrendsCard } from '../components/trends-card';
 import { NoRecordCard } from './no-record-card';
+import { DebtSnowballRecordView } from './debt-snowball-record-view';
 import type { DebtSnowballRecord } from '../../types';
-import { restoreLastArrayToLastZero } from '../../utils/multi-dim-arr-padding';
 
 export const metadata: Metadata = {
   title: 'Record | Debt Snowball',
@@ -87,9 +85,7 @@ export default async function DebtSnowballRecordPage({
       </div>
       <Separator className="mt-6" />
       <div className="flex flex-row justify-center w-full gap-6 flex-wrap">
-        {/* <InputsCard record={record} />
-        <ResultsCard record={record} />
-        <TrendsCard record={record} /> */}
+        <DebtSnowballRecordView record={record} />
       </div>
     </div>
   );
