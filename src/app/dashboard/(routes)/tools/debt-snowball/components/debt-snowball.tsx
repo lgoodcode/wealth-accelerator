@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAtomValue, useAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { toast } from 'react-toastify';
 
 import { Loading } from '@/components/loading';

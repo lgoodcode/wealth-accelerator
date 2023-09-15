@@ -30,7 +30,7 @@ CREATE TABLE debt_snowball (
   id uuid PRIMARY KEY NOT NULL,
   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
   debts debt_snowball_debt[] NOT NULL,
-  created_at timestamp with time zone NOT NULL DEFAULT now()
+  created_at timestamp with time zone NOT NULL DEFAULT NOW()
 );
 
 ALTER TABLE debt_snowball OWNER TO postgres;
@@ -289,6 +289,7 @@ BEGIN
     json_agg(
       json_build_object(
         'id', ds.id,
+        'created_at', ds.created_at,
         'debt', ds.debts,
         'inputs', json_build_object(
           'additional_payment', dsi.additional_payment,
@@ -314,4 +315,7 @@ BEGIN
   RETURN COALESCE(result, '[]'::json);
 END;
 $$ LANGUAGE plpgsql;
+
+ALTER FUNCTION get_debt_snowball_data_records OWNER TO postgres;
+
 

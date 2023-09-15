@@ -1,13 +1,13 @@
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
-import { padLastArrayWithZeros, restoreLastArrayToLastZero } from '../utils/multi-dim-arr-padding';
-import { Strategies } from '../strategies';
+import { padLastArrayWithZeros } from '../utils/multi-dim-arr-padding';
+import { addDebtSnowballRecordAtom } from '../atoms';
 import type { Debt } from '@/lib/types/debts';
 import type { DebtCalculationInputs, DebtCalculationResults, DebtSnowballRecord } from '../types';
 
 export const useSaveDebtSnowballRecord = () => {
-  // const addRecord = useSetAtom(addCreativeCashFlowRecordAtom);
+  // const addRecord = useSetAtom(addDebtSnowballRecordAtom);
 
   return async (
     userId: string,
@@ -43,19 +43,14 @@ export const useSaveDebtSnowballRecord = () => {
       throw new Error('No record id returned from database');
     }
 
-    // // Because we had to pad the arrays with zeroes, we want to remove the extra zeroes from the end
-    // restoreLastArrayToLastZero(results.current.balance_tracking);
-    // restoreLastArrayToLastZero(results.strategy.balance_tracking);
-    // restoreLastArrayToLastZero(results.strategy.loan_payback.tracking);
+    // const record: DebtSnowballRecord = {
+    //   id: record_id,
+    //   debts: strippedDebts,
+    //   inputs: structuredClone(inputs),
+    //   results: structuredClone(results),
+    // };
 
-    const record: DebtSnowballRecord = {
-      id: record_id,
-      debts: strippedDebts,
-      inputs: structuredClone(inputs),
-      results: structuredClone(results),
-    };
-
-    console.log({ record });
+    // console.log({ record });
 
     // addRecord(record);
   };

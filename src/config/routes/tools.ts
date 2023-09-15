@@ -1,4 +1,4 @@
-import { Album, DollarSign, Snowflake } from 'lucide-react';
+import { Album, DollarSign, MountainSnow, Snowflake } from 'lucide-react';
 
 import type { Route } from './routes';
 
@@ -20,5 +20,11 @@ export const toolsRoutes: Route[] = [
     path: '/dashboard/tools/debt-snowball',
     Icon: Snowflake,
     description: 'View strategies to pay off your debt with the debt snowball method.',
+  },
+  {
+    name: 'Debt Snowball Records',
+    path: '/dashboard/tools/debt-snowball/records',
+    Icon: MountainSnow,
+    description: 'View and manage records saved of your debt snowball information.',
   },
 ];

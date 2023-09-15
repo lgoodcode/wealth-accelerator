@@ -38,9 +38,10 @@ export function SaveAndResetButtons({
       .then(async () => {
         // Wait 1 second
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        toast.success(
-          'The Debt Snowball record has been saved and can be shared with the advisors'
-        );
+        toast.success('The Debt Snowball record has been saved');
+        // toast.success(
+        //   'The Debt Snowball record has been saved and can be shared with the advisors'
+        // );
         handleReset();
       })
       .catch((error) => {
