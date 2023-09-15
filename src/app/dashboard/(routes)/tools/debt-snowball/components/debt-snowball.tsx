@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useAtomValue, useAtom } from 'jotai';
+import { toast } from 'react-toastify';
 
 import { Loading } from '@/components/loading';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { SaveButton } from './save-button';
+import { SaveAndResetButtons } from './save-and-reset-buttons';
 import { DebtSnowballInputs } from './debt-snowball-inputs';
 import { DebtSnowballResults } from './debt-snowball-results';
 import { PaymentScheduleTable } from './payment-schedule-table';
@@ -29,17 +30,25 @@ interface DebtSnowballProps {
 }
 
 export function DebtSnowball({ debtsData, userId }: DebtSnowballProps) {
-  const inputs = useAtomValue(debtCalculationInputsAtom);
-  const results = useAtomValue(debtCalculationResultsAtom);
-  const comparison = useAtomValue(debtSnowballComparisonAtom);
+  const [inputs, setInputs] = useAtom(debtCalculationInputsAtom);
+  const [results, setResults] = useAtom(debtCalculationResultsAtom);
+  const [comparison, setComparison] = useAtom(debtSnowballComparisonAtom);
+  const [debtCalculationResults, setDebtCalculationResults] = useAtom(debtCalculationResultsAtom);
   const [debts, setDebts] = useAtom(debtsAtom);
-  const debtCalculationResults = useAtomValue(debtCalculationResultsAtom);
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
   const totalDebt = debts?.reduce((a, b) => a + b.amount, 0) ?? 0;
 
+  const handleReset = () => {
+    setActiveTab(TabsValue.Inputs);
+    setInputs(null);
+    setResults(null);
+    setComparison(null);
+    setDebtCalculationResults(null);
+  };
+
   useEffect(() => {
     if (!debtsData.length) {
-      toast.error('You must have at least one debt entry to calculate.');
+      toast.error('You must have at least one debt entry to calculate');
       return;
     }
   }, []);
@@ -81,7 +90,12 @@ export function DebtSnowball({ debtsData, userId }: DebtSnowballProps) {
           <TabsTrigger value={TabsValue.PaymentSchedule} disabled={!debtCalculationResults}>
             Payment Schedule
           </TabsTrigger>
-          <SaveButton className="absolute left-[480px]" userId={userId} debts={debts} />
+          <SaveAndResetButtons
+            className="absolute left-[480px]"
+            userId={userId}
+            debts={debts}
+            handleReset={handleReset}
+          />
         </TabsList>
       </div>
       <TabsContent value={TabsValue.Inputs}>
