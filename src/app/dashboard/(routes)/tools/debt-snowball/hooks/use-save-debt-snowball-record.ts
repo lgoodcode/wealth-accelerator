@@ -1,8 +1,10 @@
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
-import type { DebtCalculationInputs, DebtCalculationResults, DebtSnowballRecord } from '../types';
+import { padLastArrayWithZeros, restoreLastArrayToLastZero } from '../utils/multi-dim-arr-padding';
+import { Strategies } from '../strategies';
 import type { Debt } from '@/lib/types/debts';
+import type { DebtCalculationInputs, DebtCalculationResults, DebtSnowballRecord } from '../types';
 
 export const useSaveDebtSnowballRecord = () => {
   // const addRecord = useSetAtom(addCreativeCashFlowRecordAtom);
@@ -13,24 +15,47 @@ export const useSaveDebtSnowballRecord = () => {
     inputs: DebtCalculationInputs,
     results: DebtCalculationResults
   ) => {
-    const { error, data: record_id } = await supabase.rpc('create_debt_snowball', {});
+    // Strip the id and user_id from the debts, which isn't needed to view, to save space in the database
+    const strippedDebts = debts.map((debt) => ({
+      description: debt.description,
+      amount: debt.amount,
+      interest: debt.interest,
+      payment: debt.payment,
+      months_remaining: debt.months_remaining,
+    }));
+
+    // To insert the multi-dimensional arrays into the database, they need to all be the same length
+    // so we will pad the last array with zeros to make them all the same length
+    padLastArrayWithZeros(results.current.balance_tracking);
+    padLastArrayWithZeros(results.strategy.balance_tracking);
+    padLastArrayWithZeros(results.strategy.loan_payback.tracking);
+
+    const { error, data: record_id } = await supabase.rpc('create_debt_snowball_record', {
+      user_id: userId,
+      debts: strippedDebts,
+      inputs,
+      results,
+    });
 
     if (error) {
       throw error;
+    } else if (!record_id) {
+      throw new Error('No record id returned from database');
     }
 
-    const record = {
+    // // Because we had to pad the arrays with zeroes, we want to remove the extra zeroes from the end
+    // restoreLastArrayToLastZero(results.current.balance_tracking);
+    // restoreLastArrayToLastZero(results.strategy.balance_tracking);
+    // restoreLastArrayToLastZero(results.strategy.loan_payback.tracking);
+
+    const record: DebtSnowballRecord = {
       id: record_id,
-      debts,
-      inputs: {
-        ...structuredClone(inputs),
-        id: record_id,
-      },
-      results: {
-        ...structuredClone(results),
-        id: record_id,
-      },
-    } as DebtSnowballRecord;
+      debts: strippedDebts,
+      inputs: structuredClone(inputs),
+      results: structuredClone(results),
+    };
+
+    console.log({ record });
 
     // addRecord(record);
   };
