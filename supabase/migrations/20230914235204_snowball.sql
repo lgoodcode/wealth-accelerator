@@ -287,59 +287,47 @@ ALTER FUNCTION create_debt_snowball_record(
 
 
 
-DROP TYPE IF EXISTS debt_snowball_record;
-CREATE TYPE debt_snowball_record AS (
-  id uuid,
-  user_id uuid,
-  created_at timestamp with time zone,
-  debts debt_snowball_debt[],
-  inputs debt_snowball_inputs_data,
-  results debt_snowball_results_data
-);
-ALTER TYPE debt_snowball_record OWNER TO postgres;
-
 -- When retrieving the data, on the client you will need to use the restoreLastArrayToLastZero
 -- util function to restore the array to its original state for the following properties:
 --     results.current.balance_tracking
 --     results.strategy.balance_tracking
 --     results.strategy.loan_payback.tracking
 CREATE OR REPLACE FUNCTION get_debt_snowball_data_records(_user_id uuid)
-RETURNS JSON AS $$
-DECLARE
-  result json;
+RETURNS TABLE (
+  id uuid,
+  user_id uuid,
+  created_at timestamp with time zone,
+  debts debt_snowball_debt[],
+  inputs json, -- Using JSON because using a custom type this wasn't working
+  results json
+) AS $$
 BEGIN
-  SELECT
-    json_agg(
+  RETURN QUERY
+    SELECT
+      ds.id,
+      ds.user_id,
+      ds.created_at,
+      ds.debts,
       json_build_object(
-        'id', ds.id,
-        'user_id', ds.user_id,
-        'created_at', ds.created_at,
-        'debts', ds.debts,
-        'inputs', json_build_object(
-          'additional_payment', dsi.additional_payment,
-          'monthly_payment', dsi.monthly_payment,
-          'opportunity_rate', dsi.opportunity_rate,
-          'strategy', dsi.strategy,
-          'lump_amounts', dsi.lump_amounts,
-          'pay_back_loan', dsi.pay_back_loan,
-          'pay_interest', dsi.pay_interest,
-          'loan_interest_rate', dsi.loan_interest_rate
-        ),
-        'results', json_build_object(
-          'current', dsr.current,
-          'strategy', dsr.strategy
-        )
-      ) ORDER BY ds.created_at DESC
-    ) INTO result
+        'additional_payment', dsi.additional_payment,
+        'monthly_payment', dsi.monthly_payment,
+        'opportunity_rate', dsi.opportunity_rate,
+        'strategy', dsi.strategy,
+        'lump_amounts', dsi.lump_amounts,
+        'pay_back_loan', dsi.pay_back_loan,
+        'pay_interest', dsi.pay_interest,
+        'loan_interest_rate', dsi.loan_interest_rate
+      ) AS debt_snowball_inputs_data,
+      json_build_object(
+        'current', dsr.current,
+        'strategy', dsr.strategy
+      ) AS debt_snowball_results_data
   FROM debt_snowball ds
   JOIN debt_snowball_inputs dsi ON ds.id = dsi.id
   JOIN debt_snowball_results dsr ON ds.id = dsr.id
   WHERE ds.user_id = _user_id;
-
-  RETURN COALESCE(result, '[]'::json);
 END;
 $$ LANGUAGE plpgsql;
-
 ALTER FUNCTION get_debt_snowball_data_records(_user_id uuid) OWNER TO postgres;
 
 
@@ -356,7 +344,7 @@ RETURNS TABLE (
   user_id uuid,
   created_at timestamp with time zone,
   debts debt_snowball_debt[],
-  inputs json,
+  inputs json, -- Using JSON because using a custom type this wasn't working
   results json
 ) AS $$
 BEGIN

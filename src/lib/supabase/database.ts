@@ -591,7 +591,14 @@ export interface Database {
         Args: {
           _user_id: string
         }
-        Returns: Json
+        Returns: {
+          id: string
+          user_id: string
+          created_at: string
+          debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
+          inputs: Json
+          results: Json
+        }[]
       }
       get_manage_users: {
         Args: Record<PropertyKey, never>
