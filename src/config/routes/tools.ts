@@ -25,6 +25,6 @@ export const toolsRoutes: Route[] = [
     name: 'Debt Snowball Records',
     path: '/dashboard/tools/debt-snowball/records',
     Icon: MountainSnow,
-    description: 'View and manage records saved of your debt snowball information.',
+    description: 'View saved calculations from the Debt Snowball.',
   },
 ];
