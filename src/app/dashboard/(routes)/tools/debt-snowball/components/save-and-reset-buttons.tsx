@@ -1,18 +1,20 @@
-import { useState } from 'react';
-import { useAtomValue } from 'jotai';
+import { useState, useCallback } from 'react';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
-import { useSaveDebtSnowballRecord } from '../hooks/use-save-debt-snowball-record';
 import { cn } from '@/lib/utils/cn';
+import { useSaveDebtSnowballRecord } from '../hooks/use-save-debt-snowball-record';
 import { Button } from '@/components/ui/button';
-import { debtCalculationInputsAtom, debtCalculationResultsAtom } from '../atoms';
+import { SaveDebtSnowballDialog } from './save-debt-snowball-dialog';
 import type { Debt } from '@/lib/types/debts';
+import type { DebtCalculationInputs, DebtCalculationResults } from '../types';
 
 interface SaveAndResetButtonsProps {
   className?: string;
   userId: string;
   debts: Debt[];
+  inputs: DebtCalculationInputs | null;
+  results: DebtCalculationResults | null;
   handleReset: () => void;
 }
 
@@ -20,21 +22,23 @@ export function SaveAndResetButtons({
   className,
   userId,
   debts,
+  inputs,
+  results,
   handleReset,
 }: SaveAndResetButtonsProps) {
-  const inputs = useAtomValue(debtCalculationInputsAtom);
-  const results = useAtomValue(debtCalculationResultsAtom);
   const saveDebtSnowballRecord = useSaveDebtSnowballRecord();
-  const [isSaving, setIsSaving] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
 
-  const handleSave = async () => {
+  const handleSaveDialogOpenChange = useCallback((open?: boolean) => {
+    setShowSaveDialog((prev) => open ?? !prev);
+  }, []);
+
+  const handleSave = async (name: string) => {
     if (!inputs || !results) {
       return;
     }
 
-    setIsSaving(true);
-
-    await saveDebtSnowballRecord(userId, debts, inputs, results)
+    await saveDebtSnowballRecord(userId, name, debts, inputs, results)
       .then(async () => {
         // Wait 1 second
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -43,6 +47,7 @@ export function SaveAndResetButtons({
         //   'The Debt Snowball record has been saved and can be shared with the advisors'
         // );
         handleReset();
+        setShowSaveDialog(false);
       })
       .catch((error) => {
         console.error(error, {
@@ -56,11 +61,10 @@ export function SaveAndResetButtons({
           },
         });
         toast.error('Failed to save the Debt Snowball record. Please try again.');
-      })
-      .finally(() => setIsSaving(false));
+      });
   };
 
-  if (!results) {
+  if (!inputs || !results) {
     return null;
   }
 
@@ -70,14 +74,19 @@ export function SaveAndResetButtons({
         className="flex"
         size="sm"
         disabled={!results}
-        loading={isSaving}
-        onClick={handleSave}
+        onClick={() => setShowSaveDialog(true)}
       >
         Save
       </Button>
       <Button size="sm" variant="outline" disabled={!results} onClick={handleReset}>
         Reset
       </Button>
+
+      <SaveDebtSnowballDialog
+        open={showSaveDialog}
+        onOpenChange={handleSaveDialogOpenChange}
+        handleSave={handleSave}
+      />
     </div>
   );
 }

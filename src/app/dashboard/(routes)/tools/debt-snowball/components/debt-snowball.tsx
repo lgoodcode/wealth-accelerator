@@ -94,6 +94,8 @@ export function DebtSnowball({ debtsData, userId }: DebtSnowballProps) {
             className="absolute left-[480px]"
             userId={userId}
             debts={debts}
+            inputs={inputs}
+            results={results}
             handleReset={handleReset}
           />
         </TabsList>

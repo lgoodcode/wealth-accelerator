@@ -11,6 +11,7 @@ export const useSaveDebtSnowballRecord = () => {
 
   return async (
     userId: string,
+    name: string,
     debts: Debt[],
     inputs: DebtCalculationInputs,
     results: DebtCalculationResults
@@ -33,6 +34,7 @@ export const useSaveDebtSnowballRecord = () => {
     const { error, data } = await supabase
       .rpc('create_debt_snowball_record', {
         user_id: userId,
+        name,
         debts: strippedDebts,
         inputs,
         results,
@@ -48,6 +50,7 @@ export const useSaveDebtSnowballRecord = () => {
     const record: DebtSnowballRecord = {
       id: data.new_id,
       user_id: userId,
+      name,
       created_at: data.new_created_at,
       debts: strippedDebts,
       inputs: structuredClone(inputs),

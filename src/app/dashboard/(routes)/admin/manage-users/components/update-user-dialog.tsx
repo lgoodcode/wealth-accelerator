@@ -145,11 +145,13 @@ export function UpdateUserDialog({ open, onOpenChange, id, user }: UpdateUserDia
 
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="secondary" disabled={form.formState.isSubmitting}>
+                <Button type="button" variant="secondary" disabled={form.formState.isSubmitting}>
                   Cancel
                 </Button>
               </DialogClose>
-              <Button loading={form.formState.isSubmitting}>Save</Button>
+              <Button type="submit" loading={form.formState.isSubmitting}>
+                Save
+              </Button>
             </DialogFooter>
           </form>
         </Form>
