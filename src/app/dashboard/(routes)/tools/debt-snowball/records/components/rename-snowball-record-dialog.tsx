@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,6 +35,7 @@ interface UpdateUserDialog {
 }
 
 export function RenameSnowballRecordDialog({ open, onOpenChange, record }: UpdateUserDialog) {
+  const router = useRouter();
   const renameSnowballRecord = useRenameSnowballRecord();
   const form = useForm<{ name: string }>({
     resolver: zodResolver(
@@ -47,10 +49,11 @@ export function RenameSnowballRecordDialog({ open, onOpenChange, record }: Updat
     ),
   });
 
-  const handleRename = async (data: { name: string }) => {
+  const handleRenameSnowballRecord = async (data: { name: string }) => {
     await renameSnowballRecord(record.id, data.name)
       .then(() => {
         onOpenChange(false);
+        router.refresh(); // Refresh the page so that the name is updated in the breadcrumbs
       })
       .catch((error) => {
         console.error(error);
@@ -79,7 +82,7 @@ export function RenameSnowballRecordDialog({ open, onOpenChange, record }: Updat
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form className="space-y-4" onSubmit={form.handleSubmit(handleRename)}>
+          <form className="space-y-4" onSubmit={form.handleSubmit(handleRenameSnowballRecord)}>
             <FormField
               control={form.control}
               name="name"

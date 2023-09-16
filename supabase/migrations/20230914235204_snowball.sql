@@ -1,35 +1,3 @@
-CREATE OR REPLACE FUNCTION is_admin()
-RETURNS BOOLEAN AS $$
-BEGIN
-  RETURN EXISTS (
-    SELECT 1 FROM public.users
-    WHERE auth.uid() = id AND role = 'ADMIN'::user_role
-  );
-END;
-$$ LANGUAGE plpgsql SECURITY definer;
-
-ALTER FUNCTION is_admin() OWNER TO postgres;
-
-CREATE OR REPLACE FUNCTION get_creative_cash_flow_records(arg_user_id uuid)
-RETURNS TABLE (id uuid, inputs jsonb, results jsonb) AS $$
-BEGIN
-    RETURN QUERY
-        SELECT
-            cc.id,
-            to_jsonb(ccfi.*) AS ccfi,
-            to_jsonb(ccfr.*) AS ccfr
-        FROM creative_cash_flow cc
-        JOIN creative_cash_flow_inputs ccfi ON cc.id = ccfi.id
-        JOIN creative_cash_flow_results ccfr ON cc.id = ccfr.id
-        WHERE ccfi.user_id = arg_user_id
-        ORDER BY ccfi.created_at DESC;
-END;
-$$ LANGUAGE plpgsql SECURITY definer;
-
-ALTER FUNCTION get_creative_cash_flow_records(arg_user_id uuid) OWNER TO postgres;
-
-
-
 /**
  * debt_snowball table
  */

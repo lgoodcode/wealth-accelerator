@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { compare_strategies } from '../../functions/compare-strategies';
-import { DebtSnowballMenu } from '../components/debt-snowball-menu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DebtSnowballResults } from '../../components/debt-snowball-results';
 import { PaymentScheduleTable } from '../../components/payment-schedule-table';
+import { DebtSnowballMenu } from '../components/debt-snowball-menu';
 import type { DebtSnowballRecord } from '../../types';
 
 enum TabsValue {

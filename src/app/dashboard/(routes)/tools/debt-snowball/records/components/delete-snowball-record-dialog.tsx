@@ -33,7 +33,7 @@ export function DeleteSnowballRecordDialog({
   const deleteSnowballRecord = useDeleteSnowballRecord();
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDelete = async () => {
+  const handleDeleteSnowballRecord = async () => {
     setIsDeleting(true);
 
     await deleteSnowballRecord(record.id)
@@ -63,7 +63,7 @@ export function DeleteSnowballRecordDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-          <Button variant="destructive" onClick={handleDelete} loading={isDeleting}>
+          <Button variant="destructive" onClick={handleDeleteSnowballRecord} loading={isDeleting}>
             Delete
           </Button>
         </AlertDialogFooter>
