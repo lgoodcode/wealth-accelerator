@@ -19,7 +19,6 @@ export function TablePagination({ table }: TablePaginationProps) {
   const filteredRowsLength = table.getFilteredRowModel().rows.length;
   const paginationSize = table.getState().pagination.pageSize;
   const paginationIndex = table.getState().pagination.pageIndex;
-
   const startRecord = filteredRowsLength === 0 ? 0 : paginationSize * paginationIndex + 1;
   let endRecord;
 
