@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 // import { UpdateUserDialog } from '../update-user-dialog';
-// import { DeleteUserDialog } from '../delete-user-dialog';
+import { DeleteSnowballRecordDialog } from '../delete-snowball-record-dialog';
 import type { DebtSnowballRecord } from '../../../types';
 
 interface RowActionsProps {
@@ -73,19 +73,17 @@ export function RowActions({ row }: RowActionsProps) {
         </DropdownMenuContent>
       </DropdownMenu>
       {/*
-      <UpdateUserDialog
-        open={showUpdateDialog}
-        onOpenChange={handleUpdateDialogOpenChange}
-        id={user.id}
-        user={row.original}
-      />
-
-      <DeleteUserDialog
+      <DeleteSnowballRecordDialog
         open={showDeleteDialog}
         onOpenChange={handleDeleteDialogOpenChange}
-        id={user.id}
-        user={row.original}
-      /> */}
+        record={row.original}
+      />
+*/}
+      <DeleteSnowballRecordDialog
+        open={showDeleteDialog}
+        onOpenChange={handleDeleteDialogOpenChange}
+        record={row.original}
+      />
     </>
   );
 }

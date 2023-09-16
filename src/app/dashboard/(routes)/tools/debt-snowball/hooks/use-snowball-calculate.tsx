@@ -13,7 +13,7 @@ import {
 import type { Debt } from '@/lib/types/debts';
 import type { DebtCalculationSchemaType } from '../schema';
 
-export const useDebtCalculate = () => {
+export const useSnowballCalculate = () => {
   const debts = useAtomValue(debtsAtom) as Debt[];
   const setDebtCaluclationInputs = useSetAtom(debtCalculationInputsAtom);
   const setDebtCalculationResults = useSetAtom(debtCalculationResultsAtom);
