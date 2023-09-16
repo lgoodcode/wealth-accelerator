@@ -1,4 +1,5 @@
 import { captureException } from '@sentry/nextjs';
+import { MountainSnow, Snowflake } from 'lucide-react';
 import type { Metadata } from 'next';
 
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
@@ -7,6 +8,7 @@ import { isUUID } from '@/lib/utils/is-uuid';
 import { isAdmin } from '@/lib/utils/is-admin';
 import { restoreLastArrayToLastZero } from '../../utils/multi-dim-arr-padding';
 import { PageError } from '@/components/page-error';
+import { Breadcrumbs, BreadcrumbItem } from '@/components/ui/breadcrumbs';
 import { Separator } from '@/components/ui/separator';
 import { NoRecordCard } from './no-record-card';
 import { DebtSnowballRecordView } from './debt-snowball-record-view';
@@ -71,19 +73,31 @@ export default async function DebtSnowballRecordPage({
 
   return (
     <div className="p-8 space-y-6">
-      <div className="space-y-1">
-        <div className="flex flex-row justify-between items-center">
-          <h2 className="text-3xl font-bold">Debt Snowball Record</h2>
-          {name && (
-            <div className="flex flex-row gap-2 text-lg">
-              <span className="text-muted-foreground">Shared by</span>
-              <span className="font-bold">{name}</span>
-            </div>
-          )}
+      <div className="space-y-2">
+        <div className="space-y-1">
+          <div className="flex flex-row justify-between items-center">
+            <h2 className="text-3xl font-bold">Debt Snowball Record</h2>
+            {name && (
+              <div className="flex flex-row gap-2 text-lg">
+                <span className="text-muted-foreground">Shared by</span>
+                <span className="font-bold">{name}</span>
+              </div>
+            )}
+          </div>
+          {name && <p className="text-muted-foreground">Viewing a shared record.</p>}
         </div>
-        {name && <p className="text-muted-foreground">Viewing a shared record.</p>}
+        <Breadcrumbs>
+          <BreadcrumbItem href="/dashboard/tools/debt-snowball/records">
+            <MountainSnow size={16} className="mr-2" />
+            Records
+          </BreadcrumbItem>
+          <BreadcrumbItem active>
+            <Snowflake size={16} className="mr-2" />
+            {record.name}
+          </BreadcrumbItem>
+        </Breadcrumbs>
+        <Separator />
       </div>
-      <Separator className="mt-6" />
       <div className="flex flex-row justify-center w-full gap-6 flex-wrap">
         <DebtSnowballRecordView record={record} />
       </div>
