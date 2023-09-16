@@ -161,18 +161,21 @@ export interface Database {
           created_at: string
           debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
           id: string
+          name: string
           user_id: string
         }
         Insert: {
           created_at?: string
           debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
           id: string
+          name: string
           user_id: string
         }
         Update: {
           created_at?: string
           debts?: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
           id?: string
+          name?: string
           user_id?: string
         }
         Relationships: [
@@ -541,6 +544,7 @@ export interface Database {
       create_debt_snowball_record: {
         Args: {
           user_id: string
+          name: string
           debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
           inputs: Database["public"]["CompositeTypes"]["debt_snowball_inputs_data"]
           results: Database["public"]["CompositeTypes"]["debt_snowball_results_data"]
@@ -581,6 +585,7 @@ export interface Database {
         Returns: {
           id: string
           user_id: string
+          name: string
           created_at: string
           debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
           inputs: Json
@@ -594,6 +599,7 @@ export interface Database {
         Returns: {
           id: string
           user_id: string
+          name: string
           created_at: string
           debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
           inputs: Json
@@ -766,14 +772,6 @@ export interface Database {
         pay_back_loan: boolean
         pay_interest: boolean
         loan_interest_rate: number
-      }
-      debt_snowball_record: {
-        id: string
-        user_id: string
-        created_at: string
-        debts: unknown
-        inputs: Database["public"]["CompositeTypes"]["debt_snowball_inputs_data"]
-        results: Database["public"]["CompositeTypes"]["debt_snowball_results_data"]
       }
       debt_snowball_results_data: {
         current: Database["public"]["CompositeTypes"]["current_calculation_results"]

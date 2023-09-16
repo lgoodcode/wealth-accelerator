@@ -4,10 +4,11 @@ import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 
 import { Loading } from '@/components/loading';
+import { Card, CardContent } from '@/components/ui/card';
 import { NoRecords } from './no-records';
-import { DebtSnowballRecordsList } from './debt-snowball-records-list';
 import { debtSnowballRecordsAtom } from '../../atoms';
 import type { DebtSnowballRecord } from '../../types';
+import { DebtSnowballRecordsTable } from './table/debt-snowball-records-table';
 
 interface RecordsProps {
   recordsData: DebtSnowballRecord[];
@@ -26,5 +27,13 @@ export function DebtSnowballRecords({ recordsData }: RecordsProps) {
     return <NoRecords />;
   }
 
-  return <DebtSnowballRecordsList records={records} />;
+  return (
+    <div className="flex justify-center mx-auto lg:w-[1024px]">
+      <Card className="w-full mt-8">
+        <CardContent>
+          <DebtSnowballRecordsTable records={records} />
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

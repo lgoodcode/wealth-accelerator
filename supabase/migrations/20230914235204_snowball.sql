@@ -48,6 +48,7 @@ DROP TABLE IF EXISTS debt_snowball CASCADE;
 CREATE TABLE debt_snowball (
   id uuid PRIMARY KEY NOT NULL,
   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
+  name text NOT NULL,
   debts debt_snowball_debt[] NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT NOW()
 );
@@ -63,12 +64,6 @@ CREATE POLICY "Can view own debt snowball data or if is admin" ON public.debt_sn
 CREATE POLICY "Can insert new debt snowball data" ON public.debt_snowball
   FOR INSERT
   TO authenticated
-  WITH CHECK ((SELECT auth.uid()) = user_id);
-
-CREATE POLICY "Can update own debt snowball data" ON public.debt_snowball
-  FOR UPDATE
-  TO authenticated
-  USING (auth.uid() = user_id)
   WITH CHECK ((SELECT auth.uid()) = user_id);
 
 CREATE POLICY "Can delete own debt snowball data" ON public.debt_snowball
@@ -252,6 +247,7 @@ ALTER TYPE debt_snowball_results_data OWNER TO postgres;
 
 CREATE OR REPLACE FUNCTION create_debt_snowball_record (
   user_id uuid,
+  name text,
   debts debt_snowball_debt[],
   inputs debt_snowball_inputs_data,
   results debt_snowball_results_data
@@ -263,8 +259,8 @@ BEGIN
   -- Generate a new UUID using the uuid-ossp extension
   SELECT uuid_generate_v4() INTO new_id;
 
-  INSERT INTO debt_snowball (id, user_id, debts, created_at)
-  VALUES (new_id, user_id, debts, NOW())
+  INSERT INTO debt_snowball (id, user_id, name, debts, created_at)
+  VALUES (new_id, user_id, name, debts, NOW())
   RETURNING created_at INTO new_created_at;
 
   INSERT INTO debt_snowball_inputs (id, additional_payment, monthly_payment, opportunity_rate, strategy, lump_amounts, pay_back_loan, pay_interest, loan_interest_rate)
@@ -279,6 +275,7 @@ $$ LANGUAGE plpgsql;
 
 ALTER FUNCTION create_debt_snowball_record(
   user_id uuid,
+  name text,
   debts debt_snowball_debt[],
   inputs debt_snowball_inputs_data,
   results debt_snowball_results_data
@@ -296,6 +293,7 @@ CREATE OR REPLACE FUNCTION get_debt_snowball_data_records(_user_id uuid)
 RETURNS TABLE (
   id uuid,
   user_id uuid,
+  name text,
   created_at timestamp with time zone,
   debts debt_snowball_debt[],
   inputs json, -- Using JSON because using a custom type this wasn't working
@@ -306,6 +304,7 @@ BEGIN
     SELECT
       ds.id,
       ds.user_id,
+      ds.name,
       ds.created_at,
       ds.debts,
       json_build_object(
@@ -328,6 +327,7 @@ BEGIN
   WHERE ds.user_id = _user_id;
 END;
 $$ LANGUAGE plpgsql;
+
 ALTER FUNCTION get_debt_snowball_data_records(_user_id uuid) OWNER TO postgres;
 
 
@@ -342,6 +342,7 @@ CREATE OR REPLACE FUNCTION get_debt_snowball_data_record(record_id uuid)
 RETURNS TABLE (
   id uuid,
   user_id uuid,
+  name text,
   created_at timestamp with time zone,
   debts debt_snowball_debt[],
   inputs json, -- Using JSON because using a custom type this wasn't working
@@ -352,6 +353,7 @@ BEGIN
     SELECT
       ds.id,
       ds.user_id,
+      ds.name,
       ds.created_at,
       ds.debts,
       json_build_object(
