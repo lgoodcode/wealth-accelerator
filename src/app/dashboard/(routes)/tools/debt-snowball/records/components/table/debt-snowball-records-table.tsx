@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { format } from 'date-fns';
 import {
-  ColumnFiltersState,
+  Row,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -33,9 +35,14 @@ interface DebtSnowballRecordsTableProps {
 }
 
 export function DebtSnowballRecordsTable({ records }: DebtSnowballRecordsTableProps) {
+  const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>('');
   const handleGlobalFilter = (value: string) => setGlobalFilter(value);
+
+  const onRowClick = (row: Row<DebtSnowballRecord>) => {
+    router.push(`/dashboard/tools/debt-snowball/records/${row.original.id}`);
+  };
 
   const table = useReactTable<DebtSnowballRecord>({
     data: records || [],
@@ -45,7 +52,13 @@ export function DebtSnowballRecordsTable({ records }: DebtSnowballRecordsTablePr
       globalFilter,
     },
     globalFilterFn: (row, id, value) => {
-      return row.getValue<string>(id).toLowerCase().includes(value.toLowerCase());
+      const val: string = row.getValue<string>(id).toLocaleLowerCase();
+      const isDate = id === 'created_at';
+
+      if (isDate) {
+        return format(new Date(val), 'M/d/yy - h:mm a').toLowerCase().includes(value.toLowerCase());
+      }
+      return val.includes(value.toLowerCase());
     },
     enableGlobalFilter: true,
     enableHiding: false,
@@ -94,6 +107,7 @@ export function DebtSnowballRecordsTable({ records }: DebtSnowballRecordsTablePr
                       className={cn({
                         'w-[10%]': i === arr.length - 1,
                       })}
+                      onClick={() => i < arr.length - 1 && onRowClick(row)}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>

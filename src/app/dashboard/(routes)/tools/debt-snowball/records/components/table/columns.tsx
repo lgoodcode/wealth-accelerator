@@ -27,7 +27,7 @@ export const columns: ColumnDef<DebtSnowballRecord>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
-          <span>{format(new Date(row.getValue<string>('created_at')), 'LLL d, y - h:mm a')}</span>
+          <span>{format(new Date(row.getValue<string>('created_at')), 'M/d/yy - h:mm a')}</span>
         </div>
       );
     },
