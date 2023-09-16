@@ -97,6 +97,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+ALTER FUNCTION handle_update_debt_snowball() OWNER TO postgres;
+
 DROP TRIGGER IF EXISTS on_update_debt_snowball ON debt_snowball;
 CREATE TRIGGER on_update_debt_snowball
   BEFORE UPDATE ON debt_snowball
