@@ -37,8 +37,8 @@ export function SaveDebtSnowballDialog({ open, onOpenChange, handleSave }: Updat
           .string({
             required_error: 'Please enter a name for the record',
           })
-          .min(2)
-          .max(50),
+          .min(2, 'The name must be at least 2 characters long')
+          .max(50, 'The name must be at most 50 characters long'),
       })
     ),
   });
