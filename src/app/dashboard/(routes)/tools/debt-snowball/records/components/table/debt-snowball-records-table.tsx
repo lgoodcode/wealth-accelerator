@@ -33,7 +33,6 @@ interface DebtSnowballRecordsTableProps {
 }
 
 export function DebtSnowballRecordsTable({ records }: DebtSnowballRecordsTableProps) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>('');
   const handleGlobalFilter = (value: string) => setGlobalFilter(value);
@@ -43,7 +42,6 @@ export function DebtSnowballRecordsTable({ records }: DebtSnowballRecordsTablePr
     columns,
     state: {
       sorting,
-      columnFilters,
       globalFilter,
     },
     globalFilterFn: (row, id, value) => {
@@ -54,7 +52,6 @@ export function DebtSnowballRecordsTable({ records }: DebtSnowballRecordsTablePr
     autoResetPageIndex: false,
     onGlobalFilterChange: setGlobalFilter,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
