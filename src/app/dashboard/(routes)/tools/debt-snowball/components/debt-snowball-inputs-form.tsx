@@ -30,7 +30,7 @@ import { PercentInput } from '@/components/ui/percent-input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { debtCalculationInputsAtom, sortDebtsAtom } from '../atoms';
 import { Strategies } from '../strategies';
-import { useDebtCalculate } from '../hooks/use-debt-calculate';
+import { useSnowballCalculate } from '../hooks/use-snowball-calculate';
 import { debtCalculationSchema, type DebtCalculationSchemaType } from '../schema';
 import type { Debt } from '@/lib/types/debts';
 
@@ -41,7 +41,7 @@ interface DebtSnowballInputsFormProps {
 export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
   const inputs = useAtomValue(debtCalculationInputsAtom);
   const paymentsSum = debts.reduce((a, b) => a + b.payment, 0);
-  const calculateDebt = useDebtCalculate();
+  const snowballCalculate = useSnowballCalculate();
   const sortDebts = useSetAtom(sortDebtsAtom);
   const [numLumps, setNumLumps] = useState(1);
   const form = useForm<DebtCalculationSchemaType>({
@@ -106,7 +106,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
 
   return (
     <Form {...form}>
-      <form noValidate onSubmit={form.handleSubmit(calculateDebt)}>
+      <form noValidate onSubmit={form.handleSubmit(snowballCalculate)}>
         <div className="flex flex-col gap-6">
           <Card>
             <CardContent className="pt-6 space-y-8">

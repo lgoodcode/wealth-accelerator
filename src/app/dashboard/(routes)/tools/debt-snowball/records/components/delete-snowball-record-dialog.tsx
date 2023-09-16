@@ -21,12 +21,14 @@ interface DeleteRecordButtonProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
   record: DebtSnowballRecord;
+  callback?: () => void;
 }
 
 export function DeleteSnowballRecordDialog({
   open,
   onOpenChange,
   record,
+  callback,
 }: DeleteRecordButtonProps) {
   const deleteSnowballRecord = useDeleteSnowballRecord();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -37,6 +39,10 @@ export function DeleteSnowballRecordDialog({
     await deleteSnowballRecord(record.id)
       .then(() => {
         onOpenChange(false);
+
+        if (callback) {
+          callback();
+        }
       })
       .catch((error) => {
         console.error(error);

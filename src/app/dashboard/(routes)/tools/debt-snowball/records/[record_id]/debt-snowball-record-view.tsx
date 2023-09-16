@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { compare_strategies } from '../../functions/compare-strategies';
+import { DebtSnowballMenu } from '../components/debt-snowball-menu';
 import { DebtSnowballResults } from '../../components/debt-snowball-results';
 import { PaymentScheduleTable } from '../../components/payment-schedule-table';
 import type { DebtSnowballRecord } from '../../types';
@@ -31,11 +32,12 @@ export function DebtSnowballRecordView({ record }: DebtSnowballRecordProps) {
       onValueChange={(value) => setActiveTab(value as TabsValue)}
     >
       <div className="relative mb-8 flex flex-row justify-center items-center gap-2">
-        <TabsList className="relative grid w-[360px] mx-auto grid-cols-2 mb-8">
+        <TabsList className="relative grid w-[360px] grid-cols-2">
           {/* <TabsTrigger value={TabsValue.Inputs}>Inputs</TabsTrigger> */}
           <TabsTrigger value={TabsValue.Results}>Results</TabsTrigger>
           <TabsTrigger value={TabsValue.PaymentSchedule}>Payment Schedule</TabsTrigger>
         </TabsList>
+        <DebtSnowballMenu className="aboslute left-[360px]" record={record} redirectOnDelete />
       </div>
       {/* <TabsContent value={TabsValue.Inputs}>
         <DebtSnowballInputs debts={debts!} />

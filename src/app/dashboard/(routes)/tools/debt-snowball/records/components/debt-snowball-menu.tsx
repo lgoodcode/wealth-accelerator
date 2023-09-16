@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, MoreHorizontal, Pen, Trash } from 'lucide-react';
 
+import { cn } from '@/lib/utils/cn';
 import { useUser } from '@/hooks/use-user';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,11 +19,18 @@ import { DeleteSnowballRecordDialog } from './delete-snowball-record-dialog';
 import type { DebtSnowballRecord } from '../../types';
 
 interface RowActionsProps {
+  className?: string;
   record: DebtSnowballRecord;
   hasView?: boolean;
+  redirectOnDelete?: boolean;
 }
 
-export function DebtSnowballMenu({ record, hasView }: RowActionsProps) {
+export function DebtSnowballMenu({
+  className,
+  record,
+  hasView,
+  redirectOnDelete,
+}: RowActionsProps) {
   const user = useUser();
   const router = useRouter();
   const [showRenameDialog, setShowRenameDialog] = useState(false);
@@ -35,6 +43,12 @@ export function DebtSnowballMenu({ record, hasView }: RowActionsProps) {
   const handleDeleteDialogOpenChange = useCallback((open?: boolean) => {
     setShowDeleteDialog((prev) => open ?? !prev);
   }, []);
+
+  const snowballRecordDeleteCallback = () => {
+    if (redirectOnDelete) {
+      router.push('/dashboard/tools/debt-snowball/records');
+    }
+  };
 
   if (!user) {
     return null;
@@ -49,7 +63,7 @@ export function DebtSnowballMenu({ record, hasView }: RowActionsProps) {
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[160px]">
+        <DropdownMenuContent align="end" className={cn('w-[160px]', className)}>
           {hasView && (
             <>
               <DropdownMenuItem
@@ -68,7 +82,6 @@ export function DebtSnowballMenu({ record, hasView }: RowActionsProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onSelect={() => setShowDeleteDialog(true)}
-            disabled={user.id === record.user_id}
             className="text-red-600 font-medium"
           >
             <Trash className="mr-2 h-4 w-4" />
@@ -87,6 +100,7 @@ export function DebtSnowballMenu({ record, hasView }: RowActionsProps) {
         open={showDeleteDialog}
         onOpenChange={handleDeleteDialogOpenChange}
         record={record}
+        callback={snowballRecordDeleteCallback}
       />
     </>
   );
