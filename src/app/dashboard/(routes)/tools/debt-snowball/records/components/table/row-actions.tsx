@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { MoreHorizontal, Pen, Trash } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowUpRight, MoreHorizontal, Pen, Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
 import { useUser } from '@/hooks/use-user';
@@ -23,6 +24,7 @@ interface RowActionsProps {
 
 export function RowActions({ row }: RowActionsProps) {
   const user = useUser();
+  const router = useRouter();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -48,6 +50,13 @@ export function RowActions({ row }: RowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
+          <DropdownMenuItem
+            onClick={() => router.push(`/dashboard/tools/debt-snowball/records/${row.original.id}`)}
+          >
+            <ArrowUpRight className="mr-2 h-5 w-5 text-muted-foreground/70" />
+            View
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setShowUpdateDialog(true)}>
             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Edit
