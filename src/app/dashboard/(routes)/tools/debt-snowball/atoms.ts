@@ -71,6 +71,25 @@ export const addDebtSnowballRecordAtom = atom(null, (_get, set, record: DebtSnow
   });
 });
 
+export const renameDebtSnowballRecordAtom = atom(null, (_get, set, id: string, name: string) => {
+  set(debtSnowballRecordsAtom, (records) => {
+    if (!records) {
+      throw new Error('debtSnowballRecordsAtom is not initialized');
+    }
+
+    const index = records.findIndex((record) => record.id === id);
+
+    if (index === -1) {
+      throw new Error('Record not found');
+    }
+
+    const newRecords = [...records];
+    newRecords[index].name = name;
+
+    return newRecords;
+  });
+});
+
 export const removeDebtSnowballRecordAtom = atom(null, (_get, set, id: string) => {
   set(debtSnowballRecordsAtom, (records) => {
     if (!records) {

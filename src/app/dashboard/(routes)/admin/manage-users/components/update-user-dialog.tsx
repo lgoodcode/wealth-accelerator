@@ -64,7 +64,9 @@ export function UpdateUserDialog({ open, onOpenChange, id, user }: UpdateUserDia
           return;
         }
 
-        captureException(error);
+        captureException(error, {
+          extra: { id: user.id, data },
+        });
         toast.error(
           <span>
             Failed to update user <span className="font-bold">{user.name}</span>

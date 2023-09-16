@@ -66,10 +66,42 @@ CREATE POLICY "Can insert new debt snowball data" ON public.debt_snowball
   TO authenticated
   WITH CHECK ((SELECT auth.uid()) = user_id);
 
+CREATE POLICY "Can update own debt snowball data" ON public.debt_snowball
+  FOR UPDATE
+  TO authenticated
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
+
 CREATE POLICY "Can delete own debt snowball data" ON public.debt_snowball
   FOR DELETE
   TO authenticated
   USING ((SELECT auth.uid()) = user_id);
+
+CREATE OR REPLACE FUNCTION handle_update_debt_snowball()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.id <> OLD.id THEN
+    RAISE EXCEPTION 'Updating "id" is not allowed';
+  END IF;
+  IF NEW.user_id <> OLD.user_id THEN
+    RAISE EXCEPTION 'Updating "user_id" is not allowed';
+  END IF;
+  IF NEW.debts <> OLD.debts THEN
+    RAISE EXCEPTION 'Updating "debts" is not allowed';
+  END IF;
+  IF NEW.created_at <> OLD.created_at THEN
+    RAISE EXCEPTION 'Updating "created_at" is not allowed';
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS on_update_debt_snowball ON debt_snowball;
+CREATE TRIGGER on_update_debt_snowball
+  BEFORE UPDATE ON debt_snowball
+    FOR EACH ROW
+      EXECUTE PROCEDURE handle_update_debt_snowball();
 
 
 

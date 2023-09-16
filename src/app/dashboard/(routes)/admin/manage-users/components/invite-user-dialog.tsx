@@ -52,7 +52,9 @@ export function InviteUserDialog() {
           return;
         }
 
-        captureException(error);
+        captureException(error, {
+          extra: { data },
+        });
         toast.error('Failed to send invite email');
       });
   };

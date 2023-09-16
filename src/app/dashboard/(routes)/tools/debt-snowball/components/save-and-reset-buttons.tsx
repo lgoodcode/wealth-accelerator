@@ -3,7 +3,7 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
 import { cn } from '@/lib/utils/cn';
-import { useSaveDebtSnowballRecord } from '../hooks/use-save-debt-snowball-record';
+import { useSaveSnowballRecord } from '../hooks/use-save-snowball-record';
 import { Button } from '@/components/ui/button';
 import { SaveDebtSnowballDialog } from './save-debt-snowball-dialog';
 import type { Debt } from '@/lib/types/debts';
@@ -26,7 +26,7 @@ export function SaveAndResetButtons({
   results,
   handleReset,
 }: SaveAndResetButtonsProps) {
-  const saveDebtSnowballRecord = useSaveDebtSnowballRecord();
+  const saveDebtSnowballRecord = useSaveSnowballRecord();
   const [showSaveDialog, setShowSaveDialog] = useState(false);
 
   const handleSaveDialogOpenChange = useCallback((open?: boolean) => {

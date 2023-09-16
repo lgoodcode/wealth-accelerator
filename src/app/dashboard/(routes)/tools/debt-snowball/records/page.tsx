@@ -34,7 +34,9 @@ export default async function DebtSnowballRecordsPage() {
       <div className="space-y-2">
         <div className="space-y-1">
           <h2 className="text-3xl font-bold">Debt Snowball Records</h2>
-          <p className="text-muted-foreground">View saved calculations from the Debt Snowball.</p>
+          <p className="text-muted-foreground">
+            Click a record to view the saved calculations from the Debt Snowball.
+          </p>
         </div>
         <Breadcrumbs>
           <BreadcrumbItem active>

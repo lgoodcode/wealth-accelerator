@@ -28,13 +28,13 @@ export function DeleteSnowballRecordDialog({
   onOpenChange,
   record,
 }: DeleteRecordButtonProps) {
-  const deleteRecord = useDeleteSnowballRecord();
+  const deleteSnowballRecord = useDeleteSnowballRecord();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     setIsDeleting(true);
 
-    await deleteRecord(record.id)
+    await deleteSnowballRecord(record.id)
       .then(() => {
         onOpenChange(false);
       })

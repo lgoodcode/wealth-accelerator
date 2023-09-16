@@ -6,8 +6,8 @@ import { addDebtSnowballRecordAtom } from '../atoms';
 import type { Debt } from '@/lib/types/debts';
 import type { DebtCalculationInputs, DebtCalculationResults, DebtSnowballRecord } from '../types';
 
-export const useSaveDebtSnowballRecord = () => {
-  const addRecord = useSetAtom(addDebtSnowballRecordAtom);
+export const useSaveSnowballRecord = () => {
+  const addSnowballRecord = useSetAtom(addDebtSnowballRecordAtom);
 
   return async (
     userId: string,
@@ -57,6 +57,6 @@ export const useSaveDebtSnowballRecord = () => {
       results: structuredClone(results),
     };
 
-    addRecord(record);
+    addSnowballRecord(record);
   };
 };
