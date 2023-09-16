@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import type { ColumnDef } from '@tanstack/react-table';
 
 import { ColumnHeader } from './column-header';
-import { RowActions } from './row-actions';
+import { DebtSnowballMenu } from '../debt-snowball-menu';
 import type { DebtSnowballRecord } from '../../../types';
 
 export const columns: ColumnDef<DebtSnowballRecord>[] = [
@@ -36,7 +36,7 @@ export const columns: ColumnDef<DebtSnowballRecord>[] = [
     id: 'actions',
     cell: ({ row }) => (
       <div className="flex justify-end">
-        <RowActions row={row} />
+        <DebtSnowballMenu record={row.original} hasView />
       </div>
     ),
   },

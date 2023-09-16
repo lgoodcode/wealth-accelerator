@@ -3,7 +3,6 @@
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, MoreHorizontal, Pen, Trash } from 'lucide-react';
-import type { Row } from '@tanstack/react-table';
 
 import { useUser } from '@/hooks/use-user';
 import { Button } from '@/components/ui/button';
@@ -14,15 +13,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { RenameSnowballRecordDialog } from '../rename-snowball-record-dialog';
-import { DeleteSnowballRecordDialog } from '../delete-snowball-record-dialog';
-import type { DebtSnowballRecord } from '../../../types';
+import { RenameSnowballRecordDialog } from './rename-snowball-record-dialog';
+import { DeleteSnowballRecordDialog } from './delete-snowball-record-dialog';
+import type { DebtSnowballRecord } from '../../types';
 
 interface RowActionsProps {
-  row: Row<DebtSnowballRecord>;
+  record: DebtSnowballRecord;
+  hasView?: boolean;
 }
 
-export function RowActions({ row }: RowActionsProps) {
+export function DebtSnowballMenu({ record, hasView }: RowActionsProps) {
   const user = useUser();
   const router = useRouter();
   const [showRenameDialog, setShowRenameDialog] = useState(false);
@@ -50,13 +50,17 @@ export function RowActions({ row }: RowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/tools/debt-snowball/records/${row.original.id}`)}
-          >
-            <Eye className="mr-2 h-4 w-4 text-muted-foreground/70" />
-            View
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {hasView && (
+            <>
+              <DropdownMenuItem
+                onClick={() => router.push(`/dashboard/tools/debt-snowball/records/${record.id}`)}
+              >
+                <Eye className="mr-2 h-4 w-4 text-muted-foreground/70" />
+                View
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem onClick={() => setShowRenameDialog(true)}>
             <Pen className="mr-2 h-4 w-4 text-muted-foreground/70" />
             Rename
@@ -64,7 +68,7 @@ export function RowActions({ row }: RowActionsProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onSelect={() => setShowDeleteDialog(true)}
-            disabled={user.id === row.original.id}
+            disabled={user.id === record.user_id}
             className="text-red-600 font-medium"
           >
             <Trash className="mr-2 h-4 w-4" />
@@ -76,13 +80,13 @@ export function RowActions({ row }: RowActionsProps) {
       <RenameSnowballRecordDialog
         open={showRenameDialog}
         onOpenChange={handleRenameDialogOpenChange}
-        record={row.original}
+        record={record}
       />
 
       <DeleteSnowballRecordDialog
         open={showDeleteDialog}
         onOpenChange={handleDeleteDialogOpenChange}
-        record={row.original}
+        record={record}
       />
     </>
   );

@@ -77,6 +77,7 @@ CREATE POLICY "Can delete own debt snowball data" ON public.debt_snowball
   TO authenticated
   USING ((SELECT auth.uid()) = user_id);
 
+-- Only allow the "name" column to be updated
 CREATE OR REPLACE FUNCTION handle_update_debt_snowball()
 RETURNS TRIGGER AS $$
 BEGIN
