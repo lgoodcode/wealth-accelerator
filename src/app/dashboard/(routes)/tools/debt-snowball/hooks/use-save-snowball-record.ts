@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
@@ -7,6 +8,7 @@ import type { Debt } from '@/lib/types/debts';
 import type { DebtCalculationInputs, DebtCalculationResults, DebtSnowballRecord } from '../types';
 
 export const useSaveSnowballRecord = () => {
+  const router = useRouter();
   const addSnowballRecord = useSetAtom(addDebtSnowballRecordAtom);
 
   return async (
@@ -56,6 +58,8 @@ export const useSaveSnowballRecord = () => {
       inputs: structuredClone(inputs),
       results: structuredClone(results),
     };
+
+    router.refresh();
 
     addSnowballRecord(record);
   };
