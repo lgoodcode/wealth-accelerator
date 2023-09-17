@@ -1,5 +1,5 @@
 import { Loading } from '@/components/loading';
 
-export function DebtSnowball() {
+export default function DebtSnowball() {
   return <Loading title="Loading Record..." />;
 }
