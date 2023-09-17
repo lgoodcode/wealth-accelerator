@@ -554,6 +554,12 @@ export interface Database {
           new_created_at: string
         }[]
       }
+      delete_snowball_record: {
+        Args: {
+          record_id: string
+        }
+        Returns: undefined
+      }
       generate_rates: {
         Args: Record<PropertyKey, never>
         Returns: unknown

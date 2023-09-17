@@ -6,7 +6,9 @@ export const useDeleteSnowballRecord = () => {
   const removeSnowballRecord = useSetAtom(removeDebtSnowballRecordAtom);
 
   return async (id: string) => {
-    const { error } = await supabase.from('debt_snowball').delete().eq('id', id);
+    const { error } = await supabase.rpc('delete_snowball_record', {
+      record_id: id,
+    });
 
     if (error) {
       throw error;
