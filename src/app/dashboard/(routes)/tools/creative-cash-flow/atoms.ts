@@ -6,6 +6,11 @@ import type {
   CreativeCashFlowRecord,
 } from './types';
 
+type UpdateWaa = {
+  originalTotalWaa: number;
+  newWaa: number;
+};
+
 const defaultValues = {
   start_date: undefined,
   end_date: undefined,
@@ -23,6 +28,27 @@ export const resetCreativeCashFlowInputsAtom = atom(null, (_, set) => {
 });
 
 export const creativeCashFlowResultAtom = atom<CreativeCashFlowManagementResult | null>(null);
+
+export const updatecreativeCashFlowResultWaaAtom = atom(
+  null,
+  (get, set, { originalTotalWaa, newWaa }: UpdateWaa) => {
+    const results = get(creativeCashFlowResultAtom);
+
+    if (!results) {
+      throw new Error('creativeCashFlowResultAtom is not initialized');
+    }
+
+    set(creativeCashFlowResultAtom, {
+      ...results,
+      waa: newWaa,
+      total_waa: originalTotalWaa + newWaa,
+    });
+  }
+);
+
+/**
+ * Records
+ */
 
 export const creativeCashFlowRecordsAtom = atom<CreativeCashFlowRecord[] | null>(null);
 
@@ -57,25 +83,3 @@ export const removeCreativeCashFlowRecordAtom = atom(null, (_get, set, id: strin
     return newRecords;
   });
 });
-
-type UpdateWaa = {
-  originalTotalWaa: number;
-  newWaa: number;
-};
-
-export const updatecreativeCashFlowResultWaaAtom = atom(
-  null,
-  (get, set, { originalTotalWaa, newWaa }: UpdateWaa) => {
-    const results = get(creativeCashFlowResultAtom);
-
-    if (!results) {
-      throw new Error('creativeCashFlowResultAtom is not initialized');
-    }
-
-    set(creativeCashFlowResultAtom, {
-      ...results,
-      waa: newWaa,
-      total_waa: originalTotalWaa + newWaa,
-    });
-  }
-);

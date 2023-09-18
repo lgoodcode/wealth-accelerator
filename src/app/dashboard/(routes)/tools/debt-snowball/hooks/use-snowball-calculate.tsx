@@ -3,16 +3,28 @@ import { toast } from 'react-toastify';
 
 import { simple_calculate } from '../functions/simple-calculate-debt';
 import { snowball_calculate } from '../functions/snowball-calculate-debt';
-import { debtsAtom, debtCalculationInputsAtom, debtCalculationResultsAtom } from '../atoms';
+import { compare_strategies } from '../functions/compare-strategies';
+import {
+  debtsAtom,
+  debtCalculationInputsAtom,
+  debtCalculationResultsAtom,
+  debtSnowballComparisonAtom,
+} from '../atoms';
 import type { Debt } from '@/lib/types/debts';
 import type { DebtCalculationSchemaType } from '../schema';
 
-export const useDebtCalculate = () => {
+export const useSnowballCalculate = () => {
   const debts = useAtomValue(debtsAtom) as Debt[];
   const setDebtCaluclationInputs = useSetAtom(debtCalculationInputsAtom);
   const setDebtCalculationResults = useSetAtom(debtCalculationResultsAtom);
+  const setDebtSnowballComparison = useSetAtom(debtSnowballComparisonAtom);
 
   return async (data: DebtCalculationSchemaType) => {
+    if (!debts.length) {
+      toast.error('You must have at least one debt entry to calculate');
+      return;
+    }
+
     // Simulate loading by waiting 1 seconds
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -26,12 +38,18 @@ export const useDebtCalculate = () => {
         pay_interest: data.pay_interest,
         loan_interest_rate: data.loan_interest_rate,
       });
+      const inputs = {
+        ...data,
+        additional_payment: data.additional_payment ?? 0,
+      };
+      const results = {
+        current: currentResults,
+        strategy: strategyResults,
+      };
 
-      setDebtCaluclationInputs(data);
-      setDebtCalculationResults({
-        currentResults,
-        strategyResults,
-      });
+      setDebtCaluclationInputs(inputs);
+      setDebtCalculationResults(results);
+      setDebtSnowballComparison(compare_strategies(inputs, results));
     } catch (error: any) {
       toast.error(
         <div className="flex flex-col gap-2">

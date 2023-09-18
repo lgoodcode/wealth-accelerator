@@ -122,7 +122,13 @@ export const simple_calculate = (debts: Debt[]): SimpleDebtCalculation => {
   const interest_tracking_dollars = interest_tracking.map((year) => year.map(centsToDollars));
 
   return {
-    debt_payoffs: debt_payoffs_dollars,
+    // Strip the debt data down to only the sorted descriptions to save space in the database
+    debt_payoffs: debt_payoffs_dollars.map((debtPayoff) => ({
+      debt: {
+        description: debtPayoff.debt.description,
+      },
+      payment_tracking: debtPayoff.payment_tracking,
+    })),
     balance_tracking: balance_tracking_dollars,
     interest_tracking: interest_tracking_dollars,
     payoff_months: payoff_months,

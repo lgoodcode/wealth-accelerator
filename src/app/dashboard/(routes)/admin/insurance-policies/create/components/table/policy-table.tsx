@@ -97,7 +97,7 @@ export function PolicyTable({ insurancePolicyRows }: PolicyTableProps) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={columns.length} className="h-24 text-center text-lg">
                   No results
                 </TableCell>
               </TableRow>

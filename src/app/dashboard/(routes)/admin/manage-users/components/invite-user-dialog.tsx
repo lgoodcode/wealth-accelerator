@@ -52,7 +52,9 @@ export function InviteUserDialog() {
           return;
         }
 
-        captureException(error);
+        captureException(error, {
+          extra: { data },
+        });
         toast.error('Failed to send invite email');
       });
   };
@@ -106,11 +108,12 @@ export function InviteUserDialog() {
 
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="secondary" disabled={form.formState.isSubmitting}>
+                <Button type="button" variant="secondary" disabled={form.formState.isSubmitting}>
                   Cancel
                 </Button>
               </DialogClose>
               <Button
+                type="submit"
                 loading={form.formState.isSubmitting}
                 onClick={form.handleSubmit(handleInvite)}
               >

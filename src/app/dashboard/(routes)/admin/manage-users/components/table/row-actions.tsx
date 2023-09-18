@@ -52,7 +52,7 @@ export function RowActions({ row }: RowActionsProps) {
             onClick={() => setShowUpdateDialog(true)}
             disabled={!row.original.confirmed_email}
           >
-            <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <Pen className="mr-2 h-4 w-4 text-muted-foreground/70" />
             Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />

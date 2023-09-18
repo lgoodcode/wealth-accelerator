@@ -40,18 +40,18 @@ export function ColumnHeader({ column, title, enableHeaderOptions, className }: 
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-            <SortAsc className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <SortAsc className="mr-2 h-4 w-4 text-muted-foreground/70" />
             Asc
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-            <SortDesc className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <SortDesc className="mr-2 h-4 w-4 text-muted-foreground/70" />
             Desc
           </DropdownMenuItem>
           {column.getCanHide() && (
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-                <EyeOff className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+                <EyeOff className="mr-2 h-4 w-4 text-muted-foreground/70" />
                 Hide
               </DropdownMenuItem>
             </>

@@ -174,6 +174,7 @@ export const snowball_calculate = (
     loan_payment_tracking[year] = [];
   } else {
     // If we are only paying interest, then set to the balance to the total loan interest
+    //// Note: This is currently unused
     let loan_balance_remaining = options.pay_interest
       ? loan_interest
       : loan_payoffs.reduce((acc, lump_amount) => acc + lump_amount, 0);
@@ -290,7 +291,13 @@ export const snowball_calculate = (
   const loan_tracking_dollars = loan_payment_tracking.map((year) => year.map(centsToDollars));
 
   return {
-    debt_payoffs: debt_payoffs_dollars,
+    // Strip the debt data down to only the sorted descriptions to save space in the database
+    debt_payoffs: debt_payoffs_dollars.map((debtPayoff) => ({
+      debt: {
+        description: debtPayoff.debt.description,
+      },
+      payment_tracking: debtPayoff.payment_tracking,
+    })),
     balance_tracking: balance_tracking_dollars,
     interest_tracking: interest_tracking_dollars,
     snowball_tracking: snowball_tracking_dollars,

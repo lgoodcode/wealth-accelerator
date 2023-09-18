@@ -7,20 +7,20 @@ import { toast } from 'react-toastify';
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../../atoms';
-import { useSaveRecord } from '../hooks/use-save-record';
+import { useSaveCcfRecord } from '../hooks/use-save-ccf-record';
 
-interface ButtonsProps {
+interface SaveAndResetButtonsProps {
   className?: string;
-  user_id: string;
+  userId: string;
   handleReset: () => void;
 }
 
-export function Buttons({ className, user_id, handleReset }: ButtonsProps) {
+export function SaveAndResetButtons({ className, userId, handleReset }: SaveAndResetButtonsProps) {
   const router = useRouter();
-  const saveRecord = useSaveRecord();
-  const [isSaving, setIsSaving] = useState(false);
   const inputs = useAtomValue(creativeCashFlowInputsAtom);
   const results = useAtomValue(creativeCashFlowResultAtom);
+  const saveCcfRecord = useSaveCcfRecord();
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
     if (!results) {
@@ -29,7 +29,7 @@ export function Buttons({ className, user_id, handleReset }: ButtonsProps) {
 
     setIsSaving(true);
 
-    await saveRecord(user_id, inputs, results)
+    await saveCcfRecord(userId, inputs, results)
       .then(async () => {
         // Wait 1 second
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -61,16 +61,12 @@ export function Buttons({ className, user_id, handleReset }: ButtonsProps) {
 
   return (
     <div className={cn('flex items-center gap-4 ml-4', className)}>
-      {results && (
-        <>
-          <Button disabled={!results} loading={isSaving} onClick={handleSave}>
-            Save
-          </Button>
-          <Button variant="outline" disabled={!results} onClick={handleReset}>
-            Reset
-          </Button>
-        </>
-      )}
+      <Button size="sm" disabled={!results} loading={isSaving} onClick={handleSave}>
+        Save
+      </Button>
+      <Button size="sm" variant="outline" disabled={!results} onClick={handleReset}>
+        Reset
+      </Button>
     </div>
   );
 }

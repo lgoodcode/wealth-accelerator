@@ -41,7 +41,7 @@ export default async function CreatePolicyPage() {
 
   return (
     <div className="p-8">
-      <div className="space-y-4">
+      <div className="space-y-2">
         <div className="space-y-1">
           <h2 className="text-3xl font-bold">Insurance Policies</h2>
           <p className="text-muted-foreground">View, create, and manage user&apos;s policies.</p>

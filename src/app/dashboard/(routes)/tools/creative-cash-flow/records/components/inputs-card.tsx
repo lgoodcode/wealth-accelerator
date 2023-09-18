@@ -19,11 +19,11 @@ export function InputsCard({ record }: ResultsCardProps) {
         <div className="space-y-2 text-lg">
           <div className="flex py-4 justify-between border-b">
             <span>{inputLabels.start_date.title}</span>
-            <span>{format(new Date(record.inputs.start_date), 'LLL dd, y')}</span>
+            <span>{format(new Date(record.inputs.start_date), 'LLL d, y')}</span>
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{inputLabels.end_date.title}</span>
-            <span>{format(new Date(record.inputs.end_date), 'LLL dd, y')}</span>
+            <span>{format(new Date(record.inputs.end_date), 'LLL d, y')}</span>
           </div>
           <div className="flex py-4 justify-between border-b">
             <span>{inputLabels.all_other_income.title}</span>

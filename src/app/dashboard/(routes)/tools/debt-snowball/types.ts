@@ -11,7 +11,13 @@ export type DebtPayoff = {
 };
 
 export type SimpleDebtCalculation = {
-  debt_payoffs: DebtPayoff[];
+  debt_payoffs: {
+    // Strip the debt data down to only the sorted descriptions to save space in the database
+    debt: {
+      description: string;
+    };
+    payment_tracking: number[][];
+  }[];
   balance_tracking: number[][];
   interest_tracking: number[][];
   payoff_months: number;
@@ -30,17 +36,45 @@ export type SnowballDebtCalculation = SimpleDebtCalculation & {
 };
 
 export type DebtCalculationInputs = {
-  additional_payment?: number;
+  additional_payment: number;
   monthly_payment: number;
   opportunity_rate: number;
   strategy: Strategies;
   lump_amounts: number[];
   pay_back_loan: boolean;
-  pay_interest: boolean;
+  pay_interest: boolean; // Currently unused
   loan_interest_rate: number;
 };
 
 export type DebtCalculationResults = {
-  currentResults: SimpleDebtCalculation;
-  strategyResults: SnowballDebtCalculation;
+  current: SimpleDebtCalculation;
+  strategy: SnowballDebtCalculation;
+};
+
+export type DebtSnowballComparison = {
+  current: {
+    saved: number;
+    cost: number;
+    dateDiff: number;
+    oppCost: number;
+  };
+  strategy: {
+    saved: number;
+    cost: number;
+    dateDiff: number;
+    oppCost: number;
+  };
+};
+
+// The Debt type but with the id and user_id stripped to save space in the database
+export type DebtSnowballRecordDebt = Omit<Debt, 'id' | 'user_id'>;
+
+export type DebtSnowballRecord = {
+  id: string;
+  user_id: string;
+  name: string;
+  created_at: string;
+  debts: DebtSnowballRecordDebt[];
+  inputs: DebtCalculationInputs;
+  results: DebtCalculationResults;
 };

@@ -37,7 +37,7 @@ export function RowActions({ row }: RowActionsProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem onClick={() => setShowUpdateDialog(true)}>
-            <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <Pen className="mr-2 h-4 w-4 text-muted-foreground/70" />
             Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />

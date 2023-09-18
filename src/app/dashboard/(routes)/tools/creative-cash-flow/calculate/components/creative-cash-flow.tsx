@@ -5,7 +5,7 @@ import { useAtom, useSetAtom } from 'jotai';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { creativeCashFlowResultAtom, resetCreativeCashFlowInputsAtom } from '../../atoms';
-import { Buttons } from './buttons';
+import { SaveAndResetButtons } from './save-and-reset-buttons';
 import { CreativeCashFlowInputs } from './creative-cash-flow-inputs';
 import { CreativeCashFlowResults } from './creative-cash-flow-results';
 import type { Transaction } from '@/lib/plaid/types/transactions';
@@ -16,7 +16,7 @@ enum TabsValue {
 }
 
 interface CcfContainerProps {
-  user_id: string;
+  userId: string;
   transactions: {
     business: Transaction[];
     personal: Transaction[];
@@ -26,7 +26,7 @@ interface CcfContainerProps {
 }
 
 export function CreativeCashFlow({
-  user_id,
+  userId,
   transactions,
   ytd_collections,
   default_tax_rate,
@@ -66,12 +66,16 @@ export function CreativeCashFlow({
           <TabsTrigger value={TabsValue.Results} disabled={!results}>
             Results
           </TabsTrigger>
-          <Buttons className="absolute left-[360px]" user_id={user_id} handleReset={handleReset} />
+          <SaveAndResetButtons
+            className="absolute left-[360px]"
+            userId={userId}
+            handleReset={handleReset}
+          />
         </TabsList>
       </div>
       <TabsContent value={TabsValue.Inputs}>
         <CreativeCashFlowInputs
-          user_id={user_id}
+          userId={userId}
           transactions={transactions}
           ytd_collections={ytd_collections}
           default_tax_rate={default_tax_rate}
