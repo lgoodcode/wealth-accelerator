@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSetAtom } from 'jotai';
+import { useState } from 'react';
 
 import { compare_strategies } from '../../functions/compare-strategies';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,7 +8,6 @@ import { DebtSnowballInputs } from '../../components/debt-snowball-inputs';
 import { DebtSnowballResults } from '../../components/debt-snowball-results';
 import { PaymentScheduleTable } from '../../components/payment-schedule-table';
 import { DebtSnowballMenu } from '../components/debt-snowball-menu';
-import { debtSnowballRecordsAtom } from '../../atoms';
 import type { DebtSnowballRecord } from '../../types';
 
 enum TabsValue {
@@ -24,13 +22,8 @@ interface DebtSnowballRecordProps {
 
 export function DebtSnowballRecordId({ record }: DebtSnowballRecordProps) {
   const comparison = compare_strategies(record.inputs, record.results);
-  const setRecords = useSetAtom(debtSnowballRecordsAtom);
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Results);
   const totalDebt = record.debts.reduce((acc, b) => acc + b.amount, 0) ?? 0;
-
-  useEffect(() => {
-    setRecords([record]);
-  }, []);
 
   return (
     <Tabs
