@@ -53,7 +53,9 @@ export function RenameSnowballRecordDialog({ open, onOpenChange, record }: Updat
     await renameSnowballRecord(record.id, data.name)
       .then(() => {
         onOpenChange(false);
-        router.refresh(); // Refresh the page so that the name is updated in the breadcrumbs
+        // Refresh the page so that the name is updated in the breadcrumbs and when navigating
+        // back from the record page to the records page
+        router.refresh();
       })
       .catch((error) => {
         console.error(error);

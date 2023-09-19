@@ -9,7 +9,7 @@ import { PageError } from '@/components/page-error';
 import { Breadcrumbs, BreadcrumbItem } from '@/components/ui/breadcrumbs';
 import { Separator } from '@/components/ui/separator';
 import { NoRecordCard } from './no-record-card';
-import { DebtSnowballRecordView } from './debt-snowball-record-view';
+import { DebtSnowballRecordId } from './debt-snowball-record-id';
 import type { DebtSnowballRecord } from '../../types';
 
 export const metadata: Metadata = {
@@ -90,7 +90,7 @@ export default async function DebtSnowballRecordPage({
         <Separator />
       </div>
       <div className="flex flex-row justify-center w-full gap-6 flex-wrap">
-        <DebtSnowballRecordView record={record} />
+        <DebtSnowballRecordId record={record} />
       </div>
     </div>
   );
