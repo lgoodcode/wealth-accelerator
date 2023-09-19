@@ -200,6 +200,18 @@ $$;
 
 ALTER FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") OWNER TO "postgres";
 
+CREATE OR REPLACE FUNCTION "public"."delete_snowball_record"("record_id" "uuid") RETURNS "void"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+  DELETE FROM debt_snowball WHERE id = record_id;
+  DELETE FROM debt_snowball_results WHERE id = record_id;
+  DELETE FROM debt_snowball_inputs WHERE id = record_id;
+END;
+$$;
+
+ALTER FUNCTION "public"."delete_snowball_record"("record_id" "uuid") OWNER TO "postgres";
+
 CREATE OR REPLACE FUNCTION "public"."format_transaction"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -1105,6 +1117,10 @@ GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_
 GRANT ALL ON FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") TO "anon";
 GRANT ALL ON FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."delete_snowball_record"("record_id" "uuid") TO "anon";
+GRANT ALL ON FUNCTION "public"."delete_snowball_record"("record_id" "uuid") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."delete_snowball_record"("record_id" "uuid") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."format_transaction"() TO "anon";
 GRANT ALL ON FUNCTION "public"."format_transaction"() TO "authenticated";
