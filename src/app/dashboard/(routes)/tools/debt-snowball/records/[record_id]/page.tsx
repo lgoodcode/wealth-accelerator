@@ -3,9 +3,7 @@ import { MountainSnow, Snowflake } from 'lucide-react';
 import type { Metadata } from 'next';
 
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
-import { getUser } from '@/lib/supabase/server/get-user';
 import { isUUID } from '@/lib/utils/is-uuid';
-import { isAdmin } from '@/lib/utils/is-admin';
 import { restoreLastArrayToLastZero } from '../../utils/multi-dim-arr-padding';
 import { PageError } from '@/components/page-error';
 import { Breadcrumbs, BreadcrumbItem } from '@/components/ui/breadcrumbs';
@@ -31,8 +29,6 @@ export default async function DebtSnowballRecordPage({
   params: { record_id },
   searchParams: { name },
 }: DebtSnowballRecordPageProps) {
-  const user = (await getUser()) as User;
-
   if (!isUUID(record_id)) {
     return <NoRecordCard record_id={record_id} />;
   }
@@ -59,11 +55,6 @@ export default async function DebtSnowballRecordPage({
   }
 
   const record = data as DebtSnowballRecord;
-
-  // Don't allow users to view records that aren't theirs unless they're an admin.
-  if (record.user_id !== user.id && !isAdmin(user)) {
-    return <NoRecordCard record_id={record_id} />;
-  }
 
   // When retrieving the data, need to use the restoreLastArrayToLastZero
   // util function to restore the array to its original state for the following properties:
