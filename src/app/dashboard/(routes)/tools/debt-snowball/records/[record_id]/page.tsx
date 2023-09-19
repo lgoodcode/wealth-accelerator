@@ -3,15 +3,13 @@ import { MountainSnow, Snowflake } from 'lucide-react';
 import type { Metadata } from 'next';
 
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
-import { getUser } from '@/lib/supabase/server/get-user';
 import { isUUID } from '@/lib/utils/is-uuid';
-import { isAdmin } from '@/lib/utils/is-admin';
 import { restoreLastArrayToLastZero } from '../../utils/multi-dim-arr-padding';
 import { PageError } from '@/components/page-error';
 import { Breadcrumbs, BreadcrumbItem } from '@/components/ui/breadcrumbs';
 import { Separator } from '@/components/ui/separator';
 import { NoRecordCard } from './no-record-card';
-import { DebtSnowballRecordView } from './debt-snowball-record-view';
+import { DebtSnowballRecordId } from './debt-snowball-record-id';
 import type { DebtSnowballRecord } from '../../types';
 
 export const metadata: Metadata = {
@@ -23,16 +21,14 @@ interface DebtSnowballRecordPageProps {
     record_id: string;
   };
   searchParams: {
-    name: string;
+    sharerName: string;
   };
 }
 
 export default async function DebtSnowballRecordPage({
   params: { record_id },
-  searchParams: { name },
+  searchParams: { sharerName },
 }: DebtSnowballRecordPageProps) {
-  const user = (await getUser()) as User;
-
   if (!isUUID(record_id)) {
     return <NoRecordCard record_id={record_id} />;
   }
@@ -60,11 +56,6 @@ export default async function DebtSnowballRecordPage({
 
   const record = data as DebtSnowballRecord;
 
-  // Don't allow users to view records that aren't theirs unless they're an admin.
-  if (record.user_id !== user.id && !isAdmin(user)) {
-    return <NoRecordCard record_id={record_id} />;
-  }
-
   // When retrieving the data, need to use the restoreLastArrayToLastZero
   // util function to restore the array to its original state for the following properties:
   restoreLastArrayToLastZero(record.results.current.balance_tracking);
@@ -77,14 +68,14 @@ export default async function DebtSnowballRecordPage({
         <div className="space-y-1">
           <div className="flex flex-row justify-between items-center">
             <h2 className="text-3xl font-bold">Debt Snowball Record</h2>
-            {name && (
+            {sharerName && (
               <div className="flex flex-row gap-2 text-lg">
                 <span className="text-muted-foreground">Shared by</span>
-                <span className="font-bold">{name}</span>
+                <span className="font-bold">{sharerName}</span>
               </div>
             )}
           </div>
-          {name && <p className="text-muted-foreground">Viewing a shared record.</p>}
+          {sharerName && <p className="text-muted-foreground">Viewing a shared record.</p>}
         </div>
         <Breadcrumbs>
           <BreadcrumbItem href="/dashboard/tools/debt-snowball/records">
@@ -99,7 +90,7 @@ export default async function DebtSnowballRecordPage({
         <Separator />
       </div>
       <div className="flex flex-row justify-center w-full gap-6 flex-wrap">
-        <DebtSnowballRecordView record={record} />
+        <DebtSnowballRecordId record={record} />
       </div>
     </div>
   );

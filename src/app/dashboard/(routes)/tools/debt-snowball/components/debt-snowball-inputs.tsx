@@ -4,19 +4,29 @@ import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DebtsTable } from '@/components/debts-table';
 import { DebtSnowballInputsForm } from './debt-snowball-inputs-form';
+import { DebtSnowballInputsView } from './debt-snowball-inputs-view';
 import type { Debt } from '@/lib/types/debts';
+import type { DebtCalculationInputs } from '../types';
 
-interface DebtSnowballInputsContainerProps {
+interface DebtSnowballInputsProps {
   debts: Debt[];
+  inputs?: DebtCalculationInputs;
 }
 
-export function DebtSnowballInputs({ debts }: DebtSnowballInputsContainerProps) {
+export function DebtSnowballInputs({ debts, inputs }: DebtSnowballInputsProps) {
   const totalDebt = debts.reduce((a, b) => a + b.amount, 0);
 
   return (
     <div className="relative flex flex-col lg:grid grid-cols-3 gap-8">
       <div className="col-span-1 sticky top-8 h-fit flex flex-col gap-6">
-        <DebtSnowballInputsForm debts={debts} />
+        {inputs ? (
+          <>
+            {/* @ts-ignore - the `id` and `user_id` is omitted but will still function as needed to display  */}
+            <DebtSnowballInputsView debts={debts} inputs={inputs} />
+          </>
+        ) : (
+          <DebtSnowballInputsForm debts={debts} />
+        )}
       </div>
       <div className="col-span-2">
         <Card>

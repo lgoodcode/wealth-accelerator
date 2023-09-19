@@ -28,6 +28,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { PercentInput } from '@/components/ui/percent-input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { labels } from '../labels';
 import { debtCalculationInputsAtom, sortDebtsAtom } from '../atoms';
 import { Strategies } from '../strategies';
 import { useSnowballCalculate } from '../hooks/use-snowball-calculate';
@@ -116,13 +117,11 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>
-                      Additional monthly payment{' '}
+                      {labels.additionalPayment.title}{' '}
                       <span className="text-muted-foreground">(optional)</span>
                     </FormLabel>
                     <CurrencyInput placeholder="$500" {...field} />
-                    <FormDescription>
-                      Additional amount of money you can put towards your debt each month.
-                    </FormDescription>
+                    <FormDescription>{labels.additionalPayment.description}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -132,15 +131,9 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                 name="monthly_payment"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Current monthly payment</FormLabel>
+                    <FormLabel>{labels.monthlyPayment.title}</FormLabel>
                     <Input readOnly value={dollarFormatter(field.value)} />
-                    <FormDescription className="flex flex-col gap-1">
-                      <span>The amount of money you can put towards your debt each month.</span>
-                      <span>
-                        (This value is derived from the &quot;Additional monthly payments&quot;
-                        field and the sum of the &quot;payment&quot; from the debts.)
-                      </span>
-                    </FormDescription>
+                    <FormDescription>{labels.monthlyPayment.description}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -150,11 +143,9 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                 name="opportunity_rate"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Opportunity cost recovery rate</FormLabel>
+                    <FormLabel>{labels.opportunityRate.title}</FormLabel>
                     <PercentInput placeholder="5%" {...field} />
-                    <FormDescription>
-                      The rate to compound your savings for each month from the debt snowball.
-                    </FormDescription>
+                    <FormDescription>{labels.opportunityRate.description}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -164,7 +155,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                 name="strategy"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Strategy</FormLabel>
+                    <FormLabel>{labels.strategy.title}</FormLabel>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a strategy" />
@@ -177,9 +168,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                         ))}
                       </SelectContent>
                     </Select>
-                    <FormDescription>
-                      The strategy you want to use to pay off your debt.
-                    </FormDescription>
+                    <FormDescription>{labels.strategy.description}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -199,8 +188,8 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
           {shouldDisplayWealthAccelerator && (
             <Card>
               <CardHeader>
-                <CardTitle>Wealth Accelerator Options</CardTitle>
-                <CardDescription>Enter the lump sum cash to apply each year.</CardDescription>
+                <CardTitle>{labels.wealthAcceleratorOptions.title}</CardTitle>
+                <CardDescription>{labels.wealthAcceleratorOptions.description}</CardDescription>
               </CardHeader>
               <CardContent className="pt-0 space-y-8">
                 <div className="p-4 border space-y-8">
@@ -221,11 +210,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                             Pay back loan
                           </FormLabel>
                         </div>
-
-                        <FormDescription>
-                          Displays the payments necessary to pay back the loan taken out to pay off
-                          the debt.
-                        </FormDescription>
+                        <FormDescription>{labels.payBackLoan.description}</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -261,12 +246,9 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
                     name="loan_interest_rate"
                     render={({ field }) => (
                       <FormItem className="flex flex-col">
-                        <FormLabel>Loan interest rate</FormLabel>
+                        <FormLabel>{labels.loanInterestRate.title}</FormLabel>
                         <PercentInput placeholder="7%" disabled={!canPayBackLoan} {...field} />
-                        <FormDescription>
-                          The rate to compound the loan amounts taken, beginning when each lump sum
-                          is taken out.
-                        </FormDescription>
+                        <FormDescription>{labels.loanInterestRate.description}</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}

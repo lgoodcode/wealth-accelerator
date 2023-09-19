@@ -74,7 +74,7 @@ export const addDebtSnowballRecordAtom = atom(null, (_get, set, record: DebtSnow
 export const renameDebtSnowballRecordAtom = atom(null, (_get, set, id: string, name: string) => {
   set(debtSnowballRecordsAtom, (records) => {
     if (!records) {
-      throw new Error('debtSnowballRecordsAtom is not initialized');
+      return null;
     }
 
     const index = records.findIndex((record) => record.id === id);
@@ -93,7 +93,7 @@ export const renameDebtSnowballRecordAtom = atom(null, (_get, set, id: string, n
 export const removeDebtSnowballRecordAtom = atom(null, (_get, set, id: string) => {
   set(debtSnowballRecordsAtom, (records) => {
     if (!records) {
-      throw new Error('debtSnowballRecordsAtom is not initialized');
+      return null;
     }
 
     const index = records.findIndex((record) => record.id === id);

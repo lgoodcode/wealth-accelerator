@@ -101,7 +101,7 @@ export function DebtSnowball({ debtsData, userId }: DebtSnowballProps) {
         </TabsList>
       </div>
       <TabsContent value={TabsValue.Inputs}>
-        <DebtSnowballInputs debts={debts!} />
+        <DebtSnowballInputs debts={debts} />
       </TabsContent>
       <TabsContent value={TabsValue.Results}>
         <DebtSnowballResults
