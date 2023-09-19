@@ -46,6 +46,7 @@ export function DebtSnowballMenu({
 
   const snowballRecordDeleteCallback = () => {
     if (redirectOnDelete) {
+      router.refresh(); // Lazy way to force re-fetching data from the server
       router.push('/dashboard/tools/debt-snowball/records');
     }
   };
