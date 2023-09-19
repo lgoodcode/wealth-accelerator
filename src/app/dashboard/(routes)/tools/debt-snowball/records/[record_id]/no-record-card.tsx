@@ -7,7 +7,7 @@ interface NoRecordCardProps {
 export function NoRecordCard({ record_id }: NoRecordCardProps) {
   return (
     <div className="flex mt-32 justify-center text-center">
-      <Card className="max-w-lg">
+      <Card className="max-w-xl">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl">No Record Found</CardTitle>
         </CardHeader>
