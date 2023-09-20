@@ -711,8 +711,8 @@ CREATE TYPE debt_snowball_debt AS (
 );
 ALTER TYPE debt_snowball_debt OWNER TO postgres;
 
-DROP TABLE IF EXISTS debt_snowball CASCADE;
-CREATE TABLE debt_snowball (
+DROP TABLE IF EXISTS debt_snowballs CASCADE;
+CREATE TABLE debt_snowballs (
   id uuid PRIMARY KEY NOT NULL,
   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
   name text NOT NULL,
@@ -720,26 +720,26 @@ CREATE TABLE debt_snowball (
   created_at timestamp with time zone NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE debt_snowball OWNER TO postgres;
-ALTER TABLE debt_snowball ENABLE ROW LEVEL SECURITY;
+ALTER TABLE debt_snowballs OWNER TO postgres;
+ALTER TABLE debt_snowballs ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Can view own debt snowball data or if is admin" ON public.debt_snowball
+CREATE POLICY "Can view own debt snowball data or if is admin" ON debt_snowballs
   FOR SELECT
   TO authenticated
   USING ((SELECT auth.uid()) = user_id OR (SELECT is_admin()));
 
-CREATE POLICY "Can insert new debt snowball data" ON public.debt_snowball
+CREATE POLICY "Can insert new debt snowball data" ON debt_snowballs
   FOR INSERT
   TO authenticated
   WITH CHECK ((SELECT auth.uid()) = user_id);
 
-CREATE POLICY "Can update own debt snowball data" ON public.debt_snowball
+CREATE POLICY "Can update own debt snowball data" ON debt_snowballs
   FOR UPDATE
   TO authenticated
   USING ((SELECT auth.uid()) = user_id)
   WITH CHECK ((SELECT auth.uid()) = user_id);
 
-CREATE POLICY "Can delete own debt snowball data" ON public.debt_snowball
+CREATE POLICY "Can delete own debt snowball data" ON debt_snowballs
   FOR DELETE
   TO authenticated
   USING ((SELECT auth.uid()) = user_id);
@@ -767,9 +767,9 @@ $$ LANGUAGE plpgsql;
 
 ALTER FUNCTION handle_update_debt_snowball() OWNER TO postgres;
 
-DROP TRIGGER IF EXISTS on_update_debt_snowball ON debt_snowball;
+DROP TRIGGER IF EXISTS on_update_debt_snowball ON debt_snowballs;
 CREATE TRIGGER on_update_debt_snowball
-  BEFORE UPDATE ON debt_snowball
+  BEFORE UPDATE ON debt_snowballs
     FOR EACH ROW
       EXECUTE PROCEDURE handle_update_debt_snowball();
 
