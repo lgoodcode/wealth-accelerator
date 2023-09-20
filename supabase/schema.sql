@@ -783,7 +783,7 @@ CREATE TRIGGER on_update_debt_snowball
 
 DROP TABLE IF EXISTS debt_snowball_inputs CASCADE;
 CREATE TABLE debt_snowball_inputs (
-  id uuid PRIMARY KEY NOT NULL REFERENCES debt_snowball(id) ON DELETE CASCADE,
+  id uuid PRIMARY KEY NOT NULL REFERENCES debt_snowballs(id) ON DELETE CASCADE,
   additional_payment numeric(12,2) NOT NULL,
   monthly_payment numeric(12,2) NOT NULL,
   opportunity_rate numeric(5,2) NOT NULL,
@@ -801,7 +801,7 @@ CREATE OR REPLACE FUNCTION owns_debt_snowball_inputs_record()
 RETURNS boolean AS $$
 BEGIN
   RETURN EXISTS (
-    SELECT 1 FROM debt_snowball AS ds
+    SELECT 1 FROM debt_snowballs AS ds
     WHERE ds.id = id AND auth.uid() = ds.user_id
   );
 END;
@@ -886,7 +886,7 @@ ALTER TYPE strategy_calculation_results OWNER TO postgres;
 
 DROP TABLE IF EXISTS debt_snowball_results CASCADE;
 CREATE TABLE debt_snowball_results (
-  id uuid PRIMARY KEY NOT NULL REFERENCES debt_snowball(id) ON DELETE CASCADE,
+  id uuid PRIMARY KEY NOT NULL REFERENCES debt_snowballs(id) ON DELETE CASCADE,
   current current_calculation_results NOT NULL,
   strategy strategy_calculation_results NOT NULL
 );
@@ -898,7 +898,7 @@ CREATE OR REPLACE FUNCTION owns_debt_snowball_results_record()
 RETURNS boolean AS $$
 BEGIN
   RETURN EXISTS (
-    SELECT 1 FROM debt_snowball AS ds
+    SELECT 1 FROM debt_snowballs AS ds
     WHERE ds.id = id AND auth.uid() = ds.user_id
   );
 END;
@@ -906,17 +906,17 @@ $$ language plpgsql;
 
 ALTER FUNCTION owns_debt_snowball_results_record() OWNER TO postgres;
 
-CREATE POLICY "Can view own debt snowball result data or if admin" ON public.debt_snowball_results
+CREATE POLICY "Can view own debt snowball result data or if admin" ON debt_snowball_results
   FOR SELECT
   TO authenticated
   USING ((SELECT owns_debt_snowball_results_record()) OR (SELECT is_admin()));
 
-CREATE POLICY "Can insert new debt snowball result data" ON public.debt_snowball_results
+CREATE POLICY "Can insert new debt snowball result data" ON debt_snowball_results
   FOR INSERT
   TO authenticated
   WITH CHECK ((SELECT owns_debt_snowball_results_record()));
 
-CREATE POLICY "Can delete own debt snowball result data" ON public.debt_snowball_results
+CREATE POLICY "Can delete own debt snowball result data" ON debt_snowball_results
   FOR DELETE
   TO authenticated
   USING ((SELECT owns_debt_snowball_inputs_record()));
