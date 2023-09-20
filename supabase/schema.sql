@@ -969,7 +969,7 @@ BEGIN
   -- Generate a new UUID using the uuid-ossp extension
   SELECT uuid_generate_v4() INTO new_id;
 
-  INSERT INTO debt_snowball (id, user_id, name, debts, created_at)
+  INSERT INTO debt_snowballs (id, user_id, name, debts, created_at)
   VALUES (new_id, user_id, name, debts, NOW())
   RETURNING created_at INTO new_created_at;
 
@@ -1030,7 +1030,7 @@ BEGIN
         'current', dsr.current,
         'strategy', dsr.strategy
       ) AS debt_snowball_results_data
-  FROM debt_snowball ds
+  FROM debt_snowballs ds
   JOIN debt_snowball_inputs dsi ON ds.id = dsi.id
   JOIN debt_snowball_results dsr ON ds.id = dsr.id
   WHERE ds.user_id = _user_id;
@@ -1078,7 +1078,7 @@ BEGIN
         'current', dsr.current,
         'strategy', dsr.strategy
       ) AS debt_snowball_results_data
-  FROM debt_snowball ds
+  FROM debt_snowballs ds
   JOIN debt_snowball_inputs dsi ON ds.id = dsi.id
   JOIN debt_snowball_results dsr ON ds.id = dsr.id
   WHERE ds.id = record_id;
@@ -1092,7 +1092,7 @@ ALTER FUNCTION get_debt_snowball_data_record(record_id uuid) OWNER TO postgres;
 CREATE OR REPLACE FUNCTION delete_snowball_record(record_id UUID)
 RETURNS VOID AS $$
 BEGIN
-  DELETE FROM debt_snowball WHERE id = record_id;
+  DELETE FROM debt_snowballs WHERE id = record_id;
   DELETE FROM debt_snowball_results WHERE id = record_id;
   DELETE FROM debt_snowball_inputs WHERE id = record_id;
 END;
