@@ -8,6 +8,8 @@ interface DebtSnowballInputsViewProps {
 }
 
 export function DebtSnowballInputsView({ inputs }: DebtSnowballInputsViewProps) {
+  const isWealthAccelerator = inputs.strategy.includes('Wealth Accelerator');
+
   return (
     <Card>
       <CardHeader className="space-y-1">
@@ -34,10 +36,10 @@ export function DebtSnowballInputsView({ inputs }: DebtSnowballInputsViewProps) 
             </div>
           </div>
 
-          {inputs.strategy.includes('Wealth Accelerator') && (
+          {isWealthAccelerator && (
             <div className="space-y-2">
               <div className="space-y-1">
-                <h3 className="text-xl py-4 border-b font-medium">
+                <h3 className="text-xl py-4 border-b font-semibold">
                   {labels.wealthAcceleratorOptions.title}
                 </h3>
               </div>
@@ -51,18 +53,21 @@ export function DebtSnowballInputsView({ inputs }: DebtSnowballInputsViewProps) 
                   <span>{inputs.loan_interest_rate}%</span>
                 </div>
               </div>
-              <div className="space-y-2">
-                <div className="space-y-1">
-                  <h3 className="text-xl py-4 font-medium">{labels.loanAmounts.title}</h3>
-                </div>
-                <div>
-                  {inputs.lump_amounts.map((loan, i) => (
-                    <div key={`lump-amount-${i}`} className="flex py-4 justify-between border-b">
-                      <span>{`Year ${i + 1}`}</span>
-                      <span>{dollarFormatter(loan)}</span>
-                    </div>
-                  ))}
-                </div>
+            </div>
+          )}
+
+          {isWealthAccelerator && inputs.lump_amounts.length && (
+            <div className="space-y-2">
+              <div className="space-y-1">
+                <h3 className="text-xl py-4 border-b font-semibold">{labels.loanAmounts.title}</h3>
+              </div>
+              <div>
+                {inputs.lump_amounts.map((loan, i) => (
+                  <div key={`lump-amount-${i}`} className="flex py-4 justify-between border-b">
+                    <span>{`Year ${i + 1}`}</span>
+                    <span>{dollarFormatter(loan)}</span>
+                  </div>
+                ))}
               </div>
             </div>
           )}
