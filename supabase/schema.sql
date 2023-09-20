@@ -698,7 +698,7 @@ CREATE POLICY "Admin can delete plaid creative_cash_flow_notifiers" ON public.cr
 
 
 /**
- * debt_snowballs table
+ * debt_snowball table
  */
 
 DROP TYPE IF EXISTS debt_snowball_debt;
@@ -711,8 +711,8 @@ CREATE TYPE debt_snowball_debt AS (
 );
 ALTER TYPE debt_snowball_debt OWNER TO postgres;
 
-DROP TABLE IF EXISTS debt_snowballs CASCADE;
-CREATE TABLE debt_snowballs (
+DROP TABLE IF EXISTS debt_snowball CASCADE;
+CREATE TABLE debt_snowball (
   id uuid PRIMARY KEY NOT NULL,
   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
   name text NOT NULL,
@@ -720,26 +720,26 @@ CREATE TABLE debt_snowballs (
   created_at timestamp with time zone NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE debt_snowballs OWNER TO postgres;
-ALTER TABLE debt_snowballs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE debt_snowball OWNER TO postgres;
+ALTER TABLE debt_snowball ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Can view own debt snowball data or if is admin" ON debt_snowballs
+CREATE POLICY "Can view own debt snowball data or if is admin" ON debt_snowball
   FOR SELECT
   TO authenticated
   USING ((SELECT auth.uid()) = user_id OR (SELECT is_admin()));
 
-CREATE POLICY "Can insert new debt snowball data" ON debt_snowballs
+CREATE POLICY "Can insert new debt snowball data" ON debt_snowball
   FOR INSERT
   TO authenticated
   WITH CHECK ((SELECT auth.uid()) = user_id);
 
-CREATE POLICY "Can update own debt snowball data" ON debt_snowballs
+CREATE POLICY "Can update own debt snowball data" ON debt_snowball
   FOR UPDATE
   TO authenticated
   USING ((SELECT auth.uid()) = user_id)
   WITH CHECK ((SELECT auth.uid()) = user_id);
 
-CREATE POLICY "Can delete own debt snowball data" ON debt_snowballs
+CREATE POLICY "Can delete own debt snowball data" ON debt_snowball
   FOR DELETE
   TO authenticated
   USING ((SELECT auth.uid()) = user_id);
@@ -767,9 +767,9 @@ $$ LANGUAGE plpgsql;
 
 ALTER FUNCTION handle_update_debt_snowball() OWNER TO postgres;
 
-DROP TRIGGER IF EXISTS on_update_debt_snowball ON debt_snowballs;
+DROP TRIGGER IF EXISTS on_update_debt_snowball ON debt_snowball;
 CREATE TRIGGER on_update_debt_snowball
-  BEFORE UPDATE ON debt_snowballs
+  BEFORE UPDATE ON debt_snowball
     FOR EACH ROW
       EXECUTE PROCEDURE handle_update_debt_snowball();
 
@@ -783,7 +783,7 @@ CREATE TRIGGER on_update_debt_snowball
 
 DROP TABLE IF EXISTS debt_snowball_inputs CASCADE;
 CREATE TABLE debt_snowball_inputs (
-  id uuid PRIMARY KEY NOT NULL REFERENCES debt_snowballs(id) ON DELETE CASCADE,
+  id uuid PRIMARY KEY NOT NULL REFERENCES debt_snowball(id) ON DELETE CASCADE,
   additional_payment numeric(12,2) NOT NULL,
   monthly_payment numeric(12,2) NOT NULL,
   opportunity_rate numeric(5,2) NOT NULL,
@@ -801,7 +801,7 @@ CREATE OR REPLACE FUNCTION owns_debt_snowball_inputs_record()
 RETURNS boolean AS $$
 BEGIN
   RETURN EXISTS (
-    SELECT 1 FROM debt_snowballs AS ds
+    SELECT 1 FROM debt_snowball AS ds
     WHERE ds.id = id AND auth.uid() = ds.user_id
   );
 END;
@@ -886,7 +886,7 @@ ALTER TYPE strategy_calculation_results OWNER TO postgres;
 
 DROP TABLE IF EXISTS debt_snowball_results CASCADE;
 CREATE TABLE debt_snowball_results (
-  id uuid PRIMARY KEY NOT NULL REFERENCES debt_snowballs(id) ON DELETE CASCADE,
+  id uuid PRIMARY KEY NOT NULL REFERENCES debt_snowball(id) ON DELETE CASCADE,
   current current_calculation_results NOT NULL,
   strategy strategy_calculation_results NOT NULL
 );
@@ -898,7 +898,7 @@ CREATE OR REPLACE FUNCTION owns_debt_snowball_results_record()
 RETURNS boolean AS $$
 BEGIN
   RETURN EXISTS (
-    SELECT 1 FROM debt_snowballs AS ds
+    SELECT 1 FROM debt_snowball AS ds
     WHERE ds.id = id AND auth.uid() = ds.user_id
   );
 END;
@@ -969,7 +969,7 @@ BEGIN
   -- Generate a new UUID using the uuid-ossp extension
   SELECT uuid_generate_v4() INTO new_id;
 
-  INSERT INTO debt_snowballs (id, user_id, name, debts, created_at)
+  INSERT INTO debt_snowball (id, user_id, name, debts, created_at)
   VALUES (new_id, user_id, name, debts, NOW())
   RETURNING created_at INTO new_created_at;
 
@@ -1030,7 +1030,7 @@ BEGIN
         'current', dsr.current,
         'strategy', dsr.strategy
       ) AS debt_snowball_results_data
-  FROM debt_snowballs ds
+  FROM debt_snowball ds
   JOIN debt_snowball_inputs dsi ON ds.id = dsi.id
   JOIN debt_snowball_results dsr ON ds.id = dsr.id
   WHERE ds.user_id = _user_id;
@@ -1078,7 +1078,7 @@ BEGIN
         'current', dsr.current,
         'strategy', dsr.strategy
       ) AS debt_snowball_results_data
-  FROM debt_snowballs ds
+  FROM debt_snowball ds
   JOIN debt_snowball_inputs dsi ON ds.id = dsi.id
   JOIN debt_snowball_results dsr ON ds.id = dsr.id
   WHERE ds.id = record_id;
@@ -1092,7 +1092,7 @@ ALTER FUNCTION get_debt_snowball_data_record(record_id uuid) OWNER TO postgres;
 CREATE OR REPLACE FUNCTION delete_snowball_record(record_id UUID)
 RETURNS VOID AS $$
 BEGIN
-  DELETE FROM debt_snowballs WHERE id = record_id;
+  DELETE FROM debt_snowball WHERE id = record_id;
   DELETE FROM debt_snowball_results WHERE id = record_id;
   DELETE FROM debt_snowball_inputs WHERE id = record_id;
 END;
