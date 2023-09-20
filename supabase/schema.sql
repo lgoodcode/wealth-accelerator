@@ -698,7 +698,7 @@ CREATE POLICY "Admin can delete plaid creative_cash_flow_notifiers" ON public.cr
 
 
 /**
- * debt_snowball table
+ * debt_snowballs table
  */
 
 DROP TYPE IF EXISTS debt_snowball_debt;
