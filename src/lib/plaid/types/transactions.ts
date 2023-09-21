@@ -19,6 +19,8 @@ export type Transaction = {
   amount: number;
   category: Category;
   date: string;
+  user_filter_id: number | null;
+  global_filter_id: number | null;
 };
 
 export type TransactionWithAccountName = Transaction & {

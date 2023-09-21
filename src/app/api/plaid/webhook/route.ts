@@ -27,16 +27,17 @@ async function syncTransactionsWebhook(request: Request) {
     case 'SYNC_UPDATES_AVAILABLE': {
       const { error: itemError, data: item } = await getItemFromItemId(item_id, true);
 
-      if (itemError) {
-        console.error(itemError);
-        captureException(itemError, {
+      if (itemError || !item) {
+        const error = itemError || new Error(`No data returned for item_id: ${item_id}`);
+        console.error(error);
+        captureException(error, {
           extra: { item_id },
         });
 
         return NextResponse.json({ error: itemError.message }, { status: 500 });
       }
 
-      const { error: syncError } = await serverSyncTransactions(item!);
+      const { error: syncError } = await serverSyncTransactions(item);
 
       if (syncError) {
         console.error(syncError);

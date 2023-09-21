@@ -44,7 +44,7 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
     );
   }
 
-  const { error, data } = await serverSyncTransactions(item, user.id);
+  const { error, data } = await serverSyncTransactions(item);
 
   if (error) {
     const transactions = !data.transactions

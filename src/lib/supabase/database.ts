@@ -221,14 +221,7 @@ export interface Database {
           pay_interest?: boolean
           strategy?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "debt_snowball_inputs_id_fkey"
-            columns: ["id"]
-            referencedRelation: "debt_snowball"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       debt_snowball_results: {
         Row: {
@@ -246,14 +239,7 @@ export interface Database {
           id?: string
           strategy?: Database["public"]["CompositeTypes"]["strategy_calculation_results"]
         }
-        Relationships: [
-          {
-            foreignKeyName: "debt_snowball_results_id_fkey"
-            columns: ["id"]
-            referencedRelation: "debt_snowball"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       debts: {
         Row: {
@@ -291,6 +277,24 @@ export interface Database {
             referencedColumns: ["id"]
           }
         ]
+      }
+      global_plaid_filters: {
+        Row: {
+          category: Database["public"]["Enums"]["category"]
+          filter: string
+          id: number
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["category"]
+          filter: string
+          id?: number
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["category"]
+          filter?: string
+          id?: number
+        }
+        Relationships: []
       }
       personal_finance: {
         Row: {
@@ -433,27 +437,33 @@ export interface Database {
           amount: number
           category: Database["public"]["Enums"]["category"]
           date: string
+          global_filter_id: number | null
           id: string
           item_id: string
           name: string
+          user_filter_id: number | null
         }
         Insert: {
           account_id: string
           amount: number
           category: Database["public"]["Enums"]["category"]
           date: string
+          global_filter_id?: number | null
           id: string
           item_id: string
           name: string
+          user_filter_id?: number | null
         }
         Update: {
           account_id?: string
           amount?: number
           category?: Database["public"]["Enums"]["category"]
           date?: string
+          global_filter_id?: number | null
           id?: string
           item_id?: string
           name?: string
+          user_filter_id?: number | null
         }
         Relationships: [
           {
@@ -463,10 +473,50 @@ export interface Database {
             referencedColumns: ["account_id"]
           },
           {
+            foreignKeyName: "plaid_transactions_global_filter_id_fkey"
+            columns: ["global_filter_id"]
+            referencedRelation: "global_plaid_filters"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "plaid_transactions_item_id_fkey"
             columns: ["item_id"]
             referencedRelation: "plaid"
             referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "plaid_transactions_user_filter_id_fkey"
+            columns: ["user_filter_id"]
+            referencedRelation: "user_plaid_filters"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      user_plaid_filters: {
+        Row: {
+          category: Database["public"]["Enums"]["category"]
+          filter: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["category"]
+          filter: string
+          id?: number
+          user_id: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["category"]
+          filter?: string
+          id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_plaid_filters_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -679,13 +729,13 @@ export interface Database {
       }
       is_admin:
         | {
-            Args: {
-              user_id: string
-            }
+            Args: Record<PropertyKey, never>
             Returns: boolean
           }
         | {
-            Args: Record<PropertyKey, never>
+            Args: {
+              user_id: string
+            }
             Returns: boolean
           }
       is_email_used: {

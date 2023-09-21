@@ -329,6 +329,30 @@ INSERT INTO "public"."plaid_filters" ("id", "filter", "category") VALUES
 	(56, 'bcbs', 'Money-In');
 
 
+
+--
+-- Data for Name: global_plaid_filters; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."global_plaid_filters" ("id", "filter", "category") VALUES
+	(39, 'transfer', 'Transfer'),
+	(40, 'deposit', 'Money-In'),
+	(41, 'square', 'Money-In'),
+	(42, 'bankcard', 'Money-In'),
+	(43, 'mobile deposit', 'Money-In'),
+	(44, 'merchant', 'Money-In'),
+	(45, 'esquire', 'Money-In'),
+	(46, 'stripe', 'Money-In'),
+	(47, 'venmo', 'Money-Out'),
+	(48, 'fullscript', 'Money-In'),
+	(49, 'check', 'Money-Out'),
+	(50, 'synchrony', 'Money-In'),
+	(51, 'commerce', 'Money-In'),
+	(52, 'hcclaimpmt', 'Money-In'),
+	(53, 'clearent', 'Money-In'),
+	(56, 'bcbs', 'Money-In');
+
+
 -- Sandbox Plaid
 INSERT INTO plaid (item_id, user_id, name, access_token, expiration, cursor)
 VALUES (
