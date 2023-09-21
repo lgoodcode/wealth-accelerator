@@ -79,7 +79,7 @@ export function TransactionsTable({ item }: TransactionsTableProps) {
   }
 
   return (
-    <div className="space-y-4 mt-8">
+    <div className="space-y-4 w-full">
       <TableToolbar table={table} />
       <div className="rounded-md border">
         <Table>

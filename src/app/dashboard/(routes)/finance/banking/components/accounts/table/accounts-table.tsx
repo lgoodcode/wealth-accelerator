@@ -71,7 +71,7 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
   }
 
   return (
-    <div className="space-y-4 mt-8">
+    <div className="space-y-4">
       <TableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
