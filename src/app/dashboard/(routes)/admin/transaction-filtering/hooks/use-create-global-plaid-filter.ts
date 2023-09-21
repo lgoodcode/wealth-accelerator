@@ -4,23 +4,23 @@ import { supabase } from '@/lib/supabase/client';
 import { addGlobalFilterAtom } from '../atoms';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
-export const useCreateFilter = () => {
-  const addFilter = useSetAtom(addGlobalFilterAtom);
+export const useCreateGlobalPlaidFilter = () => {
+  const addGlobalFilter = useSetAtom(addGlobalFilterAtom);
 
   return async (filter: Pick<Filter, 'filter' | 'category'>) => {
-    const { error: insertError, data: newFilter } = await supabase
-      .from('plaid_filters')
+    const { error, data: globalFilter } = await supabase
+      .from('global_plaid_filters')
       .insert({
-        ...filter,
         filter: filter.filter.toLowerCase(),
+        category: filter.category,
       })
       .select('*')
       .single();
 
-    if (insertError || !newFilter) {
-      throw insertError || new Error('Failed to insert filter');
+    if (error || !globalFilter) {
+      throw error || new Error('Could not create filter');
     }
 
-    addFilter(newFilter as Filter);
+    addGlobalFilter(globalFilter as Filter);
   };
 };

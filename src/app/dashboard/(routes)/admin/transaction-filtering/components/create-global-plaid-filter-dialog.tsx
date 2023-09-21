@@ -35,12 +35,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useCreateFilter } from '../hooks/use-create-filter';
+import { useCreateGlobalPlaidFilter } from '../hooks/use-create-global-plaid-filter';
 import { hasGlobalFilterAtom } from '../atoms';
 import { Category } from '@/lib/plaid/types/transactions';
 
-export function AddFilterDialog() {
-  const createFilter = useCreateFilter();
+export function CreateGlobalPlaidFilterDialog() {
+  const createFilter = useCreateGlobalPlaidFilter();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const hasFilter = useSetAtom(hasGlobalFilterAtom);

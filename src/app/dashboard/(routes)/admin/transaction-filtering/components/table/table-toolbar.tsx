@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FacetedFilter } from './faceted-filter';
 import { categoryOptions } from './column-options';
-import { AddFilterDialog } from '../add-filter-dialog';
+import { CreateGlobalPlaidFilterDialog } from '../create-global-plaid-filter-dialog';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
 interface TableToolbarProps {
@@ -49,7 +49,7 @@ export function TableToolbar({ table, globalFilter, setGlobalFilter }: TableTool
         )}
       </div>
 
-      <AddFilterDialog />
+      <CreateGlobalPlaidFilterDialog />
     </div>
   );
 }

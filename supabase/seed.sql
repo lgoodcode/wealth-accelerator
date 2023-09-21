@@ -305,52 +305,28 @@ DO UPDATE SET
     "ytd_collections" = EXCLUDED."ytd_collections",
     "default_tax_rate" = EXCLUDED."default_tax_rate";
 
-
---
--- Data for Name: plaid_filters; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO "public"."plaid_filters" ("id", "filter", "category") VALUES
-	(39, 'transfer', 'Transfer'),
-	(40, 'deposit', 'Money-In'),
-	(41, 'square', 'Money-In'),
-	(42, 'bankcard', 'Money-In'),
-	(43, 'mobile deposit', 'Money-In'),
-	(44, 'merchant', 'Money-In'),
-	(45, 'esquire', 'Money-In'),
-	(46, 'stripe', 'Money-In'),
-	(47, 'venmo', 'Money-Out'),
-	(48, 'fullscript', 'Money-In'),
-	(49, 'check', 'Money-Out'),
-	(50, 'synchrony', 'Money-In'),
-	(51, 'commerce', 'Money-In'),
-	(52, 'hcclaimpmt', 'Money-In'),
-	(53, 'clearent', 'Money-In'),
-	(56, 'bcbs', 'Money-In');
-
-
-
 --
 -- Data for Name: global_plaid_filters; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO "public"."global_plaid_filters" ("id", "filter", "category") VALUES
-	(39, 'transfer', 'Transfer'),
-	(40, 'deposit', 'Money-In'),
-	(41, 'square', 'Money-In'),
-	(42, 'bankcard', 'Money-In'),
-	(43, 'mobile deposit', 'Money-In'),
-	(44, 'merchant', 'Money-In'),
-	(45, 'esquire', 'Money-In'),
-	(46, 'stripe', 'Money-In'),
-	(47, 'venmo', 'Money-Out'),
-	(48, 'fullscript', 'Money-In'),
-	(49, 'check', 'Money-Out'),
-	(50, 'synchrony', 'Money-In'),
-	(51, 'commerce', 'Money-In'),
-	(52, 'hcclaimpmt', 'Money-In'),
-	(53, 'clearent', 'Money-In'),
-	(56, 'bcbs', 'Money-In');
+  (1, 'transfer', 'Transfer'),
+  (2, 'deposit', 'Money-In'),
+  (3, 'square', 'Money-In'),
+  (4, 'bankcard', 'Money-In'),
+  (5, 'mobile deposit', 'Money-In'),
+  (6, 'merchant', 'Money-In'),
+  (7, 'esquire', 'Money-In'),
+  (8, 'stripe', 'Money-In'),
+  (9, 'venmo', 'Money-Out'),
+  (10, 'fullscript', 'Money-In'),
+  (11, 'check', 'Money-Out'),
+  (12, 'synchrony', 'Money-In'),
+  (13, 'commerce', 'Money-In'),
+  (14, 'hcclaimpmt', 'Money-In'),
+  (15, 'clearent', 'Money-In'),
+  (16, 'bcbs', 'Money-In'),
+  (17, 'united', 'Transfer');
 
 
 -- Sandbox Plaid
