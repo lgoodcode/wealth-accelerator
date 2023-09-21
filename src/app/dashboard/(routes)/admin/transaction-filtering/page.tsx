@@ -33,6 +33,9 @@ export default async function TransactionFilteringPage() {
         <p className="text-muted-foreground">
           Manage filters used to categorize transactions when received from Plaid for all users.
         </p>
+        <p className="text-muted-foreground">
+          <b>Note:</b> These filters will be overriden by user-specific filters.
+        </p>
       </div>
       <Separator className="mt-6" />
       <Filters filtersData={filters} />

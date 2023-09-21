@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { Loading } from '@/components/loading';
 import { Card, CardContent } from '@/components/ui/card';
 import { FiltersTable } from './table/filters-table';
-import { filtersAtom } from '../atoms';
+import { globalFiltersAtom } from '../atoms';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
 interface FiltersProps {
@@ -14,7 +14,7 @@ interface FiltersProps {
 }
 
 export function Filters({ filtersData }: FiltersProps) {
-  const [filters, setFilters] = useAtom(filtersAtom);
+  const [filters, setFilters] = useAtom(globalFiltersAtom);
 
   useEffect(() => {
     setFilters(filtersData);

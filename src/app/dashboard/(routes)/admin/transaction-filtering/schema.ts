@@ -2,15 +2,15 @@ import { z } from 'zod';
 
 import { Category } from '@/lib/plaid/types/transactions';
 
-export const updateFilterFormSchema = z.object({
+export const updateGlobalFilterFormSchema = z.object({
   category: z.nativeEnum(Category, {
     required_error: 'Please select a category for this filter.',
   }),
 });
 
-export type UpdateFilterFormType = z.infer<typeof updateFilterFormSchema>;
+export type UpdateGlobalFilterFormType = z.infer<typeof updateGlobalFilterFormSchema>;
 
-export const createFilterFormSchema = z.object({
+export const createGlobalFilterFormSchema = z.object({
   filter: z.string({
     required_error: 'Enter the filter text',
   }),
@@ -19,4 +19,4 @@ export const createFilterFormSchema = z.object({
   }),
 });
 
-export type CreateFilterFormType = z.infer<typeof createFilterFormSchema>;
+export type CreateGlobalFilterFormType = z.infer<typeof createGlobalFilterFormSchema>;

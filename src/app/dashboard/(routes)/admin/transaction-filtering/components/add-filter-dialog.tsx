@@ -7,7 +7,7 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
-import { createFilterFormSchema, type CreateFilterFormType } from '../schema';
+import { createGlobalFilterFormSchema, type CreateGlobalFilterFormType } from '../schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -36,22 +36,22 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useCreateFilter } from '../hooks/use-create-filter';
-import { hasFilterAtom } from '../atoms';
+import { hasGlobalFilterAtom } from '../atoms';
 import { Category } from '@/lib/plaid/types/transactions';
 
 export function AddFilterDialog() {
   const createFilter = useCreateFilter();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
-  const hasFilter = useSetAtom(hasFilterAtom);
-  const form = useForm<CreateFilterFormType>({
-    resolver: zodResolver(createFilterFormSchema),
+  const hasFilter = useSetAtom(hasGlobalFilterAtom);
+  const form = useForm<CreateGlobalFilterFormType>({
+    resolver: zodResolver(createGlobalFilterFormSchema),
     resetOptions: {
       keepValues: true,
     },
   });
 
-  const handleCreate = async (data: CreateFilterFormType) => {
+  const handleCreate = async (data: CreateGlobalFilterFormType) => {
     if (hasFilter(data.filter)) {
       form.setError('filter', {
         type: 'manual',

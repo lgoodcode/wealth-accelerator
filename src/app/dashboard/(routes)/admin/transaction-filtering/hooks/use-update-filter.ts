@@ -1,14 +1,14 @@
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
-import { updateFilterAtom } from '../atoms';
-import type { UpdateFilterFormType } from '../schema';
+import { updateGlobalFilterAtom } from '../atoms';
+import type { UpdateGlobalFilterFormType } from '../schema';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
 export const useUpdateFilter = () => {
-  const updateFilter = useSetAtom(updateFilterAtom);
+  const updateFilter = useSetAtom(updateGlobalFilterAtom);
 
-  return async (id: number, data: UpdateFilterFormType) => {
+  return async (id: number, data: UpdateGlobalFilterFormType) => {
     const { error, data: updatedFilter } = await supabase
       .from('plaid_filters')
       .update({ category: data.category })
