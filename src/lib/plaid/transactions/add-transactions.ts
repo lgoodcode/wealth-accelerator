@@ -18,6 +18,7 @@ export const addTransactions = async (
       user_filters,
       global_filters
     );
+
     const { error } = await supabase.from('plaid_transactions').upsert(parsedTransactions, {
       onConflict: 'id',
       ignoreDuplicates: true,

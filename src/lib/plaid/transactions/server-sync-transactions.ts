@@ -116,7 +116,8 @@ export const serverSyncTransactions = async (
     const updatedError = await updateTransactions(
       item.item_id,
       data.modified,
-      filters,
+      userFilters,
+      globalFilters,
       supabaseAdmin
     );
     const removedError = await removeTransactions(data.removed, supabaseAdmin);
