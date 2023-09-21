@@ -330,10 +330,6 @@ CREATE TABLE plaid_transactions (
 ALTER TABLE plaid_transactions OWNER TO postgres;
 ALTER TABLE plaid_transactions ENABLE ROW LEVEL SECURITY;
 
--- Index the name column, which is text, to optimize for case-insensitive LIKE queries
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
-CREATE INDEX trgm_idx_plaid_transactions_name ON plaid_transactions USING gin (name gin_trgm_ops);
-
 -- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
 CREATE OR REPLACE FUNCTION is_own_plaid_transaction()
 RETURNS BOOL AS $$
