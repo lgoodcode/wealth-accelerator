@@ -9,6 +9,8 @@ export const useUpdateTransaction = () => {
       .update({
         name: data.name,
         category: data.category,
+        user_filter_id: null,
+        global_filter_id: null,
       })
       .eq('id', transaction_id)
       .select('*')
