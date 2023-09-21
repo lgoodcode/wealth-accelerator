@@ -17,8 +17,8 @@ export function TableToolbar({ table, globalFilter, setGlobalFilter }: TableTool
   const isFiltered =
     table.getPreFilteredRowModel().rows.length > table.getFilteredRowModel().rows.length;
   const handleReset = () => {
-    table.resetGlobalFilter();
     setGlobalFilter('');
+    table.resetGlobalFilter();
   };
 
   return (
