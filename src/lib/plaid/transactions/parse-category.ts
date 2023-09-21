@@ -43,8 +43,9 @@ export const parseCategory = (
       category: global_filter.category,
     };
   }
+
   // No matches, default to using the amount to determine the category
-  else if (transaction.amount > 0) {
+  if (transaction.amount > 0) {
     return {
       filter_id: null,
       filter_type: null,
