@@ -45,22 +45,18 @@ export function ViewInstitutions() {
           <TabsTrigger value={TabsValue.Transactions}>Transactions</TabsTrigger>
         </TabsList>
         <TabsContent value={TabsValue.Accounts}>
-          <div className="flex justify-center mx-auto lg:w-[1024px]">
-            <Card className="w-auto mt-8">
-              <CardContent>
-                <AccountsTable item_id={selectedInstitution.item_id} />
-              </CardContent>
-            </Card>
-          </div>
+          <Card className="mt-8">
+            <CardContent>
+              <AccountsTable item_id={selectedInstitution.item_id} />
+            </CardContent>
+          </Card>
         </TabsContent>
         <TabsContent value={TabsValue.Transactions}>
-          <div className="flex justify-center mx-auto lg:w-[1280px]">
-            <Card className="w-full mt-8">
-              <CardContent>
-                <TransactionsTable item={selectedInstitution} />
-              </CardContent>
-            </Card>
-          </div>
+          <Card className="mt-8">
+            <CardContent>
+              <TransactionsTable item={selectedInstitution} />
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

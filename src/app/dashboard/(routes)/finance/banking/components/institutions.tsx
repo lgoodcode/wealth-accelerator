@@ -27,7 +27,7 @@ export function Institutions({ institutionsData }: InstitutionsProps) {
   }
 
   return (
-    <div className="flex flex-col mt-6">
+    <div className="flex flex-col mt-6 justify-center mx-auto lg:w-[1280px]">
       <ManageInstitutions />
       <ViewInstitutions />
     </div>
