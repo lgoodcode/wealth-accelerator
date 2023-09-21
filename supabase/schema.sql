@@ -22,6 +22,15 @@ CREATE TABLE users (
 ALTER TABLE public.users OWNER TO postgres;
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
+CREATE OR REPLACE FUNCTION is_authenticated()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN auth.uid() IS NOT NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION is_authenticated() OWNER TO postgres;
+
 CREATE OR REPLACE FUNCTION is_admin(user_id UUID)
 RETURNS BOOLEAN AS $$
 BEGIN
@@ -438,10 +447,10 @@ CREATE TABLE global_plaid_filters (
 ALTER TABLE global_plaid_filters OWNER TO postgres;
 ALTER TABLE global_plaid_filters ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Admins can view global plaid filters" ON global_plaid_filters
+CREATE POLICY "Users can view global plaid filters" ON global_plaid_filters
   FOR SELECT
   TO authenticated
-  USING ((SELECT is_admin()));
+  USING ((SELECT is_authenticated()));
 
 CREATE POLICY "Admins can insert global plaid filters" ON global_plaid_filters
   FOR INSERT

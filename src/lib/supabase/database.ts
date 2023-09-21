@@ -221,7 +221,14 @@ export interface Database {
           pay_interest?: boolean
           strategy?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "debt_snowball_inputs_id_fkey"
+            columns: ["id"]
+            referencedRelation: "debt_snowball"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       debt_snowball_results: {
         Row: {
@@ -239,7 +246,45 @@ export interface Database {
           id?: string
           strategy?: Database["public"]["CompositeTypes"]["strategy_calculation_results"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "debt_snowball_results_id_fkey"
+            columns: ["id"]
+            referencedRelation: "debt_snowball"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      debt_snowballs: {
+        Row: {
+          created_at: string
+          debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
+          id: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          debts?: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "debt_snowballs_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       debts: {
         Row: {
@@ -412,24 +457,6 @@ export interface Database {
             referencedColumns: ["item_id"]
           }
         ]
-      }
-      plaid_filters: {
-        Row: {
-          category: Database["public"]["Enums"]["category"]
-          filter: string
-          id: number
-        }
-        Insert: {
-          category: Database["public"]["Enums"]["category"]
-          filter: string
-          id?: number
-        }
-        Update: {
-          category?: Database["public"]["Enums"]["category"]
-          filter?: string
-          id?: number
-        }
-        Relationships: []
       }
       plaid_transactions: {
         Row: {
@@ -697,36 +724,6 @@ export interface Database {
           account: string
         }[]
       }
-      gtrgm_compress: {
-        Args: {
-          "": unknown
-        }
-        Returns: unknown
-      }
-      gtrgm_decompress: {
-        Args: {
-          "": unknown
-        }
-        Returns: unknown
-      }
-      gtrgm_in: {
-        Args: {
-          "": unknown
-        }
-        Returns: unknown
-      }
-      gtrgm_options: {
-        Args: {
-          "": unknown
-        }
-        Returns: undefined
-      }
-      gtrgm_out: {
-        Args: {
-          "": unknown
-        }
-        Returns: unknown
-      }
       is_admin:
         | {
             Args: Record<PropertyKey, never>
@@ -738,6 +735,10 @@ export interface Database {
             }
             Returns: boolean
           }
+      is_authenticated: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       is_email_used: {
         Args: {
           email: string
@@ -759,22 +760,6 @@ export interface Database {
       owns_debt_snowball_results_record: {
         Args: Record<PropertyKey, never>
         Returns: boolean
-      }
-      set_limit: {
-        Args: {
-          "": number
-        }
-        Returns: number
-      }
-      show_limit: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      show_trgm: {
-        Args: {
-          "": string
-        }
-        Returns: unknown
       }
       total_waa_before_date: {
         Args: {

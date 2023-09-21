@@ -325,8 +325,7 @@ INSERT INTO "public"."global_plaid_filters" ("id", "filter", "category") VALUES
   (13, 'commerce', 'Money-In'),
   (14, 'hcclaimpmt', 'Money-In'),
   (15, 'clearent', 'Money-In'),
-  (16, 'bcbs', 'Money-In'),
-  (17, 'united', 'Transfer');
+  (16, 'bcbs', 'Money-In');
 
 
 -- Sandbox Plaid
