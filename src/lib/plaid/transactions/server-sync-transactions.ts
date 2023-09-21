@@ -184,9 +184,9 @@ export const serverSyncTransactions = async (
     let resetCursor = false;
 
     // Take the access token and use it to request a new link token from Plaid for update mode
-    if (isCredentialError && user_id) {
+    if (isCredentialError && item.user_id) {
       const response = await plaidClient.linkTokenCreate(
-        createLinkTokenRequest(user_id, item.access_token)
+        createLinkTokenRequest(item.user_id, item.access_token)
       );
       link_token = response.data.link_token;
       // If it's a sync mutation error, then we need to reset the cursor and try again
