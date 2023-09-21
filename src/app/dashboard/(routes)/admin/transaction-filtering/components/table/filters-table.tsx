@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   ColumnFiltersState,
   SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -34,22 +33,26 @@ interface FiltersTableProps {
 }
 
 export function FiltersTable({ filters }: FiltersTableProps) {
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState<string>('');
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const table = useReactTable<Filter>({
     data: filters || [],
     columns,
     state: {
       sorting,
-      columnVisibility,
+      globalFilter,
       columnFilters,
+    },
+    globalFilterFn: (row, id, value) => {
+      const val: string = row.getValue<string>(id).toLowerCase();
+      return val.includes(value.toLowerCase());
     },
     enableHiding: false,
     autoResetPageIndex: false,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -59,8 +62,12 @@ export function FiltersTable({ filters }: FiltersTableProps) {
   });
 
   return (
-    <div className="space-y-4 mt-8 w-full">
-      <TableToolbar table={table} />
+    <div className="space-y-4 w-full">
+      <TableToolbar
+        table={table}
+        globalFilter={globalFilter}
+        setGlobalFilter={(value: string) => setGlobalFilter(value)}
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

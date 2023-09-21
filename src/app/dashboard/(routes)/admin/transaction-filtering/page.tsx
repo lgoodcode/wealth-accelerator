@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default async function TransactionFilteringPage() {
   const supabase = createSupabase();
   const { error, data } = await supabase
-    .from('plaid_filters')
+    .from('global_plaid_filters')
     .select('*')
     .order('id', { ascending: true });
 
@@ -31,7 +31,7 @@ export default async function TransactionFilteringPage() {
       <div className="space-y-1">
         <h2 className="text-3xl font-bold">Transactions Filtering</h2>
         <p className="text-muted-foreground">
-          Manage filters used to categorize transactions when received from Plaid.
+          Manage filters used to categorize transactions when received from Plaid for all users.
         </p>
       </div>
       <Separator className="mt-6" />
