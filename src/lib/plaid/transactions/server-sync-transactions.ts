@@ -109,7 +109,7 @@ export const serverSyncTransactions = async (
     const addedError = await addTransactions(
       item.item_id,
       data.added,
-      globalFilters,
+      userFilters,
       globalFilters,
       supabaseAdmin
     );
