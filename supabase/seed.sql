@@ -309,6 +309,8 @@ DO UPDATE SET
 -- Data for Name: global_plaid_filters; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+SELECT setval('"global_plaid_filters_id_seq"', (SELECT MAX("id") FROM global_plaid_filters));
+
 INSERT INTO "public"."global_plaid_filters" ("id", "filter", "category") VALUES
   (1, 'transfer', 'Transfer'),
   (2, 'deposit', 'Money-In'),
