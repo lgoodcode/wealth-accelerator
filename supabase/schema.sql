@@ -333,7 +333,9 @@ CREATE TABLE plaid_transactions (
   name text NOT NULL,
   amount numeric(12,2) NOT NULL,
   category category NOT NULL,
-  date timestamp with time zone NOT NULL
+  date timestamp with time zone NOT NULL,
+  user_filter_id int REFERENCES user_plaid_filters(id) ON DELETE SET NULL,
+  global_filter_id int REFERENCES global_plaid_filters(id) ON DELETE SET NULL
 );
 
 ALTER TABLE plaid_transactions OWNER TO postgres;
