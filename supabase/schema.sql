@@ -330,10 +330,6 @@ CREATE TABLE plaid_transactions (
 ALTER TABLE plaid_transactions OWNER TO postgres;
 ALTER TABLE plaid_transactions ENABLE ROW LEVEL SECURITY;
 
--- Index the name column, which is text, to optimize for case-insensitive LIKE queries
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
-CREATE INDEX trgm_idx_plaid_transactions_name ON plaid_transactions USING gin (name gin_trgm_ops);
-
 -- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
 CREATE OR REPLACE FUNCTION is_own_plaid_transaction()
 RETURNS BOOL AS $$
@@ -542,7 +538,7 @@ BEGIN
   VALUES (new_id, _user_id, _start_date, _end_date, _all_other_income, _payroll_and_distributions, _lifestyle_expenses_tax_rate, _tax_account_rate, _optimal_savings_strategy);
 
   INSERT INTO creative_cash_flow_results (id, user_id, collections, lifestyle_expenses, lifestyle_expenses_tax, business_profit_before_tax, business_overhead, tax_account, waa, total_waa, daily_trend, weekly_trend, yearly_trend, year_to_date)
-  VALUES (new_id, _user_id, _collections, _lifestyle_expenses, _lifestyle_expenses_tax, _business_profit_before_tax, _business_overhead, _tax_account, _waa, _total_waa, _weekly_trend, _daily_trend, _yearly_trend, _year_to_date);
+  VALUES (new_id, _user_id, _collections, _lifestyle_expenses, _lifestyle_expenses_tax, _business_profit_before_tax, _business_overhead, _tax_account, _waa, _total_waa, _daily_trend, _weekly_trend, _yearly_trend, _year_to_date);
 
   RETURN new_id;
 END;
@@ -723,23 +719,23 @@ CREATE TABLE debt_snowball (
 ALTER TABLE debt_snowball OWNER TO postgres;
 ALTER TABLE debt_snowball ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Can view own debt snowball data or if is admin" ON public.debt_snowball
+CREATE POLICY "Can view own debt snowball data or if is admin" ON debt_snowball
   FOR SELECT
   TO authenticated
   USING ((SELECT auth.uid()) = user_id OR (SELECT is_admin()));
 
-CREATE POLICY "Can insert new debt snowball data" ON public.debt_snowball
+CREATE POLICY "Can insert new debt snowball data" ON debt_snowball
   FOR INSERT
   TO authenticated
   WITH CHECK ((SELECT auth.uid()) = user_id);
 
-CREATE POLICY "Can update own debt snowball data" ON public.debt_snowball
+CREATE POLICY "Can update own debt snowball data" ON debt_snowball
   FOR UPDATE
   TO authenticated
   USING ((SELECT auth.uid()) = user_id)
   WITH CHECK ((SELECT auth.uid()) = user_id);
 
-CREATE POLICY "Can delete own debt snowball data" ON public.debt_snowball
+CREATE POLICY "Can delete own debt snowball data" ON debt_snowball
   FOR DELETE
   TO authenticated
   USING ((SELECT auth.uid()) = user_id);
@@ -906,17 +902,17 @@ $$ language plpgsql;
 
 ALTER FUNCTION owns_debt_snowball_results_record() OWNER TO postgres;
 
-CREATE POLICY "Can view own debt snowball result data or if admin" ON public.debt_snowball_results
+CREATE POLICY "Can view own debt snowball result data or if admin" ON debt_snowball_results
   FOR SELECT
   TO authenticated
   USING ((SELECT owns_debt_snowball_results_record()) OR (SELECT is_admin()));
 
-CREATE POLICY "Can insert new debt snowball result data" ON public.debt_snowball_results
+CREATE POLICY "Can insert new debt snowball result data" ON debt_snowball_results
   FOR INSERT
   TO authenticated
   WITH CHECK ((SELECT owns_debt_snowball_results_record()));
 
-CREATE POLICY "Can delete own debt snowball result data" ON public.debt_snowball_results
+CREATE POLICY "Can delete own debt snowball result data" ON debt_snowball_results
   FOR DELETE
   TO authenticated
   USING ((SELECT owns_debt_snowball_inputs_record()));
