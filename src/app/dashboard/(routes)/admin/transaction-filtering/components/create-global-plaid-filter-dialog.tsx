@@ -100,7 +100,7 @@ export function CreateGlobalPlaidFilterDialog() {
           <DialogTitle>Create Global Plaid Filter</DialogTitle>
           <DialogDescription className="flex flex-col space-y-2">
             <span>
-              Create a new filter to categorize transactions for all users received from Plaid.
+              Create a new filter to categorize transactions received from Plaid for all users.
             </span>
             <span>
               <span className="font-bold">Note:</span> all the filters are case-insensitive and will
