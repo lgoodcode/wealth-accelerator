@@ -1,5 +1,4 @@
 import { captureException, setUser } from '@sentry/nextjs';
-import { cookies } from 'next/headers';
 
 import { createSupabase } from './create-supabase';
 import { parseAuthCookie } from './parse-auth-cookie';
@@ -12,7 +11,7 @@ import { parseAuthCookie } from './parse-auth-cookie';
 export const getUser = async (): Promise<User | null> => {
   const supabase = createSupabase();
   // Parse the auth cookie and redirect to login if it's invalid
-  const authToken = parseAuthCookie(cookies());
+  const authToken = parseAuthCookie();
 
   if (!authToken) {
     return null;

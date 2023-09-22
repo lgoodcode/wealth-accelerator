@@ -1,8 +1,8 @@
+import { cookies } from 'next/headers';
 import jwtDecode from 'jwt-decode';
-import { RequestCookies } from 'next/dist/compiled/@edge-runtime/cookies';
-import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
 const PROJECT_ID = process.env.SUPABASE_PROJECT_ID;
+const SUPABASE_AUTH_COOKIE = `sb-${PROJECT_ID}-auth-token`;
 
 /** Partial of the values contained in the Supabase JWT in the cookies */
 type Token = {
@@ -20,11 +20,10 @@ type Token = {
  *
  * Can only be used in middleware or on the server.
  */
-export const parseAuthCookie = (cookies: RequestCookies | ReadonlyRequestCookies) => {
-  const cookie = cookies.get(`sb-${PROJECT_ID}-auth-token`)?.value;
-  const isInvalidCookie = !cookie || cookie === 'undefined';
-
-  if (isInvalidCookie) {
+export const parseAuthCookie = (
+  cookie = cookies().get(SUPABASE_AUTH_COOKIE)?.value
+): Token | null => {
+  if (!cookie || cookie === 'undefined') {
     return null;
   }
 

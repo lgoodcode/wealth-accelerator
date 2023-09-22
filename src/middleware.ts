@@ -6,6 +6,7 @@ import { parseAuthCookie } from '@/lib/supabase/server/parse-auth-cookie';
 import type { Database } from '@/lib/supabase/database';
 
 const PROJECT_ID = process.env.SUPABASE_PROJECT_ID;
+const SUPABASE_AUTH_COOKIE = `sb-${PROJECT_ID}-auth-token`;
 const authPagesRegex = /^\/(login|signup|forgot-password|reset-password)/;
 
 export async function middleware(request: NextRequest) {
@@ -13,7 +14,7 @@ export async function middleware(request: NextRequest) {
   const isLoginPage = request.nextUrl.pathname === '/login';
   const isAuthPage = authPagesRegex.test(request.nextUrl.pathname);
   const supabase = createMiddlewareClient<Database>({ req: request, res });
-  const token = parseAuthCookie(request.cookies);
+  const token = parseAuthCookie(request.cookies.get(SUPABASE_AUTH_COOKIE)?.value);
   const queryEntries = request.nextUrl.search ? request.nextUrl.search.substring(1) : '';
   const loginRedirectUrl = new URL(
     isLoginPage && queryEntries.startsWith('redirect_to') // Don't redirect to login page if already on login page
@@ -27,7 +28,7 @@ export async function middleware(request: NextRequest) {
   // redirect to login page for all pages except auth pages
   if (!token) {
     request.cookies.set({
-      name: `sb-${PROJECT_ID}-auth-token`,
+      name: SUPABASE_AUTH_COOKIE,
       value: '',
     });
 
