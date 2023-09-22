@@ -1,0 +1,32 @@
+'use client';
+
+import { useAtom } from 'jotai';
+import { useEffect } from 'react';
+
+import { Loading } from '@/components/loading';
+import { Card, CardContent } from '@/components/ui/card';
+import { FiltersTable } from './table/filters-table';
+import { userFiltersAtom } from '../atoms';
+import type { Filter } from '@/lib/plaid/types/transactions';
+
+interface FiltersProps {
+  filtersData: Filter[] | null;
+}
+
+export function Filters({ filtersData }: FiltersProps) {
+  const [filters, setFilters] = useAtom(userFiltersAtom);
+
+  useEffect(() => {
+    setFilters(filtersData);
+  }, []);
+
+  return (
+    <div className="flex justify-center mx-auto lg:w-[1024px]">
+      <Card className="w-full mt-8">
+        <CardContent>
+          {!filters ? <Loading className="mt-0 py-32" /> : <FiltersTable filters={filters} />}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
