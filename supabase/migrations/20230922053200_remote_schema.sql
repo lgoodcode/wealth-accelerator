@@ -664,22 +664,6 @@ $$;
 
 ALTER FUNCTION "public"."update_transaction_categories"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."update_transactions_for_deleted_global_filter"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
-    AS $$
-BEGIN
-  UPDATE plaid_transactions
-  SET category = CASE
-    WHEN amount < 0 THEN 'Money-In'::category
-    ELSE 'Money-Out'::category
-  END
-  WHERE global_filter_id = OLD.id;
-  RETURN OLD;
-END;
-$$;
-
-ALTER FUNCTION "public"."update_transactions_for_deleted_global_filter"() OWNER TO "postgres";
-
 CREATE OR REPLACE FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"() RETURNS "trigger"
     LANGUAGE "plpgsql"
     AS $$
@@ -696,22 +680,6 @@ $$;
 
 ALTER FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."update_transactions_for_new_global_filter"() RETURNS "trigger"
-    LANGUAGE "plpgsql" SECURITY DEFINER
-    AS $$
-BEGIN
-  UPDATE plaid_transactions
-  SET category = NEW.category,
-    user_filter_id = NULL,
-    global_filter_id = NEW.id
-  WHERE LOWER(name) LIKE '%' || LOWER(NEW.filter) || '%'
-    AND category IS DISTINCT FROM NEW.category; -- Only update if category is different
-  RETURN NULL;
-END;
-$$;
-
-ALTER FUNCTION "public"."update_transactions_for_new_global_filter"() OWNER TO "postgres";
-
 CREATE OR REPLACE FUNCTION "public"."update_transactions_for_new_global_plaid_filter"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -727,19 +695,6 @@ END;
 $$;
 
 ALTER FUNCTION "public"."update_transactions_for_new_global_plaid_filter"() OWNER TO "postgres";
-
-CREATE OR REPLACE FUNCTION "public"."update_transactions_for_updated_global_filter"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
-    AS $$
-BEGIN
-  UPDATE plaid_transactions
-  SET category = NEW.category
-  WHERE global_filter_id = NEW.id;
-  RETURN NULL;
-END;
-$$;
-
-ALTER FUNCTION "public"."update_transactions_for_updated_global_filter"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."update_transactions_for_updated_global_plaid_filter"() RETURNS "trigger"
     LANGUAGE "plpgsql"
@@ -1074,7 +1029,7 @@ ALTER TABLE ONLY "public"."users"
 ALTER TABLE ONLY "public"."users"
     ADD CONSTRAINT "users_pkey" PRIMARY KEY ("id");
 
-CREATE TRIGGER "on_delete_global_plaid_filter" AFTER UPDATE ON "public"."global_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."update_transactions_for_updated_global_plaid_filter"();
+CREATE TRIGGER "on_delete_global_plaid_filter" BEFORE DELETE ON "public"."global_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"();
 
 CREATE TRIGGER "on_insert_global_plaid_filter" AFTER INSERT ON "public"."global_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."update_transactions_for_new_global_plaid_filter"();
 
@@ -1402,25 +1357,13 @@ GRANT ALL ON FUNCTION "public"."update_transaction_categories"() TO "anon";
 GRANT ALL ON FUNCTION "public"."update_transaction_categories"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."update_transaction_categories"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."update_transactions_for_deleted_global_filter"() TO "anon";
-GRANT ALL ON FUNCTION "public"."update_transactions_for_deleted_global_filter"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_transactions_for_deleted_global_filter"() TO "service_role";
-
 GRANT ALL ON FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"() TO "anon";
 GRANT ALL ON FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."update_transactions_for_new_global_filter"() TO "anon";
-GRANT ALL ON FUNCTION "public"."update_transactions_for_new_global_filter"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_transactions_for_new_global_filter"() TO "service_role";
-
 GRANT ALL ON FUNCTION "public"."update_transactions_for_new_global_plaid_filter"() TO "anon";
 GRANT ALL ON FUNCTION "public"."update_transactions_for_new_global_plaid_filter"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."update_transactions_for_new_global_plaid_filter"() TO "service_role";
-
-GRANT ALL ON FUNCTION "public"."update_transactions_for_updated_global_filter"() TO "anon";
-GRANT ALL ON FUNCTION "public"."update_transactions_for_updated_global_filter"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_transactions_for_updated_global_filter"() TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."update_transactions_for_updated_global_plaid_filter"() TO "anon";
 GRANT ALL ON FUNCTION "public"."update_transactions_for_updated_global_plaid_filter"() TO "authenticated";
