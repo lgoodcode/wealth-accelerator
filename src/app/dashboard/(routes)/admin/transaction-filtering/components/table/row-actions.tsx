@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DeleteFilterMenuItem } from '../delete-filter-menu-item';
+import { DeleteGlobalPlaidFilterMenuItem } from '../delete-global-plaid-filter-menu-item';
 import { UpdateGlobalPlaidFilterDialog } from '../update-global-plaid-filter-dialog';
 import { type Filter } from '@/lib/plaid/types/transactions';
 
@@ -42,7 +42,7 @@ export function RowActions({ row }: RowActionsProps) {
             Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DeleteFilterMenuItem row={row} />
+          <DeleteGlobalPlaidFilterMenuItem row={row} />
         </DropdownMenuContent>
       </DropdownMenu>
 

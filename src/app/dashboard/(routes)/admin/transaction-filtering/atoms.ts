@@ -2,8 +2,6 @@ import { atom } from 'jotai';
 
 import { Filter } from '@/lib/plaid/types/transactions';
 
-export const isUpdateDialogOpenAtom = atom(false);
-
 export const globalFiltersAtom = atom<Filter[] | null>(null);
 
 export const hasGlobalFilterAtom = atom(null, (get, _set, filter: string) => {
