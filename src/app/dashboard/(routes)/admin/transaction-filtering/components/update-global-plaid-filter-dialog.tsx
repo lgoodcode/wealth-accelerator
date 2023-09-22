@@ -85,7 +85,7 @@ export function UpdateGlobalPlaidFilterDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update filter</DialogTitle>
+          <DialogTitle>Update Filter</DialogTitle>
           <DialogDescription>
             Update category for <span className="font-bold">{filter.filter}</span>
           </DialogDescription>

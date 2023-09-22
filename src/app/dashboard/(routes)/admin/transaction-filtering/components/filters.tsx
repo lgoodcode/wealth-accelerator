@@ -24,7 +24,7 @@ export function Filters({ filtersData }: FiltersProps) {
     <div className="flex justify-center mx-auto lg:w-[1024px]">
       <Card className="w-full mt-8">
         <CardContent>
-          {filters ? <Loading className="mt-0 py-32" /> : <FiltersTable filters={filters} />}
+          {!filters ? <Loading className="mt-0 py-32" /> : <FiltersTable filters={filters} />}
         </CardContent>
       </Card>
     </div>

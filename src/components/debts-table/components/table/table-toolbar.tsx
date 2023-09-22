@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AddDebtDialog } from '../add-debt-dialog';
+import { CreateDebtDialog } from '../create-debt-dialog';
 import type { Debt } from '@/lib/types/debts';
 
 interface TableToolbarProps {
@@ -37,7 +37,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
         )}
       </div>
 
-      <AddDebtDialog />
+      <CreateDebtDialog />
     </div>
   );
 }

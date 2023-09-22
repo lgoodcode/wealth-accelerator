@@ -31,7 +31,7 @@ import { debtFormSchema, DebtFormType } from '../schema';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { PercentInput } from '@/components/ui/percent-input';
 
-export function AddDebtDialog() {
+export function CreateDebtDialog() {
   const createDebt = useCreateDebt();
   const [isOpen, setIsOpen] = useState(false);
   const form = useForm<DebtFormType>({
@@ -59,13 +59,13 @@ export function AddDebtDialog() {
       <DialogTrigger asChild>
         <Button className="h-8 px-2 lg:px-3">
           <PlusCircle className="mr-2 h-4 w-4" />
-          Add debt
+          Create Debt
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create debt</DialogTitle>
+          <DialogTitle>Create Debt</DialogTitle>
           <DialogDescription>Create a new debt to manage.</DialogDescription>
         </DialogHeader>
         <Form {...form}>

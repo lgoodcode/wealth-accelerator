@@ -64,7 +64,7 @@ export function UpdateDebtDialog({ open, onOpenChange, debt }: UpdateDebtDialogP
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update debt</DialogTitle>
+          <DialogTitle>Update Debt</DialogTitle>
           <DialogDescription>
             Update <span className="font-bold">{debt.description}</span>
           </DialogDescription>
