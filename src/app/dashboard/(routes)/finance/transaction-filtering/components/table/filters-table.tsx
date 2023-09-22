@@ -34,7 +34,6 @@ interface FiltersTableProps {
 
 export function FiltersTable({ filters }: FiltersTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = useState<string>('');
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable<Filter>({
@@ -42,12 +41,7 @@ export function FiltersTable({ filters }: FiltersTableProps) {
     columns,
     state: {
       sorting,
-      globalFilter,
       columnFilters,
-    },
-    globalFilterFn: (row, id, value) => {
-      const val: string = row.getValue<string>(id).toLowerCase();
-      return val.includes(value.toLowerCase());
     },
     enableHiding: false,
     autoResetPageIndex: false,
@@ -63,11 +57,7 @@ export function FiltersTable({ filters }: FiltersTableProps) {
 
   return (
     <div className="space-y-4 w-full">
-      <TableToolbar
-        table={table}
-        globalFilter={globalFilter}
-        setGlobalFilter={(value: string) => setGlobalFilter(value)}
-      />
+      <TableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

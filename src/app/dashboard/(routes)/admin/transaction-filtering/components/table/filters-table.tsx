@@ -43,10 +43,6 @@ export function FiltersTable({ filters }: FiltersTableProps) {
       sorting,
       columnFilters,
     },
-    globalFilterFn: (row, id, value) => {
-      const val: string = row.getValue<string>(id).toLowerCase();
-      return val.includes(value.toLowerCase());
-    },
     enableHiding: false,
     autoResetPageIndex: false,
     onSortingChange: setSorting,

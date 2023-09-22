@@ -12,26 +12,19 @@ import type { Filter } from '@/lib/plaid/types/transactions';
 
 interface TableToolbarProps {
   table: Table<Filter>;
-  globalFilter: string;
-  setGlobalFilter: (value: string) => void;
 }
 
-export function TableToolbar({ table, globalFilter, setGlobalFilter }: TableToolbarProps) {
+export function TableToolbar({ table }: TableToolbarProps) {
   const isFiltered =
     table.getPreFilteredRowModel().rows.length > table.getFilteredRowModel().rows.length;
-  const handleReset = () => {
-    setGlobalFilter('');
-    table.resetColumnFilters();
-    table.resetGlobalFilter();
-  };
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Filter filters..."
-          value={globalFilter}
-          onChange={(event) => setGlobalFilter(event.target.value)}
+          value={(table.getColumn('filter')?.getFilterValue() ?? '') as string}
+          onChange={(event) => table.getColumn('filter')?.setFilterValue(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
         {table.getColumn('category') && (
@@ -42,7 +35,11 @@ export function TableToolbar({ table, globalFilter, setGlobalFilter }: TableTool
           />
         )}
         {isFiltered && (
-          <Button variant="ghost" onClick={handleReset} className="h-8 px-2 lg:px-3">
+          <Button
+            variant="ghost"
+            onClick={() => table.resetColumnFilters()}
+            className="h-8 px-2 lg:px-3"
+          >
             Reset
             <X className="ml-2 h-4 w-4" />
           </Button>
