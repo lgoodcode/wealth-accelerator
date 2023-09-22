@@ -2,8 +2,6 @@ import { atom } from 'jotai';
 
 import { Debt } from '@/lib/types/debts';
 
-export const isUpdateDialogOpenAtom = atom(false);
-
 export const debtsAtom = atom<Debt[] | null>(null);
 
 export const addDebtAtom = atom(null, (_get, set, newDebt: Debt) => {
