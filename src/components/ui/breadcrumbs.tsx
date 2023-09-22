@@ -42,7 +42,7 @@ export const BreadcrumbItem = ({ children, className, href, active }: Breadcrumb
 
 export const Breadcrumbs = ({ children, className }: BreadcrumbProps) => {
   return (
-    <div className={cn('breadcrumbs overflow-x-auto py-2 text-sm', className)}>
+    <div className={cn('breadcrumbs overflow-x-auto text-sm', className)}>
       <ul className="flex items-center whitespace-nowrap min-h-fit">
         {Children.map(children, (child, i) => (
           <>

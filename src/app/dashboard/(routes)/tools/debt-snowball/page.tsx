@@ -27,7 +27,7 @@ export default async function DebtSnowballPage() {
   }
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-8">
       <div className="space-y-1">
         <div className="flex flex-row items-center">
           <h2 className="text-3xl font-bold">Debt Snowball</h2>

@@ -77,12 +77,12 @@ export function DebtSnowball({ debtsData, userId }: DebtSnowballProps) {
 
   return (
     <Tabs
-      className="w-full"
+      className="w-full space-y-8 mt-8"
       value={activeTab}
       onValueChange={(value) => setActiveTab(value as TabsValue)}
     >
-      <div className="relative mb-8 flex flex-row justify-center items-center gap-2">
-        <TabsList className="relative grid w-[480px] mx-auto grid-cols-3 mb-8">
+      <div className="relative flex flex-row justify-center items-center gap-2">
+        <TabsList className="relative grid w-[480px] mx-auto grid-cols-3">
           <TabsTrigger value={TabsValue.Inputs}>Inputs</TabsTrigger>
           <TabsTrigger value={TabsValue.Results} disabled={!debtCalculationResults}>
             Results
