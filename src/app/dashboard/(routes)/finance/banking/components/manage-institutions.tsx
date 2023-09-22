@@ -18,7 +18,11 @@ import { InstitutionSelection } from './institution-selection';
 import { RenameInstitutionDialog } from './rename-institution-dialog';
 import { DeleteInstitutionDialog } from './delete-institution-dialog';
 
-export function ManageInstitutions() {
+interface ManageInstitutionsProps {
+  disabled?: boolean;
+}
+
+export function ManageInstitutions({ disabled }: ManageInstitutionsProps) {
   const [showRenameDialog, setShowRenameDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const selectedInstitution = useAtomValue(selectedInstitutionAtom);
@@ -33,7 +37,7 @@ export function ManageInstitutions() {
 
   return (
     <div className="flex flex-col lg:flex-row w-full items-center justify-start">
-      <div className="w-full mr-auto py-4">
+      <div className="w-full mr-auto">
         {selectedInstitution && (
           <h2 className="text-4xl capitalize font-medium tracking-tighter">
             {selectedInstitution?.name ?? 'Select an institution'}
@@ -41,8 +45,8 @@ export function ManageInstitutions() {
         )}
       </div>
 
-      <div className="flex h-20 w-full justify-start lg:justify-end items-center space-x-2">
-        <InstitutionSelection />
+      <div className="flex w-full justify-start lg:justify-end items-center space-x-2">
+        <InstitutionSelection disabled={disabled} />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -21,7 +21,11 @@ import {
   CommandSeparator,
 } from '@/components/ui/command';
 
-export function InstitutionSelection() {
+interface InstitutionSelectionProps {
+  disabled?: boolean;
+}
+
+export function InstitutionSelection({ disabled }: InstitutionSelectionProps) {
   const { open, ready, isGettingLinkToken } = usePlaid();
   const [isOpen, setIsOpen] = useState(false);
   const institutions = useAtomValue(institutionsAtom);
@@ -36,6 +40,7 @@ export function InstitutionSelection() {
           variant="outline"
           role="combobox"
           aria-expanded={isOpen}
+          disabled={disabled}
           aria-label="Select an institution"
           className="w-[420px] flex items-center"
         >

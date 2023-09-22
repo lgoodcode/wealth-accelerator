@@ -30,7 +30,7 @@ export function ViewInstitutions() {
   }
 
   return (
-    <div className="flex py-4 items-center">
+    <div className="flex py-8 items-center">
       <Tabs
         className="w-full"
         value={selectedTab}
