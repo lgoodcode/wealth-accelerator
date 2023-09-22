@@ -14,31 +14,91 @@ import type { Filter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
 import { captureException } from '@sentry/nextjs';
 
-export const serverSyncTransactions = async (
-  item: Institution,
-  user_id?: string
-): Promise<ServerSyncTransactions> => {
-  const { error: filtersError, data: filtersData } = await supabaseAdmin // Need admin to access plaid_filters for all users
-    .from('plaid_filters')
+type GetFilters =
+  | {
+      isError: true;
+      data: ServerSyncTransactions;
+    }
+  | {
+      isError: false;
+      data: Filter[];
+    };
+
+const getGlobalFilters = async (): Promise<GetFilters> => {
+  const { error, data } = await supabaseAdmin // Need admin to access plaid_filters for all users
+    .from('global_plaid_filters')
     .select('*')
     .order('id', { ascending: true });
 
-  if (filtersError) {
+  if (error) {
     return {
-      error: {
-        status: 500,
-        general: filtersError,
-        plaid: null,
-        link_token: null,
-      },
+      isError: true,
       data: {
-        hasMore: false,
-        transactions: null,
-      },
+        error: {
+          status: 500,
+          general: error,
+          plaid: null,
+          link_token: null,
+        },
+        data: {
+          hasMore: false,
+          transactions: null,
+        },
+      } as ServerSyncTransactions,
     };
   }
 
-  const filters = filtersData as Filter[];
+  return {
+    isError: false,
+    data: data as Filter[],
+  };
+};
+
+const getUserFilters = async (user_id: string): Promise<GetFilters> => {
+  const { error, data } = await supabaseAdmin // Need admin to access plaid_filters for all users
+    .from('user_plaid_filters')
+    .select('id, filter, category')
+    .eq('user_id', user_id)
+    .order('id', { ascending: true });
+
+  if (error) {
+    return {
+      isError: true,
+      data: {
+        error: {
+          status: 500,
+          general: error,
+          plaid: null,
+          link_token: null,
+        },
+        data: {
+          hasMore: false,
+          transactions: null,
+        },
+      } as ServerSyncTransactions,
+    };
+  }
+
+  return {
+    isError: false,
+    data: data as Filter[],
+  };
+};
+
+export const serverSyncTransactions = async (
+  item: Institution
+): Promise<ServerSyncTransactions> => {
+  const { isError: globalFiltersIsError, data: globalFilters } = await getGlobalFilters();
+
+  if (globalFiltersIsError) {
+    return globalFilters;
+  }
+
+  const { isError: userFiltersIsError, data: userFilters } = await getUserFilters(item.user_id);
+
+  if (userFiltersIsError) {
+    return userFilters;
+  }
 
   try {
     const { data } = await plaidClient.transactionsSync({
@@ -46,11 +106,18 @@ export const serverSyncTransactions = async (
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
       count: PLAID_SYNC_BATCH_SIZE,
     });
-    const addedError = await addTransactions(item.item_id, data.added, filters, supabaseAdmin);
+    const addedError = await addTransactions(
+      item.item_id,
+      data.added,
+      userFilters,
+      globalFilters,
+      supabaseAdmin
+    );
     const updatedError = await updateTransactions(
       item.item_id,
       data.modified,
-      filters,
+      userFilters,
+      globalFilters,
       supabaseAdmin
     );
     const removedError = await removeTransactions(data.removed, supabaseAdmin);
@@ -118,9 +185,9 @@ export const serverSyncTransactions = async (
     let resetCursor = false;
 
     // Take the access token and use it to request a new link token from Plaid for update mode
-    if (isCredentialError && user_id) {
+    if (isCredentialError && item.user_id) {
       const response = await plaidClient.linkTokenCreate(
-        createLinkTokenRequest(user_id, item.access_token)
+        createLinkTokenRequest(item.user_id, item.access_token)
       );
       link_token = response.data.link_token;
       // If it's a sync mutation error, then we need to reset the cursor and try again

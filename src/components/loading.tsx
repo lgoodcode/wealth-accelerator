@@ -11,7 +11,7 @@ export function Loading({ className, title = 'Loading...', children, ...props }:
   return (
     <div
       className={cn(
-        'flex flex-row !mt-32 h-6 items-center justify-center pointer-events-none select-none',
+        'flex flex-row mt-32 h-6 items-center justify-center pointer-events-none select-none',
         className
       )}
       {...props}

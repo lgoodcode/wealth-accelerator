@@ -5,6 +5,7 @@ import { useAtomValue } from 'jotai';
 
 import { selectedInstitutionAtom } from '@/lib/plaid/atoms';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
 import { AccountsTable } from './accounts/table/accounts-table';
 import { TransactionsTable } from './transactions/table/transactions-table';
 
@@ -29,7 +30,7 @@ export function ViewInstitutions() {
   }
 
   return (
-    <div className="flex py-4 items-center">
+    <div className="flex py-8 items-center">
       <Tabs
         className="w-full"
         value={selectedTab}
@@ -44,10 +45,18 @@ export function ViewInstitutions() {
           <TabsTrigger value={TabsValue.Transactions}>Transactions</TabsTrigger>
         </TabsList>
         <TabsContent value={TabsValue.Accounts}>
-          <AccountsTable item_id={selectedInstitution.item_id} />
+          <Card className="mt-8">
+            <CardContent>
+              <AccountsTable item_id={selectedInstitution.item_id} />
+            </CardContent>
+          </Card>
         </TabsContent>
         <TabsContent value={TabsValue.Transactions}>
-          <TransactionsTable item={selectedInstitution} />
+          <Card className="mt-8">
+            <CardContent>
+              <TransactionsTable item={selectedInstitution} />
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

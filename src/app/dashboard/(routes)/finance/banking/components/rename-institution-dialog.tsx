@@ -67,7 +67,7 @@ export function RenameInstitutionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Rename institution</DialogTitle>
+          <DialogTitle>Rename Institution</DialogTitle>
           <DialogDescription>Set a new name for this institution.</DialogDescription>
         </DialogHeader>
         <Form {...form}>

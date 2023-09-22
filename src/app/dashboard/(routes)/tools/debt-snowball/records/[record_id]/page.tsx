@@ -63,7 +63,7 @@ export default async function DebtSnowballRecordPage({
   restoreLastArrayToLastZero(record.results.strategy.loan_payback.tracking);
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-8 space-y-8">
       <div className="space-y-2">
         <div className="space-y-1">
           <div className="flex flex-row justify-between items-center">
@@ -87,7 +87,7 @@ export default async function DebtSnowballRecordPage({
             {record.name}
           </BreadcrumbItem>
         </Breadcrumbs>
-        <Separator />
+        <Separator className="mt-6" />
       </div>
       <div className="flex flex-row justify-center w-full gap-6 flex-wrap">
         <DebtSnowballRecordId record={record} />

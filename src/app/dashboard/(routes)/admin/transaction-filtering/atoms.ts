@@ -4,10 +4,10 @@ import { Filter } from '@/lib/plaid/types/transactions';
 
 export const isUpdateDialogOpenAtom = atom(false);
 
-export const filtersAtom = atom<Filter[] | null>(null);
+export const globalFiltersAtom = atom<Filter[] | null>(null);
 
-export const hasFilterAtom = atom(null, (get, _set, filter: string) => {
-  const filters = get(filtersAtom);
+export const hasGlobalFilterAtom = atom(null, (get, _set, filter: string) => {
+  const filters = get(globalFiltersAtom);
 
   if (!filters) {
     return false;
@@ -16,8 +16,8 @@ export const hasFilterAtom = atom(null, (get, _set, filter: string) => {
   return filters.some((f) => f.filter === filter);
 });
 
-export const addFilterAtom = atom(null, (_get, set, newFilter: Filter) => {
-  set(filtersAtom, (filters) => {
+export const addGlobalFilterAtom = atom(null, (_get, set, newFilter: Filter) => {
+  set(globalFiltersAtom, (filters) => {
     if (!filters) {
       return [newFilter];
     }
@@ -26,8 +26,8 @@ export const addFilterAtom = atom(null, (_get, set, newFilter: Filter) => {
   });
 });
 
-export const updateFilterAtom = atom(null, (_get, set, updatedFilter: Filter) => {
-  set(filtersAtom, (filters) => {
+export const updateGlobalFilterAtom = atom(null, (_get, set, updatedFilter: Filter) => {
+  set(globalFiltersAtom, (filters) => {
     if (!filters) {
       throw new Error('filtersAtom is not initialized');
     }
@@ -45,8 +45,8 @@ export const updateFilterAtom = atom(null, (_get, set, updatedFilter: Filter) =>
   });
 });
 
-export const removeFilterAtom = atom(null, (_get, set, id: number) => {
-  set(filtersAtom, (filters) => {
+export const removeGlobalFilterAtom = atom(null, (_get, set, id: number) => {
+  set(globalFiltersAtom, (filters) => {
     if (!filters) {
       throw new Error('filtersAtom is not initialized');
     }

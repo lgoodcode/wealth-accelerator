@@ -10,12 +10,16 @@ import type { DebtSnowballRecord } from '../../../types';
 interface TableToolbarProps {
   table: Table<DebtSnowballRecord>;
   globalFilter: string;
-  handleGlobalFilter: (value: string) => void;
+  setGlobalFilter: (value: string) => void;
 }
 
-export function TableToolbar({ table, globalFilter, handleGlobalFilter }: TableToolbarProps) {
+export function TableToolbar({ table, globalFilter, setGlobalFilter }: TableToolbarProps) {
   const isFiltered =
     table.getPreFilteredRowModel().rows.length > table.getFilteredRowModel().rows.length;
+  const handleReset = () => {
+    setGlobalFilter('');
+    table.resetGlobalFilter();
+  };
 
   return (
     <div className="flex items-center justify-between">
@@ -23,15 +27,11 @@ export function TableToolbar({ table, globalFilter, handleGlobalFilter }: TableT
         <Input
           placeholder="Filter records..."
           value={globalFilter}
-          onChange={(event) => handleGlobalFilter(event.target.value)}
+          onChange={(event) => setGlobalFilter(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
         {isFiltered && (
-          <Button
-            variant="ghost"
-            onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3"
-          >
+          <Button variant="ghost" onClick={handleReset} className="h-8 px-2 lg:px-3">
             Reset
             <X className="ml-2 h-4 w-4" />
           </Button>

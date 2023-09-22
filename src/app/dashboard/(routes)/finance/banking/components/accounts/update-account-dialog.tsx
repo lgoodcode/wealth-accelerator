@@ -93,7 +93,7 @@ export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDi
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update account</DialogTitle>
+          <DialogTitle>Update Account</DialogTitle>
           <DialogDescription>
             Update information for <span className="font-bold">{row.original.name}</span>
           </DialogDescription>

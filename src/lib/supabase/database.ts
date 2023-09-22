@@ -255,6 +255,37 @@ export interface Database {
           }
         ]
       }
+      debt_snowballs: {
+        Row: {
+          created_at: string
+          debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          debts: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
+          id: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          debts?: Database["public"]["CompositeTypes"]["debt_snowball_debt"][]
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "debt_snowballs_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       debts: {
         Row: {
           amount: number
@@ -291,6 +322,24 @@ export interface Database {
             referencedColumns: ["id"]
           }
         ]
+      }
+      global_plaid_filters: {
+        Row: {
+          category: Database["public"]["Enums"]["category"]
+          filter: string
+          id: number
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["category"]
+          filter: string
+          id?: number
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["category"]
+          filter?: string
+          id?: number
+        }
+        Relationships: []
       }
       personal_finance: {
         Row: {
@@ -409,51 +458,39 @@ export interface Database {
           }
         ]
       }
-      plaid_filters: {
-        Row: {
-          category: Database["public"]["Enums"]["category"]
-          filter: string
-          id: number
-        }
-        Insert: {
-          category: Database["public"]["Enums"]["category"]
-          filter: string
-          id?: number
-        }
-        Update: {
-          category?: Database["public"]["Enums"]["category"]
-          filter?: string
-          id?: number
-        }
-        Relationships: []
-      }
       plaid_transactions: {
         Row: {
           account_id: string
           amount: number
           category: Database["public"]["Enums"]["category"]
           date: string
+          global_filter_id: number | null
           id: string
           item_id: string
           name: string
+          user_filter_id: number | null
         }
         Insert: {
           account_id: string
           amount: number
           category: Database["public"]["Enums"]["category"]
           date: string
+          global_filter_id?: number | null
           id: string
           item_id: string
           name: string
+          user_filter_id?: number | null
         }
         Update: {
           account_id?: string
           amount?: number
           category?: Database["public"]["Enums"]["category"]
           date?: string
+          global_filter_id?: number | null
           id?: string
           item_id?: string
           name?: string
+          user_filter_id?: number | null
         }
         Relationships: [
           {
@@ -463,10 +500,50 @@ export interface Database {
             referencedColumns: ["account_id"]
           },
           {
+            foreignKeyName: "plaid_transactions_global_filter_id_fkey"
+            columns: ["global_filter_id"]
+            referencedRelation: "global_plaid_filters"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "plaid_transactions_item_id_fkey"
             columns: ["item_id"]
             referencedRelation: "plaid"
             referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "plaid_transactions_user_filter_id_fkey"
+            columns: ["user_filter_id"]
+            referencedRelation: "user_plaid_filters"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      user_plaid_filters: {
+        Row: {
+          category: Database["public"]["Enums"]["category"]
+          filter: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["category"]
+          filter: string
+          id?: number
+          user_id: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["category"]
+          filter?: string
+          id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_plaid_filters_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -647,47 +724,21 @@ export interface Database {
           account: string
         }[]
       }
-      gtrgm_compress: {
-        Args: {
-          "": unknown
-        }
-        Returns: unknown
-      }
-      gtrgm_decompress: {
-        Args: {
-          "": unknown
-        }
-        Returns: unknown
-      }
-      gtrgm_in: {
-        Args: {
-          "": unknown
-        }
-        Returns: unknown
-      }
-      gtrgm_options: {
-        Args: {
-          "": unknown
-        }
-        Returns: undefined
-      }
-      gtrgm_out: {
-        Args: {
-          "": unknown
-        }
-        Returns: unknown
-      }
       is_admin:
+        | {
+            Args: Record<PropertyKey, never>
+            Returns: boolean
+          }
         | {
             Args: {
               user_id: string
             }
             Returns: boolean
           }
-        | {
-            Args: Record<PropertyKey, never>
-            Returns: boolean
-          }
+      is_authenticated: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       is_email_used: {
         Args: {
           email: string
@@ -709,22 +760,6 @@ export interface Database {
       owns_debt_snowball_results_record: {
         Args: Record<PropertyKey, never>
         Returns: boolean
-      }
-      set_limit: {
-        Args: {
-          "": number
-        }
-        Returns: number
-      }
-      show_limit: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      show_trgm: {
-        Args: {
-          "": string
-        }
-        Returns: unknown
       }
       total_waa_before_date: {
         Args: {

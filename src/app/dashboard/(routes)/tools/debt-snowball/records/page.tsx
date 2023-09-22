@@ -30,13 +30,10 @@ export default async function DebtSnowballRecordsPage() {
   const records = data as unknown as DebtSnowballRecord[];
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-8 space-y-8">
       <div className="space-y-2">
         <div className="space-y-1">
           <h2 className="text-3xl font-bold">Debt Snowball Records</h2>
-          <p className="text-muted-foreground">
-            Click a record to view the saved calculations from the Debt Snowball.
-          </p>
         </div>
         <Breadcrumbs>
           <BreadcrumbItem active>

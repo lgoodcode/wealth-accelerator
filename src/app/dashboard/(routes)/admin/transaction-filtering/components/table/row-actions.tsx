@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { DeleteFilterMenuItem } from '../delete-filter-menu-item';
-import { UpdateFilterDialog } from '../update-filter-dialog';
+import { UpdateGlobalPlaidFilterDialog } from '../update-global-plaid-filter-dialog';
 import { type Filter } from '@/lib/plaid/types/transactions';
 
 interface RowActionsProps {
@@ -46,7 +46,7 @@ export function RowActions({ row }: RowActionsProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <UpdateFilterDialog
+      <UpdateGlobalPlaidFilterDialog
         open={showUpdateDialog}
         onOpenChange={handleUpdateDialogOpenChange}
         filter={row.original}

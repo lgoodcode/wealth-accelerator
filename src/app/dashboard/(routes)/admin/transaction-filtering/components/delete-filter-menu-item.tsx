@@ -4,7 +4,7 @@ import { Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { useDeleteFilter } from '../hooks/use-delete-filter';
+import { useDeleteGlobalPlaidFilter } from '../hooks/use-delete-global-plaid-filter';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
 interface DeleteFilterMenuItemProps {
@@ -12,7 +12,7 @@ interface DeleteFilterMenuItemProps {
 }
 
 export function DeleteFilterMenuItem({ row }: DeleteFilterMenuItemProps) {
-  const deleteFilter = useDeleteFilter();
+  const deleteFilter = useDeleteGlobalPlaidFilter();
 
   const handleDeleteFilter = async () => {
     await deleteFilter(row.original.id)

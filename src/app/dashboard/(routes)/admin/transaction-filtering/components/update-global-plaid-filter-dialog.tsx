@@ -30,8 +30,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useUpdateFilter } from '../hooks/use-update-filter';
-import { updateFilterFormSchema, type UpdateFilterFormType } from '../schema';
+import { useUpdateGlobalPlaidFilter } from '../hooks/use-update-global-plaid-filter';
+import { updateGlobalFilterFormSchema, type UpdateGlobalFilterFormType } from '../schema';
 import { Category, type Filter } from '@/lib/plaid/types/transactions';
 
 interface UpdateFilterDialogProps {
@@ -40,22 +40,31 @@ interface UpdateFilterDialogProps {
   filter: Filter;
 }
 
-export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterDialogProps) {
-  const updateFilter = useUpdateFilter();
+export function UpdateGlobalPlaidFilterDialog({
+  open,
+  onOpenChange,
+  filter,
+}: UpdateFilterDialogProps) {
+  const updateFilter = useUpdateGlobalPlaidFilter();
   const queryClient = useQueryClient();
-  const form = useForm<UpdateFilterFormType>({
-    resolver: zodResolver(updateFilterFormSchema),
+  const form = useForm<UpdateGlobalFilterFormType>({
+    resolver: zodResolver(updateGlobalFilterFormSchema),
     values: {
       category: filter.category,
     },
   });
 
-  const handleUpdate = async (data: UpdateFilterFormType) => {
+  const handleUpdate = async (data: UpdateGlobalFilterFormType) => {
     await updateFilter(filter.id, data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ['transactions'] });
         onOpenChange(false);
+        toast.success(
+          <span>
+            Updated filter <span className="font-bold">{filter.filter}</span>
+          </span>
+        );
       })
       .catch((error) => {
         console.error(error);
@@ -76,7 +85,7 @@ export function UpdateFilterDialog({ open, onOpenChange, filter }: UpdateFilterD
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update filter</DialogTitle>
+          <DialogTitle>Update Filter</DialogTitle>
           <DialogDescription>
             Update category for <span className="font-bold">{filter.filter}</span>
           </DialogDescription>

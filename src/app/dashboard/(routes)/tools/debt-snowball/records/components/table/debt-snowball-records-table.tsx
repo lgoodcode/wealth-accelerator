@@ -38,7 +38,6 @@ export function DebtSnowballRecordsTable({ records }: DebtSnowballRecordsTablePr
   const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>('');
-  const handleGlobalFilter = (value: string) => setGlobalFilter(value);
 
   const onRowClick = (row: Row<DebtSnowballRecord>) => {
     router.push(`/dashboard/tools/debt-snowball/records/${row.original.id}`);
@@ -78,7 +77,7 @@ export function DebtSnowballRecordsTable({ records }: DebtSnowballRecordsTablePr
       <TableToolbar
         table={table}
         globalFilter={globalFilter}
-        handleGlobalFilter={handleGlobalFilter}
+        setGlobalFilter={(value: string) => setGlobalFilter(value)}
       />
       <div className="rounded-md border">
         <Table>

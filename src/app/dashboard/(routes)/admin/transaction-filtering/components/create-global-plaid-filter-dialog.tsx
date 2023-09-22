@@ -7,7 +7,7 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
-import { createFilterFormSchema, type CreateFilterFormType } from '../schema';
+import { createGlobalFilterFormSchema, type CreateGlobalFilterFormType } from '../schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -35,23 +35,23 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useCreateFilter } from '../hooks/use-create-filter';
-import { hasFilterAtom } from '../atoms';
+import { useCreateGlobalPlaidFilter } from '../hooks/use-create-global-plaid-filter';
+import { hasGlobalFilterAtom } from '../atoms';
 import { Category } from '@/lib/plaid/types/transactions';
 
-export function AddFilterDialog() {
-  const createFilter = useCreateFilter();
+export function CreateGlobalPlaidFilterDialog() {
+  const createFilter = useCreateGlobalPlaidFilter();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
-  const hasFilter = useSetAtom(hasFilterAtom);
-  const form = useForm<CreateFilterFormType>({
-    resolver: zodResolver(createFilterFormSchema),
+  const hasFilter = useSetAtom(hasGlobalFilterAtom);
+  const form = useForm<CreateGlobalFilterFormType>({
+    resolver: zodResolver(createGlobalFilterFormSchema),
     resetOptions: {
       keepValues: true,
     },
   });
 
-  const handleCreate = async (data: CreateFilterFormType) => {
+  const handleCreate = async (data: CreateGlobalFilterFormType) => {
     if (hasFilter(data.filter)) {
       form.setError('filter', {
         type: 'manual',
@@ -65,6 +65,11 @@ export function AddFilterDialog() {
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ['transactions'] });
         setIsOpen(false);
+        toast.success(
+          <span>
+            Created filter <span className="font-bold">{data.filter}</span>
+          </span>
+        );
       })
       .catch((error) => {
         if (error?.code === '23505') {
@@ -91,19 +96,21 @@ export function AddFilterDialog() {
       <DialogTrigger asChild>
         <Button className="h-8 px-2 lg:px-3">
           <PlusCircle className="mr-2 h-4 w-4" />
-          Add Filter
+          Create Filter
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader className="space-y-4">
-          <DialogTitle>Create Filter</DialogTitle>
-          <DialogDescription className="space-y-2">
-            <p>Create a new filter to categorize transactions when received from Plaid.</p>
-            <p>
+          <DialogTitle>Create Global Plaid Filter</DialogTitle>
+          <DialogDescription className="flex flex-col space-y-2">
+            <span>
+              Create a new filter to categorize transactions received from Plaid for all users.
+            </span>
+            <span>
               <span className="font-bold">Note:</span> all the filters are case-insensitive and will
               be formatted to lowercase.
-            </p>
+            </span>
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

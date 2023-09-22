@@ -2,43 +2,13 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 
+import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
 import type { Debt } from '@/lib/types/debts';
-import { dollarFormatter } from '@/lib/utils/dollar-formatter';
-
-/**
- * NOTES
- *
- * `row.getValue<string>('name')`, when retrieving the value of a column, specify the type of the value
- * to ensure that the value is of the correct type.
- *
- * The filterFn `value` is the value set from the table.getColumn('date')?.setFilterValue() call.
- */
 
 export const columns = (rowActions: boolean, enableHeaderOptions = true): ColumnDef<Debt>[] => {
   const cols: ColumnDef<Debt>[] = [
-    // {
-    //   id: 'select',
-    //   enableSorting: false,
-    //   enableHeaderOptions: false,
-    //   header: ({ table }) => (
-    //     <Checkbox
-    //       checked={table.getIsAllPageRowsSelected()}
-    //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-    //       aria-label="Select all"
-    //       className="translate-y-[2px]"
-    //     />
-    //   ),
-    //   cell: ({ row }) => (
-    //     <Checkbox
-    //       checked={row.getIsSelected()}
-    //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-    //       aria-label="Select row"
-    //       className="translate-y-[2px]"
-    //     />
-    //   ),
-    // },
     {
       accessorKey: 'description',
       enableHiding: false,
