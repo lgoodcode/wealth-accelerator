@@ -9,8 +9,8 @@ import type { Filter, Transaction as ParsedTransaction } from '@/lib/plaid/types
 export const parseTransactions = async (
   item_id: string,
   transactions: Transaction[],
-  global_filters: Filter[],
-  user_filters: Filter[]
+  user_filters: Filter[],
+  global_filters: Filter[]
 ): Promise<ParsedTransaction[]> => {
   return transactions.map((transaction) => {
     const { category, filter_id, filter_type } = parseCategory(

@@ -1027,13 +1027,13 @@ ALTER TABLE ONLY "public"."plaid_transactions"
     ADD CONSTRAINT "plaid_transactions_account_id_fkey" FOREIGN KEY ("account_id") REFERENCES "public"."plaid_accounts"("account_id") ON DELETE CASCADE;
 
 ALTER TABLE ONLY "public"."plaid_transactions"
-    ADD CONSTRAINT "plaid_transactions_global_filter_id_fkey" FOREIGN KEY ("global_filter_id") REFERENCES "public"."global_plaid_filters"("id");
+    ADD CONSTRAINT "plaid_transactions_global_filter_id_fkey" FOREIGN KEY ("global_filter_id") REFERENCES "public"."global_plaid_filters"("id") ON DELETE SET NULL;
 
 ALTER TABLE ONLY "public"."plaid_transactions"
     ADD CONSTRAINT "plaid_transactions_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "public"."plaid"("item_id") ON DELETE CASCADE;
 
 ALTER TABLE ONLY "public"."plaid_transactions"
-    ADD CONSTRAINT "plaid_transactions_user_filter_id_fkey" FOREIGN KEY ("user_filter_id") REFERENCES "public"."user_plaid_filters"("id");
+    ADD CONSTRAINT "plaid_transactions_user_filter_id_fkey" FOREIGN KEY ("user_filter_id") REFERENCES "public"."user_plaid_filters"("id") ON DELETE SET NULL;
 
 ALTER TABLE ONLY "public"."plaid"
     ADD CONSTRAINT "plaid_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id");
@@ -1052,13 +1052,13 @@ CREATE POLICY "Admin can update plaid creative_cash_flow_notifiers data" ON "pub
 
 CREATE POLICY "Admin can view plaid creative_cash_flow_notifiers data" ON "public"."creative_cash_flow_notifiers" FOR SELECT TO "authenticated" USING ("public"."is_admin"("auth"."uid"()));
 
+CREATE POLICY "Admins can delete global plaid filters" ON "public"."global_plaid_filters" FOR DELETE TO "authenticated" USING (( SELECT "public"."is_admin"() AS "is_admin"));
+
 CREATE POLICY "Admins can delete users" ON "public"."users" FOR DELETE TO "authenticated" USING ("public"."is_admin"("auth"."uid"()));
 
 CREATE POLICY "Admins can insert global plaid filters" ON "public"."global_plaid_filters" FOR INSERT TO "authenticated" WITH CHECK (( SELECT "public"."is_admin"() AS "is_admin"));
 
 CREATE POLICY "Admins can update global plaid filters" ON "public"."global_plaid_filters" FOR UPDATE TO "authenticated" USING (( SELECT "public"."is_admin"() AS "is_admin"));
-
-CREATE POLICY "Admins can view global plaid filters" ON "public"."global_plaid_filters" FOR SELECT TO "authenticated" USING (( SELECT "public"."is_admin"() AS "is_admin"));
 
 CREATE POLICY "Can delete own CCF data" ON "public"."creative_cash_flow" FOR DELETE TO "authenticated" USING (("auth"."uid"() = "user_id"));
 
