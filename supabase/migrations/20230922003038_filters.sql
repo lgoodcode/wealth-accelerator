@@ -1,17 +1,24 @@
-CREATE OR REPLACE FUNCTION update_transactions_for_updated_global_filter()
+
+
+-- Only allow the "name" column to be updated
+CREATE OR REPLACE FUNCTION handle_update_global_plaid_filter()
 RETURNS TRIGGER AS $$
 BEGIN
-  UPDATE plaid_transactions
-  SET category = NEW.category
-  WHERE global_filter_id = NEW.id;
-  RETURN NULL;
+  IF NEW.id <> OLD.id THEN
+    RAISE EXCEPTION 'Updating "id" is not allowed';
+  END IF;
+  IF NEW.filter <> OLD.filter THEN
+    RAISE EXCEPTION 'Updating "filter" is not allowed';
+  END IF;
+
+  RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION update_transactions_for_updated_global_filter() OWNER TO postgres;
+ALTER FUNCTION handle_update_global_plaid_filter() OWNER TO postgres;
 
-DROP TRIGGER IF EXISTS on_delete_global_plaid_filter ON global_plaid_filters;
-CREATE TRIGGER on_delete_global_plaid_filter
-  AFTER UPDATE ON global_plaid_filters
+DROP TRIGGER IF EXISTS on_update_global_plaid_filter ON global_plaid_filters;
+CREATE TRIGGER on_update_global_plaid_filter
+  BEFORE UPDATE ON global_plaid_filters
     FOR EACH ROW
-      EXECUTE FUNCTION update_transactions_for_updated_global_filter();
+      EXECUTE PROCEDURE handle_update_global_plaid_filter();

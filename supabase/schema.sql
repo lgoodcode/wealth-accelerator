@@ -469,7 +469,7 @@ CREATE POLICY "Admins can delete global plaid filters" ON global_plaid_filters
   TO authenticated
   USING ((SELECT is_admin()));
 
-CREATE OR REPLACE FUNCTION update_transactions_for_new_global_filter()
+CREATE OR REPLACE FUNCTION update_transactions_for_new_global_plaid_filter()
 RETURNS TRIGGER AS $$
 BEGIN
   UPDATE plaid_transactions
@@ -482,16 +482,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
 
-ALTER FUNCTION update_transactions_for_new_global_filter() OWNER TO postgres;
+ALTER FUNCTION update_transactions_for_new_global_plaid_filter() OWNER TO postgres;
 
 DROP TRIGGER IF EXISTS on_insert_global_plaid_filter ON global_plaid_filters;
 CREATE TRIGGER on_insert_global_plaid_filter
   AFTER INSERT ON global_plaid_filters
     FOR EACH ROW
-      EXECUTE FUNCTION update_transactions_for_new_global_filter();
+      EXECUTE FUNCTION update_transactions_for_new_global_plaid_filter();
 
 -- When a global filter is deleted, update the category of all transactions that were using it
-CREATE OR REPLACE FUNCTION update_transactions_for_deleted_global_filter()
+CREATE OR REPLACE FUNCTION update_transactions_for_deleted_global_plaid_filter()
 RETURNS TRIGGER AS $$
 BEGIN
   UPDATE plaid_transactions
@@ -504,15 +504,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION update_transactions_for_deleted_global_filter() OWNER TO postgres;
+ALTER FUNCTION update_transactions_for_deleted_global_plaid_filter() OWNER TO postgres;
 
 DROP TRIGGER IF EXISTS on_delete_global_plaid_filter ON global_plaid_filters;
 CREATE TRIGGER on_delete_global_plaid_filter
   BEFORE DELETE ON global_plaid_filters
     FOR EACH ROW
-      EXECUTE FUNCTION update_transactions_for_deleted_global_filter();
+      EXECUTE FUNCTION update_transactions_for_deleted_global_plaid_filter();
 
-CREATE OR REPLACE FUNCTION update_transactions_for_updated_global_filter()
+CREATE OR REPLACE FUNCTION update_transactions_for_updated_global_plaid_filter()
 RETURNS TRIGGER AS $$
 BEGIN
   UPDATE plaid_transactions
@@ -522,15 +522,36 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION update_transactions_for_updated_global_filter() OWNER TO postgres;
+ALTER FUNCTION update_transactions_for_updated_global_plaid_filter() OWNER TO postgres;
 
 DROP TRIGGER IF EXISTS on_delete_global_plaid_filter ON global_plaid_filters;
 CREATE TRIGGER on_delete_global_plaid_filter
   AFTER UPDATE ON global_plaid_filters
     FOR EACH ROW
-      EXECUTE FUNCTION update_transactions_for_updated_global_filter();
+      EXECUTE FUNCTION update_transactions_for_updated_global_plaid_filter();
 
+-- Only allow the "category" column to be updated
+CREATE OR REPLACE FUNCTION handle_update_global_plaid_filter()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.id <> OLD.id THEN
+    RAISE EXCEPTION 'Updating "id" is not allowed';
+  END IF;
+  IF NEW.filter <> OLD.filter THEN
+    RAISE EXCEPTION 'Updating "filter" is not allowed';
+  END IF;
 
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION handle_update_global_plaid_filter() OWNER TO postgres;
+
+DROP TRIGGER IF EXISTS on_update_global_plaid_filter ON global_plaid_filters;
+CREATE TRIGGER on_update_global_plaid_filter
+  BEFORE UPDATE ON global_plaid_filters
+    FOR EACH ROW
+      EXECUTE PROCEDURE handle_update_global_plaid_filter();
 
 
 
