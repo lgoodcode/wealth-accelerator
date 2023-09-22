@@ -91,7 +91,7 @@ export function AuthHelper() {
             </div>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-64" align="end">
+        <DropdownMenuContent className="w-64 h-[600px] overflow-y-auto" align="end">
           <TestUsers />
         </DropdownMenuContent>
       </DropdownMenu>
