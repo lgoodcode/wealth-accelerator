@@ -65,6 +65,11 @@ export function CreateGlobalPlaidFilterDialog() {
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ['transactions'] });
         setIsOpen(false);
+        toast.success(
+          <span>
+            Created filter <span className="font-bold">{data.filter}</span>
+          </span>
+        );
       })
       .catch((error) => {
         if (error?.code === '23505') {
