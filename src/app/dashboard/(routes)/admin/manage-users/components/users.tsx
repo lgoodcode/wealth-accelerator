@@ -20,15 +20,11 @@ export function Users({ usersData }: FiltersProps) {
     setUsers(usersData);
   }, []);
 
-  if (!users) {
-    return <Loading />;
-  }
-
   return (
     <div className="flex justify-center mx-auto lg:w-[1024px]">
       <Card className="w-full mt-8">
         <CardContent>
-          <UsersTable users={users} />
+          {!users ? <Loading className="mt-0 py-32" /> : <UsersTable users={users} />}
         </CardContent>
       </Card>
     </div>
