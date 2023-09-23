@@ -85,7 +85,7 @@ export function UpdateUserPlaidFilterDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update Filter</DialogTitle>
+          <DialogTitle>Update User Plaid Filter</DialogTitle>
           <DialogDescription>
             Update category for <span className="font-bold">{filter.filter}</span>
           </DialogDescription>

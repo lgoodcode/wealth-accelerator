@@ -1,3 +1,6 @@
+
+
+
 CREATE OR REPLACE FUNCTION create_user_plaid_filter(
   _filter user_plaid_filters,
   user_override boolean,
@@ -62,7 +65,6 @@ ALTER FUNCTION create_user_plaid_filter(
 
 
 
-
 -- When a user filter is deleted, if the user selected a global filter to use,
 -- then we will update the transactions to use the global filter instead.
 CREATE OR REPLACE FUNCTION delete_user_plaid_filter(filter_id int, global_filter_id int DEFAULT NULL)
@@ -97,3 +99,36 @@ ALTER FUNCTION delete_user_plaid_filter(
   filter_id int,
   global_filter_id int
 ) OWNER TO postgres;
+
+
+
+-- Only allow the "category" column to be updated and update the transactions
+-- that use this filter is connected to
+CREATE OR REPLACE FUNCTION update_user_plaid_filter()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.id <> OLD.id THEN
+    RAISE EXCEPTION 'Updating "id" is not allowed';
+  END IF;
+  IF NEW.user_id <> OLD.user_id THEN
+    RAISE EXCEPTION 'Updating "user_id" is not allowed';
+  END IF;
+  IF NEW.filter <> OLD.filter THEN
+    RAISE EXCEPTION 'Updating "filter" is not allowed';
+  END IF;
+
+  UPDATE plaid_transactions
+  SET category = NEW.category
+  WHERE user_filter_id = NEW.id;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION update_user_plaid_filter() OWNER TO postgres;
+
+DROP TRIGGER IF EXISTS on_update_user_plaid_filter ON user_plaid_filters;
+CREATE TRIGGER on_update_user_plaid_filter
+  BEFORE UPDATE ON user_plaid_filters
+    FOR EACH ROW
+      EXECUTE PROCEDURE update_user_plaid_filter();
