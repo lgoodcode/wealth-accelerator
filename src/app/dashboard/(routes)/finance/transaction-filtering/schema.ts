@@ -4,7 +4,7 @@ import { Category } from '@/lib/plaid/types/transactions';
 
 export const updateUserFilterFormSchema = z.object({
   category: z.nativeEnum(Category, {
-    required_error: 'Please select a category for this filter.',
+    required_error: 'Please select a category for this filter',
   }),
 });
 
