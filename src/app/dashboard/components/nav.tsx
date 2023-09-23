@@ -4,7 +4,7 @@ import { forwardRef } from 'react';
 import Link from 'next/link';
 import { LucideIcon } from 'lucide-react';
 
-import { financeRoutes, toolsRoutes, adminRoutes, exampleRoutes } from '@/config/routes';
+import { financeRoutes, toolsRoutes, adminRoutes } from '@/config/routes';
 import { cn } from '@/lib/utils/cn';
 import {
   NavigationMenu,
@@ -106,21 +106,6 @@ export function Nav({ className, isAdmin }: NavProps) {
                     </ListItem>
                   )
                 )}
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-        )}
-
-        {process.env.NODE_ENV === 'development' && (
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>Examples</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                {exampleRoutes.map((route) => (
-                  <ListItem key={route.path} title={route.name} href={route.path} Icon={route.Icon}>
-                    {route.description}
-                  </ListItem>
-                ))}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
