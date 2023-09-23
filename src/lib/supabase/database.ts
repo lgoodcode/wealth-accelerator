@@ -510,6 +510,12 @@ export interface Database {
             columns: ["item_id"]
             referencedRelation: "plaid"
             referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "plaid_transactions_user_filter_id_fkey"
+            columns: ["user_filter_id"]
+            referencedRelation: "user_plaid_filters"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -627,11 +633,16 @@ export interface Database {
       }
       create_user_plaid_filter: {
         Args: {
-          _filter: Database["public"]["CompositeTypes"]["user_plaid_filter"]
+          _filter: unknown
           user_override: boolean
           global_override: boolean
         }
-        Returns: undefined
+        Returns: {
+          category: Database["public"]["Enums"]["category"]
+          filter: string
+          id: number
+          user_id: string
+        }
       }
       delete_snowball_record: {
         Args: {
@@ -835,11 +846,6 @@ export interface Database {
         total_amount: number
         snowball_tracking: unknown
         loan_payback: Database["public"]["CompositeTypes"]["loan_payback_type"]
-      }
-      user_plaid_filter: {
-        user_id: string
-        filter: string
-        category: Database["public"]["Enums"]["category"]
       }
     }
   }

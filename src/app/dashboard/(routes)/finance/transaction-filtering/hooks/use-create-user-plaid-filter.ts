@@ -18,8 +18,8 @@ export const useCreateUserPlaidFilter = () => {
           filter: data.filter,
           category: data.category,
         },
-        user_override: data.user_override,
-        global_override: data.global_override,
+        user_override: data.user_override ?? false,
+        global_override: data.global_override ?? false,
       })
       .select('*')
       .single();

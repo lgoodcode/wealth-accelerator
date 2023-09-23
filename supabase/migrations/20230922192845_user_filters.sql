@@ -1,67 +1,61 @@
-DROP TYPE IF EXISTS user_plaid_filter;
-CREATE TYPE user_plaid_filter AS (
-  user_id uuid,
-  filter text,
-  category category
-);
-
 CREATE OR REPLACE FUNCTION create_user_plaid_filter(
-  _filter user_plaid_filter,
+  _filter user_plaid_filters,
   user_override boolean,
   global_override boolean
 )
-RETURNS VOID AS $$
+RETURNS user_plaid_filters AS $$
 DECLARE
-  filter_id int;
+  new_filter user_plaid_filters;
 BEGIN
   INSERT INTO user_plaid_filters (user_id, filter, category)
   VALUES (_filter.user_id, _filter.filter, _filter.category)
-  RETURNING id INTO filter_id;
+  RETURNING * INTO new_filter;
+
+  -- Create a temporary table of transaction id's that belong to the user and match the filter
+  CREATE TEMP TABLE temp_transactions AS
+  SELECT pt.id
+  FROM plaid_transactions pt
+  JOIN plaid p ON p.item_id = pt.item_id
+  WHERE p.user_id = _filter.user_id
+    AND LOWER(pt.name) LIKE '%' || LOWER(_filter.filter) || '%';
 
   -- Override any filter
   IF user_override AND global_override THEN
     UPDATE plaid_transactions pt
     SET category = _filter.category,
-      user_filter_id = filter_id,
+      user_filter_id = new_filter.id,
       global_filter_id = NULL
-    FROM plaid p
-    WHERE p.item_id = pt.item_id
-      AND p.user_id = _filter.user_id
-      AND LOWER(name) LIKE '%' || LOWER(_filter.filter) || '%';
+    WHERE pt.id IN (SELECT id FROM temp_transactions);
   -- Override any existing user filter but not existing global
   ELSIF user_override THEN
     UPDATE plaid_transactions pt
-    SET category = _filter.category, user_filter_id = filter_id
-    FROM plaid p
-    WHERE p.item_id = pt.item_id
-      AND p.user_id = _filter.user_id
-      AND global_filter_id IS NULL
-      AND LOWER(name) LIKE '%' || LOWER(_filter.filter) || '%';
+    SET category = _filter.category, user_filter_id = new_filter.id
+    WHERE global_filter_id IS NULL
+      AND pt.id IN (SELECT id FROM temp_transactions);
   -- Override any existing global filter but not existing user
   ELSIF global_override THEN
     UPDATE plaid_transactions pt
     SET category = _filter.category,
-      user_filter_id = filter_id,
+      user_filter_id = new_filter.id,
       global_filter_id = NULL
-    WHERE p.item_id = pt.item_id
-      AND p.user_id = _filter.user_id
-      AND user_filter_id IS NULL
-      AND LOWER(name) LIKE '%' || LOWER(_filter.filter) || '%';
+    WHERE user_filter_id IS NULL
+      AND pt.id IN (SELECT id FROM temp_transactions);
   -- Only update transactions that don't have a filter
   ELSE
     UPDATE plaid_transactions pt
-    SET category = _filter.category, user_filter_id = filter_id
-    WHERE p.item_id = pt.item_id
-      AND p.user_id = _filter.user_id
-      AND user_filter_id IS NULL
+    SET category = _filter.category, user_filter_id = new_filter.id
+    WHERE user_filter_id IS NULL
       AND global_filter_id IS NULL
-      AND LOWER(name) LIKE '%' || LOWER(_filter.filter) || '%';
+      AND pt.id IN (SELECT id FROM temp_transactions);
   END IF;
+
+  DROP TABLE temp_transactions;
+  RETURN new_filter;
 END;
 $$ LANGUAGE plpgsql;
 
 ALTER FUNCTION create_user_plaid_filter(
-  _filter user_plaid_filter,
+  _filter user_plaid_filters,
   user_override boolean,
   global_override boolean
 ) OWNER TO postgres;

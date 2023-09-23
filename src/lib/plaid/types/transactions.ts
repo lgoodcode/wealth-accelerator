@@ -13,8 +13,6 @@ export type Filter = {
 
 export type UserFilter = Filter & {
   user_id: string;
-  user_override: boolean;
-  global_override: boolean;
 };
 
 export type Transaction = {

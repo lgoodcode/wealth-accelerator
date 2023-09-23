@@ -48,9 +48,6 @@ export function CreateUserPlaidFilterDialog() {
   const hasFilter = useSetAtom(hasUserFilterAtom);
   const form = useForm<CreateUserFilterFormType>({
     resolver: zodResolver(createUserFilterFormSchema),
-    resetOptions: {
-      keepValues: true,
-    },
   });
 
   const handleCreate = async (data: CreateUserFilterFormType) => {
