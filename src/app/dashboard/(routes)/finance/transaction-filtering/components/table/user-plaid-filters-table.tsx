@@ -26,17 +26,17 @@ import {
 import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
-import type { Filter } from '@/lib/plaid/types/transactions';
+import type { UserFilter } from '@/lib/plaid/types/transactions';
 
-interface FiltersTableProps {
-  filters: Filter[] | null;
+interface UserPlaidFiltersTableProps {
+  filters: UserFilter[] | null;
 }
 
-export function FiltersTable({ filters }: FiltersTableProps) {
+export function UserPlaidFiltersTable({ filters }: UserPlaidFiltersTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const table = useReactTable<Filter>({
+  const table = useReactTable<UserFilter>({
     data: filters || [],
     columns,
     state: {

@@ -510,12 +510,6 @@ export interface Database {
             columns: ["item_id"]
             referencedRelation: "plaid"
             referencedColumns: ["item_id"]
-          },
-          {
-            foreignKeyName: "plaid_transactions_user_filter_id_fkey"
-            columns: ["user_filter_id"]
-            referencedRelation: "user_plaid_filters"
-            referencedColumns: ["id"]
           }
         ]
       }
@@ -631,6 +625,14 @@ export interface Database {
           new_created_at: string
         }[]
       }
+      create_user_plaid_filter: {
+        Args: {
+          _filter: Database["public"]["CompositeTypes"]["user_plaid_filter"]
+          user_override: boolean
+          global_override: boolean
+        }
+        Returns: undefined
+      }
       delete_snowball_record: {
         Args: {
           record_id: string
@@ -726,13 +728,13 @@ export interface Database {
       }
       is_admin:
         | {
-            Args: Record<PropertyKey, never>
-            Returns: boolean
-          }
-        | {
             Args: {
               user_id: string
             }
+            Returns: boolean
+          }
+        | {
+            Args: Record<PropertyKey, never>
             Returns: boolean
           }
       is_authenticated: {
@@ -833,6 +835,11 @@ export interface Database {
         total_amount: number
         snowball_tracking: unknown
         loan_payback: Database["public"]["CompositeTypes"]["loan_payback_type"]
+      }
+      user_plaid_filter: {
+        user_id: string
+        filter: string
+        category: Database["public"]["Enums"]["category"]
       }
     }
   }

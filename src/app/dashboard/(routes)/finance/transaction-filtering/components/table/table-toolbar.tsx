@@ -8,10 +8,10 @@ import { Input } from '@/components/ui/input';
 import { FacetedFilter } from './faceted-filter';
 import { categoryOptions } from './column-options';
 import { CreateUserPlaidFilterDialog } from '../create-user-plaid-filter-dialog';
-import type { Filter } from '@/lib/plaid/types/transactions';
+import type { UserFilter } from '@/lib/plaid/types/transactions';
 
 interface TableToolbarProps {
-  table: Table<Filter>;
+  table: Table<UserFilter>;
 }
 
 export function TableToolbar({ table }: TableToolbarProps) {

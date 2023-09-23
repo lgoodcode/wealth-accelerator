@@ -14,10 +14,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DeleteFilterMenuItem } from '../delete-user-plaid-filter-menu-item';
 import { UpdateUserPlaidFilterDialog } from '../update-user-plaid-filter-dialog';
-import { type Filter } from '@/lib/plaid/types/transactions';
+import type { UserFilter } from '@/lib/plaid/types/transactions';
 
 interface RowActionsProps {
-  row: Row<Filter>;
+  row: Row<UserFilter>;
 }
 
 export function RowActions({ row }: RowActionsProps) {

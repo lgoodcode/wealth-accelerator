@@ -5,10 +5,10 @@ import type { Row } from '@tanstack/react-table';
 
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useDeleteUserPlaidFilter } from '../hooks/use-delete-user-plaid-filter';
-import type { Filter } from '@/lib/plaid/types/transactions';
+import type { UserFilter } from '@/lib/plaid/types/transactions';
 
 interface DeleteFilterMenuItemProps {
-  row: Row<Filter>;
+  row: Row<UserFilter>;
 }
 
 export function DeleteFilterMenuItem({ row }: DeleteFilterMenuItemProps) {

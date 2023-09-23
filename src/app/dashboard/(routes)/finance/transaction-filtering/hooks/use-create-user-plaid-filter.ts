@@ -1,26 +1,33 @@
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
+import { useUser } from '@/hooks/use-user';
 import { addUserFilterAtom } from '../atoms';
-import type { Filter } from '@/lib/plaid/types/transactions';
+import type { UserFilter } from '@/lib/plaid/types/transactions';
+import type { CreateUserFilterFormType } from '../schema';
 
 export const useCreateUserPlaidFilter = () => {
+  const user = useUser()!;
   const addUserFilter = useSetAtom(addUserFilterAtom);
 
-  return async (filter: Pick<Filter, 'filter' | 'category'>) => {
-    const { error, data: globalFilter } = await supabase
-      .from('user_plaid_filters')
-      .insert({
-        filter: filter.filter.toLowerCase(),
-        category: filter.category,
+  return async (data: CreateUserFilterFormType) => {
+    const { error, data: userFilter } = await supabase
+      .rpc('create_user_plaid_filter', {
+        _filter: {
+          user_id: user.id,
+          filter: data.filter,
+          category: data.category,
+        },
+        user_override: data.user_override,
+        global_override: data.global_override,
       })
       .select('*')
       .single();
 
-    if (error || !globalFilter) {
+    if (error || !userFilter) {
       throw error || new Error('Could not create filter');
     }
 
-    addUserFilter(globalFilter as Filter);
+    addUserFilter(userFilter as UserFilter);
   };
 };

@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DeleteGlobalPlaidFilterMenuItem } from '../delete-global-plaid-filter-menu-item';
 import { UpdateGlobalPlaidFilterDialog } from '../update-global-plaid-filter-dialog';
-import { type Filter } from '@/lib/plaid/types/transactions';
+import type { Filter } from '@/lib/plaid/types/transactions';
 
 interface RowActionsProps {
   row: Row<Filter>;

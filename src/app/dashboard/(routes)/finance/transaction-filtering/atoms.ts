@@ -1,8 +1,8 @@
 import { atom } from 'jotai';
 
-import { Filter } from '@/lib/plaid/types/transactions';
+import type { UserFilter } from '@/lib/plaid/types/transactions';
 
-export const userFiltersAtom = atom<Filter[] | null>(null);
+export const userFiltersAtom = atom<UserFilter[] | null>(null);
 
 export const hasUserFilterAtom = atom(null, (get, _set, filter: string) => {
   const filters = get(userFiltersAtom);
@@ -14,7 +14,7 @@ export const hasUserFilterAtom = atom(null, (get, _set, filter: string) => {
   return filters.some((f) => f.filter === filter);
 });
 
-export const addUserFilterAtom = atom(null, (_get, set, newFilter: Filter) => {
+export const addUserFilterAtom = atom(null, (_get, set, newFilter: UserFilter) => {
   set(userFiltersAtom, (filters) => {
     if (!filters) {
       return [newFilter];
@@ -24,7 +24,7 @@ export const addUserFilterAtom = atom(null, (_get, set, newFilter: Filter) => {
   });
 });
 
-export const updateUserFilterAtom = atom(null, (_get, set, updatedFilter: Filter) => {
+export const updateUserFilterAtom = atom(null, (_get, set, updatedFilter: UserFilter) => {
   set(userFiltersAtom, (filters) => {
     if (!filters) {
       throw new Error('filtersAtom is not initialized');

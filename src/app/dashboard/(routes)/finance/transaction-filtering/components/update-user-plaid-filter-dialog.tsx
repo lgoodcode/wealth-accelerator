@@ -32,12 +32,12 @@ import {
 } from '@/components/ui/form';
 import { useUpdateUserPlaidFilter } from '../hooks/use-update-user-plaid-filter';
 import { updateUserFilterFormSchema, type UpdateUserFilterFormType } from '../schema';
-import { Category, type Filter } from '@/lib/plaid/types/transactions';
+import { Category, type UserFilter } from '@/lib/plaid/types/transactions';
 
 interface UpdateFilterDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
-  filter: Filter;
+  filter: UserFilter;
 }
 
 export function UpdateUserPlaidFilterDialog({

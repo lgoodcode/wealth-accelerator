@@ -9,10 +9,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { Filter } from '@/lib/plaid/types/transactions';
+import type { UserFilter } from '@/lib/plaid/types/transactions';
 
 interface ColumnHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  column: Column<Filter>;
+  column: Column<UserFilter>;
   title: string;
 }
 

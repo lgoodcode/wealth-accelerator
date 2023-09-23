@@ -5,15 +5,15 @@ import { useEffect } from 'react';
 
 import { Loading } from '@/components/loading';
 import { Card, CardContent } from '@/components/ui/card';
-import { FiltersTable } from './table/filters-table';
+import { UserPlaidFiltersTable } from './table/user-plaid-filters-table';
 import { userFiltersAtom } from '../atoms';
-import type { Filter } from '@/lib/plaid/types/transactions';
+import type { UserFilter } from '@/lib/plaid/types/transactions';
 
 interface FiltersProps {
-  filtersData: Filter[] | null;
+  userFiltersData: UserFilter[] | null;
 }
 
-export function Filters({ filtersData }: FiltersProps) {
+export function UserPlaidFilters({ userFiltersData: filtersData }: FiltersProps) {
   const [filters, setFilters] = useAtom(userFiltersAtom);
 
   useEffect(() => {
@@ -24,7 +24,11 @@ export function Filters({ filtersData }: FiltersProps) {
     <div className="flex justify-center mx-auto lg:w-[1024px]">
       <Card className="w-full mt-8">
         <CardContent>
-          {!filters ? <Loading className="mt-0 py-32" /> : <FiltersTable filters={filters} />}
+          {!filters ? (
+            <Loading className="mt-0 py-32" />
+          ) : (
+            <UserPlaidFiltersTable filters={filters} />
+          )}
         </CardContent>
       </Card>
     </div>

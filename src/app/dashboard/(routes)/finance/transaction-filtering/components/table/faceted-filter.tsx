@@ -16,10 +16,10 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
-import type { Filter } from '@/lib/plaid/types/transactions';
+import type { UserFilter } from '@/lib/plaid/types/transactions';
 
 interface FacetedFilterProps {
-  column?: Column<Filter>;
+  column?: Column<UserFilter>;
   title?: string;
   options: {
     label: string;

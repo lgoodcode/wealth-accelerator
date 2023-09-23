@@ -4,14 +4,14 @@ import type { Metadata } from 'next';
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
-import { Filters } from './components/filters';
-import type { Filter } from '@/lib/plaid/types/transactions';
+import { UserPlaidFilters } from './components/user-plaid-filters';
+import type { UserFilter } from '@/lib/plaid/types/transactions';
 
 export const metadata: Metadata = {
   title: 'Transactions Filtering',
 };
 
-export default async function TransactionFilteringPage() {
+export default async function UserTransactionFilteringPage() {
   const supabase = createSupabase();
   const { error, data } = await supabase
     .from('user_plaid_filters')
@@ -24,21 +24,18 @@ export default async function TransactionFilteringPage() {
     return <PageError />;
   }
 
-  const filters = (data as Filter[]) ?? null;
+  const filters = (data as UserFilter[]) ?? null;
 
   return (
     <div className="p-8">
       <div className="space-y-1">
         <h2 className="text-3xl font-bold">Transactions Filtering</h2>
         <p className="text-muted-foreground">
-          Manage filters used to categorize transactions when received from Plaid for your accounts.
-        </p>
-        <p className="text-muted-foreground">
-          <b>Note:</b> These filters will override admin-specified filters.
+          Manage filters used to categorize your transactions when received from Plaid.
         </p>
       </div>
       <Separator className="mt-6" />
-      <Filters filtersData={filters} />
+      <UserPlaidFilters userFiltersData={filters} />
     </div>
   );
 }

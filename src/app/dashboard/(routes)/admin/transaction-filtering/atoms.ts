@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 
-import { Filter } from '@/lib/plaid/types/transactions';
+import type { Filter } from '@/lib/plaid/types/transactions';
 
 export const globalFiltersAtom = atom<Filter[] | null>(null);
 

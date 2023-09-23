@@ -11,6 +11,12 @@ export type Filter = {
   category: Category;
 };
 
+export type UserFilter = Filter & {
+  user_id: string;
+  user_override: boolean;
+  global_override: boolean;
+};
+
 export type Transaction = {
   id: string;
   item_id: string;

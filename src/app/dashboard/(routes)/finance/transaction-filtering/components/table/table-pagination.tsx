@@ -9,10 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Filter } from '@/lib/plaid/types/transactions';
+import type { UserFilter } from '@/lib/plaid/types/transactions';
 
 interface TablePaginationProps {
-  table: Table<Filter>;
+  table: Table<UserFilter>;
 }
 
 export function TablePagination({ table }: TablePaginationProps) {

@@ -10,6 +10,7 @@ import { PlusCircle } from 'lucide-react';
 import { createUserFilterFormSchema, type CreateUserFilterFormType } from '../schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -30,6 +31,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -104,12 +106,10 @@ export function CreateUserPlaidFilterDialog() {
         <DialogHeader className="space-y-4">
           <DialogTitle>Create User Plaid Filter</DialogTitle>
           <DialogDescription className="flex flex-col space-y-2">
+            <span>Create a new filter to categorize transactions received from Plaid.</span>
             <span>
-              Create a new filter to categorize transactions received from Plaid for all users.
-            </span>
-            <span>
-              <span className="font-bold">Note:</span> all the filters are case-insensitive and will
-              be formatted to lowercase.
+              <span className="font-bold">Note:</span> all filters are case-insensitive and will be
+              formatted to lowercase.
             </span>
           </DialogDescription>
         </DialogHeader>
@@ -147,6 +147,58 @@ export function CreateUserPlaidFilterDialog() {
                         ))}
                       </SelectContent>
                     </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="user_override"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Override</FormLabel>
+                  <FormDescription>
+                    <span className="text-muted-foreground">
+                      Will override other filters you have specified that also match.
+                    </span>
+                  </FormDescription>
+                  <FormControl>
+                    <Checkbox
+                      id="enabled"
+                      name={field.name}
+                      className="w-6 h-6"
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="global_override"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Global Override</FormLabel>
+                  <FormDescription>
+                    <span className="text-muted-foreground">
+                      Will override filters specified by admins that also match.
+                    </span>
+                  </FormDescription>
+                  <FormControl>
+                    <Checkbox
+                      id="enabled"
+                      name={field.name}
+                      className="w-6 h-6"
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
