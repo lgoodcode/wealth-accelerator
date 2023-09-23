@@ -1,23 +1,26 @@
 'use client';
 
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 
 import { Loading } from '@/components/loading';
 import { Card, CardContent } from '@/components/ui/card';
 import { UserPlaidFiltersTable } from './table/user-plaid-filters-table';
-import { userFiltersAtom } from '../atoms';
-import type { UserFilter } from '@/lib/plaid/types/transactions';
+import { userFiltersAtom, globalFiltersAtom } from '../atoms';
+import type { Filter, UserFilter } from '@/lib/plaid/types/transactions';
 
 interface FiltersProps {
   userFiltersData: UserFilter[] | null;
+  globalFilters: Filter[] | null;
 }
 
-export function UserPlaidFilters({ userFiltersData: filtersData }: FiltersProps) {
+export function UserPlaidFilters({ userFiltersData: filtersData, globalFilters }: FiltersProps) {
   const [filters, setFilters] = useAtom(userFiltersAtom);
+  const setGlobalFilters = useSetAtom(globalFiltersAtom);
 
   useEffect(() => {
     setFilters(filtersData);
+    setGlobalFilters(globalFilters);
   }, []);
 
   return (

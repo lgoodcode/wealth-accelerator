@@ -650,6 +650,13 @@ export interface Database {
         }
         Returns: undefined
       }
+      delete_user_plaid_filter: {
+        Args: {
+          filter_id: number
+          global_filter_id?: number
+        }
+        Returns: undefined
+      }
       generate_rates: {
         Args: Record<PropertyKey, never>
         Returns: unknown

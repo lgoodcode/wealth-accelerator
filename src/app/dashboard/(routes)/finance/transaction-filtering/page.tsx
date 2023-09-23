@@ -5,7 +5,7 @@ import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { UserPlaidFilters } from './components/user-plaid-filters';
-import type { UserFilter } from '@/lib/plaid/types/transactions';
+import type { Filter, UserFilter } from '@/lib/plaid/types/transactions';
 
 export const metadata: Metadata = {
   title: 'Transactions Filtering',
@@ -13,18 +13,30 @@ export const metadata: Metadata = {
 
 export default async function UserTransactionFilteringPage() {
   const supabase = createSupabase();
-  const { error, data } = await supabase
+  const { error: userFiltersError, data: userFiltersData } = await supabase
     .from('user_plaid_filters')
     .select('*')
     .order('id', { ascending: true });
 
-  if (error) {
-    console.error(error);
-    captureException(error);
+  if (userFiltersError) {
+    console.error(userFiltersError);
+    captureException(userFiltersError);
     return <PageError />;
   }
 
-  const filters = (data as UserFilter[]) ?? null;
+  const { error: globalFiltersError, data: globalFiltersData } = await supabase
+    .from('global_plaid_filters')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (globalFiltersError) {
+    console.error(globalFiltersError);
+    captureException(globalFiltersError);
+    return <PageError />;
+  }
+
+  const userFilters = (userFiltersData as UserFilter[]) ?? null;
+  const globalFilters = (globalFiltersData as Filter[]) ?? null;
 
   return (
     <div className="p-8">
@@ -35,7 +47,7 @@ export default async function UserTransactionFilteringPage() {
         </p>
       </div>
       <Separator className="mt-6" />
-      <UserPlaidFilters userFiltersData={filters} />
+      <UserPlaidFilters userFiltersData={userFilters} globalFilters={globalFilters} />
     </div>
   );
 }

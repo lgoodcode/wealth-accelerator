@@ -62,87 +62,38 @@ ALTER FUNCTION create_user_plaid_filter(
 
 
 
--- CREATE OR REPLACE FUNCTION update_transactions_for_new_global_plaid_filter()
--- RETURNS TRIGGER AS $$
--- BEGIN
---   UPDATE plaid_transactions
---   SET category = NEW.category,
---     user_filter_id = NULL,
---     global_filter_id = NEW.id
---   WHERE LOWER(name) LIKE '%' || LOWER(NEW.filter) || '%'
---     AND category IS DISTINCT FROM NEW.category; -- Only update if category is different
---   RETURN NULL;
--- END;
--- $$ LANGUAGE plpgsql SECURITY definer;
 
--- ALTER FUNCTION update_transactions_for_new_global_plaid_filter() OWNER TO postgres;
+-- When a user filter is deleted, if the user selected a global filter to use,
+-- then we will update the transactions to use the global filter instead.
+CREATE OR REPLACE FUNCTION delete_user_plaid_filter(filter_id int, global_filter_id int DEFAULT NULL)
+RETURNS VOID AS $$
+DECLARE
+  global_filter global_plaid_filters;
+BEGIN
+  IF global_filter_id IS NOT NULL THEN
+    SELECT * FROM global_plaid_filters WHERE id = global_filter_id INTO global_filter;
 
--- DROP TRIGGER IF EXISTS on_insert_global_plaid_filter ON global_plaid_filters;
--- CREATE TRIGGER on_insert_global_plaid_filter
---   AFTER INSERT ON global_plaid_filters
---     FOR EACH ROW
---       EXECUTE FUNCTION update_transactions_for_new_global_plaid_filter();
+    UPDATE plaid_transactions
+    SET
+      category = global_filter.category,
+      global_filter_id = global_filter.id
+    WHERE user_filter_id = filter_id;
+  ELSE
+    UPDATE plaid_transactions
+    SET
+      category = CASE
+        WHEN amount < 0 THEN 'Money-In'::category
+        ELSE 'Money-Out'::category
+      END,
+      global_filter_id = NULL
+    WHERE user_filter_id = filter_id;
+  END IF;
 
--- -- When a global filter is deleted, update the category of all transactions that were using it
--- CREATE OR REPLACE FUNCTION update_transactions_for_deleted_global_plaid_filter()
--- RETURNS TRIGGER AS $$
--- BEGIN
---   UPDATE plaid_transactions
---   SET category = CASE
---     WHEN amount < 0 THEN 'Money-In'::category
---     ELSE 'Money-Out'::category
---   END
---   WHERE global_filter_id = OLD.id;
---   RETURN OLD;
--- END;
--- $$ LANGUAGE plpgsql;
+  DELETE FROM user_plaid_filters WHERE id = filter_id;
+END;
+$$ LANGUAGE plpgsql;
 
--- ALTER FUNCTION update_transactions_for_deleted_global_plaid_filter() OWNER TO postgres;
-
--- DROP TRIGGER IF EXISTS on_delete_global_plaid_filter ON global_plaid_filters;
--- CREATE TRIGGER on_delete_global_plaid_filter
---   BEFORE DELETE ON global_plaid_filters
---     FOR EACH ROW
---       EXECUTE FUNCTION update_transactions_for_deleted_global_plaid_filter();
-
--- CREATE OR REPLACE FUNCTION update_transactions_for_updated_global_plaid_filter()
--- RETURNS TRIGGER AS $$
--- BEGIN
---   UPDATE plaid_transactions
---   SET category = NEW.category
---   WHERE global_filter_id = NEW.id;
---   RETURN NULL;
--- END;
--- $$ LANGUAGE plpgsql;
-
--- ALTER FUNCTION update_transactions_for_updated_global_plaid_filter() OWNER TO postgres;
-
--- DROP TRIGGER IF EXISTS on_delete_global_plaid_filter ON global_plaid_filters;
--- CREATE TRIGGER on_delete_global_plaid_filter
---   AFTER UPDATE ON global_plaid_filters
---     FOR EACH ROW
---       EXECUTE FUNCTION update_transactions_for_updated_global_plaid_filter();
-
--- -- Only allow the "category" column to be updated
--- CREATE OR REPLACE FUNCTION handle_update_global_plaid_filter()
--- RETURNS TRIGGER AS $$
--- BEGIN
---   IF NEW.id <> OLD.id THEN
---     RAISE EXCEPTION 'Updating "id" is not allowed';
---   END IF;
---   IF NEW.filter <> OLD.filter THEN
---     RAISE EXCEPTION 'Updating "filter" is not allowed';
---   END IF;
-
---   RETURN NEW;
--- END;
--- $$ LANGUAGE plpgsql;
-
--- ALTER FUNCTION handle_update_global_plaid_filter() OWNER TO postgres;
-
--- DROP TRIGGER IF EXISTS on_update_global_plaid_filter ON global_plaid_filters;
--- CREATE TRIGGER on_update_global_plaid_filter
---   BEFORE UPDATE ON global_plaid_filters
---     FOR EACH ROW
---       EXECUTE PROCEDURE handle_update_global_plaid_filter();
-
+ALTER FUNCTION delete_user_plaid_filter(
+  filter_id int,
+  global_filter_id int
+) OWNER TO postgres;

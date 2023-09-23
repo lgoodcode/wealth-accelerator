@@ -44,8 +44,8 @@ import { Category } from '@/lib/plaid/types/transactions';
 export function CreateUserPlaidFilterDialog() {
   const createFilter = useCreateUserPlaidFilter();
   const queryClient = useQueryClient();
-  const [isOpen, setIsOpen] = useState(false);
   const hasFilter = useSetAtom(hasUserFilterAtom);
+  const [isOpen, setIsOpen] = useState(false);
   const form = useForm<CreateUserFilterFormType>({
     resolver: zodResolver(createUserFilterFormSchema),
   });
@@ -110,6 +110,7 @@ export function CreateUserPlaidFilterDialog() {
             </span>
           </DialogDescription>
         </DialogHeader>
+
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(handleCreate)}>
             <FormField

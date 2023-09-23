@@ -22,3 +22,12 @@ export const createUserFilterFormSchema = z.object({
 });
 
 export type CreateUserFilterFormType = z.infer<typeof createUserFilterFormSchema>;
+
+export const deleteUserFilterFormSchema = z.object({
+  global_filter_id: z.coerce.number({
+    required_error: 'Please select a filter to default to',
+    invalid_type_error: 'Please select a filter to default to',
+  }),
+});
+
+export type DeleteUserFilterFormType = z.infer<typeof deleteUserFilterFormSchema>;

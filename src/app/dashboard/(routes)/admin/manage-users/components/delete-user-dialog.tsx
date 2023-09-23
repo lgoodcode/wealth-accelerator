@@ -61,11 +61,11 @@ export function DeleteUserDialog({ open, onOpenChange, id, user }: DeleteUserPro
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. <span className="font-bold">{user.name}</span> and all the
-            data associated with the user will be deleted.
-          </AlertDialogDescription>
         </AlertDialogHeader>
+        <AlertDialogDescription>
+          This action cannot be undone. <span className="font-bold">{user.name}</span> and all the
+          data associated with the user will be deleted.
+        </AlertDialogDescription>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
           <Button variant="destructive" onClick={handleDelete} loading={isDeleting}>

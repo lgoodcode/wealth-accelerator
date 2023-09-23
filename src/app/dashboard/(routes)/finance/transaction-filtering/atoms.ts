@@ -1,8 +1,9 @@
 import { atom } from 'jotai';
 
-import type { UserFilter } from '@/lib/plaid/types/transactions';
+import type { Filter, UserFilter } from '@/lib/plaid/types/transactions';
 
 export const userFiltersAtom = atom<UserFilter[] | null>(null);
+export const globalFiltersAtom = atom<Filter[] | null>(null);
 
 export const hasUserFilterAtom = atom(null, (get, _set, filter: string) => {
   const filters = get(userFiltersAtom);
