@@ -37,6 +37,8 @@ export default async function CreativeCashFlowRecordPage({
     .rpc('get_creative_cash_flow_record', { record_id: record_id })
     .single();
 
+  console.log({ error, data });
+
   if (error) {
     if (error.code === 'PGRST116') {
       return <NoRecordCard record_id={record_id} />;
