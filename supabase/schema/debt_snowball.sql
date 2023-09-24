@@ -17,6 +17,8 @@ CREATE TABLE debt_snowball (
   created_at timestamp with time zone NOT NULL DEFAULT NOW()
 );
 
+CREATE INDEX IF NOT EXISTS idx_debt_snowball_user_id ON debt_snowball(user_id);
+
 ALTER TABLE debt_snowball OWNER TO postgres;
 ALTER TABLE debt_snowball ENABLE ROW LEVEL SECURITY;
 
