@@ -1,11 +1,12 @@
 import { atom } from 'jotai';
 
-import type { Filter } from '@/lib/plaid/types/transactions';
+import type { Filter, UserFilter } from '@/lib/plaid/types/transactions';
 
+export const userFiltersAtom = atom<UserFilter[] | null>(null);
 export const globalFiltersAtom = atom<Filter[] | null>(null);
 
-export const hasGlobalFilterAtom = atom(null, (get, _set, filter: string) => {
-  const filters = get(globalFiltersAtom);
+export const hasUserFilterAtom = atom(null, (get, _set, filter: string) => {
+  const filters = get(userFiltersAtom);
 
   if (!filters) {
     return false;
@@ -14,8 +15,8 @@ export const hasGlobalFilterAtom = atom(null, (get, _set, filter: string) => {
   return filters.some((f) => f.filter === filter);
 });
 
-export const addGlobalFilterAtom = atom(null, (_get, set, newFilter: Filter) => {
-  set(globalFiltersAtom, (filters) => {
+export const addUserFilterAtom = atom(null, (_get, set, newFilter: UserFilter) => {
+  set(userFiltersAtom, (filters) => {
     if (!filters) {
       return [newFilter];
     }
@@ -24,8 +25,8 @@ export const addGlobalFilterAtom = atom(null, (_get, set, newFilter: Filter) => 
   });
 });
 
-export const updateGlobalFilterAtom = atom(null, (_get, set, updatedFilter: Filter) => {
-  set(globalFiltersAtom, (filters) => {
+export const updateUserFilterAtom = atom(null, (_get, set, updatedFilter: UserFilter) => {
+  set(userFiltersAtom, (filters) => {
     if (!filters) {
       throw new Error('filtersAtom is not initialized');
     }
@@ -43,8 +44,8 @@ export const updateGlobalFilterAtom = atom(null, (_get, set, updatedFilter: Filt
   });
 });
 
-export const removeGlobalFilterAtom = atom(null, (_get, set, id: number) => {
-  set(globalFiltersAtom, (filters) => {
+export const removeUserFilterAtom = atom(null, (_get, set, id: number) => {
+  set(userFiltersAtom, (filters) => {
     if (!filters) {
       throw new Error('filtersAtom is not initialized');
     }

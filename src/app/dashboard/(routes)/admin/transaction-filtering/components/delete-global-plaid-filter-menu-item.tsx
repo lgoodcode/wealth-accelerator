@@ -11,7 +11,7 @@ interface DeleteFilterMenuItemProps {
   row: Row<Filter>;
 }
 
-export function DeleteFilterMenuItem({ row }: DeleteFilterMenuItemProps) {
+export function DeleteGlobalPlaidFilterMenuItem({ row }: DeleteFilterMenuItemProps) {
   const deleteFilter = useDeleteGlobalPlaidFilter();
 
   const handleDeleteFilter = async () => {

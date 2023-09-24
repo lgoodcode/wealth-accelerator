@@ -1,4 +1,4 @@
-import { Banknote, Landmark, Receipt, BookOpen, LineChart, Shield } from 'lucide-react';
+import { Banknote, Filter, Landmark, Receipt, BookOpen, LineChart, Shield } from 'lucide-react';
 
 import type { Route } from './routes';
 
@@ -20,6 +20,12 @@ export const financeRoutes: Route[] = [
     path: '/dashboard/finance/banking',
     Icon: Landmark,
     description: 'Add bank accounts and manage transactions received from Plaid.',
+  },
+  {
+    name: 'Transaction Filtering',
+    path: '/dashboard/finance/transaction-filtering',
+    Icon: Filter,
+    description: 'Filter transaction categories received from your bank accounts.',
   },
   // {
   //   name: 'Statistics',

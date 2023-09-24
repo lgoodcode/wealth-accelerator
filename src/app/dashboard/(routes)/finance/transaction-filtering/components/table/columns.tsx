@@ -5,9 +5,9 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { categoryOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
-import { Category, type Filter } from '@/lib/plaid/types/transactions';
+import { Category, type UserFilter } from '@/lib/plaid/types/transactions';
 
-export const columns: ColumnDef<Filter>[] = [
+export const columns: ColumnDef<UserFilter>[] = [
   {
     accessorKey: 'filter',
     header: ({ column }) => <ColumnHeader column={column} title="Filter" />,

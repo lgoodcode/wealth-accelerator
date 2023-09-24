@@ -8,10 +8,10 @@ import { Filters } from './components/filters';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
 export const metadata: Metadata = {
-  title: 'Transactions Filtering',
+  title: 'Global Transactions Filtering',
 };
 
-export default async function TransactionFilteringPage() {
+export default async function GlobalTransactionFilteringPage() {
   const supabase = createSupabase();
   const { error, data } = await supabase
     .from('global_plaid_filters')
@@ -29,12 +29,12 @@ export default async function TransactionFilteringPage() {
   return (
     <div className="p-8">
       <div className="space-y-1">
-        <h2 className="text-3xl font-bold">Transactions Filtering</h2>
+        <h2 className="text-3xl font-bold">Global Transactions Filtering</h2>
         <p className="text-muted-foreground">
           Manage filters used to categorize transactions when received from Plaid for all users.
         </p>
         <p className="text-muted-foreground">
-          <b>Note:</b> These filters will be overriden by user-specific filters.
+          <b>Note:</b> These filters can be overriden by user-specific filters.
         </p>
       </div>
       <Separator className="mt-6" />
