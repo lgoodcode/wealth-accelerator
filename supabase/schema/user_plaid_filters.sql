@@ -6,6 +6,8 @@ CREATE TABLE user_plaid_filters (
   category category NOT NULL
 );
 
+CREATE INDEX IF NOT EXISTS idx_user_plaid_filters_user_id ON user_plaid_filters(user_id);
+
 ALTER TABLE user_plaid_filters OWNER TO postgres;
 ALTER TABLE user_plaid_filters ENABLE ROW LEVEL SECURITY;
 
@@ -58,28 +60,30 @@ BEGIN
     SET category = _filter.category,
       user_filter_id = new_filter.id,
       global_filter_id = NULL
-    WHERE pt.id IN (SELECT id FROM temp_transactions);
+    FROM temp_transactions tt
+    WHERE pt.id = tt.id;
   -- Override any existing user filter but not existing global
   ELSIF user_override THEN
     UPDATE plaid_transactions pt
     SET category = _filter.category, user_filter_id = new_filter.id
-    WHERE global_filter_id IS NULL
-      AND pt.id IN (SELECT id FROM temp_transactions);
+    FROM temp_transactions tt
+    WHERE pt.id = tt.id AND global_filter_id IS NULL;
   -- Override any existing global filter but not existing user
   ELSIF global_override THEN
     UPDATE plaid_transactions pt
     SET category = _filter.category,
       user_filter_id = new_filter.id,
       global_filter_id = NULL
-    WHERE user_filter_id IS NULL
-      AND pt.id IN (SELECT id FROM temp_transactions);
+    FROM temp_transactions tt
+    WHERE pt.id = tt.id AND user_filter_id IS NULL;
   -- Only update transactions that don't have a filter
   ELSE
     UPDATE plaid_transactions pt
     SET category = _filter.category, user_filter_id = new_filter.id
-    WHERE user_filter_id IS NULL
-      AND global_filter_id IS NULL
-      AND pt.id IN (SELECT id FROM temp_transactions);
+    FROM temp_transactions tt
+    WHERE pt.id = tt.id
+      AND user_filter_id IS NULL
+      AND global_filter_id IS NULL;
   END IF;
 
   DROP TABLE temp_transactions;

@@ -11,23 +11,25 @@ CREATE TABLE plaid_accounts (
   enabled boolean NOT NULL DEFAULT true
 );
 
+CREATE INDEX IF NOT EXISTS idx_plaid_accounts_item_id ON plaid_accounts(item_id);
+
 ALTER TABLE plaid_accounts OWNER TO postgres;
 ALTER TABLE plaid_accounts ENABLE ROW LEVEL SECURITY;
 
 -- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
 CREATE OR REPLACE FUNCTION is_own_plaid_account()
-RETURNS BOOL AS $$
+RETURNS BOOLEAN AS $$
 BEGIN
-  PERFORM
-  FROM plaid as p
-  WHERE p.item_id = item_id AND p.user_id = auth.uid();
-  RETURN FOUND;
+  RETURN EXISTS (
+    SELECT 1 FROM plaid p
+    WHERE p.item_id = item_id AND p.user_id = auth.uid()
+  );
 END;
-$$ LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql;
 
 ALTER FUNCTION is_own_plaid_account() OWNER TO postgres;
 
-CREATE POLICY "Can view own plaid accounts data" ON public.plaid_accounts
+CREATE POLICY "Can view own plaid accounts" ON public.plaid_accounts
   FOR SELECT
   TO authenticated
   USING (is_own_plaid_account());
@@ -37,7 +39,7 @@ CREATE POLICY "Can insert own plaid accounts" ON public.plaid_accounts
   TO authenticated
   WITH CHECK (is_own_plaid_account());
 
-CREATE POLICY "Can update own plaid accounts data" ON public.plaid_accounts
+CREATE POLICY "Can update own plaid accounts" ON public.plaid_accounts
   FOR UPDATE
   TO authenticated
   USING (is_own_plaid_account());

@@ -15,23 +15,28 @@ CREATE TABLE plaid_transactions (
   global_filter_id int REFERENCES global_plaid_filters(id) ON DELETE SET NULL
 );
 
+CREATE INDEX IF NOT EXISTS idx_plaid_transactions_item_id ON plaid_transactions(item_id);
+CREATE INDEX IF NOT EXISTS idx_plaid_transactions_account_id ON plaid_transactions(account_id);
+CREATE INDEX IF NOT EXISTS idx_plaid_transactions_user_filter_id ON plaid_transactions(user_filter_id);
+CREATE INDEX IF NOT EXISTS idx_plaid_transactions_global_filter_id ON plaid_transactions(global_filter_id);
+
 ALTER TABLE plaid_transactions OWNER TO postgres;
 ALTER TABLE plaid_transactions ENABLE ROW LEVEL SECURITY;
 
 -- Because the user_id is not stored in the plaid_accounts table, we need to join the plaid table
 CREATE OR REPLACE FUNCTION is_own_plaid_transaction()
-RETURNS BOOL AS $$
+RETURNS BOOLEAN AS $$
 BEGIN
-  PERFORM
-  FROM plaid as p
-  WHERE p.item_id = item_id AND p.user_id = auth.uid();
-  RETURN FOUND;
+  RETURN EXISTS (
+    SELECT 1 FROM plaid p
+    WHERE p.item_id = item_id AND p.user_id = auth.uid()
+  );
 END;
-$$ LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql;
 
 ALTER FUNCTION is_own_plaid_transaction() OWNER TO postgres;
 
-CREATE POLICY "Can view own plaid transactions data" ON public.plaid_transactions
+CREATE POLICY "Can view own plaid transactions" ON public.plaid_transactions
   FOR SELECT
   TO authenticated
   USING (is_own_plaid_transaction());
@@ -41,7 +46,7 @@ CREATE POLICY "Can insert own plaid transactions" ON public.plaid_transactions
   TO authenticated
   WITH CHECK (is_own_plaid_transaction());
 
-CREATE POLICY "Can update own plaid transactions data" ON public.plaid_transactions
+CREATE POLICY "Can update own plaid transactions" ON public.plaid_transactions
   FOR UPDATE
   TO authenticated
   USING (is_own_plaid_transaction());

@@ -9,6 +9,8 @@ CREATE TABLE plaid (
   cursor text -- used to track last transactions synced
 );
 
+CREATE INDEX IF NOT EXISTS idx_plaid_user_id ON plaid(user_id);
+
 ALTER TABLE plaid OWNER TO postgres;
 ALTER TABLE plaid ENABLE ROW LEVEL SECURITY;
 
