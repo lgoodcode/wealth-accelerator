@@ -740,13 +740,13 @@ export interface Database {
       }
       is_admin:
         | {
-            Args: Record<PropertyKey, never>
-            Returns: boolean
-          }
-        | {
             Args: {
               user_id: string
             }
+            Returns: boolean
+          }
+        | {
+            Args: Record<PropertyKey, never>
             Returns: boolean
           }
       is_authenticated: {
