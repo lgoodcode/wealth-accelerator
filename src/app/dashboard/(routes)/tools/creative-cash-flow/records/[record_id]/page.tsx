@@ -15,29 +15,23 @@ import { NoRecordCard } from './no-record-card';
 import type { CreativeCashFlowRecord } from '../../types';
 
 export const metadata: Metadata = {
-  title: 'Shared Creative Cash Flow Record',
+  title: 'Record | Creative Cash Flow',
 };
 
-interface SharedCreativeCashFlowRecordPageProps {
+interface CreativeCashFlowRecordPageProps {
   params: {
     record_id: string;
   };
   searchParams: {
-    name: string;
+    sharerName: string;
   };
 }
 
-export default async function SharedCreativeCashFlowRecordPage({
+export default async function CreativeCashFlowRecordPage({
   params: { record_id },
-  searchParams: { name },
-}: SharedCreativeCashFlowRecordPageProps) {
-  const user = await getUser();
-
-  if (!user) {
-    redirect('/login');
-  } else if (!isAdmin(user)) {
-    redirect('/dashboard/home');
-  } else if (!isUUID(record_id)) {
+  searchParams: { sharerName },
+}: CreativeCashFlowRecordPageProps) {
+  if (!isUUID(record_id)) {
     return <NoRecordCard record_id={record_id} />;
   }
 
@@ -65,10 +59,10 @@ export default async function SharedCreativeCashFlowRecordPage({
       <div className="space-y-1">
         <div className="flex flex-row justify-between items-center">
           <h2 className="text-3xl font-bold">Shared Creative Cash Flow Record</h2>
-          {name && (
+          {sharerName && (
             <div className="flex flex-row gap-2 text-lg">
               <span className="text-muted-foreground">Shared by</span>
-              <span className="font-bold">{name}</span>
+              <span className="font-bold">{sharerName}</span>
             </div>
           )}
         </div>

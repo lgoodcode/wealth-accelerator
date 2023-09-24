@@ -34,9 +34,7 @@ export default async function DebtSnowballRecordPage({
   }
 
   const supabase = createSupabase();
-  const { error, data } = await supabase
-    .rpc('get_debt_snowball_data_record', { record_id })
-    .single();
+  const { error, data } = await supabase.rpc('get_debt_snowball_record', { record_id }).single();
 
   if (error) {
     if (error.code === 'PGRST116') {

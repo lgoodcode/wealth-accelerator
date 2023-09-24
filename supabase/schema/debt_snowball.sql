@@ -147,7 +147,7 @@ ALTER FUNCTION create_debt_snowball_record(
 --     results.current.balance_tracking
 --     results.strategy.balance_tracking
 --     results.strategy.loan_payback.tracking
-CREATE OR REPLACE FUNCTION get_debt_snowball_data_records(_user_id uuid)
+CREATE OR REPLACE FUNCTION get_debt_snowball_records(_user_id uuid)
 RETURNS TABLE (
   id uuid,
   user_id uuid,
@@ -186,7 +186,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION get_debt_snowball_data_records(_user_id uuid) OWNER TO postgres;
+ALTER FUNCTION get_debt_snowball_records(_user_id uuid) OWNER TO postgres;
 
 
 
@@ -195,7 +195,7 @@ ALTER FUNCTION get_debt_snowball_data_records(_user_id uuid) OWNER TO postgres;
 --     results.current.balance_tracking
 --     results.strategy.balance_tracking
 --     results.strategy.loan_payback.tracking
-CREATE OR REPLACE FUNCTION get_debt_snowball_data_record(record_id uuid)
+CREATE OR REPLACE FUNCTION get_debt_snowball_record(record_id uuid)
 RETURNS TABLE (
   id uuid,
   user_id uuid,
@@ -234,7 +234,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION get_debt_snowball_data_record(record_id uuid) OWNER TO postgres;
+ALTER FUNCTION get_debt_snowball_record(record_id uuid) OWNER TO postgres;
 
 
 
