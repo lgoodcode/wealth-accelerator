@@ -14,7 +14,7 @@ CREATE TABLE debt_snowball_inputs (
 ALTER TABLE debt_snowball_inputs OWNER TO postgres;
 ALTER TABLE debt_snowball_inputs ENABLE ROW LEVEL SECURITY;
 
-CREATE OR REPLACE FUNCTION owns_debt_snowball_inputs_record()
+CREATE OR REPLACE FUNCTION owns_debt_snowball_inputs()
 RETURNS boolean AS $$
 BEGIN
   RETURN EXISTS (
@@ -24,20 +24,20 @@ BEGIN
 END;
 $$ language plpgsql;
 
-ALTER FUNCTION owns_debt_snowball_inputs_record() OWNER TO postgres;
+ALTER FUNCTION owns_debt_snowball_inputs() OWNER TO postgres;
 
-CREATE POLICY "Can view own debt snowball input data or if admin" ON public.debt_snowball_inputs
+CREATE POLICY "Can view own debt snowball input data or if admin" ON debt_snowball_inputs
   FOR SELECT
   TO authenticated
-  USING ((SELECT owns_debt_snowball_inputs_record()) OR (SELECT is_admin()));
+  USING ((SELECT owns_debt_snowball_inputs()) OR (SELECT is_admin()));
 
-CREATE POLICY "Can insert new debt snowball input data" ON public.debt_snowball_inputs
+CREATE POLICY "Can insert new debt snowball input data" ON debt_snowball_inputs
   FOR INSERT
   TO authenticated
-  WITH CHECK ((SELECT owns_debt_snowball_inputs_record()));
+  WITH CHECK ((SELECT owns_debt_snowball_inputs()));
 
-CREATE POLICY "Can delete own debt snowball input data" ON public.debt_snowball_inputs
+CREATE POLICY "Can delete own debt snowball input data" ON debt_snowball_inputs
   FOR DELETE
   TO authenticated
-  USING ((SELECT owns_debt_snowball_inputs_record()));
+  USING ((SELECT owns_debt_snowball_inputs()));
 
