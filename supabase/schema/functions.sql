@@ -170,7 +170,7 @@ BEGIN
         JOIN creative_cash_flow_results ccfr ON cc.id = ccfr.id
         WHERE cc.id = record_id;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY definer;
 
 ALTER FUNCTION get_creative_cash_flow_record(record_id uuid) OWNER TO postgres;
 

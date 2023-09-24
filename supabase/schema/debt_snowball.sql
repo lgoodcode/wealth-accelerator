@@ -235,16 +235,3 @@ END;
 $$ LANGUAGE plpgsql;
 
 ALTER FUNCTION get_debt_snowball_record(record_id uuid) OWNER TO postgres;
-
-
-
-CREATE OR REPLACE FUNCTION delete_snowball_record(record_id UUID)
-RETURNS VOID AS $$
-BEGIN
-  DELETE FROM debt_snowball WHERE id = record_id;
-  DELETE FROM debt_snowball_results WHERE id = record_id;
-  DELETE FROM debt_snowball_inputs WHERE id = record_id;
-END;
-$$ LANGUAGE plpgsql;
-
-ALTER FUNCTION delete_snowball_record(record_id uuid) OWNER TO postgres;
