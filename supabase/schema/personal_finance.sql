@@ -17,19 +17,21 @@ CREATE TABLE personal_finance (
   default_tax_rate smallint NOT NULL DEFAULT 25
 );
 
+CREATE INDEX IF NOT EXISTS idx_personal_finance_user_id ON personal_finance(user_id);
+
 ALTER TABLE personal_finance OWNER TO postgres;
 ALTER TABLE personal_finance ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Can view own personal_finance data" ON public.personal_finance
+CREATE POLICY "Can view own personal finances" ON public.personal_finance
   FOR SELECT
   TO authenticated
-  USING (auth.uid() = user_id);
+  USING ((SELECT auth.uid()) = user_id);
 
-CREATE POLICY "Can update own personal_finance data" ON public.personal_finance
+CREATE POLICY "Can update own personal finances" ON public.personal_finance
   FOR UPDATE
   TO authenticated
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
 
 -- Function that generates the rates array of 60 numeric(5,2) [] with a default value of 7
 -- and divide the value by 100 when displaying/using it
