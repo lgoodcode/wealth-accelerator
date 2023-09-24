@@ -320,6 +320,24 @@ $$;
 
 ALTER FUNCTION "public"."generate_rates"() OWNER TO "postgres";
 
+CREATE OR REPLACE FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") RETURNS TABLE("id" "uuid", "inputs" "jsonb", "results" "jsonb")
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+    RETURN QUERY
+        SELECT
+            cc.id,
+            to_jsonb(ccfi.*) AS inputs,
+            to_jsonb(ccfr.*) AS results
+        FROM creative_cash_flow cc
+        JOIN creative_cash_flow_inputs ccfi ON cc.id = ccfi.id
+        JOIN creative_cash_flow_results ccfr ON cc.id = ccfr.id
+        WHERE cc.id = record_id;
+END;
+$$;
+
+ALTER FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") OWNER TO "postgres";
+
 CREATE OR REPLACE FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") RETURNS TABLE("id" "uuid", "inputs" "jsonb", "results" "jsonb")
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -1398,6 +1416,10 @@ GRANT ALL ON FUNCTION "public"."format_transaction"() TO "service_role";
 GRANT ALL ON FUNCTION "public"."generate_rates"() TO "anon";
 GRANT ALL ON FUNCTION "public"."generate_rates"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."generate_rates"() TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") TO "anon";
+GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "authenticated";
