@@ -165,4 +165,4 @@ DROP TRIGGER IF EXISTS on_update_user_plaid_filter ON user_plaid_filters;
 CREATE TRIGGER on_update_user_plaid_filter
   BEFORE UPDATE ON user_plaid_filters
     FOR EACH ROW
-      EXECUTE PROCEDURE update_user_plaid_filter();
+      EXECUTE FUNCTION update_user_plaid_filter();
