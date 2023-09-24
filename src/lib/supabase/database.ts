@@ -631,25 +631,29 @@ export interface Database {
           new_created_at: string
         }[]
       }
-      delete_snowball_record: {
+      create_user_plaid_filter: {
         Args: {
-          record_id: string
+          _filter: unknown
+          user_override: boolean
+          global_override: boolean
+        }
+        Returns: {
+          category: Database["public"]["Enums"]["category"]
+          filter: string
+          id: number
+          user_id: string
+        }
+      }
+      delete_user_plaid_filter: {
+        Args: {
+          filter_id: number
+          global_filter_id?: number
         }
         Returns: undefined
       }
       generate_rates: {
         Args: Record<PropertyKey, never>
         Returns: unknown
-      }
-      get_creative_cash_flow_record: {
-        Args: {
-          record_id: string
-        }
-        Returns: {
-          id: string
-          inputs: Json
-          results: Json
-        }[]
       }
       get_creative_cash_flow_records: {
         Args: {
@@ -661,7 +665,7 @@ export interface Database {
           results: Json
         }[]
       }
-      get_debt_snowball_data_record: {
+      get_debt_snowball_record: {
         Args: {
           record_id: string
         }
@@ -675,7 +679,7 @@ export interface Database {
           results: Json
         }[]
       }
-      get_debt_snowball_data_records: {
+      get_debt_snowball_records: {
         Args: {
           _user_id: string
         }
@@ -753,11 +757,11 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
-      owns_debt_snowball_inputs_record: {
+      owns_debt_snowball_inputs: {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
-      owns_debt_snowball_results_record: {
+      owns_debt_snowball_results: {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
