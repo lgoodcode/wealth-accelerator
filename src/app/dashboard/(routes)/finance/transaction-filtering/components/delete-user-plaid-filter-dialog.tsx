@@ -82,7 +82,7 @@ export function DeleteUserPlaidFilterDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Delete Filter <b className="font-extrabold italic">{filter.filter}</b>
+            Delete Filter <b className="font-bold italic">{filter.filter}</b>
           </AlertDialogTitle>
         </AlertDialogHeader>
 
