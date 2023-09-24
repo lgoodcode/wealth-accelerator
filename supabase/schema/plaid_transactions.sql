@@ -57,6 +57,8 @@ CREATE POLICY "Can delete own plaid transactions" ON public.plaid_transactions
   TO authenticated
   USING (is_own_plaid_transaction());
 
+
+
 -- Function that formats a transaction that is being inserted
 CREATE OR REPLACE FUNCTION format_transaction()
 RETURNS TRIGGER AS $$

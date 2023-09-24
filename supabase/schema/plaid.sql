@@ -37,7 +37,7 @@ CREATE POLICY "Can delete own institutions" ON public.plaid
 
 
 -- Only allow the "name, cursor, expiration" columns to be updated
-CREATE OR REPLACE FUNCTION update_plaid()
+CREATE OR REPLACE FUNCTION verify_update_plaid()
 RETURNS TRIGGER AS $$
 BEGIN
   IF NEW.item_id <> OLD.item_id THEN
@@ -54,10 +54,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION update_plaid() OWNER TO postgres;
+ALTER FUNCTION verify_update_plaid() OWNER TO postgres;
 
 DROP TRIGGER IF EXISTS on_update_plaid ON plaid;
 CREATE TRIGGER on_update_plaid
   BEFORE UPDATE ON plaid
     FOR EACH ROW
-      EXECUTE FUNCTION update_plaid();
+      EXECUTE FUNCTION verify_update_plaid();
