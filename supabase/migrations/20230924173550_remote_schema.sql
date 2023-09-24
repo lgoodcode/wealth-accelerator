@@ -198,6 +198,76 @@ $$;
 
 ALTER FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") OWNER TO "postgres";
 
+SET default_tablespace = '';
+
+SET default_table_access_method = "heap";
+
+CREATE TABLE IF NOT EXISTS "public"."user_plaid_filters" (
+    "id" integer NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "filter" "text" NOT NULL,
+    "category" "public"."category" NOT NULL
+);
+
+ALTER TABLE "public"."user_plaid_filters" OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."user_plaid_filters", "user_override" boolean, "global_override" boolean) RETURNS "public"."user_plaid_filters"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+  new_filter user_plaid_filters;
+BEGIN
+  INSERT INTO user_plaid_filters (user_id, filter, category)
+  VALUES (_filter.user_id, _filter.filter, _filter.category)
+  RETURNING * INTO new_filter;
+
+  -- Create a temporary table of transaction id's that belong to the user and match the filter
+  CREATE TEMP TABLE temp_transactions AS
+  SELECT pt.id
+  FROM plaid_transactions pt
+  JOIN plaid p ON p.item_id = pt.item_id
+  WHERE p.user_id = _filter.user_id
+    AND LOWER(pt.name) LIKE '%' || LOWER(_filter.filter) || '%';
+
+  -- Override any filter
+  IF user_override AND global_override THEN
+    UPDATE plaid_transactions pt
+    SET category = _filter.category,
+      user_filter_id = new_filter.id,
+      global_filter_id = NULL
+    FROM temp_transactions tt
+    WHERE pt.id = tt.id;
+  -- Override any existing user filter but not existing global
+  ELSIF user_override THEN
+    UPDATE plaid_transactions pt
+    SET category = _filter.category, user_filter_id = new_filter.id
+    FROM temp_transactions tt
+    WHERE pt.id = tt.id AND global_filter_id IS NULL;
+  -- Override any existing global filter but not existing user
+  ELSIF global_override THEN
+    UPDATE plaid_transactions pt
+    SET category = _filter.category,
+      user_filter_id = new_filter.id,
+      global_filter_id = NULL
+    FROM temp_transactions tt
+    WHERE pt.id = tt.id AND user_filter_id IS NULL;
+  -- Only update transactions that don't have a filter
+  ELSE
+    UPDATE plaid_transactions pt
+    SET category = _filter.category, user_filter_id = new_filter.id
+    FROM temp_transactions tt
+    WHERE pt.id = tt.id
+      AND user_filter_id IS NULL
+      AND global_filter_id IS NULL;
+  END IF;
+
+  DROP TABLE temp_transactions;
+  RETURN new_filter;
+END;
+$$;
+
+ALTER FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."user_plaid_filters", "user_override" boolean, "global_override" boolean) OWNER TO "postgres";
+
 CREATE OR REPLACE FUNCTION "public"."delete_snowball_record"("record_id" "uuid") RETURNS "void"
     LANGUAGE "plpgsql"
     AS $$
@@ -209,6 +279,37 @@ END;
 $$;
 
 ALTER FUNCTION "public"."delete_snowball_record"("record_id" "uuid") OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."delete_user_plaid_filter"("filter_id" integer, "global_filter_id" integer DEFAULT NULL::integer) RETURNS "void"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+  global_filter global_plaid_filters;
+BEGIN
+  IF global_filter_id IS NOT NULL THEN
+    SELECT * FROM global_plaid_filters WHERE id = global_filter_id INTO global_filter;
+
+    UPDATE plaid_transactions
+    SET
+      category = global_filter.category,
+      global_filter_id = global_filter.id
+    WHERE user_filter_id = filter_id;
+  ELSE
+    UPDATE plaid_transactions
+    SET
+      category = CASE
+        WHEN amount < 0 THEN 'Money-In'::category
+        ELSE 'Money-Out'::category
+      END,
+      global_filter_id = NULL
+    WHERE user_filter_id = filter_id;
+  END IF;
+
+  DELETE FROM user_plaid_filters WHERE id = filter_id;
+END;
+$$;
+
+ALTER FUNCTION "public"."delete_user_plaid_filter"("filter_id" integer, "global_filter_id" integer) OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."format_transaction"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
@@ -564,26 +665,26 @@ $_$;
 ALTER FUNCTION "public"."is_email_used"("email" "text") OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."is_own_plaid_account"() RETURNS boolean
-    LANGUAGE "plpgsql" SECURITY DEFINER
+    LANGUAGE "plpgsql"
     AS $$
 BEGIN
-  PERFORM
-  FROM plaid as p
-  WHERE p.item_id = item_id AND p.user_id = auth.uid();
-  RETURN FOUND;
+  RETURN EXISTS (
+    SELECT 1 FROM plaid p
+    WHERE p.item_id = item_id AND p.user_id = auth.uid()
+  );
 END;
 $$;
 
 ALTER FUNCTION "public"."is_own_plaid_account"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."is_own_plaid_transaction"() RETURNS boolean
-    LANGUAGE "plpgsql" SECURITY DEFINER
+    LANGUAGE "plpgsql"
     AS $$
 BEGIN
-  PERFORM
-  FROM plaid as p
-  WHERE p.item_id = item_id AND p.user_id = auth.uid();
-  RETURN FOUND;
+  RETURN EXISTS (
+    SELECT 1 FROM plaid p
+    WHERE p.item_id = item_id AND p.user_id = auth.uid()
+  );
 END;
 $$;
 
@@ -709,6 +810,30 @@ $$;
 
 ALTER FUNCTION "public"."update_transactions_for_updated_global_plaid_filter"() OWNER TO "postgres";
 
+CREATE OR REPLACE FUNCTION "public"."update_user_plaid_filter"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+  IF NEW.id <> OLD.id THEN
+    RAISE EXCEPTION 'Updating "id" is not allowed';
+  END IF;
+  IF NEW.user_id <> OLD.user_id THEN
+    RAISE EXCEPTION 'Updating "user_id" is not allowed';
+  END IF;
+  IF NEW.filter <> OLD.filter THEN
+    RAISE EXCEPTION 'Updating "filter" is not allowed';
+  END IF;
+
+  UPDATE plaid_transactions
+  SET category = NEW.category
+  WHERE user_filter_id = NEW.id;
+
+  RETURN NEW;
+END;
+$$;
+
+ALTER FUNCTION "public"."update_user_plaid_filter"() OWNER TO "postgres";
+
 CREATE OR REPLACE FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") RETURNS "json"
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -732,10 +857,6 @@ END;
 $$;
 
 ALTER FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") OWNER TO "postgres";
-
-SET default_tablespace = '';
-
-SET default_table_access_method = "heap";
 
 CREATE TABLE IF NOT EXISTS "public"."creative_cash_flow" (
     "id" "uuid" NOT NULL,
@@ -937,15 +1058,6 @@ CREATE TABLE IF NOT EXISTS "public"."plaid_transactions" (
 
 ALTER TABLE "public"."plaid_transactions" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."user_plaid_filters" (
-    "id" integer NOT NULL,
-    "user_id" "uuid" NOT NULL,
-    "filter" "text" NOT NULL,
-    "category" "public"."category" NOT NULL
-);
-
-ALTER TABLE "public"."user_plaid_filters" OWNER TO "postgres";
-
 ALTER TABLE "public"."user_plaid_filters" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME "public"."user_plaid_filters_id_seq"
     START WITH 1
@@ -1029,6 +1141,18 @@ ALTER TABLE ONLY "public"."users"
 ALTER TABLE ONLY "public"."users"
     ADD CONSTRAINT "users_pkey" PRIMARY KEY ("id");
 
+CREATE INDEX "idx_plaid_accounts_item_id" ON "public"."plaid_accounts" USING "btree" ("item_id");
+
+CREATE INDEX "idx_plaid_transactions_account_id" ON "public"."plaid_transactions" USING "btree" ("account_id");
+
+CREATE INDEX "idx_plaid_transactions_global_filter_id" ON "public"."plaid_transactions" USING "btree" ("global_filter_id");
+
+CREATE INDEX "idx_plaid_transactions_item_id" ON "public"."plaid_transactions" USING "btree" ("item_id");
+
+CREATE INDEX "idx_plaid_transactions_user_filter_id" ON "public"."plaid_transactions" USING "btree" ("user_filter_id");
+
+CREATE INDEX "idx_plaid_user_id" ON "public"."plaid" USING "btree" ("user_id");
+
 CREATE TRIGGER "on_delete_global_plaid_filter" BEFORE DELETE ON "public"."global_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"();
 
 CREATE TRIGGER "on_insert_global_plaid_filter" AFTER INSERT ON "public"."global_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."update_transactions_for_new_global_plaid_filter"();
@@ -1040,6 +1164,8 @@ CREATE TRIGGER "on_update_debt_snowball" BEFORE UPDATE ON "public"."debt_snowbal
 CREATE TRIGGER "on_update_debt_snowball" BEFORE UPDATE ON "public"."debt_snowballs" FOR EACH ROW EXECUTE FUNCTION "public"."handle_update_debt_snowball"();
 
 CREATE TRIGGER "on_update_global_plaid_filter" BEFORE UPDATE ON "public"."global_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."handle_update_global_plaid_filter"();
+
+CREATE TRIGGER "on_update_user_plaid_filter" BEFORE UPDATE ON "public"."user_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."update_user_plaid_filter"();
 
 CREATE TRIGGER "on_user_created_init_personal_finance" AFTER INSERT ON "public"."users" FOR EACH ROW EXECUTE FUNCTION "public"."handle_init_personal_finance"();
 
@@ -1166,9 +1292,9 @@ CREATE POLICY "Can update own institution data" ON "public"."plaid" FOR UPDATE T
 
 CREATE POLICY "Can update own personal_finance data" ON "public"."personal_finance" FOR UPDATE TO "authenticated" USING (("auth"."uid"() = "user_id")) WITH CHECK (("auth"."uid"() = "user_id"));
 
-CREATE POLICY "Can update own plaid accounts data" ON "public"."plaid_accounts" FOR UPDATE TO "authenticated" USING ("public"."is_own_plaid_account"());
+CREATE POLICY "Can update own plaid accounts" ON "public"."plaid_accounts" FOR UPDATE TO "authenticated" USING ("public"."is_own_plaid_account"());
 
-CREATE POLICY "Can update own plaid transactions data" ON "public"."plaid_transactions" FOR UPDATE TO "authenticated" USING ("public"."is_own_plaid_transaction"());
+CREATE POLICY "Can update own plaid transactions" ON "public"."plaid_transactions" FOR UPDATE TO "authenticated" USING ("public"."is_own_plaid_transaction"());
 
 CREATE POLICY "Can update own user data or admins can update all users data" ON "public"."users" FOR UPDATE TO "authenticated" USING ((("auth"."uid"() = "id") OR "public"."is_admin"("auth"."uid"()))) WITH CHECK (((("auth"."uid"() = "id") AND ("role" = "role")) OR "public"."is_admin"("auth"."uid"())));
 
@@ -1192,9 +1318,9 @@ CREATE POLICY "Can view own institution data" ON "public"."plaid" FOR SELECT TO 
 
 CREATE POLICY "Can view own personal_finance data" ON "public"."personal_finance" FOR SELECT TO "authenticated" USING (("auth"."uid"() = "user_id"));
 
-CREATE POLICY "Can view own plaid accounts data" ON "public"."plaid_accounts" FOR SELECT TO "authenticated" USING ("public"."is_own_plaid_account"());
+CREATE POLICY "Can view own plaid accounts" ON "public"."plaid_accounts" FOR SELECT TO "authenticated" USING ("public"."is_own_plaid_account"());
 
-CREATE POLICY "Can view own plaid transactions data" ON "public"."plaid_transactions" FOR SELECT TO "authenticated" USING ("public"."is_own_plaid_transaction"());
+CREATE POLICY "Can view own plaid transactions" ON "public"."plaid_transactions" FOR SELECT TO "authenticated" USING ("public"."is_own_plaid_transaction"());
 
 CREATE POLICY "Can view their own data and admins can view all user data" ON "public"."users" FOR SELECT TO "authenticated" USING ((("auth"."uid"() = "id") OR "public"."is_admin"("auth"."uid"())));
 
@@ -1257,9 +1383,21 @@ GRANT ALL ON FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "
 GRANT ALL ON FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") TO "service_role";
 
+GRANT ALL ON TABLE "public"."user_plaid_filters" TO "anon";
+GRANT ALL ON TABLE "public"."user_plaid_filters" TO "authenticated";
+GRANT ALL ON TABLE "public"."user_plaid_filters" TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."user_plaid_filters", "user_override" boolean, "global_override" boolean) TO "anon";
+GRANT ALL ON FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."user_plaid_filters", "user_override" boolean, "global_override" boolean) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."user_plaid_filters", "user_override" boolean, "global_override" boolean) TO "service_role";
+
 GRANT ALL ON FUNCTION "public"."delete_snowball_record"("record_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."delete_snowball_record"("record_id" "uuid") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."delete_snowball_record"("record_id" "uuid") TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."delete_user_plaid_filter"("filter_id" integer, "global_filter_id" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."delete_user_plaid_filter"("filter_id" integer, "global_filter_id" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."delete_user_plaid_filter"("filter_id" integer, "global_filter_id" integer) TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."format_transaction"() TO "anon";
 GRANT ALL ON FUNCTION "public"."format_transaction"() TO "authenticated";
@@ -1369,6 +1507,10 @@ GRANT ALL ON FUNCTION "public"."update_transactions_for_updated_global_plaid_fil
 GRANT ALL ON FUNCTION "public"."update_transactions_for_updated_global_plaid_filter"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."update_transactions_for_updated_global_plaid_filter"() TO "service_role";
 
+GRANT ALL ON FUNCTION "public"."update_user_plaid_filter"() TO "anon";
+GRANT ALL ON FUNCTION "public"."update_user_plaid_filter"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."update_user_plaid_filter"() TO "service_role";
+
 GRANT ALL ON FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") TO "anon";
 GRANT ALL ON FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") TO "service_role";
@@ -1444,10 +1586,6 @@ GRANT ALL ON TABLE "public"."plaid_accounts" TO "service_role";
 GRANT ALL ON TABLE "public"."plaid_transactions" TO "anon";
 GRANT ALL ON TABLE "public"."plaid_transactions" TO "authenticated";
 GRANT ALL ON TABLE "public"."plaid_transactions" TO "service_role";
-
-GRANT ALL ON TABLE "public"."user_plaid_filters" TO "anon";
-GRANT ALL ON TABLE "public"."user_plaid_filters" TO "authenticated";
-GRANT ALL ON TABLE "public"."user_plaid_filters" TO "service_role";
 
 GRANT ALL ON SEQUENCE "public"."user_plaid_filters_id_seq" TO "anon";
 GRANT ALL ON SEQUENCE "public"."user_plaid_filters_id_seq" TO "authenticated";
