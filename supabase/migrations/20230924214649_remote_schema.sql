@@ -321,7 +321,7 @@ $$;
 ALTER FUNCTION "public"."generate_rates"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") RETURNS TABLE("id" "uuid", "inputs" "jsonb", "results" "jsonb")
-    LANGUAGE "plpgsql"
+    LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
 BEGIN
     RETURN QUERY
