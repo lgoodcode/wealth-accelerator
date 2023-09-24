@@ -44,7 +44,7 @@ CREATE POLICY "Can delete own debt snowball data" ON debt_snowball
   USING ((SELECT auth.uid()) = user_id);
 
 -- Only allow the "name" column to be updated
-CREATE OR REPLACE FUNCTION handle_update_debt_snowball()
+CREATE OR REPLACE FUNCTION verify_update_debt_snowball()
 RETURNS TRIGGER AS $$
 BEGIN
   IF NEW.id <> OLD.id THEN
@@ -64,13 +64,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION handle_update_debt_snowball() OWNER TO postgres;
+ALTER FUNCTION verify_update_debt_snowball() OWNER TO postgres;
 
 DROP TRIGGER IF EXISTS on_update_debt_snowball ON debt_snowball;
 CREATE TRIGGER on_update_debt_snowball
   BEFORE UPDATE ON debt_snowball
     FOR EACH ROW
-      EXECUTE PROCEDURE handle_update_debt_snowball();
+      EXECUTE FUNCTION verify_update_debt_snowball();
 
 
 
