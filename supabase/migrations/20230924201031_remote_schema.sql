@@ -268,18 +268,6 @@ $$;
 
 ALTER FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."user_plaid_filters", "user_override" boolean, "global_override" boolean) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."delete_snowball_record"("record_id" "uuid") RETURNS "void"
-    LANGUAGE "plpgsql"
-    AS $$
-BEGIN
-  DELETE FROM debt_snowball WHERE id = record_id;
-  DELETE FROM debt_snowball_results WHERE id = record_id;
-  DELETE FROM debt_snowball_inputs WHERE id = record_id;
-END;
-$$;
-
-ALTER FUNCTION "public"."delete_snowball_record"("record_id" "uuid") OWNER TO "postgres";
-
 CREATE OR REPLACE FUNCTION "public"."delete_user_plaid_filter"("filter_id" integer, "global_filter_id" integer DEFAULT NULL::integer) RETURNS "void"
     LANGUAGE "plpgsql"
     AS $$
@@ -332,26 +320,8 @@ $$;
 
 ALTER FUNCTION "public"."generate_rates"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") RETURNS TABLE("id" "uuid", "inputs" "jsonb", "results" "jsonb")
-    LANGUAGE "plpgsql"
-    AS $$
-BEGIN
-    RETURN QUERY
-        SELECT
-            cc.id,
-            to_jsonb(ccfi.*) AS inputs,
-            to_jsonb(ccfr.*) AS results
-        FROM creative_cash_flow cc
-        JOIN creative_cash_flow_inputs ccfi ON cc.id = inputs.id
-        JOIN creative_cash_flow_results ccfr ON cc.id = results.id
-        WHERE cc.id = record_id;
-END;
-$$;
-
-ALTER FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") OWNER TO "postgres";
-
 CREATE OR REPLACE FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") RETURNS TABLE("id" "uuid", "inputs" "jsonb", "results" "jsonb")
-    LANGUAGE "plpgsql"
+    LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
 BEGIN
     RETURN QUERY
@@ -369,7 +339,7 @@ $$;
 
 ALTER FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_debt_snowball_data_record"("record_id" "uuid") RETURNS TABLE("id" "uuid", "user_id" "uuid", "name" "text", "created_at" timestamp with time zone, "debts" "public"."debt_snowball_debt"[], "inputs" "json", "results" "json")
+CREATE OR REPLACE FUNCTION "public"."get_debt_snowball_record"("record_id" "uuid") RETURNS TABLE("id" "uuid", "user_id" "uuid", "name" "text", "created_at" timestamp with time zone, "debts" "public"."debt_snowball_debt"[], "inputs" "json", "results" "json")
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -401,9 +371,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_debt_snowball_data_record"("record_id" "uuid") OWNER TO "postgres";
+ALTER FUNCTION "public"."get_debt_snowball_record"("record_id" "uuid") OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_debt_snowball_data_records"("_user_id" "uuid") RETURNS TABLE("id" "uuid", "user_id" "uuid", "name" "text", "created_at" timestamp with time zone, "debts" "public"."debt_snowball_debt"[], "inputs" "json", "results" "json")
+CREATE OR REPLACE FUNCTION "public"."get_debt_snowball_records"("_user_id" "uuid") RETURNS TABLE("id" "uuid", "user_id" "uuid", "name" "text", "created_at" timestamp with time zone, "debts" "public"."debt_snowball_debt"[], "inputs" "json", "results" "json")
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -435,7 +405,7 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_debt_snowball_data_records"("_user_id" "uuid") OWNER TO "postgres";
+ALTER FUNCTION "public"."get_debt_snowball_records"("_user_id" "uuid") OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."get_manage_users"() RETURNS TABLE("id" "uuid", "name" "text", "email" "text", "role" "public"."user_role", "confirmed_email" boolean, "created_at" timestamp with time zone, "updated_at" timestamp with time zone)
     LANGUAGE "plpgsql" SECURITY DEFINER
@@ -460,7 +430,7 @@ $$;
 ALTER FUNCTION "public"."get_manage_users"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."get_transactions_by_user_id"("user_id" "uuid") RETURNS "json"
-    LANGUAGE "plpgsql" SECURITY DEFINER
+    LANGUAGE "plpgsql"
     AS $_$
 DECLARE
   personal_transactions JSON;
@@ -520,7 +490,7 @@ $_$;
 ALTER FUNCTION "public"."get_transactions_by_user_id"("user_id" "uuid") OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."get_transactions_with_account_name"("ins_item_id" "text", "offset_val" integer, "limit_val" integer) RETURNS TABLE("id" "text", "item_id" "text", "account_id" "text", "name" "text", "amount" numeric, "category" "public"."category", "date" timestamp with time zone, "account" "text")
-    LANGUAGE "plpgsql" SECURITY DEFINER
+    LANGUAGE "plpgsql"
     AS $$
 BEGIN
     RETURN QUERY
@@ -577,29 +547,6 @@ END;
 $$;
 
 ALTER FUNCTION "public"."handle_new_user"() OWNER TO "postgres";
-
-CREATE OR REPLACE FUNCTION "public"."handle_update_debt_snowball"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
-    AS $$
-BEGIN
-  IF NEW.id <> OLD.id THEN
-    RAISE EXCEPTION 'Updating "id" is not allowed';
-  END IF;
-  IF NEW.user_id <> OLD.user_id THEN
-    RAISE EXCEPTION 'Updating "user_id" is not allowed';
-  END IF;
-  IF NEW.debts <> OLD.debts THEN
-    RAISE EXCEPTION 'Updating "debts" is not allowed';
-  END IF;
-  IF NEW.created_at <> OLD.created_at THEN
-    RAISE EXCEPTION 'Updating "created_at" is not allowed';
-  END IF;
-
-  RETURN NEW;
-END;
-$$;
-
-ALTER FUNCTION "public"."handle_update_debt_snowball"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."handle_update_global_plaid_filter"() RETURNS "trigger"
     LANGUAGE "plpgsql"
@@ -690,7 +637,7 @@ $$;
 
 ALTER FUNCTION "public"."is_own_plaid_transaction"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."owns_debt_snowball_inputs_record"() RETURNS boolean
+CREATE OR REPLACE FUNCTION "public"."owns_debt_snowball_inputs"() RETURNS boolean
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -701,9 +648,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."owns_debt_snowball_inputs_record"() OWNER TO "postgres";
+ALTER FUNCTION "public"."owns_debt_snowball_inputs"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."owns_debt_snowball_results_record"() RETURNS boolean
+CREATE OR REPLACE FUNCTION "public"."owns_debt_snowball_results"() RETURNS boolean
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -714,7 +661,7 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."owns_debt_snowball_results_record"() OWNER TO "postgres";
+ALTER FUNCTION "public"."owns_debt_snowball_results"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."recategorize_transactions"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
@@ -857,6 +804,49 @@ END;
 $$;
 
 ALTER FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."verify_update_debt_snowball"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+  IF NEW.id <> OLD.id THEN
+    RAISE EXCEPTION 'Updating "id" is not allowed';
+  END IF;
+  IF NEW.user_id <> OLD.user_id THEN
+    RAISE EXCEPTION 'Updating "user_id" is not allowed';
+  END IF;
+  IF NEW.debts <> OLD.debts THEN
+    RAISE EXCEPTION 'Updating "debts" is not allowed';
+  END IF;
+  IF NEW.created_at <> OLD.created_at THEN
+    RAISE EXCEPTION 'Updating "created_at" is not allowed';
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+ALTER FUNCTION "public"."verify_update_debt_snowball"() OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."verify_update_plaid"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+  IF NEW.item_id <> OLD.item_id THEN
+    RAISE EXCEPTION 'Updating "item_id" is not allowed';
+  END IF;
+  IF NEW.user_id <> OLD.user_id THEN
+    RAISE EXCEPTION 'Updating "user_id" is not allowed';
+  END IF;
+  IF NEW.access_token <> OLD.access_token THEN
+    RAISE EXCEPTION 'Updating "access_token" is not allowed';
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+ALTER FUNCTION "public"."verify_update_plaid"() OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."creative_cash_flow" (
     "id" "uuid" NOT NULL,
@@ -1141,6 +1131,12 @@ ALTER TABLE ONLY "public"."users"
 ALTER TABLE ONLY "public"."users"
     ADD CONSTRAINT "users_pkey" PRIMARY KEY ("id");
 
+CREATE INDEX "idx_debt_snowball_user_id" ON "public"."debt_snowball" USING "btree" ("user_id");
+
+CREATE INDEX "idx_debts_user_id" ON "public"."debts" USING "btree" ("user_id");
+
+CREATE INDEX "idx_personal_finance_user_id" ON "public"."personal_finance" USING "btree" ("user_id");
+
 CREATE INDEX "idx_plaid_accounts_item_id" ON "public"."plaid_accounts" USING "btree" ("item_id");
 
 CREATE INDEX "idx_plaid_transactions_account_id" ON "public"."plaid_transactions" USING "btree" ("account_id");
@@ -1159,11 +1155,11 @@ CREATE TRIGGER "on_insert_global_plaid_filter" AFTER INSERT ON "public"."global_
 
 CREATE TRIGGER "on_insert_plaid_transactions" BEFORE INSERT ON "public"."plaid_transactions" FOR EACH ROW EXECUTE FUNCTION "public"."format_transaction"();
 
-CREATE TRIGGER "on_update_debt_snowball" BEFORE UPDATE ON "public"."debt_snowball" FOR EACH ROW EXECUTE FUNCTION "public"."handle_update_debt_snowball"();
-
-CREATE TRIGGER "on_update_debt_snowball" BEFORE UPDATE ON "public"."debt_snowballs" FOR EACH ROW EXECUTE FUNCTION "public"."handle_update_debt_snowball"();
+CREATE TRIGGER "on_update_debt_snowball" BEFORE UPDATE ON "public"."debt_snowball" FOR EACH ROW EXECUTE FUNCTION "public"."verify_update_debt_snowball"();
 
 CREATE TRIGGER "on_update_global_plaid_filter" BEFORE UPDATE ON "public"."global_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."handle_update_global_plaid_filter"();
+
+CREATE TRIGGER "on_update_plaid" BEFORE UPDATE ON "public"."plaid" FOR EACH ROW EXECUTE FUNCTION "public"."verify_update_plaid"();
 
 CREATE TRIGGER "on_update_user_plaid_filter" BEFORE UPDATE ON "public"."user_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."update_user_plaid_filter"();
 
@@ -1246,13 +1242,13 @@ CREATE POLICY "Can delete own debt snowball data" ON "public"."debt_snowball" FO
 
 CREATE POLICY "Can delete own debt snowball data" ON "public"."debt_snowballs" FOR DELETE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Can delete own debt snowball input data" ON "public"."debt_snowball_inputs" FOR DELETE TO "authenticated" USING (( SELECT "public"."owns_debt_snowball_inputs_record"() AS "owns_debt_snowball_inputs_record"));
+CREATE POLICY "Can delete own debt snowball input data" ON "public"."debt_snowball_inputs" FOR DELETE TO "authenticated" USING (( SELECT "public"."owns_debt_snowball_inputs"() AS "owns_debt_snowball_inputs"));
 
-CREATE POLICY "Can delete own debt snowball result data" ON "public"."debt_snowball_results" FOR DELETE TO "authenticated" USING (( SELECT "public"."owns_debt_snowball_inputs_record"() AS "owns_debt_snowball_inputs_record"));
+CREATE POLICY "Can delete own debt snowball results" ON "public"."debt_snowball_results" FOR DELETE TO "authenticated" USING (( SELECT "public"."owns_debt_snowball_results"() AS "owns_debt_snowball_results"));
 
 CREATE POLICY "Can delete own debts" ON "public"."debts" FOR DELETE TO "authenticated" USING (("auth"."uid"() = "user_id"));
 
-CREATE POLICY "Can delete own institutions" ON "public"."plaid" FOR DELETE TO "authenticated" USING (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can delete own institutions" ON "public"."plaid" FOR DELETE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 CREATE POLICY "Can delete own plaid accounts" ON "public"."plaid_accounts" FOR DELETE TO "authenticated" USING ("public"."is_own_plaid_account"());
 
@@ -1268,13 +1264,13 @@ CREATE POLICY "Can insert new debt snowball data" ON "public"."debt_snowball" FO
 
 CREATE POLICY "Can insert new debt snowball data" ON "public"."debt_snowballs" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Can insert new debt snowball input data" ON "public"."debt_snowball_inputs" FOR INSERT TO "authenticated" WITH CHECK (( SELECT "public"."owns_debt_snowball_inputs_record"() AS "owns_debt_snowball_inputs_record"));
+CREATE POLICY "Can insert new debt snowball input data" ON "public"."debt_snowball_inputs" FOR INSERT TO "authenticated" WITH CHECK (( SELECT "public"."owns_debt_snowball_inputs"() AS "owns_debt_snowball_inputs"));
 
-CREATE POLICY "Can insert new debt snowball result data" ON "public"."debt_snowball_results" FOR INSERT TO "authenticated" WITH CHECK (( SELECT "public"."owns_debt_snowball_results_record"() AS "owns_debt_snowball_results_record"));
+CREATE POLICY "Can insert new debt snowball results" ON "public"."debt_snowball_results" FOR INSERT TO "authenticated" WITH CHECK (( SELECT "public"."owns_debt_snowball_results"() AS "owns_debt_snowball_results"));
 
 CREATE POLICY "Can insert new debts" ON "public"."debts" FOR INSERT TO "authenticated" WITH CHECK (("auth"."uid"() = "user_id"));
 
-CREATE POLICY "Can insert new institutions" ON "public"."plaid" FOR INSERT TO "authenticated" WITH CHECK (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can insert new institutions" ON "public"."plaid" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 CREATE POLICY "Can insert own plaid accounts" ON "public"."plaid_accounts" FOR INSERT TO "authenticated" WITH CHECK ("public"."is_own_plaid_account"());
 
@@ -1288,13 +1284,13 @@ CREATE POLICY "Can update own debt snowball data" ON "public"."debt_snowball" FO
 
 CREATE POLICY "Can update own debt snowball data" ON "public"."debt_snowballs" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Can update own institution data" ON "public"."plaid" FOR UPDATE TO "authenticated" USING (("auth"."uid"() = "user_id")) WITH CHECK (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can update own institutions" ON "public"."plaid" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Can update own personal_finance data" ON "public"."personal_finance" FOR UPDATE TO "authenticated" USING (("auth"."uid"() = "user_id")) WITH CHECK (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can update own personal finances" ON "public"."personal_finance" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Can update own plaid accounts" ON "public"."plaid_accounts" FOR UPDATE TO "authenticated" USING ("public"."is_own_plaid_account"());
+CREATE POLICY "Can update own plaid accounts" ON "public"."plaid_accounts" FOR UPDATE TO "authenticated" USING ("public"."is_own_plaid_account"()) WITH CHECK ("public"."is_own_plaid_account"());
 
-CREATE POLICY "Can update own plaid transactions" ON "public"."plaid_transactions" FOR UPDATE TO "authenticated" USING ("public"."is_own_plaid_transaction"());
+CREATE POLICY "Can update own plaid transactions" ON "public"."plaid_transactions" FOR UPDATE TO "authenticated" USING ("public"."is_own_plaid_transaction"()) WITH CHECK ("public"."is_own_plaid_transaction"());
 
 CREATE POLICY "Can update own user data or admins can update all users data" ON "public"."users" FOR UPDATE TO "authenticated" USING ((("auth"."uid"() = "id") OR "public"."is_admin"("auth"."uid"()))) WITH CHECK (((("auth"."uid"() = "id") AND ("role" = "role")) OR "public"."is_admin"("auth"."uid"())));
 
@@ -1304,19 +1300,19 @@ CREATE POLICY "Can view own CCF or if is admin" ON "public"."creative_cash_flow"
 
 CREATE POLICY "Can view own CCF results data" ON "public"."creative_cash_flow_results" FOR SELECT TO "authenticated" USING (("auth"."uid"() = "user_id"));
 
-CREATE POLICY "Can view own debt data or admins can view all debt data" ON "public"."debts" FOR SELECT TO "authenticated" USING ((("auth"."uid"() = "user_id") OR "public"."is_admin"("auth"."uid"())));
-
 CREATE POLICY "Can view own debt snowball data or if is admin" ON "public"."debt_snowball" FOR SELECT TO "authenticated" USING (((( SELECT "auth"."uid"() AS "uid") = "user_id") OR ( SELECT "public"."is_admin"() AS "is_admin")));
 
 CREATE POLICY "Can view own debt snowball data or if is admin" ON "public"."debt_snowballs" FOR SELECT TO "authenticated" USING (((( SELECT "auth"."uid"() AS "uid") = "user_id") OR ( SELECT "public"."is_admin"() AS "is_admin")));
 
-CREATE POLICY "Can view own debt snowball input data or if admin" ON "public"."debt_snowball_inputs" FOR SELECT TO "authenticated" USING ((( SELECT "public"."owns_debt_snowball_inputs_record"() AS "owns_debt_snowball_inputs_record") OR ( SELECT "public"."is_admin"() AS "is_admin")));
+CREATE POLICY "Can view own debt snowball input data or if admin" ON "public"."debt_snowball_inputs" FOR SELECT TO "authenticated" USING ((( SELECT "public"."owns_debt_snowball_inputs"() AS "owns_debt_snowball_inputs") OR ( SELECT "public"."is_admin"() AS "is_admin")));
 
-CREATE POLICY "Can view own debt snowball result data or if admin" ON "public"."debt_snowball_results" FOR SELECT TO "authenticated" USING ((( SELECT "public"."owns_debt_snowball_results_record"() AS "owns_debt_snowball_results_record") OR ( SELECT "public"."is_admin"() AS "is_admin")));
+CREATE POLICY "Can view own debt snowball results or if admin" ON "public"."debt_snowball_results" FOR SELECT TO "authenticated" USING ((( SELECT "public"."owns_debt_snowball_results"() AS "owns_debt_snowball_results") OR ( SELECT "public"."is_admin"() AS "is_admin")));
 
-CREATE POLICY "Can view own institution data" ON "public"."plaid" FOR SELECT TO "authenticated" USING (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can view own debts or is admin" ON "public"."debts" FOR SELECT TO "authenticated" USING ((("auth"."uid"() = "user_id") OR "public"."is_admin"()));
 
-CREATE POLICY "Can view own personal_finance data" ON "public"."personal_finance" FOR SELECT TO "authenticated" USING (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can view own institutions" ON "public"."plaid" FOR SELECT TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
+
+CREATE POLICY "Can view own personal finances" ON "public"."personal_finance" FOR SELECT TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 CREATE POLICY "Can view own plaid accounts" ON "public"."plaid_accounts" FOR SELECT TO "authenticated" USING ("public"."is_own_plaid_account"());
 
@@ -1391,10 +1387,6 @@ GRANT ALL ON FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."us
 GRANT ALL ON FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."user_plaid_filters", "user_override" boolean, "global_override" boolean) TO "authenticated";
 GRANT ALL ON FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."user_plaid_filters", "user_override" boolean, "global_override" boolean) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."delete_snowball_record"("record_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."delete_snowball_record"("record_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."delete_snowball_record"("record_id" "uuid") TO "service_role";
-
 GRANT ALL ON FUNCTION "public"."delete_user_plaid_filter"("filter_id" integer, "global_filter_id" integer) TO "anon";
 GRANT ALL ON FUNCTION "public"."delete_user_plaid_filter"("filter_id" integer, "global_filter_id" integer) TO "authenticated";
 GRANT ALL ON FUNCTION "public"."delete_user_plaid_filter"("filter_id" integer, "global_filter_id" integer) TO "service_role";
@@ -1407,21 +1399,17 @@ GRANT ALL ON FUNCTION "public"."generate_rates"() TO "anon";
 GRANT ALL ON FUNCTION "public"."generate_rates"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."generate_rates"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") TO "service_role";
-
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_debt_snowball_data_record"("record_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."get_debt_snowball_data_record"("record_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_debt_snowball_data_record"("record_id" "uuid") TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_debt_snowball_record"("record_id" "uuid") TO "anon";
+GRANT ALL ON FUNCTION "public"."get_debt_snowball_record"("record_id" "uuid") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_debt_snowball_record"("record_id" "uuid") TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_debt_snowball_data_records"("_user_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."get_debt_snowball_data_records"("_user_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_debt_snowball_data_records"("_user_id" "uuid") TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_debt_snowball_records"("_user_id" "uuid") TO "anon";
+GRANT ALL ON FUNCTION "public"."get_debt_snowball_records"("_user_id" "uuid") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_debt_snowball_records"("_user_id" "uuid") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."get_manage_users"() TO "anon";
 GRANT ALL ON FUNCTION "public"."get_manage_users"() TO "authenticated";
@@ -1442,10 +1430,6 @@ GRANT ALL ON FUNCTION "public"."handle_init_personal_finance"() TO "service_role
 GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "anon";
 GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "service_role";
-
-GRANT ALL ON FUNCTION "public"."handle_update_debt_snowball"() TO "anon";
-GRANT ALL ON FUNCTION "public"."handle_update_debt_snowball"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."handle_update_debt_snowball"() TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."handle_update_global_plaid_filter"() TO "anon";
 GRANT ALL ON FUNCTION "public"."handle_update_global_plaid_filter"() TO "authenticated";
@@ -1475,13 +1459,13 @@ GRANT ALL ON FUNCTION "public"."is_own_plaid_transaction"() TO "anon";
 GRANT ALL ON FUNCTION "public"."is_own_plaid_transaction"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."is_own_plaid_transaction"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."owns_debt_snowball_inputs_record"() TO "anon";
-GRANT ALL ON FUNCTION "public"."owns_debt_snowball_inputs_record"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."owns_debt_snowball_inputs_record"() TO "service_role";
+GRANT ALL ON FUNCTION "public"."owns_debt_snowball_inputs"() TO "anon";
+GRANT ALL ON FUNCTION "public"."owns_debt_snowball_inputs"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."owns_debt_snowball_inputs"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."owns_debt_snowball_results_record"() TO "anon";
-GRANT ALL ON FUNCTION "public"."owns_debt_snowball_results_record"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."owns_debt_snowball_results_record"() TO "service_role";
+GRANT ALL ON FUNCTION "public"."owns_debt_snowball_results"() TO "anon";
+GRANT ALL ON FUNCTION "public"."owns_debt_snowball_results"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."owns_debt_snowball_results"() TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."recategorize_transactions"() TO "anon";
 GRANT ALL ON FUNCTION "public"."recategorize_transactions"() TO "authenticated";
@@ -1514,6 +1498,14 @@ GRANT ALL ON FUNCTION "public"."update_user_plaid_filter"() TO "service_role";
 GRANT ALL ON FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") TO "anon";
 GRANT ALL ON FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."verify_update_debt_snowball"() TO "anon";
+GRANT ALL ON FUNCTION "public"."verify_update_debt_snowball"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."verify_update_debt_snowball"() TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."verify_update_plaid"() TO "anon";
+GRANT ALL ON FUNCTION "public"."verify_update_plaid"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."verify_update_plaid"() TO "service_role";
 
 GRANT ALL ON TABLE "public"."creative_cash_flow" TO "anon";
 GRANT ALL ON TABLE "public"."creative_cash_flow" TO "authenticated";

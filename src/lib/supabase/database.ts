@@ -631,29 +631,9 @@ export interface Database {
           new_created_at: string
         }[]
       }
-      create_user_plaid_filter: {
-        Args: {
-          _filter: unknown
-          user_override: boolean
-          global_override: boolean
-        }
-        Returns: {
-          category: Database["public"]["Enums"]["category"]
-          filter: string
-          id: number
-          user_id: string
-        }
-      }
       delete_snowball_record: {
         Args: {
           record_id: string
-        }
-        Returns: undefined
-      }
-      delete_user_plaid_filter: {
-        Args: {
-          filter_id: number
-          global_filter_id?: number
         }
         Returns: undefined
       }
@@ -746,13 +726,13 @@ export interface Database {
       }
       is_admin:
         | {
-            Args: {
-              user_id: string
-            }
+            Args: Record<PropertyKey, never>
             Returns: boolean
           }
         | {
-            Args: Record<PropertyKey, never>
+            Args: {
+              user_id: string
+            }
             Returns: boolean
           }
       is_authenticated: {
