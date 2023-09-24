@@ -45,9 +45,13 @@ BEGIN
         LIMIT
             limit_val;
 END;
-$$ LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql;
 
-ALTER FUNCTION get_transactions_with_account_name(ins_item_id text, offset_val int, limit_val int) OWNER TO postgres;
+ALTER FUNCTION get_transactions_with_account_name(
+  ins_item_id text,
+  offset_val int,
+  limit_val int
+) OWNER TO postgres;
 
 
 -- Retrieves all transactions for all accounts for the user except for transactions
@@ -112,7 +116,7 @@ BEGIN
     'business', business_transactions
   );
 END;
-$$ LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql;
 
 ALTER FUNCTION public.get_transactions_by_user_id(user_id uuid) OWNER TO postgres;
 
@@ -140,7 +144,7 @@ BEGIN
         WHERE ccfi.user_id = arg_user_id
         ORDER BY ccfi.created_at DESC;
 END;
-$$ LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql;
 
 ALTER FUNCTION get_creative_cash_flow_records(arg_user_id uuid) OWNER TO postgres;
 
@@ -162,8 +166,8 @@ BEGIN
             to_jsonb(ccfi.*) AS inputs,
             to_jsonb(ccfr.*) AS results
         FROM creative_cash_flow cc
-        JOIN creative_cash_flow_inputs ccfi ON cc.id = inputs.id
-        JOIN creative_cash_flow_results ccfr ON cc.id = results.id
+        JOIN creative_cash_flow_inputs ccfi ON cc.id = ccfi.id
+        JOIN creative_cash_flow_results ccfr ON cc.id = ccfr.id
         WHERE cc.id = record_id;
 END;
 $$ LANGUAGE plpgsql SECURITY definer;
@@ -187,9 +191,12 @@ BEGIN
 
   RETURN total_waa_sum;
 END;
-$$ LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql;
 
-ALTER FUNCTION total_waa_before_date(user_id uuid, target_date timestamp with time zone) OWNER TO postgres;
+ALTER FUNCTION total_waa_before_date(
+  user_id uuid,
+  target_date timestamp with time zone
+) OWNER TO postgres;
 
 
 

@@ -49,12 +49,15 @@ CREATE POLICY "Can insert own plaid transactions" ON public.plaid_transactions
 CREATE POLICY "Can update own plaid transactions" ON public.plaid_transactions
   FOR UPDATE
   TO authenticated
-  USING (is_own_plaid_transaction());
+  USING (is_own_plaid_transaction())
+  WITH CHECK (is_own_plaid_transaction());
 
 CREATE POLICY "Can delete own plaid transactions" ON public.plaid_transactions
   FOR DELETE
   TO authenticated
   USING (is_own_plaid_transaction());
+
+
 
 -- Function that formats a transaction that is being inserted
 CREATE OR REPLACE FUNCTION format_transaction()

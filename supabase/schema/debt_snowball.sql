@@ -17,6 +17,8 @@ CREATE TABLE debt_snowball (
   created_at timestamp with time zone NOT NULL DEFAULT NOW()
 );
 
+CREATE INDEX IF NOT EXISTS idx_debt_snowball_user_id ON debt_snowball(user_id);
+
 ALTER TABLE debt_snowball OWNER TO postgres;
 ALTER TABLE debt_snowball ENABLE ROW LEVEL SECURITY;
 
@@ -42,7 +44,7 @@ CREATE POLICY "Can delete own debt snowball data" ON debt_snowball
   USING ((SELECT auth.uid()) = user_id);
 
 -- Only allow the "name" column to be updated
-CREATE OR REPLACE FUNCTION handle_update_debt_snowball()
+CREATE OR REPLACE FUNCTION verify_update_debt_snowball()
 RETURNS TRIGGER AS $$
 BEGIN
   IF NEW.id <> OLD.id THEN
@@ -62,13 +64,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION handle_update_debt_snowball() OWNER TO postgres;
+ALTER FUNCTION verify_update_debt_snowball() OWNER TO postgres;
 
 DROP TRIGGER IF EXISTS on_update_debt_snowball ON debt_snowball;
 CREATE TRIGGER on_update_debt_snowball
   BEFORE UPDATE ON debt_snowball
     FOR EACH ROW
-      EXECUTE PROCEDURE handle_update_debt_snowball();
+      EXECUTE FUNCTION verify_update_debt_snowball();
 
 
 
@@ -145,7 +147,7 @@ ALTER FUNCTION create_debt_snowball_record(
 --     results.current.balance_tracking
 --     results.strategy.balance_tracking
 --     results.strategy.loan_payback.tracking
-CREATE OR REPLACE FUNCTION get_debt_snowball_data_records(_user_id uuid)
+CREATE OR REPLACE FUNCTION get_debt_snowball_records(_user_id uuid)
 RETURNS TABLE (
   id uuid,
   user_id uuid,
@@ -184,7 +186,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION get_debt_snowball_data_records(_user_id uuid) OWNER TO postgres;
+ALTER FUNCTION get_debt_snowball_records(_user_id uuid) OWNER TO postgres;
 
 
 
@@ -193,7 +195,7 @@ ALTER FUNCTION get_debt_snowball_data_records(_user_id uuid) OWNER TO postgres;
 --     results.current.balance_tracking
 --     results.strategy.balance_tracking
 --     results.strategy.loan_payback.tracking
-CREATE OR REPLACE FUNCTION get_debt_snowball_data_record(record_id uuid)
+CREATE OR REPLACE FUNCTION get_debt_snowball_record(record_id uuid)
 RETURNS TABLE (
   id uuid,
   user_id uuid,
@@ -232,17 +234,4 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION get_debt_snowball_data_record(record_id uuid) OWNER TO postgres;
-
-
-
-CREATE OR REPLACE FUNCTION delete_snowball_record(record_id UUID)
-RETURNS VOID AS $$
-BEGIN
-  DELETE FROM debt_snowball WHERE id = record_id;
-  DELETE FROM debt_snowball_results WHERE id = record_id;
-  DELETE FROM debt_snowball_inputs WHERE id = record_id;
-END;
-$$ LANGUAGE plpgsql;
-
-ALTER FUNCTION delete_snowball_record(record_id uuid) OWNER TO postgres;
+ALTER FUNCTION get_debt_snowball_record(record_id uuid) OWNER TO postgres;

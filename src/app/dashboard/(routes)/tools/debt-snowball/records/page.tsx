@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export default async function DebtSnowballRecordsPage() {
   const user = (await getUser()) as User;
   const supabase = createSupabase();
-  const { error, data } = await supabase.rpc('get_debt_snowball_data_records', {
+  const { error, data } = await supabase.rpc('get_debt_snowball_records', {
     _user_id: user.id,
   });
 

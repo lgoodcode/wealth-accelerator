@@ -9,13 +9,15 @@ CREATE TABLE debts (
   months_remaining smallint NOT NULL DEFAULT 0
 );
 
+CREATE INDEX IF NOT EXISTS idx_debts_user_id ON debts(user_id);
+
 ALTER TABLE debts OWNER TO postgres;
 ALTER TABLE debts ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Can view own debt data or admins can view all debt data" ON public.debts
+CREATE POLICY "Can view own debts or is admin" ON public.debts
   FOR SELECT
   TO authenticated
-  USING (auth.uid() = user_id OR is_admin(auth.uid()));
+  USING (auth.uid() = user_id OR is_admin());
 
 CREATE POLICY "Can insert new debts" ON public.debts
   FOR INSERT

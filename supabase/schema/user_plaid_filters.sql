@@ -25,6 +25,8 @@ CREATE POLICY "Users can update own plaid filters" ON user_plaid_filters
   FOR UPDATE
   TO authenticated
   USING ((SELECT auth.uid()) = user_id);
+  -- WITH CHECK is omitted because the BEFORE UPDATE trigger checks for this
+  -- and does other operations
 
 CREATE POLICY "Users can delete own plaid filters" ON user_plaid_filters
   FOR DELETE
@@ -165,4 +167,4 @@ DROP TRIGGER IF EXISTS on_update_user_plaid_filter ON user_plaid_filters;
 CREATE TRIGGER on_update_user_plaid_filter
   BEFORE UPDATE ON user_plaid_filters
     FOR EACH ROW
-      EXECUTE PROCEDURE update_user_plaid_filter();
+      EXECUTE FUNCTION update_user_plaid_filter();

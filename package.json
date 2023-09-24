@@ -1,5 +1,5 @@
 {
-  "name": "project",
+  "name": "wealth-accelerator",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
     "analyze": "cross-env ANALYZE=true next build",
     "supabase:serve": "supabase functions serve --env-file ./supabase/functions/.env.local",
     "supabase:gen-types": "supabase gen types typescript --local > ./src/lib/supabase/database.ts",
-    "supabase:reset": "supabase stop && supabase start && npm run genTypes",
+    "supabase:reset": "supabase db reset && npm run supabase:gen-types",
     "git:reset": "git stash && git checkout main && git pull && git branch -D staging && git checkout -b staging && git push -uf origin staging && git stash pop"
   },
   "dependencies": {

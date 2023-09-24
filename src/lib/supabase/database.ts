@@ -644,12 +644,6 @@ export interface Database {
           user_id: string
         }
       }
-      delete_snowball_record: {
-        Args: {
-          record_id: string
-        }
-        Returns: undefined
-      }
       delete_user_plaid_filter: {
         Args: {
           filter_id: number
@@ -681,7 +675,7 @@ export interface Database {
           results: Json
         }[]
       }
-      get_debt_snowball_data_record: {
+      get_debt_snowball_record: {
         Args: {
           record_id: string
         }
@@ -695,7 +689,7 @@ export interface Database {
           results: Json
         }[]
       }
-      get_debt_snowball_data_records: {
+      get_debt_snowball_records: {
         Args: {
           _user_id: string
         }
@@ -773,11 +767,11 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
-      owns_debt_snowball_inputs_record: {
+      owns_debt_snowball_inputs: {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
-      owns_debt_snowball_results_record: {
+      owns_debt_snowball_results: {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
