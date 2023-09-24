@@ -14,23 +14,23 @@ CREATE INDEX IF NOT EXISTS idx_plaid_user_id ON plaid(user_id);
 ALTER TABLE plaid OWNER TO postgres;
 ALTER TABLE plaid ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Can view own institution data" ON public.plaid
+CREATE POLICY "Can view own institutions" ON public.plaid
   FOR SELECT
   TO authenticated
-  USING (auth.uid() = user_id);
+  USING ((SELECT auth.uid()) = user_id);
 
 CREATE POLICY "Can insert new institutions" ON public.plaid
   FOR INSERT
   TO authenticated
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK ((SELECT auth.uid()) = user_id);
 
-CREATE POLICY "Can update own institution data" ON public.plaid
+CREATE POLICY "Can update own institutions" ON public.plaid
   FOR UPDATE
   TO authenticated
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
 
 CREATE POLICY "Can delete own institutions" ON public.plaid
   FOR DELETE
   TO authenticated
-  USING (auth.uid() = user_id);
+  USING ((SELECT auth.uid()) = user_id);
