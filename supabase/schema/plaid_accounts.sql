@@ -42,7 +42,8 @@ CREATE POLICY "Can insert own plaid accounts" ON public.plaid_accounts
 CREATE POLICY "Can update own plaid accounts" ON public.plaid_accounts
   FOR UPDATE
   TO authenticated
-  USING (is_own_plaid_account());
+  USING (is_own_plaid_account())
+  WITH CHECK (is_own_plaid_account());
 
 CREATE POLICY "Can delete own plaid accounts" ON public.plaid_accounts
   FOR DELETE
