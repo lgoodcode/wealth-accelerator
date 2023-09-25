@@ -163,7 +163,7 @@ export function CreateUserPlaidFilterDialog() {
                   </FormDescription>
                   <FormControl>
                     <Checkbox
-                      id="enabled"
+                      id="user-override"
                       name={field.name}
                       className="w-6 h-6"
                       ref={field.ref}
@@ -189,7 +189,7 @@ export function CreateUserPlaidFilterDialog() {
                   </FormDescription>
                   <FormControl>
                     <Checkbox
-                      id="enabled"
+                      id="global-override"
                       name={field.name}
                       className="w-6 h-6"
                       ref={field.ref}
@@ -209,7 +209,9 @@ export function CreateUserPlaidFilterDialog() {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button loading={form.formState.isSubmitting}>Save</Button>
+              <Button type="submit" loading={form.formState.isSubmitting}>
+                Save
+              </Button>
             </DialogFooter>
           </form>
         </Form>

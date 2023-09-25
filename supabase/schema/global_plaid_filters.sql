@@ -28,6 +28,53 @@ CREATE POLICY "Admins can delete global plaid filters" ON global_plaid_filters
   TO authenticated
   USING ((SELECT is_admin()));
 
+
+
+CREATE OR REPLACE FUNCTION create_global_plaid_filter(
+  _filter global_plaid_filters,
+  override boolean
+)
+RETURNS global_plaid_filters AS $$
+DECLARE
+  new_filter global_plaid_filters;
+BEGIN
+  INSERT INTO global_plaid_filters (filter, category)
+  VALUES (_filter.filter, _filter.category)
+  RETURNING * INTO new_filter;
+
+  -- Create a temporary table of transaction id's that match the filter, don't already
+  -- have a user filter applied, and if the override flag is set, include transactions
+  -- that have a global filter, otherwise, skip those
+  CREATE TEMP TABLE temp_transactions AS
+  SELECT pt.id
+  FROM plaid_transactions pt
+  JOIN plaid p ON p.item_id = pt.item_id
+  WHERE
+    pt.user_filter_id IS NULL
+    AND CASE
+      WHEN override = FALSE THEN pt.global_filter_id IS NULL
+      ELSE TRUE
+    END
+    AND LOWER(pt.name) LIKE '%' || LOWER(_filter.filter) || '%';
+
+  UPDATE plaid_transactions pt
+  SET category = _filter.category,
+    global_filter_id = new_filter.id
+  FROM temp_transactions tt
+  WHERE pt.id = tt.id;
+
+  DROP TABLE temp_transactions;
+  RETURN new_filter;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION create_global_plaid_filter(
+  _filter global_plaid_filters,
+  override boolean
+) OWNER TO postgres;
+
+
+
 CREATE OR REPLACE FUNCTION update_transactions_for_new_global_plaid_filter()
 RETURNS TRIGGER AS $$
 BEGIN

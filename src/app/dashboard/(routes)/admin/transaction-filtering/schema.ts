@@ -17,6 +17,7 @@ export const createGlobalFilterFormSchema = z.object({
   category: z.nativeEnum(Category, {
     required_error: 'Select a category',
   }),
+  override: z.boolean().optional(),
 });
 
 export type CreateGlobalFilterFormType = z.infer<typeof createGlobalFilterFormSchema>;

@@ -631,6 +631,17 @@ export interface Database {
           new_created_at: string
         }[]
       }
+      create_global_plaid_filter: {
+        Args: {
+          _filter: unknown
+          override: boolean
+        }
+        Returns: {
+          category: Database["public"]["Enums"]["category"]
+          filter: string
+          id: number
+        }
+      }
       create_user_plaid_filter: {
         Args: {
           _filter: unknown
@@ -740,13 +751,13 @@ export interface Database {
       }
       is_admin:
         | {
-            Args: {
-              user_id: string
-            }
+            Args: Record<PropertyKey, never>
             Returns: boolean
           }
         | {
-            Args: Record<PropertyKey, never>
+            Args: {
+              user_id: string
+            }
             Returns: boolean
           }
       is_authenticated: {
