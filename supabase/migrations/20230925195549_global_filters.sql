@@ -77,3 +77,92 @@ CREATE TRIGGER on_update_global_plaid_filter
   BEFORE UPDATE ON global_plaid_filters
     FOR EACH ROW
       EXECUTE FUNCTION update_global_plaid_filter();
+
+
+
+-- When a user filter is deleted, if the user selected a global filter to use,
+-- then we will update the transactions to use the global filter instead.
+CREATE OR REPLACE FUNCTION delete_global_plaid_filter(filter_id int, new_filter_id int DEFAULT NULL)
+RETURNS VOID AS $$
+DECLARE
+  new_global_filter global_plaid_filters;
+BEGIN
+  IF new_filter_id IS NOT NULL THEN
+    SELECT * FROM global_plaid_filters WHERE id = new_filter_id INTO new_global_filter;
+
+    UPDATE plaid_transactions
+    SET
+      category = new_global_filter.category,
+      global_filter_id = new_global_filter.id
+    WHERE global_filter_id = filter_id;
+  ELSE
+    UPDATE plaid_transactions
+    SET
+      category = CASE
+        WHEN amount < 0 THEN 'Money-In'::category
+        ELSE 'Money-Out'::category
+      END,
+      global_filter_id = NULL
+    WHERE global_filter_id = filter_id;
+  END IF;
+
+  DELETE FROM global_plaid_filters WHERE id = filter_id;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION delete_global_plaid_filter(
+  filter_id int,
+  new_filter_id int
+) OWNER TO postgres;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- When a user filter is deleted, if the user selected a global filter to use,
+-- then we will update the transactions to use the global filter instead.
+CREATE OR REPLACE FUNCTION delete_user_plaid_filter(filter_id int, global_filter_id int DEFAULT NULL)
+RETURNS VOID AS $$
+DECLARE
+  global_filter global_plaid_filters;
+BEGIN
+  IF global_filter_id IS NOT NULL THEN
+    SELECT * FROM global_plaid_filters WHERE id = global_filter_id INTO global_filter;
+
+    UPDATE plaid_transactions
+    SET
+      category = global_filter.category,
+      global_filter_id = global_filter.id,
+      user_filter_id = NULL
+    WHERE user_filter_id = filter_id;
+  ELSE
+    UPDATE plaid_transactions
+    SET
+      category = CASE
+        WHEN amount < 0 THEN 'Money-In'::category
+        ELSE 'Money-Out'::category
+      END,
+      global_filter_id = NULL,
+      user_filter_id = NULL
+    WHERE user_filter_id = filter_id;
+  END IF;
+
+  DELETE FROM user_plaid_filters WHERE id = filter_id;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION delete_user_plaid_filter(
+  filter_id int,
+  global_filter_id int
+) OWNER TO postgres;

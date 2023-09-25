@@ -655,6 +655,13 @@ export interface Database {
           user_id: string
         }
       }
+      delete_global_plaid_filter: {
+        Args: {
+          filter_id: number
+          new_filter_id?: number
+        }
+        Returns: undefined
+      }
       delete_user_plaid_filter: {
         Args: {
           filter_id: number

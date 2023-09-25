@@ -34,7 +34,7 @@ import { useUpdateUserPlaidFilter } from '../hooks/use-update-user-plaid-filter'
 import { updateUserFilterFormSchema, type UpdateUserFilterFormType } from '../schema';
 import { Category, type UserFilter } from '@/lib/plaid/types/transactions';
 
-interface UpdateFilterDialogProps {
+interface UpdateUserPlaidFilterDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
   filter: UserFilter;
@@ -44,7 +44,7 @@ export function UpdateUserPlaidFilterDialog({
   open,
   onOpenChange,
   filter,
-}: UpdateFilterDialogProps) {
+}: UpdateUserPlaidFilterDialogProps) {
   const updateFilter = useUpdateUserPlaidFilter();
   const queryClient = useQueryClient();
   const form = useForm<UpdateUserFilterFormType>({

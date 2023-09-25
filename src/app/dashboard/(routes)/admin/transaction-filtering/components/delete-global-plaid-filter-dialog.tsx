@@ -24,34 +24,37 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { globalFiltersAtom } from '../atoms';
-import { useDeleteUserPlaidFilter } from '../hooks/use-delete-user-plaid-filter';
-import { deleteUserFilterFormSchema, type DeleteUserFilterFormType } from '../schema';
-import type { UserFilter } from '@/lib/plaid/types/transactions';
+import { useDeleteGlobalPlaidFilter } from '../hooks/use-delete-global-plaid-filter';
+import { deleteGlobalFilterFormSchema, type DeleteGlobalFilterFormType } from '../schema';
+import type { Filter } from '@/lib/plaid/types/transactions';
 
-interface DeleteUserPlaidFilterDialogProps {
+interface DeleteGlobalPlaidFilterDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
-  filter: UserFilter;
+  filter: Filter;
 }
 
-export function DeleteUserPlaidFilterDialog({
+export function DeleteGlobalPlaidFilterDialog({
   open,
   onOpenChange,
   filter,
-}: DeleteUserPlaidFilterDialogProps) {
-  const deleteFilter = useDeleteUserPlaidFilter();
+}: DeleteGlobalPlaidFilterDialogProps) {
+  const deleteFilter = useDeleteGlobalPlaidFilter();
   const queryClient = useQueryClient();
   const globalFilters = useAtomValue(globalFiltersAtom);
-  const form = useForm<DeleteUserFilterFormType>({
-    resolver: zodResolver(deleteUserFilterFormSchema),
+  const form = useForm<DeleteGlobalFilterFormType>({
+    resolver: zodResolver(deleteGlobalFilterFormSchema),
   });
   const matchingGlobalFilters = !globalFilters
     ? []
     : globalFilters.filter((globalFilter) => {
-        return new RegExp(globalFilter.filter, 'i').test(filter.filter);
+        return (
+          globalFilter.filter !== filter.filter &&
+          new RegExp(globalFilter.filter, 'i').test(filter.filter)
+        );
       });
 
-  const handleDelete = async ({ global_filter_id }: DeleteUserFilterFormType) => {
+  const handleDelete = async ({ global_filter_id }: DeleteGlobalFilterFormType) => {
     await deleteFilter(filter.id, global_filter_id)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {
