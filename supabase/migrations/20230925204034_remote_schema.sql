@@ -202,6 +202,52 @@ SET default_tablespace = '';
 
 SET default_table_access_method = "heap";
 
+CREATE TABLE IF NOT EXISTS "public"."global_plaid_filters" (
+    "id" integer NOT NULL,
+    "filter" "text" NOT NULL,
+    "category" "public"."category" NOT NULL
+);
+
+ALTER TABLE "public"."global_plaid_filters" OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."create_global_plaid_filter"("_filter" "public"."global_plaid_filters", "override" boolean) RETURNS "public"."global_plaid_filters"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+  new_filter global_plaid_filters;
+BEGIN
+  INSERT INTO global_plaid_filters (filter, category)
+  VALUES (_filter.filter, _filter.category)
+  RETURNING * INTO new_filter;
+
+  -- Create a temporary table of transaction id's that match the filter, don't already
+  -- have a user filter applied, and if the override flag is set, include transactions
+  -- that have a global filter, otherwise, skip those
+  CREATE TEMP TABLE temp_transactions AS
+  SELECT pt.id
+  FROM plaid_transactions pt
+  JOIN plaid p ON p.item_id = pt.item_id
+  WHERE
+    pt.user_filter_id IS NULL
+    AND CASE
+      WHEN override = FALSE THEN pt.global_filter_id IS NULL
+      ELSE TRUE
+    END
+    AND LOWER(pt.name) LIKE '%' || LOWER(_filter.filter) || '%';
+
+  UPDATE plaid_transactions pt
+  SET category = _filter.category,
+    global_filter_id = new_filter.id
+  FROM temp_transactions tt
+  WHERE pt.id = tt.id;
+
+  DROP TABLE temp_transactions;
+  RETURN new_filter;
+END;
+$$;
+
+ALTER FUNCTION "public"."create_global_plaid_filter"("_filter" "public"."global_plaid_filters", "override" boolean) OWNER TO "postgres";
+
 CREATE TABLE IF NOT EXISTS "public"."user_plaid_filters" (
     "id" integer NOT NULL,
     "user_id" "uuid" NOT NULL,
@@ -268,6 +314,37 @@ $$;
 
 ALTER FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."user_plaid_filters", "user_override" boolean, "global_override" boolean) OWNER TO "postgres";
 
+CREATE OR REPLACE FUNCTION "public"."delete_global_plaid_filter"("filter_id" integer, "new_filter_id" integer DEFAULT NULL::integer) RETURNS "void"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+  new_global_filter global_plaid_filters;
+BEGIN
+  IF new_filter_id IS NOT NULL THEN
+    SELECT * FROM global_plaid_filters WHERE id = new_filter_id INTO new_global_filter;
+
+    UPDATE plaid_transactions
+    SET
+      category = new_global_filter.category,
+      global_filter_id = new_global_filter.id
+    WHERE global_filter_id = filter_id;
+  ELSE
+    UPDATE plaid_transactions
+    SET
+      category = CASE
+        WHEN amount < 0 THEN 'Money-In'::category
+        ELSE 'Money-Out'::category
+      END,
+      global_filter_id = NULL
+    WHERE global_filter_id = filter_id;
+  END IF;
+
+  DELETE FROM global_plaid_filters WHERE id = filter_id;
+END;
+$$;
+
+ALTER FUNCTION "public"."delete_global_plaid_filter"("filter_id" integer, "new_filter_id" integer) OWNER TO "postgres";
+
 CREATE OR REPLACE FUNCTION "public"."delete_user_plaid_filter"("filter_id" integer, "global_filter_id" integer DEFAULT NULL::integer) RETURNS "void"
     LANGUAGE "plpgsql"
     AS $$
@@ -280,7 +357,8 @@ BEGIN
     UPDATE plaid_transactions
     SET
       category = global_filter.category,
-      global_filter_id = global_filter.id
+      global_filter_id = global_filter.id,
+      user_filter_id = NULL
     WHERE user_filter_id = filter_id;
   ELSE
     UPDATE plaid_transactions
@@ -289,7 +367,8 @@ BEGIN
         WHEN amount < 0 THEN 'Money-In'::category
         ELSE 'Money-Out'::category
       END,
-      global_filter_id = NULL
+      global_filter_id = NULL,
+      user_filter_id = NULL
     WHERE user_filter_id = filter_id;
   END IF;
 
@@ -566,23 +645,6 @@ $$;
 
 ALTER FUNCTION "public"."handle_new_user"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."handle_update_global_plaid_filter"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
-    AS $$
-BEGIN
-  IF NEW.id <> OLD.id THEN
-    RAISE EXCEPTION 'Updating "id" is not allowed';
-  END IF;
-  IF NEW.filter <> OLD.filter THEN
-    RAISE EXCEPTION 'Updating "filter" is not allowed';
-  END IF;
-
-  RETURN NEW;
-END;
-$$;
-
-ALTER FUNCTION "public"."handle_update_global_plaid_filter"() OWNER TO "postgres";
-
 CREATE OR REPLACE FUNCTION "public"."is_admin"() RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -717,6 +779,27 @@ $_$;
 
 ALTER FUNCTION "public"."total_waa_before_date"("user_id" "uuid", "target_date" timestamp with time zone) OWNER TO "postgres";
 
+CREATE OR REPLACE FUNCTION "public"."update_global_plaid_filter"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+  IF NEW.id <> OLD.id THEN
+    RAISE EXCEPTION 'Updating "id" is not allowed';
+  END IF;
+  IF NEW.filter <> OLD.filter THEN
+    RAISE EXCEPTION 'Updating "filter" is not allowed';
+  END IF;
+
+  UPDATE plaid_transactions
+  SET category = NEW.category
+  WHERE global_filter_id = NEW.id;
+
+  RETURN NEW;
+END;
+$$;
+
+ALTER FUNCTION "public"."update_global_plaid_filter"() OWNER TO "postgres";
+
 CREATE OR REPLACE FUNCTION "public"."update_transaction_categories"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -729,51 +812,6 @@ END;
 $$;
 
 ALTER FUNCTION "public"."update_transaction_categories"() OWNER TO "postgres";
-
-CREATE OR REPLACE FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
-    AS $$
-BEGIN
-  UPDATE plaid_transactions
-  SET category = CASE
-    WHEN amount < 0 THEN 'Money-In'::category
-    ELSE 'Money-Out'::category
-  END
-  WHERE global_filter_id = OLD.id;
-  RETURN OLD;
-END;
-$$;
-
-ALTER FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"() OWNER TO "postgres";
-
-CREATE OR REPLACE FUNCTION "public"."update_transactions_for_new_global_plaid_filter"() RETURNS "trigger"
-    LANGUAGE "plpgsql" SECURITY DEFINER
-    AS $$
-BEGIN
-  UPDATE plaid_transactions
-  SET category = NEW.category,
-    user_filter_id = NULL,
-    global_filter_id = NEW.id
-  WHERE LOWER(name) LIKE '%' || LOWER(NEW.filter) || '%'
-    AND category IS DISTINCT FROM NEW.category; -- Only update if category is different
-  RETURN NULL;
-END;
-$$;
-
-ALTER FUNCTION "public"."update_transactions_for_new_global_plaid_filter"() OWNER TO "postgres";
-
-CREATE OR REPLACE FUNCTION "public"."update_transactions_for_updated_global_plaid_filter"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
-    AS $$
-BEGIN
-  UPDATE plaid_transactions
-  SET category = NEW.category
-  WHERE global_filter_id = NEW.id;
-  RETURN NULL;
-END;
-$$;
-
-ALTER FUNCTION "public"."update_transactions_for_updated_global_plaid_filter"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."update_user_plaid_filter"() RETURNS "trigger"
     LANGUAGE "plpgsql"
@@ -988,14 +1026,6 @@ ALTER TABLE "public"."debts" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENT
     CACHE 1
 );
 
-CREATE TABLE IF NOT EXISTS "public"."global_plaid_filters" (
-    "id" integer NOT NULL,
-    "filter" "text" NOT NULL,
-    "category" "public"."category" NOT NULL
-);
-
-ALTER TABLE "public"."global_plaid_filters" OWNER TO "postgres";
-
 ALTER TABLE "public"."global_plaid_filters" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME "public"."global_plaid_filters_id_seq"
     START WITH 1
@@ -1167,15 +1197,11 @@ CREATE INDEX "idx_plaid_transactions_user_filter_id" ON "public"."plaid_transact
 
 CREATE INDEX "idx_plaid_user_id" ON "public"."plaid" USING "btree" ("user_id");
 
-CREATE TRIGGER "on_delete_global_plaid_filter" BEFORE DELETE ON "public"."global_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"();
-
-CREATE TRIGGER "on_insert_global_plaid_filter" AFTER INSERT ON "public"."global_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."update_transactions_for_new_global_plaid_filter"();
-
 CREATE TRIGGER "on_insert_plaid_transactions" BEFORE INSERT ON "public"."plaid_transactions" FOR EACH ROW EXECUTE FUNCTION "public"."format_transaction"();
 
 CREATE TRIGGER "on_update_debt_snowball" BEFORE UPDATE ON "public"."debt_snowball" FOR EACH ROW EXECUTE FUNCTION "public"."verify_update_debt_snowball"();
 
-CREATE TRIGGER "on_update_global_plaid_filter" BEFORE UPDATE ON "public"."global_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."handle_update_global_plaid_filter"();
+CREATE TRIGGER "on_update_global_plaid_filter" BEFORE UPDATE ON "public"."global_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."update_global_plaid_filter"();
 
 CREATE TRIGGER "on_update_plaid" BEFORE UPDATE ON "public"."plaid" FOR EACH ROW EXECUTE FUNCTION "public"."verify_update_plaid"();
 
@@ -1397,6 +1423,14 @@ GRANT ALL ON FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "
 GRANT ALL ON FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") TO "service_role";
 
+GRANT ALL ON TABLE "public"."global_plaid_filters" TO "anon";
+GRANT ALL ON TABLE "public"."global_plaid_filters" TO "authenticated";
+GRANT ALL ON TABLE "public"."global_plaid_filters" TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."create_global_plaid_filter"("_filter" "public"."global_plaid_filters", "override" boolean) TO "anon";
+GRANT ALL ON FUNCTION "public"."create_global_plaid_filter"("_filter" "public"."global_plaid_filters", "override" boolean) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."create_global_plaid_filter"("_filter" "public"."global_plaid_filters", "override" boolean) TO "service_role";
+
 GRANT ALL ON TABLE "public"."user_plaid_filters" TO "anon";
 GRANT ALL ON TABLE "public"."user_plaid_filters" TO "authenticated";
 GRANT ALL ON TABLE "public"."user_plaid_filters" TO "service_role";
@@ -1404,6 +1438,10 @@ GRANT ALL ON TABLE "public"."user_plaid_filters" TO "service_role";
 GRANT ALL ON FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."user_plaid_filters", "user_override" boolean, "global_override" boolean) TO "anon";
 GRANT ALL ON FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."user_plaid_filters", "user_override" boolean, "global_override" boolean) TO "authenticated";
 GRANT ALL ON FUNCTION "public"."create_user_plaid_filter"("_filter" "public"."user_plaid_filters", "user_override" boolean, "global_override" boolean) TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."delete_global_plaid_filter"("filter_id" integer, "new_filter_id" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."delete_global_plaid_filter"("filter_id" integer, "new_filter_id" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."delete_global_plaid_filter"("filter_id" integer, "new_filter_id" integer) TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."delete_user_plaid_filter"("filter_id" integer, "global_filter_id" integer) TO "anon";
 GRANT ALL ON FUNCTION "public"."delete_user_plaid_filter"("filter_id" integer, "global_filter_id" integer) TO "authenticated";
@@ -1453,10 +1491,6 @@ GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "anon";
 GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."handle_update_global_plaid_filter"() TO "anon";
-GRANT ALL ON FUNCTION "public"."handle_update_global_plaid_filter"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."handle_update_global_plaid_filter"() TO "service_role";
-
 GRANT ALL ON FUNCTION "public"."is_admin"() TO "anon";
 GRANT ALL ON FUNCTION "public"."is_admin"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."is_admin"() TO "service_role";
@@ -1497,21 +1531,13 @@ GRANT ALL ON FUNCTION "public"."total_waa_before_date"("user_id" "uuid", "target
 GRANT ALL ON FUNCTION "public"."total_waa_before_date"("user_id" "uuid", "target_date" timestamp with time zone) TO "authenticated";
 GRANT ALL ON FUNCTION "public"."total_waa_before_date"("user_id" "uuid", "target_date" timestamp with time zone) TO "service_role";
 
+GRANT ALL ON FUNCTION "public"."update_global_plaid_filter"() TO "anon";
+GRANT ALL ON FUNCTION "public"."update_global_plaid_filter"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."update_global_plaid_filter"() TO "service_role";
+
 GRANT ALL ON FUNCTION "public"."update_transaction_categories"() TO "anon";
 GRANT ALL ON FUNCTION "public"."update_transaction_categories"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."update_transaction_categories"() TO "service_role";
-
-GRANT ALL ON FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"() TO "anon";
-GRANT ALL ON FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_transactions_for_deleted_global_plaid_filter"() TO "service_role";
-
-GRANT ALL ON FUNCTION "public"."update_transactions_for_new_global_plaid_filter"() TO "anon";
-GRANT ALL ON FUNCTION "public"."update_transactions_for_new_global_plaid_filter"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_transactions_for_new_global_plaid_filter"() TO "service_role";
-
-GRANT ALL ON FUNCTION "public"."update_transactions_for_updated_global_plaid_filter"() TO "anon";
-GRANT ALL ON FUNCTION "public"."update_transactions_for_updated_global_plaid_filter"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_transactions_for_updated_global_plaid_filter"() TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."update_user_plaid_filter"() TO "anon";
 GRANT ALL ON FUNCTION "public"."update_user_plaid_filter"() TO "authenticated";
@@ -1572,10 +1598,6 @@ GRANT ALL ON TABLE "public"."debts" TO "service_role";
 GRANT ALL ON SEQUENCE "public"."debts_id_seq1" TO "anon";
 GRANT ALL ON SEQUENCE "public"."debts_id_seq1" TO "authenticated";
 GRANT ALL ON SEQUENCE "public"."debts_id_seq1" TO "service_role";
-
-GRANT ALL ON TABLE "public"."global_plaid_filters" TO "anon";
-GRANT ALL ON TABLE "public"."global_plaid_filters" TO "authenticated";
-GRANT ALL ON TABLE "public"."global_plaid_filters" TO "service_role";
 
 GRANT ALL ON SEQUENCE "public"."global_plaid_filters_id_seq" TO "anon";
 GRANT ALL ON SEQUENCE "public"."global_plaid_filters_id_seq" TO "authenticated";
