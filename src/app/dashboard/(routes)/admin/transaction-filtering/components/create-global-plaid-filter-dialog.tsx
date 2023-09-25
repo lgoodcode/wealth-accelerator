@@ -10,6 +10,7 @@ import { PlusCircle } from 'lucide-react';
 import { createGlobalFilterFormSchema, type CreateGlobalFilterFormType } from '../schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -30,6 +31,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -46,9 +48,6 @@ export function CreateGlobalPlaidFilterDialog() {
   const hasFilter = useSetAtom(hasGlobalFilterAtom);
   const form = useForm<CreateGlobalFilterFormType>({
     resolver: zodResolver(createGlobalFilterFormSchema),
-    resetOptions: {
-      keepValues: true,
-    },
   });
 
   const handleCreate = async (data: CreateGlobalFilterFormType) => {
@@ -152,6 +151,32 @@ export function CreateGlobalPlaidFilterDialog() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="override"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Override</FormLabel>
+                  <FormDescription>
+                    <span className="text-muted-foreground">
+                      Will override other admin filters specified that also match.
+                    </span>
+                  </FormDescription>
+                  <FormControl>
+                    <Checkbox
+                      id="override"
+                      name={field.name}
+                      className="w-6 h-6"
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <DialogFooter>
               <DialogClose asChild>
@@ -159,7 +184,9 @@ export function CreateGlobalPlaidFilterDialog() {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button loading={form.formState.isSubmitting}>Save</Button>
+              <Button type="submit" loading={form.formState.isSubmitting}>
+                Save
+              </Button>
             </DialogFooter>
           </form>
         </Form>

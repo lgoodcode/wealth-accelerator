@@ -114,7 +114,8 @@ BEGIN
     UPDATE plaid_transactions
     SET
       category = global_filter.category,
-      global_filter_id = global_filter.id
+      global_filter_id = global_filter.id,
+      user_filter_id = NULL
     WHERE user_filter_id = filter_id;
   ELSE
     UPDATE plaid_transactions
@@ -123,7 +124,8 @@ BEGIN
         WHEN amount < 0 THEN 'Money-In'::category
         ELSE 'Money-Out'::category
       END,
-      global_filter_id = NULL
+      global_filter_id = NULL,
+      user_filter_id = NULL
     WHERE user_filter_id = filter_id;
   END IF;
 

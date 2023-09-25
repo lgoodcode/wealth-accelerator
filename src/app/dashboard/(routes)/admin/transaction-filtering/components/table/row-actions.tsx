@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { MoreHorizontal, Pen } from 'lucide-react';
+import { MoreHorizontal, Pen, Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
 import { Button } from '@/components/ui/button';
@@ -12,8 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DeleteGlobalPlaidFilterMenuItem } from '../delete-global-plaid-filter-menu-item';
 import { UpdateGlobalPlaidFilterDialog } from '../update-global-plaid-filter-dialog';
+import { DeleteGlobalPlaidFilterDialog } from '../delete-global-plaid-filter-dialog';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
 interface RowActionsProps {
@@ -22,9 +22,13 @@ interface RowActionsProps {
 
 export function RowActions({ row }: RowActionsProps) {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleUpdateDialogOpenChange = useCallback((open?: boolean) => {
     setShowUpdateDialog((prev) => open ?? !prev);
+  }, []);
+  const handleDeleteDialogOpenChange = useCallback((open?: boolean) => {
+    setShowDeleteDialog((prev) => open ?? !prev);
   }, []);
 
   return (
@@ -42,13 +46,25 @@ export function RowActions({ row }: RowActionsProps) {
             Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DeleteGlobalPlaidFilterMenuItem row={row} />
+          <DropdownMenuItem
+            onClick={() => setShowDeleteDialog(true)}
+            className="text-red-600 font-medium"
+          >
+            <Trash className="mr-2 h-4 w-4" />
+            Delete
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
       <UpdateGlobalPlaidFilterDialog
         open={showUpdateDialog}
         onOpenChange={handleUpdateDialogOpenChange}
+        filter={row.original}
+      />
+
+      <DeleteGlobalPlaidFilterDialog
+        open={showDeleteDialog}
+        onOpenChange={handleDeleteDialogOpenChange}
         filter={row.original}
       />
     </>
