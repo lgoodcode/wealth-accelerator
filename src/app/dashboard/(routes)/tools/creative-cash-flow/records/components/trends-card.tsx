@@ -16,6 +16,8 @@ interface TrendsCardProps {
 }
 
 export function TrendsCard({ record }: TrendsCardProps) {
+  const actual_annual_trend = record.results.yearly_trend.reduce((a, b) => a + b, 0) / 3;
+
   return (
     <Card className="flex flex-col max-w-[500px] w-full min-w-[280px]">
       <CardHeader className="space-y-1">
@@ -56,9 +58,22 @@ export function TrendsCard({ record }: TrendsCardProps) {
         <div>
           <CardHeader className="space-y-1 px-0">
             <CardTitle className="text-2xl">{resultsLabels.year_to_date.title}</CardTitle>
-            <CardDescription>{resultsLabels.year_to_date.description}</CardDescription>
+            {resultsLabels.year_to_date.description && (
+              <CardDescription>{resultsLabels.year_to_date.description}</CardDescription>
+            )}
           </CardHeader>
           <div className="text-2xl">{dollarFormatter(record.results.year_to_date)}</div>
+        </div>
+        <div>
+          <CardHeader className="space-y-1 px-0">
+            <CardTitle className="text-2xl">
+              {resultsLabels.actual_collection_trend.title}
+            </CardTitle>
+            {resultsLabels.year_to_date.description && (
+              <CardDescription>{resultsLabels.actual_collection_trend.description}</CardDescription>
+            )}
+          </CardHeader>
+          <div className="text-2xl">{dollarFormatter(actual_annual_trend)}</div>
         </div>
       </CardContent>
     </Card>

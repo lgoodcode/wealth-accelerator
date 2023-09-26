@@ -74,4 +74,8 @@ export const resultsLabels = {
     title: 'Year to Date',
     description: '',
   },
+  actual_collection_trend: {
+    title: 'Actual Collection Trend',
+    description: '',
+  },
 };
