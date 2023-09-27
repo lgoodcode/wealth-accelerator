@@ -17,6 +17,7 @@ export const theme = {
       'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
     },
     boxShadow: {
+      main: '0 8px 26px -4px hsla(0,0%,8%,.15),0 8px 9px -5px hsla(0,0%,8%,.06)',
       'white-sm':
         '0 2px 3px -1px rgba(255, 255, 255, 0.1), 0 1px 2px -1px rgba(255, 255, 255, 0.1)',
       'white-md':

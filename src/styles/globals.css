@@ -100,6 +100,12 @@
   }
 }
 
+@layer utilities {
+  .bd-sat-blur {
+    backdrop-filter: saturate(200%) blur(30px);
+  }
+}
+
 .loading-spinner {
   pointer-events: none;
   display: inline-block;
