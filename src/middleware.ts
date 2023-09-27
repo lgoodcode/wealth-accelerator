@@ -10,6 +10,11 @@ const authPagesRegex = /^\/(login|signup|forgot-password|reset-password)/;
 
 export async function middleware(request: NextRequest) {
   const res = NextResponse.next();
+
+  if (request.nextUrl.pathname === '/') {
+    return res;
+  }
+
   const isLoginPage = request.nextUrl.pathname === '/login';
   const isAuthPage = authPagesRegex.test(request.nextUrl.pathname);
   const supabase = createMiddlewareClient<Database>({ req: request, res });
@@ -87,5 +92,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/login', '/reset-password', '/dashboard/:path*'],
+  matcher: ['/', '/login', '/reset-password', '/dashboard/:path*'],
 };
