@@ -5,14 +5,14 @@ import { Button } from '@/components/ui/button';
 
 export default function HomePage() {
   return (
-    <>
+    <div>
       <div className="sticky z-50 top-0 w-full flex justify-center">
         <nav className="absolute w-full bg-white/80 bd-sat-blur">
           <div className="relative flex max-w-6xl mx-auto h-16 px-4 justify-between items-center">
-            <a href="/dashboard/home" className="px-3">
-              <Image src="/img/logo-318x85.png" alt="logo" priority width={132} height={36} />
+            <a href="https://www.chirowealth.com" target="_blank" rel="noreferrer">
+              <Image src="/img/logo-318x85.png" alt="logo" priority width={160} height={43} />
             </a>
-            <ul className="flex gap-3">
+            {/* <ul className="flex gap-3">
               <li>
                 <Link
                   href="/"
@@ -29,8 +29,13 @@ export default function HomePage() {
                   <span className="text-sm font-semibold leading-none">Contact Us</span>
                 </Link>
               </li>
-            </ul>
-            <Button>Contact Us</Button>
+            </ul> */}
+            <div className="flex gap-2">
+              <Button variant="ghost">
+                <a href="/login">Sign In</a>
+              </Button>
+              <Button>Contact Us</Button>
+            </div>
           </div>
         </nav>
       </div>
@@ -54,8 +59,8 @@ export default function HomePage() {
                   <h2 className="text-3xl font-sans text-cyan-900 font-bold tracking-tight">
                     Financial Freedom is Within Your Reach
                   </h2>
-                  <h2 className="text-dark">Choose the best</h2>
-                  <p className="text-xl font-sans text-primary pr-48">
+                  <h2 className="text-3xl">Choose the best</h2>
+                  <p className="text-2xl font-sans text-primary pr-12">
                     Take control of your financial future with our app, designed to help you build
                     long-term wealth, security and income.
                   </p>
@@ -65,6 +70,6 @@ export default function HomePage() {
           </div>
         </div>
       </header>
-    </>
+    </div>
   );
 }
