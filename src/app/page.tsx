@@ -49,6 +49,7 @@ export default function HomePage() {
               width={1001}
               height={708}
               alt="image"
+              priority
             />
           </div>
 
@@ -63,6 +64,13 @@ export default function HomePage() {
                     Take control of your financial future with our app, designed to help you build
                     long-term wealth, security and income.
                   </p>
+
+                  <div className="flex gap-8">
+                    <Button className="text-xl py-4 px-6">Contact Us</Button>
+                    <Button variant="secondary" className="text-xl py-4 px-6">
+                      Read More
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
