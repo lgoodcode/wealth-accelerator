@@ -214,7 +214,7 @@ export const serverSyncTransactions = async (
           isRateLimitError,
           isCredentialError,
           isSyncMutationError,
-          isOtherPlaidError: !generalError && !!errorCode,
+          isOtherPlaidError: !generalError && !errorCode,
         },
       },
       data: {
