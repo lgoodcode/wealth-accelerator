@@ -6,7 +6,8 @@ import { formatPath } from '@/lib/utils/format-path';
 export const useLogin = () => {
   const router = useRouter();
   const searchParams = useSearchParams()!;
-  const redirectTo = formatPath(searchParams.get('redirect_to'));
+  const rawRedirectTo = formatPath(searchParams.get('redirect_to'));
+  const redirectTo = rawRedirectTo === '/' ? undefined : rawRedirectTo;
   let queryString = '?';
   let i = 0;
 

@@ -10,11 +10,6 @@ const authPagesRegex = /^\/(login|signup|forgot-password|reset-password)/;
 
 export async function middleware(request: NextRequest) {
   const res = NextResponse.next();
-
-  if (request.nextUrl.pathname === '/') {
-    return res;
-  }
-
   const isLoginPage = request.nextUrl.pathname === '/login';
   const isAuthPage = authPagesRegex.test(request.nextUrl.pathname);
   const supabase = createMiddlewareClient<Database>({ req: request, res });
@@ -29,7 +24,7 @@ export async function middleware(request: NextRequest) {
   );
 
   // If the auth token isn't valid (none or expired), destory the session cookie and
-  // redirect to login page for all pages except auth pages
+  // redirect to login page, without a redirect_to, for all pages except auth pages
   if (!token) {
     request.cookies.set({
       name: `sb-${PROJECT_ID}-auth-token`,
@@ -39,7 +34,7 @@ export async function middleware(request: NextRequest) {
     if (isAuthPage) {
       return res;
     }
-    return NextResponse.redirect(loginRedirectUrl);
+    return NextResponse.redirect(new URL(`${request.nextUrl.origin}/login`));
   }
 
   // Refresh session to prevent expiration
@@ -92,5 +87,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/login', '/reset-password', '/dashboard/:path*'],
+  matcher: ['/login', '/reset-password', '/dashboard/:path*'],
 };
