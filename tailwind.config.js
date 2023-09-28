@@ -1,5 +1,3 @@
-import { fontFamily } from 'tailwindcss/defaultTheme';
-
 /** @type {import('tailwindcss').Config} */
 export const darkMode = 'class';
 export const content = ['./src/**/*.{js,ts,jsx,tsx,mdx}'];
@@ -72,7 +70,7 @@ export const theme = {
       sm: 'calc(var(--radius) - 4px)',
     },
     fontFamily: {
-      sans: ['var(--font-opensans)', ...fontFamily.sans],
+      sans: ['var(--font-opensans)'],
     },
     keyframes: {
       'accordion-down': {
