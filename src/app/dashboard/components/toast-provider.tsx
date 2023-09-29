@@ -2,7 +2,7 @@
 
 import { ToastContainer } from 'react-toastify';
 import { useTheme } from 'next-themes';
-import { Inter } from '@/lib/fonts';
+import { inter } from '@/lib/fonts';
 import 'react-toastify/dist/ReactToastify.css';
 
 export function ToastProvider() {
@@ -17,7 +17,7 @@ export function ToastProvider() {
       limit={5}
       toastClassName="border border-background-contrast shadow-lg"
       bodyStyle={{
-        ...Inter.style,
+        ...inter.style,
         fontWeight: 500,
         paddingBottom: '0.75rem',
       }}

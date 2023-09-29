@@ -24,7 +24,7 @@ export async function middleware(request: NextRequest) {
   );
 
   // If the auth token isn't valid (none or expired), destory the session cookie and
-  // redirect to login page for all pages except auth pages
+  // redirect to login page, without a redirect_to, for all pages except auth pages
   if (!token) {
     request.cookies.set({
       name: `sb-${PROJECT_ID}-auth-token`,
@@ -34,7 +34,7 @@ export async function middleware(request: NextRequest) {
     if (isAuthPage) {
       return res;
     }
-    return NextResponse.redirect(loginRedirectUrl);
+    return NextResponse.redirect(new URL(`${request.nextUrl.origin}/login`));
   }
 
   // Refresh session to prevent expiration

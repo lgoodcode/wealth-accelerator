@@ -7,7 +7,7 @@ interface LoadingProps {
   children?: React.ReactNode;
 }
 
-export function Loading({ className, title = 'Loading...', children, ...props }: LoadingProps) {
+export function Loading({ className, title = 'Loading', children, ...props }: LoadingProps) {
   return (
     <div
       className={cn(

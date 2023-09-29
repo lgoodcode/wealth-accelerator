@@ -58,51 +58,49 @@ export function ProfileForm({ user }: ProfileFormProps) {
   };
 
   return (
-    <div className="p-4 border">
-      <Form {...form}>
-        <form noValidate onSubmit={form.handleSubmit(handleUpdateProfile)} className="space-y-8">
-          <h3 className="text-xl font-semibold">Profile</h3>
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="John Doe" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="you@example.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <Form {...form}>
+      <form noValidate onSubmit={form.handleSubmit(handleUpdateProfile)} className="space-y-8">
+        <h3 className="text-xl font-semibold">Profile</h3>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="John Doe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="you@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="w-full flex gap-2 justify-end">
-            <Button type="button" variant="secondary" className="ml-2" onClick={() => form.reset()}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              loading={form.formState.isSubmitting}
-              disabled={!form.formState.isDirty}
-            >
-              Save
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+        <div className="w-full flex gap-2 justify-end">
+          <Button type="button" variant="secondary" className="ml-2" onClick={() => form.reset()}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            loading={form.formState.isSubmitting}
+            disabled={!form.formState.isDirty}
+          >
+            Save
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }

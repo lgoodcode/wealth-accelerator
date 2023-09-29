@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 
 import { useUser } from '@/hooks/use-user';
@@ -25,19 +24,7 @@ export function Header({ height }: HeaderProps) {
     >
       <div className="border-b">
         <div className="relative flex h-16 px-4 justify-between items-center">
-          <Link href="/dashboard/home" className="px-3">
-            <Image
-              src="/img/logo-318x85.png"
-              alt="logo"
-              priority
-              width={132}
-              height={36}
-              style={{
-                width: 132,
-                height: 36,
-              }}
-            />
-          </Link>
+          <Image src="/img/logo-318x85.png" alt="logo" priority width={160} height={43} />
 
           <Nav className="mx-4" isAdmin={user ? isAdmin(user) : false} />
 
