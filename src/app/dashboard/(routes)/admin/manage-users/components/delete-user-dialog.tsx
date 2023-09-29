@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
 import { Button } from '@/components/ui/button';
@@ -44,9 +43,6 @@ export function DeleteUserDialog({ open, onOpenChange, id, user }: DeleteUserPro
       })
       .catch((error) => {
         console.error(error);
-        captureException(error, {
-          extra: { id: user.id },
-        });
         toast.error(
           <span>
             Failed to remove user <span className="font-bold">{user.name}</span>
