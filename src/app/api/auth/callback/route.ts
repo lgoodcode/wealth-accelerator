@@ -10,7 +10,8 @@ export const GET = exchangeCodeForSession;
 async function exchangeCodeForSession(request: NextRequest) {
   const url = request.nextUrl;
   const code = url.searchParams.get('code');
-  const redirectTo: `/${string}` = formatPath(url.searchParams.get('redirect_to')) ?? '/login';
+  const redirect_to = url.searchParams.get('redirect_to');
+  const redirectTo: `/${string}` = redirect_to ? formatPath(redirect_to) : '/login';
 
   try {
     if (code) {
