@@ -34,7 +34,7 @@ export default function Terms() {
           <div className="flex justify-center max-w-full">
             <div className="flex flex-col md:flex-row">
               <div className="px-4 mb-4">
-                <ul className="flex flex-col p-4 md:w-32 rounded-xl bg-white leading-relaxed text-[#344767] sticky min-w-max">
+                <ul className="flex flex-col p-4 md:w-32 rounded-xl bg-white leading-relaxed text-[#344767] sticky top-4 min-w-max">
                   {verticalNavItems.map((item, index) => (
                     <li
                       className="flex flex-row px-4 py-2 hover:bg-[#f3f3f3] hover:rounded-lg duration-300 whitespace-nowrap cursor-pointer"
