@@ -1,8 +1,8 @@
 const verticalNavItems: Array<VerticalNavItemType> = [
-  { icon: '🚀', label: 'General Terms' },
-  { icon: '🚀', label: 'Cookies' },
-  { icon: '🚀', label: 'Privacy Policy' },
-  { icon: '🚀', label: 'Disclaimer' },
+  { icon: '🚀', label: 'General Terms', anchor: '#general-terms' },
+  { icon: '🚀', label: 'Cookies', anchor: '#cookies' },
+  { icon: '🚀', label: 'Privacy Policy', anchor: '#privacy-policy' },
+  { icon: '🚀', label: 'Disclaimer', anchor: '#disclaimer' },
 ];
 
 // export const content = [
@@ -30,7 +30,7 @@ export default function Terms() {
       <div className="font-sans">
         <div>{/* Space for Navbar */}</div>
 
-        <section className="min-h-screen bg-[#e9ecef] py-32">
+        <section id="general-terms" className="min-h-screen bg-[#e9ecef] py-32">
           <div className="flex justify-center max-w-full">
             <div className="flex flex-col md:flex-row">
               <div className="px-4 mb-4">
@@ -40,7 +40,7 @@ export default function Terms() {
                       className="flex flex-row px-4 py-2 hover:bg-[#f3f3f3] hover:rounded-lg duration-300 whitespace-nowrap cursor-pointer"
                       key={index}
                     >
-                      <a className="flex flex-row justify-center">
+                      <a href={item.anchor} className="flex flex-row justify-center">
                         <div>
                           <div>{item.icon}</div>
                         </div>
@@ -87,7 +87,10 @@ export default function Terms() {
                       in the singular, plural, capitalization and/or he/she or they, are taken as
                       interchangeable and therefore as referring to same.
                     </p>
-                    <h2 className="text-3xl text-[#344767] font-bold mb-3 ">Cookies</h2>
+
+                    <h2 id="cookies" className="text-3xl text-[#344767] font-bold mb-3 ">
+                      Cookies
+                    </h2>
                     <p className="text-[#67748e] mb-4">
                       We employ the use of cookies. By accessing Creative Tim, you agreed to use
                       cookies in agreement with the Creative Tim&#39;s Privacy Policy.
@@ -98,14 +101,20 @@ export default function Terms() {
                       functionality of certain areas to make it easier for people visiting our
                       website. Some of our affiliate/advertising partners may also use cookies.
                     </p>
-                    <h2 className="text-3xl text-[#344767] font-bold mb-3">Your Privacy</h2>
+
+                    <h2 id="privacy-policy" className="text-3xl text-[#344767] font-bold mb-3">
+                      Your Privacy
+                    </h2>
                     <p className="text-[#67748e] mb-8">
                       Please read{' '}
                       <a href="" target="_blank" rel="noreferrer" className="text-slate-800">
                         Privacy Policy
                       </a>
                     </p>
-                    <h2 className="text-3xl text-[#344767] font-bold mb-3">Disclaimer</h2>
+
+                    <h2 id="disclaimer" className="text-3xl text-[#344767] font-bold mb-3">
+                      Disclaimer
+                    </h2>
                     <p className="text-[#67748e] mb-4">
                       To the maximum extent permitted by applicable law, we exclude all
                       representations, warranties and conditions relating to our website and the use
@@ -153,4 +162,5 @@ export default function Terms() {
 interface VerticalNavItemType {
   icon: string;
   label: string;
+  anchor: string;
 }
