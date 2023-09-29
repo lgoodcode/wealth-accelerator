@@ -24,7 +24,7 @@ export function TableToolbar({ table, globalFilter, handleGlobalFilter }: TableT
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter users..."
+          placeholder="Filter users"
           value={globalFilter}
           onChange={(event) => handleGlobalFilter(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"

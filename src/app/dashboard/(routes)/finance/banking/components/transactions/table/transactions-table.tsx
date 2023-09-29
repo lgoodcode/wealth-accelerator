@@ -75,7 +75,7 @@ export function TransactionsTable({ item }: TransactionsTableProps) {
   if (isError) {
     return <ClientError />;
   } else if (isFetching) {
-    return <Loading title="Fetching Transactions..." className="!mt-0 py-32" />;
+    return <Loading title="Fetching Transactions" className="!mt-0 py-32" />;
   }
 
   return (

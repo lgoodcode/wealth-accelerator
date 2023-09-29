@@ -67,7 +67,7 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
   if (isError) {
     return <ClientError />;
   } else if (isFetching) {
-    return <Loading title="Fetching Accounts..." className="!mt-0 py-32" />;
+    return <Loading title="Fetching Accounts" className="!mt-0 py-32" />;
   }
 
   return (
