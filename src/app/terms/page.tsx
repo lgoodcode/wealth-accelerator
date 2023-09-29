@@ -1,34 +1,30 @@
-import Image from 'next/image';
-
-interface Props {}
-
-export const verticalNavItems = [
+const verticalNavItems: Array<VerticalNavItemType> = [
   { icon: '🚀', label: 'General Terms' },
   { icon: '🚀', label: 'Cookies' },
   { icon: '🚀', label: 'Privacy Policy' },
   { icon: '🚀', label: 'Disclaimer' },
 ];
 
-export const content = [
-  {
-    id: 'general-terms',
-    sectionTitle: '',
-    body: ['Welcome to Creative Tim!', 'These terms and conditions'],
-  },
-  {
-    id: 'cookies',
-    sectionTitle: 'Cookies',
-    body: ['We employ the use of cookies', 'Most interactive websites use'],
-  },
-  { id: 'privacy', sectionTitle: 'Privacy Policy', body: ['Please read Privacy Policy'] },
-  {
-    id: 'disclaimer',
-    sectionTitle: 'Disclaimer',
-    body: ['To the maximum extent permitted by applicable law'],
-  },
-];
+// export const content = [
+//   {
+//     id: 'general-terms',
+//     sectionTitle: '',
+//     body: ['Welcome to Creative Tim!', 'These terms and conditions'],
+//   },
+//   {
+//     id: 'cookies',
+//     sectionTitle: 'Cookies',
+//     body: ['We employ the use of cookies', 'Most interactive websites use'],
+//   },
+//   { id: 'privacy', sectionTitle: 'Privacy Policy', body: ['Please read Privacy Policy'] },
+//   {
+//     id: 'disclaimer',
+//     sectionTitle: 'Disclaimer',
+//     body: ['To the maximum extent permitted by applicable law'],
+//   },
+// ];
 
-export default function Terms({}: Props) {
+export default function Terms() {
   return (
     <>
       <div className="font-sans">
@@ -152,4 +148,9 @@ export default function Terms({}: Props) {
       </div>
     </>
   );
+}
+
+interface VerticalNavItemType {
+  icon: string;
+  label: string;
 }
