@@ -34,11 +34,11 @@ export default function Terms({}: Props) {
       <div className="font-sans">
         <div>{/* Space for Navbar */}</div>
 
-        <section className="py-32 bg-[#e9ecef] min-h-screen">
-          <div className="max-w-full flex justify-center">
-            <div className="flex md:flex-row flex-col">
-              <div className="px-3 mb-4">
-                <ul className="md:w-32 min-w-max flex flex-col bg-white rounded-xl p-4 sticky top-1 leading-relaxed text-[#344767]">
+        <section className="min-h-screen bg-[#e9ecef] py-32">
+          <div className="flex justify-center max-w-full">
+            <div className="flex flex-col md:flex-row">
+              <div className="px-4 mb-4">
+                <ul className="flex flex-col p-4 md:w-32 rounded-xl bg-white leading-relaxed text-[#344767] sticky min-w-max">
                   {verticalNavItems.map((item, index) => (
                     <li
                       className="flex flex-row px-4 py-2 hover:bg-[#f3f3f3] hover:rounded-lg duration-300 whitespace-nowrap cursor-pointer"
@@ -56,8 +56,8 @@ export default function Terms({}: Props) {
               </div>
 
               <div className="px-3">
-                <div className="rounded-2xl max-w-3xl bg-white shadow-main">
-                  <div className="rounded-t-2xl relative p-12 bg-gradient-to-r from-[#ff0080] to-[#7928ca]">
+                <div className="max-w-3xl rounded-2xl bg-white shadow-main">
+                  <div className="relative p-12 rounded-t-2xl bg-gradient-to-r from-[#ff0080] to-[#7928ca]">
                     <h2 className="text-3xl font-bold text-white">Terms & conditions</h2>
                     <p className="text-base text-white opacity-80 mb-4">
                       Last modified: Sep 30 2023
@@ -75,7 +75,7 @@ export default function Terms({}: Props) {
                       not continue to use Creative Tim if you do not agree to take all of the terms
                       and conditions stated on this page.
                     </p>
-                    <p className="text-[#67748e] mb-4">
+                    <p className="text-[#67748e] mb-8">
                       The following terminology applies to these Terms and Conditions, Privacy
                       Statement and Disclaimer Notice and all Agreements: &#34;Client&#34;,
                       &#34;You&#34; and &#34;Your&#34; refers to you, the person log on this website
@@ -91,31 +91,31 @@ export default function Terms({}: Props) {
                       in the singular, plural, capitalization and/or he/she or they, are taken as
                       interchangeable and therefore as referring to same.
                     </p>
-                    <h2 className="mt-5 mb-3 text-3xl font-bold text-[#344767]">Cookies</h2>
+                    <h2 className="text-3xl text-[#344767] font-bold mb-3 ">Cookies</h2>
                     <p className="text-[#67748e] mb-4">
                       We employ the use of cookies. By accessing Creative Tim, you agreed to use
                       cookies in agreement with the Creative Tim&#39;s Privacy Policy.
                     </p>
-                    <p className="text-[#67748e] mb-4">
+                    <p className="text-[#67748e] mb-8">
                       Most interactive websites use cookies to let us retrieve the user&#39;s
                       details for each visit. Cookies are used by our website to enable the
                       functionality of certain areas to make it easier for people visiting our
                       website. Some of our affiliate/advertising partners may also use cookies.
                     </p>
-                    <h2 className="mt-5 mb-3 text-3xl font-bold text-[#344767]">Your Privacy</h2>
-                    <p className="text-[#67748e] mb-4">
+                    <h2 className="text-3xl text-[#344767] font-bold mb-3">Your Privacy</h2>
+                    <p className="text-[#67748e] mb-8">
                       Please read{' '}
                       <a href="" target="_blank" rel="noreferrer" className="text-slate-800">
                         Privacy Policy
                       </a>
                     </p>
-                    <h2 className="mt-5 mb-3 text-3xl font-bold text-[#344767]">Disclaimer</h2>
+                    <h2 className="text-3xl text-[#344767] font-bold mb-3">Disclaimer</h2>
                     <p className="text-[#67748e] mb-4">
                       To the maximum extent permitted by applicable law, we exclude all
                       representations, warranties and conditions relating to our website and the use
                       of this website. Nothing in this disclaimer will:
                     </p>
-                    <ul className="list-disc pl-6 mb-4">
+                    <ul className="pl-10 mb-4 list-disc">
                       <li className="text-[#67748e]">
                         limit or exclude our or your liability for death or personal injury;
                       </li>
