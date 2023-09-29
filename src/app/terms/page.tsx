@@ -35,13 +35,16 @@ export default function Terms({}: Props) {
         <div>{/* Space for Navbar */}</div>
 
         <section className="py-32 bg-[#e9ecef] min-h-screen">
-          <div className="flex flex-row justify-center">
-            <div className="flex flex-row">
-              <div className="px-3">
-                <ul className="flex flex-col bg-white rounded-xl p-4 sticky top-1">
+          <div className="max-w-full flex justify-center">
+            <div className="flex md:flex-row flex-col">
+              <div className="px-3 mb-4">
+                <ul className="md:w-32 min-w-max flex flex-col bg-white rounded-xl p-4 sticky top-1 leading-relaxed text-[#344767]">
                   {verticalNavItems.map((item, index) => (
-                    <li className="flex flex-row px-4 py-2" key={index}>
-                      <a className="flex flex-row items-center justify-center">
+                    <li
+                      className="flex flex-row px-4 py-2 hover:bg-[#f3f3f3] hover:rounded-lg duration-300 whitespace-nowrap cursor-pointer"
+                      key={index}
+                    >
+                      <a className="flex flex-row justify-center">
                         <div>
                           <div>{item.icon}</div>
                         </div>
@@ -53,10 +56,12 @@ export default function Terms({}: Props) {
               </div>
 
               <div className="px-3">
-                <div className="rounded-2xl max-w-3xl bg-white shadow-lg">
+                <div className="rounded-2xl max-w-3xl bg-white shadow-main">
                   <div className="rounded-t-2xl relative p-12 bg-gradient-to-r from-[#ff0080] to-[#7928ca]">
                     <h2 className="text-3xl font-bold text-white">Terms & conditions</h2>
-                    <p className="text-base text-white">Last modified: Sep 30 2023</p>
+                    <p className="text-base text-white opacity-80 mb-4">
+                      Last modified: Sep 30 2023
+                    </p>
                     <div>{/*svg for waves here*/}</div>
                   </div>
                   <div className="p-12">
