@@ -1,3 +1,9 @@
+interface VerticalNavItemType {
+  icon: string;
+  label: string;
+  anchor: string;
+}
+
 const verticalNavItems: Array<VerticalNavItemType> = [
   { icon: '🚀', label: 'General Terms', anchor: '#general-terms' },
   { icon: '🚀', label: 'Cookies', anchor: '#cookies' },
@@ -33,8 +39,8 @@ export default function Terms() {
         <section id="general-terms" className="min-h-screen bg-[#e9ecef] py-32">
           <div className="flex justify-center max-w-full">
             <div className="flex flex-col md:flex-row">
-              <div className="px-4 mb-4">
-                <ul className="flex flex-col p-4 md:w-32 rounded-xl bg-white leading-relaxed text-[#344767] sticky top-4 min-w-max">
+              <div className="md:min-w-[28%] px-4 mb-4">
+                <ul className="flex flex-col p-4 md:w-32 rounded-xl bg-white leading-relaxed text-[#344767] sticky top-4 min-w-max md:min-w-full">
                   {verticalNavItems.map((item, index) => (
                     <li
                       className="flex flex-row px-4 py-2 hover:bg-[#f3f3f3] hover:rounded-lg duration-300 whitespace-nowrap cursor-pointer"
@@ -52,7 +58,7 @@ export default function Terms() {
               </div>
 
               <div className="px-3">
-                <div className="max-w-3xl rounded-2xl bg-white shadow-main">
+                <div className="max-w-6xl rounded-2xl bg-white shadow-main">
                   <div className="relative p-12 rounded-t-2xl bg-gradient-to-r from-[#ff0080] to-[#7928ca]">
                     <h2 className="text-3xl font-bold text-white">Terms & conditions</h2>
                     <p className="text-base text-white opacity-80 mb-4">
@@ -157,10 +163,4 @@ export default function Terms() {
       </div>
     </>
   );
-}
-
-interface VerticalNavItemType {
-  icon: string;
-  label: string;
-  anchor: string;
 }
