@@ -4,11 +4,11 @@ import { faker } from '@faker-js/faker';
 
 export function Footer() {
   return (
-    <footer className="bg-gray-800 pt-8 pb-4">
-      <div className="container mx-auto mb-8 grid lg:grid-cols-3 gap-8">
+    <footer className="bg-gray-800 pt-8 pb-4 space-y-4">
+      <div className="container mx-auto grid lg:grid-cols-3 gap-8">
         <div>
           <h4 className="text-white mb-2">About Us</h4>
-          <p className="text-gray-400">{faker.lorem.sentences(6)}</p>
+          <p className="text-gray-400">{faker.lorem.sentences(3)}</p>
         </div>
 
         <div>
@@ -26,8 +26,8 @@ export function Footer() {
         <div>
           <h4 className="text-white mb-2">Legal</h4>
           <div className="flex flex-col gap-1 w-fit">
-            <Link href="/terms" className="text-gray-400 hover:text-gray-300 capitalize">
-              Terms of Service
+            <Link href="/terms" className="text-gray-400 hover:text-gray-300">
+              Terms of Use
             </Link>
             <Link href="/privacy" className="text-gray-400 hover:text-gray-300 capitalize">
               Privacy Policy
