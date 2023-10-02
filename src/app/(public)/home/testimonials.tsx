@@ -3,7 +3,7 @@ export function Testimonials() {
     <>
       <div className="text-center">
         <h2 className="text-4xl text-cyan-900 font-semibold tracking-tight capitalize">
-          Testimonials
+          What Our Customers Are Saying
         </h2>
       </div>
     </>

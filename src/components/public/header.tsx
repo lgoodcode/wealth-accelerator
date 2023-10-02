@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 export function Header() {
   return (
     <div className="sticky z-50 top-0 w-full flex justify-center">
-      <nav className="absolute w-full bg-white/90 bd-frost">
-        <div className="relative flex max-w-6xl mx-auto px-4 xl:px-0 h-[70px] shadow-lg justify-between items-center">
+      <nav className="absolute w-full bg-gray-50/90 bd-frost shadow-md">
+        <div className="container relative flex mx-auto px-4 xl:px-0 h-[70px] justify-between items-center">
           <Link href="/">
             <Image src="/img/logo-318x85.png" alt="logo" priority width={200} height={58} />
           </Link>

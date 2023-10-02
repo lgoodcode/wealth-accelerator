@@ -19,9 +19,9 @@ const FeatureItem = ({ title, description }: FeatureItemProps) => {
   );
 };
 
-export function Features() {
+export function Features({ className }: { className?: string }) {
   return (
-    <>
+    <div className={className}>
       <div className="text-center">
         <h2 className="text-4xl text-cyan-900 font-semibold tracking-tight capitalize">
           What We Can Do
@@ -46,6 +46,6 @@ export function Features() {
           description="We get insulted by others, lose trust for those We get back."
         />
       </div>
-    </>
+    </div>
   );
 }

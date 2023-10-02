@@ -5,11 +5,9 @@ import { Features } from './features';
 import { FAQ } from './faq';
 import { Testimonials } from './testimonials';
 
-export const dynamic = 'force-static';
-
 export default function HomePage() {
   return (
-    <div className="font-sans">
+    <div className="font-sans bg-blackAlpha-50">
       <div className="min-h-[80vh] p-0 relative overflow-hidden flex items-center bg-cover bg-[50%]">
         <Image
           className="absolute top-0 right-0 ml-auto w-full lg:w-[50%] h-[90%] z-0 lg:rounded-bl-[10rem] rounded-none"
@@ -43,12 +41,12 @@ export default function HomePage() {
         </div>
       </div>
 
-      <section className="container py-32 bg-blackAlpha-50">
-        <Features />
+      <section className="py-32">
+        <Features className="container" />
       </section>
 
-      <section className="container py-32">
-        <FAQ />
+      <section className="py-32 bg-white">
+        <FAQ className="container shadow-main" />
       </section>
 
       <section className="container py-32">
