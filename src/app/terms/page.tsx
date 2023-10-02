@@ -1,5 +1,7 @@
 // npm imports
 // local imports
+import { Header } from '@/components/public/header';
+
 // type imports
 
 interface VerticalNavItemType {
@@ -38,19 +40,19 @@ export default function Terms() {
   return (
     <>
       <div className="font-sans">
-        <div>{/* Space for Navbar */}</div>
+        <Header />
 
-        <section id="general-terms" className="min-h-screen bg-[#e9ecef] py-32">
+        <section id="general-terms" className="min-h-screen bg-gray-50 py-32">
           <div className="flex justify-center max-w-full">
             <div className="flex flex-col md:flex-row">
-              <div className="md:min-w-[28%] px-4 mb-4">
-                <ul className="flex flex-col p-4 md:w-32 rounded-xl bg-white leading-relaxed text-[#344767] sticky top-4 min-w-max md:min-w-full">
+              <div className="md:min-w-[28%] md:block hidden px-4 mb-4">
+                <ul className="flex flex-col p-4 md:w-32 rounded-xl bg-white leading-relaxed text-muted-foreground sticky top-20 min-w-max md:min-w-full shadow-main font-medium">
                   {verticalNavItems.map((item, index) => (
-                    <li
-                      className="flex flex-row px-4 py-2 hover:bg-[#f3f3f3] hover:rounded-lg duration-300 whitespace-nowrap cursor-pointer"
-                      key={index}
-                    >
-                      <a href={item.anchor} className="flex flex-row justify-center">
+                    <li className="flex flex-row justify-center w-full" key={index}>
+                      <a
+                        href={item.anchor}
+                        className="flex flex-row px-4 py-2 hover:bg-blackAlpha-200 hover:rounded-lg duration-300 whitespace-nowrap cursor-pointer w-full"
+                      >
                         <div>
                           <div>{item.icon}</div>
                         </div>
@@ -70,18 +72,18 @@ export default function Terms() {
                     </p>
                     <div>{/*svg for waves here*/}</div>
                   </div>
-                  <div className="p-12">
-                    <p className="text-[#67748e] mb-4">Welcome to Creative Tim!</p>
-                    <p className="text-[#67748e] mb-4">
+                  <div className="md:p-12 p-8">
+                    <p className="text-muted-foreground mb-4">Welcome to Creative Tim!</p>
+                    <p className="text-muted-foreground mb-4">
                       These terms and conditions outline the rules and regulations for the use of
                       Creative Tim&#39;s Website, located here.
                     </p>
-                    <p className="text-[#67748e] mb-4">
+                    <p className="text-muted-foreground mb-4">
                       By accessing this website we assume you accept these terms and conditions. Do
                       not continue to use Creative Tim if you do not agree to take all of the terms
                       and conditions stated on this page.
                     </p>
-                    <p className="text-[#67748e] mb-8">
+                    <p className="text-muted-foreground mb-8">
                       The following terminology applies to these Terms and Conditions, Privacy
                       Statement and Disclaimer Notice and all Agreements: &#34;Client&#34;,
                       &#34;You&#34; and &#34;Your&#34; refers to you, the person log on this website
@@ -98,62 +100,61 @@ export default function Terms() {
                       interchangeable and therefore as referring to same.
                     </p>
 
-                    <h2 id="cookies" className="text-3xl text-[#344767] font-bold mb-3 ">
+                    <h2 id="cookies" className="text-3xl text-muted-foreground font-bold mb-3 ">
                       Cookies
                     </h2>
-                    <p className="text-[#67748e] mb-4">
-                      We employ the use of cookies. By accessing Creative Tim, you agreed to use
-                      cookies in agreement with the Creative Tim&#39;s Privacy Policy.
-                    </p>
-                    <p className="text-[#67748e] mb-8">
-                      Most interactive websites use cookies to let us retrieve the user&#39;s
-                      details for each visit. Cookies are used by our website to enable the
-                      functionality of certain areas to make it easier for people visiting our
-                      website. Some of our affiliate/advertising partners may also use cookies.
-                    </p>
-
-                    <h2 id="privacy-policy" className="text-3xl text-[#344767] font-bold mb-3">
-                      Your Privacy
-                    </h2>
-                    <p className="text-[#67748e] mb-8">
+                    <p className="text-muted-foreground mb-4">
                       Please read{' '}
                       <a href="" target="_blank" rel="noreferrer" className="text-slate-800">
-                        Privacy Policy
+                        Cookies
                       </a>
                     </p>
 
-                    <h2 id="disclaimer" className="text-3xl text-[#344767] font-bold mb-3">
+                    <h2
+                      id="privacy-policy"
+                      className="text-3xl text-muted-foreground font-bold mb-3"
+                    >
+                      Your Privacy
+                    </h2>
+                    <p className="text-muted-foreground mb-8">
+                      Please read{' '}
+                      <a href="" target="_blank" rel="noreferrer" className="text-slate-800">
+                        Privacy
+                      </a>
+                    </p>
+
+                    <h2 id="disclaimer" className="text-3xl text-muted-foreground font-bold mb-3">
                       Disclaimer
                     </h2>
-                    <p className="text-[#67748e] mb-4">
+                    <p className="text-muted-foreground mb-4">
                       To the maximum extent permitted by applicable law, we exclude all
                       representations, warranties and conditions relating to our website and the use
                       of this website. Nothing in this disclaimer will:
                     </p>
                     <ul className="pl-10 mb-4 list-disc">
-                      <li className="text-[#67748e]">
+                      <li className="text-muted-foreground">
                         limit or exclude our or your liability for death or personal injury;
                       </li>
-                      <li className="text-[#67748e]">
+                      <li className="text-muted-foreground">
                         limit or exclude our or your liability for fraud or fraudulent
                         misrepresentation;
                       </li>
-                      <li className="text-[#67748e]">
+                      <li className="text-muted-foreground">
                         limit any of our or your liabilities in any way that is not permitted under
                         applicable law; or
                       </li>
-                      <li className="text-[#67748e]">
+                      <li className="text-muted-foreground">
                         exclude any of our or your liabilities that may not be excluded under
                         applicable law.
                       </li>
                     </ul>
-                    <p className="text-[#67748e] mb-4">
+                    <p className="text-muted-foreground mb-4">
                       The limitations and prohibitions of liability set in this Section and
                       elsewhere in this disclaimer: (a) are subject to the preceding paragraph; and
                       (b) govern all liabilities arising under the disclaimer, including liabilities
                       arising in contract, in tort and for breach of statutory duty.
                     </p>
-                    <p className="text-[#67748e] mb-4">
+                    <p className="text-muted-foreground mb-4">
                       As long as the website and the information and services on the website are
                       provided free of charge, we will not be liable for any loss or damage of any
                       nature.
