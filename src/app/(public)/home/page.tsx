@@ -49,8 +49,8 @@ export default function HomePage() {
         <FAQ className="container shadow-main" />
       </section>
 
-      <section className="container py-32">
-        <Testimonials />
+      <section className="py-32">
+        <Testimonials className="container" />
       </section>
     </div>
   );
