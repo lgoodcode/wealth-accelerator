@@ -72,6 +72,13 @@ async function syncTransactionsWebhook(request: Request) {
         return NextResponse.json({ error: 'Failed to remove transactions' }, { status: 500 });
       }
 
+    case 'ERROR':
+      console.error(body.error);
+      captureException(body.error, {
+        extra: { item_id },
+      });
+      break;
+
     // Ignore - not needed if using sync endpoint + webhook
     case 'DEFAULT_UPDATE':
     case 'INITIAL_UPDATE':
