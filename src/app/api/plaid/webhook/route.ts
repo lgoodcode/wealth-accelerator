@@ -71,6 +71,7 @@ async function syncTransactionsWebhook(request: Request) {
 
         return NextResponse.json({ error: 'Failed to remove transactions' }, { status: 500 });
       }
+      break;
 
     case 'ERROR':
       console.error(body.error);
