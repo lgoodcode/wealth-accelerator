@@ -41,18 +41,18 @@ export default function HomePage() {
         </div>
       </div>
 
-      <section className="py-32">
+      <section className="py-28 lg:py-32">
         <Features className="container" />
       </section>
 
-      <section className="py-32">
+      <section className="py-28 lg:py-32">
         <div className="mb-12 text-center">
           <h2 className="text-4xl text-cyan-900 font-semibold tracking-tight uppercase">FAQ</h2>
         </div>
         <FAQ className="container" />
       </section>
 
-      <section className="py-32">
+      <section className="py-28 lg:py-32">
         <Testimonials className="container" />
       </section>
     </div>
