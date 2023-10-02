@@ -32,7 +32,7 @@ const quickLinks: QuickLink[] = [
 const QuickLinks = () => {
   return (
     <div className="w-[280px] min-w-[280px] lg:block hidden">
-      <ul className="sticky top-28 p-4 rounded-md bg-white leading-relaxed text-muted-foreground/80 shadow-main font-medium">
+      <ul className="sticky top-28 p-4 rounded-md bg-white leading-relaxed border text-muted-foreground/80 shadow-main font-medium">
         {quickLinks.map((item, index) => (
           <li className="flex flex-row" key={index}>
             <Link
@@ -56,9 +56,9 @@ export default function TermsPage() {
           <QuickLinks />
 
           <div className="bg-white shadow-lg">
-            <div className="relative p-12 rounded-t-md bg-gradient-to-br from-cyan-900 from-30% to-cyan-600">
+            <div className="relative p-12 space-y-2 rounded-t-md bg-gradient-to-br from-cyan-900 from-30% to-cyan-600">
               <h2 className="text-3xl font-bold text-white">Terms of Use</h2>
-              <p className="text-base text-white opacity-80">Effective: Sep 30, 2023</p>
+              <p className="text-base text-white opacity-80">Effective: Oct, 1 2023</p>
             </div>
 
             <div className="md:p-12 p-8">
