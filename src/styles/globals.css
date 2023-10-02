@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  scroll-behavior: smooth;
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -101,12 +97,6 @@ html {
   }
   .link {
     @apply text-primary underline underline-offset-4 text-sky-500 hover:text-sky-600;
-  }
-}
-
-@layer utilities {
-  .bd-sat-blur {
-    backdrop-filter: saturate(200%) blur(30px);
   }
 }
 
