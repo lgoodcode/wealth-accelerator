@@ -32,12 +32,12 @@ const quickLinks: QuickLink[] = [
 const QuickLinks = () => {
   return (
     <div className="w-[280px] min-w-[280px] lg:block hidden">
-      <ul className="sticky top-28 p-4 rounded-md bg-white leading-relaxed text-muted-foreground/80 shadow-main font-medium">
+      <ul className="sticky top-28 p-4 rounded-md bg-white leading-relaxed text-muted-foreground shadow-main font-medium">
         {quickLinks.map((item, index) => (
           <li className="flex flex-row" key={index}>
             <Link
               href={item.anchor}
-              className="flex flex-row px-4 py-2 rounded-md hover:text-muted-foreground hover:bg-blackAlpha-100 duration-200 whitespace-nowrap cursor-pointer min-w-full"
+              className="flex flex-row px-4 py-2 rounded-md hover:bg-gray-200 duration-200 whitespace-nowrap cursor-pointer min-w-full"
             >
               <p>{item.label}</p>
             </Link>
