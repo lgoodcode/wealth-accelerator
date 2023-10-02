@@ -8,9 +8,9 @@ export function Header() {
     <div className="sticky z-50 top-0 w-full flex justify-center">
       <nav className="absolute w-full bg-white/90 bd-frost">
         <div className="relative flex max-w-6xl mx-auto px-4 xl:px-0 h-[70px] shadow-lg justify-between items-center">
-          <a href="https://www.chirowealth.com" target="_blank" rel="noreferrer">
+          <Link href="/">
             <Image src="/img/logo-318x85.png" alt="logo" priority width={200} height={58} />
-          </a>
+          </Link>
           <ul className="flex gap-3">
             {/* <li>
               <a
