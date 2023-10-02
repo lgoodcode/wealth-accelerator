@@ -42,7 +42,7 @@ export function Testimonials({ className }: { className?: string }) {
           ))}
         </div>
         <div className="space-y-8">
-          {new Array(3).fill(0).map((_, i) => (
+          {new Array(3).fill(0).map(() => (
             <TestimonialItem
               key={faker.number.binary()}
               title={faker.hacker.phrase()}
@@ -53,7 +53,7 @@ export function Testimonials({ className }: { className?: string }) {
           ))}
         </div>
         <div className="space-y-8">
-          {new Array(3).fill(0).map((_, i) => (
+          {new Array(3).fill(0).map(() => (
             <TestimonialItem
               key={faker.number.binary()}
               title={faker.hacker.phrase()}

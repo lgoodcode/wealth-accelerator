@@ -22,13 +22,13 @@ const FeatureItem = ({ title, description }: FeatureItemProps) => {
 export function Features({ className }: { className?: string }) {
   return (
     <div className={className}>
-      <div className="text-center">
+      <div className="mb-12 text-center">
         <h2 className="text-4xl text-cyan-900 font-semibold tracking-tight capitalize">
           What We Can Do
         </h2>
       </div>
 
-      <div className="mt-8 grid grid-cols-12 gap-8">
+      <div className="grid grid-cols-12 gap-8">
         <FeatureItem
           title="Components"
           description="We get insulted by others, lose trust for those We get back."
