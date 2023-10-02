@@ -9,7 +9,7 @@ const FeatureItem = ({ title, description }: FeatureItemProps) => {
   return (
     <div className="col-span-12 md:col-span-6 lg:col-span-3 border-2 p-6 py-8 shadow-main">
       <div className="space-y-6 text-center">
-        <div className="p-4 mx-auto w-fit bg-gradient-to-br from-cyan-700 to-cyan-900 text-white rounded-full">
+        <div className="p-4 mx-auto w-fit bg-gradient-to-br from-cyan-600 to-cyan-900 text-white rounded-full">
           <Box size={48} className="mx-auto" />
         </div>
         <h5 className="text-xl font-semibold">{title}</h5>
