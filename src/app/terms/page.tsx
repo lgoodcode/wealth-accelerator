@@ -47,7 +47,7 @@ export default function Terms() {
   );
 }
 
-export const verticalNavItems: Array<VerticalNavItemType> = [
+const verticalNavItems: Array<VerticalNavItemType> = [
   { label: 'General Terms', anchor: '#general-terms' },
   { label: 'Cookies', anchor: '#cookies' },
   { label: 'Privacy Policy', anchor: '#privacy-policy' },
