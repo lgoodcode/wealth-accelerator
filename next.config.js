@@ -9,11 +9,6 @@ const nextConfig = {
   redirects: async () => {
     return [
       {
-        source: '/',
-        destination: '/login',
-        permanent: false,
-      },
-      {
         source: '/dashboard',
         destination: '/dashboard/home',
         permanent: true,
@@ -49,7 +44,12 @@ const nextConfig = {
     ];
   },
   rewrites: async () => {
+    // Rewrite the root path to /home so we can group the components
     return [
+      {
+        source: '/',
+        destination: '/home',
+      },
       {
         // Proxy /sentry to Sentry
         source: '/sentry/:path*',

@@ -1,5 +1,5 @@
+import Link from 'next/link';
 import Image from 'next/image';
-// import Link from 'next/link';
 
 import { ThemeProvider } from '@/components/theme-provider';
 import { AuthHelper } from './auth-helper';
@@ -26,18 +26,20 @@ export default async function AuthenticationLayout({ children }: AuthenticationL
 
         <div className="lg:p-8 col-start-2 bg-white min-h-screen flex flex-col items-center justify-center">
           <div className="mx-auto lg:p-8 lg:py-12 rounded-md bg-white flex w-full flex-col justify-center space-y-6 sm:w-[480px]">
-            <Image
-              src="/img/logo-318x85.png"
-              width={270}
-              height={70}
-              alt="logo"
-              priority
-              className="mx-auto"
-              style={{
-                width: 270,
-                height: 70,
-              }}
-            />
+            <Link href="/" className="cursor-pointer">
+              <Image
+                src="/img/logo-318x85.png"
+                width={270}
+                height={70}
+                alt="logo"
+                priority
+                className="mx-auto"
+                style={{
+                  width: 270,
+                  height: 70,
+                }}
+              />
+            </Link>
 
             {children}
 
