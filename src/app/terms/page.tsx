@@ -1,3 +1,7 @@
+// npm imports
+// local imports
+// type imports
+
 interface VerticalNavItemType {
   icon: string;
   label: string;
