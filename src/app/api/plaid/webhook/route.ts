@@ -53,7 +53,7 @@ async function syncTransactionsWebhook(request: Request) {
       break;
     }
 
-    case 'TRANSACTIONS_REMOVED':
+    case 'TRANSACTIONS_REMOVED': {
       const removed_transactions = body.removed_transactions as string[];
       const { error } = await supabaseAdmin
         .from('plaid_transactions')
@@ -71,14 +71,18 @@ async function syncTransactionsWebhook(request: Request) {
 
         return NextResponse.json({ error: 'Failed to remove transactions' }, { status: 500 });
       }
-      break;
 
-    case 'ERROR':
+      break;
+    }
+
+    case 'ERROR': {
       console.error(body.error);
       captureException(body.error, {
         extra: { item_id },
       });
+
       break;
+    }
 
     // Ignore - not needed if using sync endpoint + webhook
     case 'DEFAULT_UPDATE':
