@@ -5,14 +5,10 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
-export function FAQ() {
+export function FAQ({ className }: { className?: string }) {
   return (
-    <div className="container">
-      <div className="text-center">
-        <h2 className="text-4xl text-cyan-900 font-semibold tracking-tight uppercase">FAQ</h2>
-      </div>
-
-      <Accordion type="single" collapsible className="w-full mt-8">
+    <div className={className}>
+      <Accordion type="single" collapsible className="w-full shadow-main p-8 lg:p-12">
         <AccordionItem value="item-1">
           <AccordionTrigger className="text-xl data-[state=closed]:text-muted-foreground">
             Is it accessible?
