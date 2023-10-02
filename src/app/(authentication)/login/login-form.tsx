@@ -104,10 +104,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
           </Link>
         </div> */}
         <div className="mx-auto">
-          <Link
-            href="/forgot-password"
-            className="hover:underline underline-offset-4 text-blue-500"
-          >
+          <Link href="/forgot-password" className="link">
             Forgot your password?
           </Link>
         </div>
