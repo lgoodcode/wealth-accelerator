@@ -7,7 +7,7 @@ import {
 
 export function FAQ() {
   return (
-    <div className="container">
+    <>
       <div className="text-center">
         <h2 className="text-4xl text-cyan-900 font-semibold tracking-tight uppercase">FAQ</h2>
       </div>
@@ -38,6 +38,6 @@ export function FAQ() {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </div>
+    </>
   );
 }
