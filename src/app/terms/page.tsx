@@ -65,7 +65,7 @@ export default function Terms() {
 
               <div className="px-3">
                 <div className="max-w-6xl rounded-2xl bg-white shadow-main">
-                  <div className="relative p-12 rounded-t-2xl bg-gradient-to-r from-[#ff0080] to-[#7928ca]">
+                  <div className="relative p-12 rounded-t-2xl bg-gradient-to-r from-primary to-blackAlpha-700">
                     <h2 className="text-3xl font-bold text-white">Terms & conditions</h2>
                     <p className="text-base text-white opacity-80 mb-4">
                       Last modified: Sep 30 2023
