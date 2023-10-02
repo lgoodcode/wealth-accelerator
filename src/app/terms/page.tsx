@@ -9,6 +9,13 @@ interface VerticalNavItemType {
   anchor: string;
 }
 
+const verticalNavItems: Array<VerticalNavItemType> = [
+  { label: 'General Terms', anchor: '#general-terms' },
+  { label: 'Cookies', anchor: '#cookies' },
+  { label: 'Privacy Policy', anchor: '#privacy-policy' },
+  { label: 'Disclaimer', anchor: '#disclaimer' },
+];
+
 export default function Terms() {
   return (
     <>
@@ -47,14 +54,7 @@ export default function Terms() {
   );
 }
 
-const verticalNavItems: Array<VerticalNavItemType> = [
-  { label: 'General Terms', anchor: '#general-terms' },
-  { label: 'Cookies', anchor: '#cookies' },
-  { label: 'Privacy Policy', anchor: '#privacy-policy' },
-  { label: 'Disclaimer', anchor: '#disclaimer' },
-];
-
-export const Banner = () => {
+const Banner = () => {
   return (
     <>
       <div className="relative p-12 rounded-t-2xl bg-gradient-to-r from-cyan-900 to-cyan-600">
@@ -65,7 +65,7 @@ export const Banner = () => {
   );
 };
 
-export const Content = () => {
+const Content = () => {
   return (
     <>
       <div className="md:p-12 p-8">
