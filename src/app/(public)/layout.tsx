@@ -11,7 +11,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
   return (
     <>
       <Header />
-      {children}
+      <div className="font-sans bg-blackAlpha-50">{children}</div>
       <Footer />
     </>
   );
