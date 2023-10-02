@@ -50,7 +50,7 @@ const QuickLinks = () => {
 
 export default function TermsPage() {
   return (
-    <section id="general" className="container min-h-screen py-32">
+    <section id="general" className="container py-32">
       <div className="flex justify-center max-w-full">
         <div className="flex flex-row gap-8">
           <QuickLinks />

@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 
 export function Footer() {
   return (
-    <footer className="bg-gray-800 pt-8 pb-4 space-y-4">
+    <footer className="bg-gray-800 pt-8 pb-4 space-y-6">
       <div className="container mx-auto grid lg:grid-cols-3 gap-8">
         <div>
           <h4 className="text-white mb-2">About Us</h4>
