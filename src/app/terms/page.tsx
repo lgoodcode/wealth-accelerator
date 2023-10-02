@@ -45,18 +45,15 @@ export default function Terms() {
         <section id="general-terms" className="min-h-screen bg-gray-50 py-32">
           <div className="flex justify-center max-w-full">
             <div className="flex flex-col md:flex-row">
-              <div className="md:min-w-[28%] md:block hidden px-4 mb-4">
-                <ul className="flex flex-col p-4 md:w-32 rounded-xl bg-white leading-relaxed text-muted-foreground sticky top-20 min-w-max md:min-w-full shadow-main font-medium">
+              <div className="w-[280px] min-w-[280px] md:block hidden px-4 mb-4">
+                <ul className="flex flex-col p-4 md:w-32 rounded-xl bg-white leading-relaxed text-muted-foreground sticky top-20 min-w-full shadow-main font-medium">
                   {verticalNavItems.map((item, index) => (
-                    <li className="flex flex-row justify-center w-full" key={index}>
+                    <li className="flex flex-row" key={index}>
                       <a
                         href={item.anchor}
-                        className="flex flex-row px-4 py-2 hover:bg-blackAlpha-200 hover:rounded-lg duration-300 whitespace-nowrap cursor-pointer w-full"
+                        className="flex flex-row px-4 py-2 hover:bg-blackAlpha-200 hover:rounded-lg duration-300 whitespace-nowrap cursor-pointer min-w-full"
                       >
-                        <div>
-                          <div>{item.icon}</div>
-                        </div>
-                        <p className="pl-4">{item.label}</p>
+                        <p>{item.label}</p>
                       </a>
                     </li>
                   ))}
@@ -65,7 +62,7 @@ export default function Terms() {
 
               <div className="px-3">
                 <div className="max-w-6xl rounded-2xl bg-white shadow-main">
-                  <div className="relative p-12 rounded-t-2xl bg-gradient-to-r from-primary to-blackAlpha-700">
+                  <div className="relative p-12 rounded-t-2xl bg-gradient-to-r from-cyan-900 to-cyan-600">
                     <h2 className="text-3xl font-bold text-white">Terms & conditions</h2>
                     <p className="text-base text-white opacity-80 mb-4">
                       Last modified: Sep 30 2023
