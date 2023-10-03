@@ -9,7 +9,7 @@ interface TestimonialItemProps {
 
 const TestimonialItem = ({ title, description, name, occupation }: TestimonialItemProps) => {
   return (
-    <div className="space-y-6 p-6 border shadow-md">
+    <div className="space-y-6 p-6 border shadow-md bg-white">
       <h3 className="text-lg font-semibold">{title}</h3>
       <p>{description}</p>
       <div>

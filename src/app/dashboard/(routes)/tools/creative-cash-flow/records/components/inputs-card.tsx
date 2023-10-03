@@ -41,10 +41,11 @@ export function InputsCard({ record }: ResultsCardProps) {
             <span>{inputLabels.tax_account_rate.title}</span>
             <span>{record.inputs.tax_account_rate}%</span>
           </div>
-          <div className="flex py-4 justify-between border-b">
+          {/* Disabled by client until further notice */}
+          {/* <div className="flex py-4 justify-between border-b">
             <span>{inputLabels.optimal_savings_strategy.title}</span>
             <span>{dollarFormatter(record.inputs.optimal_savings_strategy)}</span>
-          </div>
+          </div> */}
         </div>
       </CardContent>
     </Card>

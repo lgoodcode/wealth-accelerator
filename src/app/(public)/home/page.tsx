@@ -1,13 +1,16 @@
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
-import { Features } from './features';
-import { FAQ } from './faq';
-import { Testimonials } from './testimonials';
+import { Header } from '@/components/public/header';
+import { Features } from './components/features';
+import { FAQ } from './components/faq';
+import { Testimonials } from './components/testimonials';
 
 export default function HomePage() {
   return (
-    <div className="font-sans bg-blackAlpha-50">
+    <>
+      <Header sticky />
+
       <div className="min-h-[75vh] p-0 relative overflow-hidden flex items-center bg-cover bg-[50%]">
         <Image
           className="absolute top-0 right-0 ml-auto w-full lg:w-[50%] h-[90%] z-0 lg:rounded-bl-[10rem] rounded-none"
@@ -55,6 +58,6 @@ export default function HomePage() {
       <section className="py-28 lg:py-32">
         <Testimonials className="container" />
       </section>
-    </div>
+    </>
   );
 }

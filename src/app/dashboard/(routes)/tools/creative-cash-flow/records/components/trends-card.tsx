@@ -56,7 +56,7 @@ export function TrendsCard({ record }: TrendsCardProps) {
           </TableBody>
         </Table>
         <div>
-          <CardHeader className="space-y-1 px-0">
+          <CardHeader className="space-y-1 px-0 pb-2">
             <CardTitle className="text-2xl">{resultsLabels.year_to_date.title}</CardTitle>
             {resultsLabels.year_to_date.description && (
               <CardDescription>{resultsLabels.year_to_date.description}</CardDescription>
@@ -65,7 +65,7 @@ export function TrendsCard({ record }: TrendsCardProps) {
           <div className="text-2xl">{dollarFormatter(record.results.year_to_date)}</div>
         </div>
         <div>
-          <CardHeader className="space-y-1 px-0">
+          <CardHeader className="space-y-1 px-0 pb-2">
             <CardTitle className="text-2xl">
               {resultsLabels.actual_collection_trend.title}
             </CardTitle>

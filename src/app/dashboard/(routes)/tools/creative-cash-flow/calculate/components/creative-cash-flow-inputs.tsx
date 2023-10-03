@@ -48,6 +48,7 @@ export function CreativeCashFlowInputs({
     defaultValues: {
       ...creativeCashFlowInputs,
       tax_account_rate: creativeCashFlowInputs.tax_account_rate || default_tax_rate,
+      optimal_savings_strategy: 0,
     },
   });
 
@@ -165,7 +166,7 @@ export function CreativeCashFlowInputs({
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="optimal_savings_strategy"
               render={({ field }) => (
@@ -178,7 +179,7 @@ export function CreativeCashFlowInputs({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <div className="flex justify-end">
               <Button type="submit" className="w-full" loading={form.formState.isSubmitting}>
                 Calculate
