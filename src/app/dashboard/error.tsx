@@ -1,25 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { captureException } from '@sentry/nextjs';
 
 import { Button } from '@/components/ui/button';
 
-export default function InternalErrorPage({ error, reset }: any) {
-  const router = useRouter();
-  const [isRetrying, setIsRetrying] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const handleReset = () => {
-    setIsRetrying(true);
-    reset();
-  };
-  const handleGoHome = () => {
-    setIsLoading(true);
-    router.push('/dashboard/home');
-  };
-
+export default function DashboardInternalErrorPage({ error, reset }: any) {
   captureException(error);
 
   return (
@@ -32,11 +19,9 @@ export default function InternalErrorPage({ error, reset }: any) {
           </p>
         </div>
         <div className="flex gap-4">
-          <Button loading={isRetrying} onClick={handleReset}>
-            Reload
-          </Button>
-          <Button loading={isLoading} onClick={handleGoHome}>
-            Go home
+          <Button onClick={reset}>Reload</Button>
+          <Button>
+            <Link href="/dashboard/home">Go Home</Link>
           </Button>
         </div>
       </div>

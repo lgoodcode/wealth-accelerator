@@ -16,7 +16,7 @@ export default function NotFound() {
           </h1>
           <div className="mr-auto">
             <Button size="lg">
-              <Link href="/">Go home</Link>
+              <Link href="/">Go Home</Link>
             </Button>
           </div>
         </div>
@@ -26,8 +26,8 @@ export default function NotFound() {
             src="/img/404-hiker.png"
             alt="404 illustration - lost hiker"
             priority
-            width={2500}
-            height={1778}
+            width={678}
+            height={475}
           />
         </div>
       </div>

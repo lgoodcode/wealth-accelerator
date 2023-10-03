@@ -14,8 +14,8 @@ export default function DashboardNotFoundPage() {
           src="/img/404-robot.png"
           alt="404 illustration - robot"
           priority
-          width={2500}
-          height={1778}
+          width={678}
+          height={475}
         />
       </div>
     </div>
