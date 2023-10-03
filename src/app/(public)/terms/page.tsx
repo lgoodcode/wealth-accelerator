@@ -53,7 +53,7 @@ const quickLinks: QuickLink[] = [
   },
 ];
 
-export const Group = ({ id, title, children }: GroupProps) => (
+const Group = ({ id, title, children }: GroupProps) => (
   <div>
     <h2 id={id} className="text-3xl text-cyan-900 font-bold mb-4">
       {title}
