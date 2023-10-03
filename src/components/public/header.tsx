@@ -1,13 +1,26 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
+import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 
-export function Header() {
+interface HeaderProps {
+  sticky?: boolean;
+}
+
+export function Header({ sticky = false }: HeaderProps) {
   return (
-    <div className="sticky z-50 top-0 w-full flex justify-center">
-      <nav className="absolute w-full bg-gray-50/90 bd-frost shadow-md">
-        <div className="container relative flex mx-auto px-4 xl:px-0 h-16 justify-between items-center">
+    <div
+      className={cn('w-full flex justify-center', {
+        'sticky z-50 top-0': sticky,
+      })}
+    >
+      <nav
+        className={cn('w-full bg-gray-50/90 bd-frost shadow-md', {
+          absolute: sticky,
+        })}
+      >
+        <div className="container relative flex mx-auto px-8 h-16 justify-between items-center">
           <Link href="/">
             <Image src="/img/logo-318x85.png" alt="logo" priority width={168} height={45} />
           </Link>
