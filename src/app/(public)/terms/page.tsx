@@ -1,11 +1,15 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
-import { Group } from './components/group';
-
 export const metadata: Metadata = {
   title: 'Terms of Service',
 };
+
+interface GroupProps {
+  id: string;
+  title: string;
+  children: React.ReactNode;
+}
 
 interface QuickLink {
   label: string;
@@ -46,6 +50,15 @@ const quickLinks: QuickLink[] = [
     anchor: '#term-and-termination',
   },
 ];
+
+export const Group = ({ id, title, children }: GroupProps) => (
+  <div>
+    <h2 id={id} className="text-3xl text-cyan-900 font-bold mb-4">
+      {title}
+    </h2>
+    <div className="space-y-4">{children}</div>
+  </div>
+);
 
 const QuickLinks = () => {
   return (
