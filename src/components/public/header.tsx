@@ -7,9 +7,9 @@ export function Header() {
   return (
     <div className="sticky z-50 top-0 w-full flex justify-center">
       <nav className="absolute w-full bg-gray-50/90 bd-frost shadow-md">
-        <div className="container relative flex mx-auto px-4 xl:px-0 h-20 justify-between items-center">
+        <div className="container relative flex mx-auto px-4 xl:px-0 h-16 justify-between items-center">
           <Link href="/">
-            <Image src="/img/logo-318x85.png" alt="logo" priority width={200} height={58} />
+            <Image src="/img/logo-318x85.png" alt="logo" priority width={168} height={45} />
           </Link>
           <ul className="flex gap-3">
             {/* <li>
