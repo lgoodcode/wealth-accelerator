@@ -11,7 +11,7 @@ export default function NotFound() {
 
       <div className="container mt-32 grid grid-cols-2 gap-8 lg:gap-0">
         <div className="col-span-2 lg:col-span-1 my-auto space-y-6">
-          <h1 className="text-4xl font-semibold">
+          <h1 className="text-4xl font-semibold leading-snug">
             Oops, the page you&apos;re looking for wasn&apos;t found.
           </h1>
           <div className="mr-auto">
@@ -23,11 +23,11 @@ export default function NotFound() {
 
         <div className="col-span-2 lg:col-span-1 relative">
           <Image
-            src="/img/404-hiker.png"
+            src="/img/404.png"
             alt="404 illustration - lost hiker"
             priority
-            width={678}
-            height={475}
+            width={668}
+            height={668}
           />
         </div>
       </div>
