@@ -22,6 +22,7 @@ interface TrendsProps {
 
 export function Trends({ createCountUpProps }: TrendsProps) {
   const results = useAtomValue(creativeCashFlowResultAtom);
+  const actual_annual_trend = results ? results.yearly_trend.reduce((a, b) => a + b, 0) / 3 : 0;
 
   if (!results) {
     return null;
@@ -101,9 +102,8 @@ export function Trends({ createCountUpProps }: TrendsProps) {
               </TableRow>
             </TableBody>
           </Table>
-
           <div>
-            <CardHeader className="space-y-1 px-0">
+            <CardHeader className="space-y-1 px-0 pb-2">
               <CardTitle className="text-2xl">{resultsLabels.year_to_date.title}</CardTitle>
               <CardDescription className="text-md">
                 {resultsLabels.year_to_date.description}
@@ -112,6 +112,22 @@ export function Trends({ createCountUpProps }: TrendsProps) {
             <CountUp
               className="text-2xl"
               {...createCountUpProps(results.year_to_date, countUpProps.item1.delay)}
+            />
+          </div>
+          <div>
+            <CardHeader className="space-y-1 px-0 pb-2">
+              <CardTitle className="text-2xl">
+                {resultsLabels.actual_collection_trend.title}
+              </CardTitle>
+              {resultsLabels.year_to_date.description && (
+                <CardDescription>
+                  {resultsLabels.actual_collection_trend.description}
+                </CardDescription>
+              )}
+            </CardHeader>
+            <CountUp
+              className="text-2xl"
+              {...createCountUpProps(actual_annual_trend, countUpProps.item1.delay)}
             />
           </div>
         </CardContent>
