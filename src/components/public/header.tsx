@@ -23,13 +23,13 @@ export function Header() {
             <li>
               <Link
                 href="/contact"
-                className="block h-auto text-lg select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-blackAlpha-100"
+                className="select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-200"
               >
                 <span className="font-medium leading-none">Contact Us</span>
               </Link>
             </li>
           </ul>
-          <Button size="lg">
+          <Button>
             <Link href="/login">Sign In</Link>
           </Button>
         </div>
