@@ -24,7 +24,7 @@ export default function NotFound() {
         <div className="col-span-2 lg:col-span-1 relative">
           <Image
             src="/img/404.png"
-            alt="404 illustration - lost hiker"
+            alt="404 illustration - Image by pikisuperstar on Freepik"
             priority
             width={668}
             height={668}
