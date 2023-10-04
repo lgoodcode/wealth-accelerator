@@ -91,13 +91,13 @@ export default function TermsPage() {
           <div className="flex flex-row gap-8">
             <QuickLinks />
 
-            <div className="bg-white shadow-lg">
+            <div className="bg-white shadow-lg max-w-5xl">
               <div className="relative p-12 space-y-2 rounded-t-md bg-gradient-to-br from-cyan-900 from-30% to-cyan-600">
                 <h2 className="text-3xl font-bold text-white">Terms of Service</h2>
                 <p className="text-base text-white opacity-80">Effective: October 1, 2023</p>
               </div>
 
-              <div className="p-8 md:px-12 space-y-12 text-muted-foreground">
+              <div className="px-8 py-12 md:px-12 space-y-12 text-muted-foreground">
                 <div className="space-y-4">
                   <p className="uppercase font-lg mb-8 font-bold text-cyan-900 px-[15%] md:px[20%]">
                     PLEASE NOTE THAT YOUR USE OF AND ACCESS TO OUR SERVICES (DEFINED BELOW) ARE

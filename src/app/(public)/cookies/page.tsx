@@ -12,7 +12,7 @@ export default function CookiesPolicyPage() {
     <>
       <Header />
 
-      <section className="container py-12 max-w-6xl">
+      <section className="container py-12 max-w-5xl">
         <div className="flex justify-center max-w-full">
           <div className="flex flex-row gap-8">
             <div className="bg-white shadow-lg">
@@ -21,7 +21,7 @@ export default function CookiesPolicyPage() {
                 <p className="text-base text-white opacity-80">Effective: October 1, 2023</p>
               </div>
 
-              <div className="p-8 md:px-12 space-y-12 text-muted-foreground">
+              <div className="px-8 py-12 md:px-12 space-y-12 text-muted-foreground">
                 <div className="space-y-4">
                   <p>
                     The information provided below coincide with the guidelines outlined in our{' '}
