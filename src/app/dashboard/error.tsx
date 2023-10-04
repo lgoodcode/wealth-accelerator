@@ -11,10 +11,10 @@ export default function DashboardInternalErrorPage({ error, reset }: any) {
 
   return (
     <div className="container font-sans mt-32 grid grid-cols-2 gap-8 lg:gap-0">
-      <div className="col-span-2 lg:col-span-1 my-auto space-y-6">
+      <div className="container col-span-2 lg:col-span-1 my-auto space-y-6">
         <div>
           <h1 className="text-4xl font-semibold leading-snug">Something went wrong</h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg md:pr-12 text-muted-foreground">
             Try reloading the content or navigate to a different page or refresh the page.
           </p>
         </div>
