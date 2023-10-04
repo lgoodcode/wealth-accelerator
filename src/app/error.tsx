@@ -14,7 +14,7 @@ export default function InternalErrorPage({ error, reset }: any) {
     <>
       <Header />
 
-      <div className="container h-full mt-24 lg:mt-0 flex-grow grid grid-cols-2 gap-8">
+      <div className="container mt-24 lg:mt-0 grid grid-cols-2 gap-8">
         <div className="md:container col-span-2 lg:col-span-1 my-auto space-y-6">
           <div>
             <h1 className="text-4xl font-semibold leading-snug">Something went wrong</h1>
