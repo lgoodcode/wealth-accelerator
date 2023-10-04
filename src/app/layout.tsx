@@ -20,7 +20,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         className={cn('min-h-screen bg-background antialiased', inter.className, openSans.variable)}
       >
         <div className="relative flex min-h-screen flex-col">
-          <div className="flex-1">{children}</div>
+          <div className="flex flex-1 flex-col">{children}</div>
         </div>
         <TailwindIndicator />
       </body>
