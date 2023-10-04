@@ -91,13 +91,13 @@ export default function TermsPage() {
           <div className="flex flex-row gap-8">
             <QuickLinks />
 
-            <div className="bg-white shadow-lg">
+            <div className="bg-white shadow-lg max-w-5xl">
               <div className="relative p-12 space-y-2 rounded-t-md bg-gradient-to-br from-cyan-900 from-30% to-cyan-600">
-                <h2 className="text-3xl font-bold text-white">Terms of Use</h2>
-                <p className="text-base text-white opacity-80">Effective: Oct, 1 2023</p>
+                <h2 className="text-3xl font-bold text-white">Terms of Service</h2>
+                <p className="text-base text-white opacity-80">Effective: October 1, 2023</p>
               </div>
 
-              <div className="p-8 md:px-12 space-y-12 text-muted-foreground">
+              <div className="px-8 py-12 md:px-12 space-y-12 text-muted-foreground">
                 <div className="space-y-4">
                   <p className="uppercase font-lg mb-8 font-bold text-cyan-900 px-[15%] md:px[20%]">
                     PLEASE NOTE THAT YOUR USE OF AND ACCESS TO OUR SERVICES (DEFINED BELOW) ARE
@@ -151,7 +151,7 @@ export default function TermsPage() {
                 <Group id="user-representations" title="User Representations">
                   <p>By using the Services, you represent and warrant that:</p>
 
-                  <ol className="pl-10 list-decimal space-y-1">
+                  <ol className="pl-10 !mt-2 list-decimal space-y-1">
                     <li>
                       All registration information you submit will be true, accurate, current, and
                       complete.
@@ -187,7 +187,7 @@ export default function TermsPage() {
                     representations, warranties and conditions relating to our website and the use
                     of this website. Nothing in this disclaimer will:
                   </p>
-                  <ul className="pl-10 list-disc space-y-1">
+                  <ul className="pl-10 !mt-2 list-disc space-y-1">
                     <li>limit or exclude our or your liability for death or personal injury;</li>
                     <li>
                       limit or exclude our or your liability for fraud or fraudulent
@@ -223,7 +223,7 @@ export default function TermsPage() {
                     by us.
                   </p>
                   <p>As a user of the Services, you agree not to:</p>
-                  <ul className="pl-10 list-disc space-y-1">
+                  <ul className="pl-10 !mt-2 list-disc space-y-1">
                     <li>
                       Systematically retrieve data or other content from the Services to create or
                       compile, directly or indirectly, a collection, compilation, database, or

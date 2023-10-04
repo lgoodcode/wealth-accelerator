@@ -17,10 +17,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
+        // Use className when utilizing it in a class and variable when using it as a CSS variable,
+        // which is being used for the openSans in the tailwind config file
         className={cn('min-h-screen bg-background antialiased', inter.className, openSans.variable)}
       >
         <div className="relative flex min-h-screen flex-col">
-          <div className="flex-1">{children}</div>
+          <main className="flex flex-1 flex-col">{children}</main>
         </div>
         <TailwindIndicator />
       </body>
