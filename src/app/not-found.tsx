@@ -11,7 +11,7 @@ export default function NotFound() {
       <Header />
 
       <div className="container h-full mt-32 lg:mt-0 flex-grow grid grid-cols-2 gap-8">
-        <div className="container col-span-2 lg:col-span-1 my-auto space-y-6">
+        <div className="md:container col-span-2 lg:col-span-1 my-auto space-y-6">
           <h1 className="text-4xl font-semibold leading-snug">
             Oops, the page you&apos;re looking for wasn&apos;t found.
           </h1>
