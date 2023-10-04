@@ -27,7 +27,7 @@ export function Footer() {
           <h4 className="text-white mb-2">Legal</h4>
           <div className="flex flex-col gap-1 w-fit">
             <Link href="/terms" className="text-gray-400 hover:text-gray-300">
-              Terms of Use
+              Terms of Service
             </Link>
             <Link href="/privacy" className="text-gray-400 hover:text-gray-300 capitalize">
               Privacy Policy

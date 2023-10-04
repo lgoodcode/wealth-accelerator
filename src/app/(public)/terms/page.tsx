@@ -151,7 +151,7 @@ export default function TermsPage() {
                 <Group id="user-representations" title="User Representations">
                   <p>By using the Services, you represent and warrant that:</p>
 
-                  <ol className="pl-10 list-decimal space-y-1">
+                  <ol className="pl-10 !mt-2 list-decimal space-y-1">
                     <li>
                       All registration information you submit will be true, accurate, current, and
                       complete.
@@ -187,7 +187,7 @@ export default function TermsPage() {
                     representations, warranties and conditions relating to our website and the use
                     of this website. Nothing in this disclaimer will:
                   </p>
-                  <ul className="pl-10 list-disc space-y-1">
+                  <ul className="pl-10 !mt-2 list-disc space-y-1">
                     <li>limit or exclude our or your liability for death or personal injury;</li>
                     <li>
                       limit or exclude our or your liability for fraud or fraudulent
@@ -223,7 +223,7 @@ export default function TermsPage() {
                     by us.
                   </p>
                   <p>As a user of the Services, you agree not to:</p>
-                  <ul className="pl-10 list-disc space-y-1">
+                  <ul className="pl-10 !mt-2 list-disc space-y-1">
                     <li>
                       Systematically retrieve data or other content from the Services to create or
                       compile, directly or indirectly, a collection, compilation, database, or
