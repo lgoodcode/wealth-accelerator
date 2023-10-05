@@ -9,7 +9,7 @@ interface PublicLayoutProps {
 export default function PublicLayout({ children }: PublicLayoutProps) {
   return (
     <>
-      <div className="font-sans bg-gray-100 flex-grow">{children}</div>
+      <div className="font-sans bg-white flex-grow">{children}</div>
       <Footer />
     </>
   );
