@@ -104,7 +104,9 @@ export function ContactForm() {
           />
         </div>
         <div className="w-full lg:col-span-2 flex justify-center">
-          <Button className="py-3">Send Message</Button>
+          <Button className="py-3" loading={form.formState.isSubmitting}>
+            Send Message
+          </Button>
         </div>
       </form>
     </Form>
