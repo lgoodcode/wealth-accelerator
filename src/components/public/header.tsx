@@ -36,9 +36,9 @@ export function Header({ sticky = false }: HeaderProps) {
             <li>
               <Link
                 href="/contact"
-                className="select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-200"
+                className="select-none rounded-md px-3 py-2 leading-none no-underline outline-none transition-colors hover:bg-gray-300/70 hover:shadow-sm"
               >
-                <span className="font-medium leading-none">Contact Us</span>
+                <span className="font-semibold leading-none">Contact Us</span>
               </Link>
             </li>
           </ul>
