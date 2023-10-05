@@ -19,17 +19,13 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
-type ServerMessage = {
-  type: 'error' | 'success';
-  message: string;
-} | null;
+import type { ServerMessage } from '@/lib/types/public';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const signUp = useSignUp();
-  const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
+  const [serverMessage, setServerMessage] = useState<ServerMessage | null>(null);
   const form = useForm<RegisterUserFormType>({
     resolver: zodResolver(registerUserFormSchema),
     defaultValues: {

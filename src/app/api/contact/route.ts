@@ -8,6 +8,12 @@ export const dynamic = 'force-dynamic';
 export const POST = ContactRoute;
 
 type ContactBody = {
+  fullName: string;
+  email: string;
+  message: string;
+};
+
+type ContactTemplateData = {
   full_name: string;
   email: string;
   message: string;
@@ -30,8 +36,8 @@ async function ContactRoute(request: Request) {
 
   if (body instanceof Error) {
     return NextResponse.json({ error: body.message }, { status: 400 });
-  } else if (!body.full_name) {
-    return NextResponse.json({ error: 'Missing full name' }, { status: 400 });
+  } else if (!body.fullName) {
+    return NextResponse.json({ error: 'Missing fullName' }, { status: 400 });
   } else if (!body.email) {
     return NextResponse.json({ error: 'Missing email' }, { status: 400 });
   } else if (!body.message) {
@@ -40,8 +46,8 @@ async function ContactRoute(request: Request) {
 
   // TODO: get the notifiers from the database
 
-  const emailBody = createEmailBody(NOTIFIERS, 'contact', {
-    full_name: body.full_name,
+  const emailBody = createEmailBody<ContactTemplateData>(NOTIFIERS, 'contact', {
+    full_name: body.fullName,
     email: body.email,
     message: body.message,
   });
