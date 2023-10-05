@@ -21,12 +21,12 @@ type Recipients = {
   email: string;
 };
 
-export type TemplateData = Record<string, any>;
+export type TemplateData = Record<string, string>;
 
 const SMTP2GO_API_URL = process.env.SMTP2GO_API_URL;
 const EMAIL_SENDER = process.env.EMAIL_SENDER;
 
-export const createEmailBody = <T = Record<string, string>>(
+export const createEmailBody = <T extends TemplateData>(
   recipients: Recipients[],
   template_id: string,
   template_data: T
