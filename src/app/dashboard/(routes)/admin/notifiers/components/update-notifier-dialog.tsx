@@ -18,6 +18,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -38,11 +39,7 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
   const [isUpdating, setIsUpdating] = useState(false);
   const form = useForm<NotifierForm>({
     resolver: zodResolver(notifierFormSchema),
-    values: {
-      name: notifier.name,
-      email: notifier.email.toLowerCase(),
-      enabled: notifier.enabled,
-    },
+    values: notifier,
   });
 
   const handleUpdateDialogOpenChange = useCallback(
@@ -104,14 +101,68 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
             />
             <FormField
               control={form.control}
-              name="enabled"
+              name="contact_email"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Enabled</FormLabel>
-
+                  <div>
+                    <FormLabel>Contact Email</FormLabel>
+                    <FormDescription>Notifies when a user submits a contact form.</FormDescription>
+                  </div>
                   <FormControl>
                     <Checkbox
-                      id="enabled"
+                      id="contact-email"
+                      name={field.name}
+                      className="w-6 h-6"
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="creative_cash_flow"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <div>
+                    <FormLabel>Creative Cash Flow</FormLabel>
+                    <FormDescription>
+                      Notifies when a user shares a Creative Cash Flow record.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Checkbox
+                      id="creative-cash-flow"
+                      name={field.name}
+                      className="w-6 h-6"
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="debt_snowball"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <div>
+                    <FormLabel>Debt Snowball</FormLabel>
+                    <FormDescription>
+                      Notifies when a user shares a Debt Snowball record.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Checkbox
+                      id="debt-snowball"
                       name={field.name}
                       className="w-6 h-6"
                       ref={field.ref}

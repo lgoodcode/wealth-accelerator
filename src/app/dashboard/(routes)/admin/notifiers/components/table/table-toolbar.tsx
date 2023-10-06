@@ -27,13 +27,13 @@ export function TableToolbar({ table }: TableToolbarProps) {
           onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn('enabled') && (
+        {/* {table.getColumn('enabled') && (
           <FacetedFilter
             column={table.getColumn('enabled')}
             title="Enabled"
             options={enabledOptions}
           />
-        )}
+        )} */}
         {isFiltered && (
           <Button
             variant="ghost"

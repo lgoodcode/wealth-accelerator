@@ -1,18 +1,12 @@
 'use client';
 
 import type { ColumnDef } from '@tanstack/react-table';
+import { Check, X } from 'lucide-react';
 
 import { enabledOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
 import type { Notifier } from '@/lib/types';
-
-/**
- * NOTES
- *
- * The `enableGlobalFilter` option is used to enable the global filter for the columns so that
- * it filters against both name and email.
- */
 
 export const columns: ColumnDef<Notifier>[] = [
   {
@@ -32,8 +26,8 @@ export const columns: ColumnDef<Notifier>[] = [
     },
   },
   {
-    accessorKey: 'email',
     enableGlobalFilter: true,
+    accessorKey: 'email',
     header: ({ column }) => <ColumnHeader column={column} title="Email" />,
     cell: ({ row }) => {
       return (
@@ -48,19 +42,48 @@ export const columns: ColumnDef<Notifier>[] = [
     },
   },
   {
-    accessorKey: 'enabled',
-    header: ({ column }) => <ColumnHeader column={column} title="Enabled" />,
+    accessorKey: 'contact_email',
+    header: ({ column }) => <ColumnHeader column={column} title="Contact Email" />,
     cell: ({ row }) => {
-      const isEnabled = row.getValue<boolean>('enabled') ? 'true' : 'false';
-      const enabled = enabledOptions.find((option) => option.value === isEnabled);
-
-      if (!enabled) {
-        return null;
-      }
+      const isEnabled = row.getValue<boolean>('contact_email') ? 'true' : 'false';
 
       return (
-        <div className="flex items-center">
-          <enabled.icon className="ml-4" />
+        <div className="flex items-center justify-center">
+          <div>{isEnabled === 'true' ? <Check /> : <X />}</div>
+        </div>
+      );
+    },
+    // Need to convert the value to a string because the filterFn value is an array of strings
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue<boolean>(id) ? 'true' : 'false');
+    },
+  },
+  {
+    accessorKey: 'creative_cash_flow',
+    header: ({ column }) => <ColumnHeader column={column} title="Creative Cash Flow" />,
+    cell: ({ row }) => {
+      const isEnabled = row.getValue<boolean>('creative_cash_flow') ? 'true' : 'false';
+
+      return (
+        <div className="flex items-center justify-center">
+          <div>{isEnabled === 'true' ? <Check /> : <X />}</div>
+        </div>
+      );
+    },
+    // Need to convert the value to a string because the filterFn value is an array of strings
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue<boolean>(id) ? 'true' : 'false');
+    },
+  },
+  {
+    accessorKey: 'debt_snowball',
+    header: ({ column }) => <ColumnHeader column={column} title="Debt Snowball" />,
+    cell: ({ row }) => {
+      const isEnabled = row.getValue<boolean>('debt_snowball') ? 'true' : 'false';
+
+      return (
+        <div className="flex items-center justify-center">
+          <div>{isEnabled === 'true' ? <Check /> : <X />}</div>
         </div>
       );
     },
