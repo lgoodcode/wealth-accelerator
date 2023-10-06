@@ -43,7 +43,7 @@ export default async function AuthenticationLayout({ children }: AuthenticationL
 
             {children}
 
-            {/* <p className="px-8 text-center text-sm text-muted-foreground">
+            <p className="px-8 text-center text-sm text-muted-foreground">
               By using our website, you agree to our{' '}
               <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
                 Terms
@@ -53,7 +53,7 @@ export default async function AuthenticationLayout({ children }: AuthenticationL
                 Privacy Policy
               </Link>
               .
-            </p> */}
+            </p>
           </div>
         </div>
       </div>
