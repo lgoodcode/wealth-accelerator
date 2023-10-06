@@ -20,25 +20,23 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-const formSchema = z.object({
+const loginFormSchema = z.object({
   email: z.string().nonempty('Please enter your email').email(),
   password: z.string().nonempty('Please enter your password'),
 });
+
+type LoginForm = z.infer<typeof loginFormSchema>;
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
   const login = useLogin();
   const [serverError, setServerError] = useState('');
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+  const form = useForm<LoginForm>({
+    resolver: zodResolver(loginFormSchema),
   });
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  const onSubmit = async (data: LoginForm) => {
     setServerError('');
 
     await login(data).catch((error) => {
@@ -108,6 +106,20 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
             Forgot your password?
           </Link>
         </div>
+      </div>
+
+      <div className="px-8 text-center text-sm text-muted-foreground">
+        <p>
+          By using our website, you agree to our{' '}
+          <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
+            Terms
+          </Link>{' '}
+          and{' '}
+          <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
+            Privacy Policy
+          </Link>
+          .
+        </p>
       </div>
     </div>
   );
