@@ -7,6 +7,7 @@ import { supabaseAdmin } from '@/lib/supabase/server/admin';
 
 export const dynamic = 'force-dynamic';
 export const POST = ContactRoute;
+const TEMPLATE_ID = 'contact';
 
 type ContactBody = {
   fullName: string;
@@ -44,7 +45,7 @@ async function ContactRoute(request: Request) {
     return NextResponse.json({ error: 'No notifiers found' }, { status: 500 });
   }
 
-  const emailBody = createEmailBody<TemplateData>(notifiers, 'contact', {
+  const emailBody = createEmailBody<TemplateData>(notifiers, TEMPLATE_ID, {
     full_name: body.fullName,
     email: body.email,
     message: body.message,
