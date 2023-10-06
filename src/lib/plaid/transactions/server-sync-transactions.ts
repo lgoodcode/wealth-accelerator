@@ -10,21 +10,21 @@ import {
   PlaidTransactionsSyncMutationErrorCode,
 } from '@/lib/plaid/types/sync';
 import type { Institution } from '@/lib/plaid/types/institutions';
-import type { Filter } from '@/lib/plaid/types/transactions';
+import type { Filter, UserFilter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
 import { captureException } from '@sentry/nextjs';
 
-type GetFilters =
+type GetFilters<F> =
   | {
       isError: true;
       data: ServerSyncTransactions;
     }
   | {
       isError: false;
-      data: Filter[];
+      data: F[];
     };
 
-const getGlobalFilters = async (): Promise<GetFilters> => {
+const getGlobalFilters = async (): Promise<GetFilters<Filter>> => {
   const { error, data } = await supabaseAdmin // Need admin to access plaid_filters for all users
     .from('global_plaid_filters')
     .select('*')
@@ -54,7 +54,7 @@ const getGlobalFilters = async (): Promise<GetFilters> => {
   };
 };
 
-const getUserFilters = async (user_id: string): Promise<GetFilters> => {
+const getUserFilters = async (user_id: string): Promise<GetFilters<UserFilter>> => {
   const { error, data } = await supabaseAdmin // Need admin to access plaid_filters for all users
     .from('user_plaid_filters')
     .select('id, filter, category')
@@ -81,7 +81,7 @@ const getUserFilters = async (user_id: string): Promise<GetFilters> => {
 
   return {
     isError: false,
-    data: data as Filter[],
+    data: data as UserFilter[],
   };
 };
 

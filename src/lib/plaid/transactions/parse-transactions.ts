@@ -1,7 +1,11 @@
 import type { Transaction } from 'plaid';
 
 import { parseCategory } from './parse-category';
-import type { Filter, Transaction as ParsedTransaction } from '@/lib/plaid/types/transactions';
+import type {
+  Filter,
+  Transaction as ParsedTransaction,
+  UserFilter,
+} from '@/lib/plaid/types/transactions';
 
 /**
  * Parses Plaid transactions and returns an array of transactions in the shape of our database
@@ -9,7 +13,7 @@ import type { Filter, Transaction as ParsedTransaction } from '@/lib/plaid/types
 export const parseTransactions = async (
   item_id: string,
   transactions: Transaction[],
-  user_filters: Filter[],
+  user_filters: UserFilter[],
   global_filters: Filter[]
 ): Promise<ParsedTransaction[]> => {
   return transactions.map((transaction) => {
