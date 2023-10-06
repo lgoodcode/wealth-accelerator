@@ -11,7 +11,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
   return (
     <>
       <Header />
-      <div className="font-sans flex-grow">{children}</div>
+      <div className="font-sans flex-grow pb-16">{children}</div>
       <Footer />
     </>
   );
