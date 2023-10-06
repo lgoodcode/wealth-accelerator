@@ -11,8 +11,8 @@ const authPagesRegex = /^\/(login|signup|forgot-password|reset-password|set-pass
 export async function middleware(request: NextRequest) {
   const res = NextResponse.next({
     headers: {
-      // Set custom header to allow server components to know the current URL
-      'x-url': `${request.nextUrl.pathname}${request.nextUrl.search}`,
+      // Set custom header to allow server components to know the current path
+      'x-path': request.nextUrl.pathname,
     },
   });
   const isLoginPage = request.nextUrl.pathname === '/login';
