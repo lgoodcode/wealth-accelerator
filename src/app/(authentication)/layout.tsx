@@ -13,47 +13,29 @@ export default async function AuthenticationLayout({ children }: AuthenticationL
     <ThemeProvider attribute="class" forcedTheme="light">
       <AuthHelper />
 
-      <div className="container relative flex flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-        <div className="hidden -z-10 absolute w-full h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
-          <Image
-            src="/img/bg-auth.jpg"
-            alt="mountain covered by fog"
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        </div>
+      <div className="relative grid xl:grid-cols-2 justify-center">
+        <Image
+          src="/img/himalayas.jpg"
+          alt="mountain covered by fog"
+          priority
+          fill
+          className="object-cover"
+        />
 
-        <div className="lg:p-8 col-start-2 bg-white min-h-screen flex flex-col items-center justify-center">
-          <div className="mx-auto lg:p-8 lg:py-12 rounded-md bg-white flex w-full flex-col justify-center space-y-6 sm:w-[480px]">
-            <Link href="/" className="cursor-pointer">
+        <div className="col-start-2 min-h-screen flex flex-col items-center justify-center">
+          <div className="px-8 py-12 w-[512px] rounded-md flex flex-col bg-white/90 bd-frost">
+            <Link href="/" className="mb-6">
               <Image
                 src="/img/logo-318x85.png"
+                alt="logo"
+                className="mx-auto"
+                priority
                 width={270}
                 height={70}
-                alt="logo"
-                priority
-                className="mx-auto"
-                style={{
-                  width: 270,
-                  height: 70,
-                }}
               />
             </Link>
 
             {children}
-
-            <p className="px-8 text-center text-sm text-muted-foreground">
-              By using our website, you agree to our{' '}
-              <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
-                Terms
-              </Link>{' '}
-              and{' '}
-              <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
-                Privacy Policy
-              </Link>
-              .
-            </p>
           </div>
         </div>
       </div>

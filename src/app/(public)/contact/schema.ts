@@ -9,9 +9,11 @@ export const contactSchema = z.object({
     .max(100, 'The maximum number of characters is 100'),
   email: z
     .string({
-      required_error: 'Please enter a valid email',
+      required_error: 'Please enter your email',
     })
-    .email(),
+    .email({
+      message: 'Please enter a valid email',
+    }),
   message: z.string({
     required_error: 'Please enter your message',
   }),

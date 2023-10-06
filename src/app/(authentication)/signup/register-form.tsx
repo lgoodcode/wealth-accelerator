@@ -67,7 +67,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
       )}
 
       <Form {...form}>
-        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
           <FormField
             control={form.control}
             name="name"

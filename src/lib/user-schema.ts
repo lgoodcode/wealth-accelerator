@@ -2,6 +2,19 @@ import { z } from 'zod';
 
 import { Role } from '@/lib/types';
 
+export const loginFormSchema = z.object({
+  email: z
+    .string({
+      required_error: 'Please enter your email',
+    })
+    .email({
+      message: 'Please enter a valid email',
+    }),
+  password: z.string({
+    required_error: 'Please enter your password',
+  }),
+});
+
 export const registerUserFormSchema = z.object({
   name: z
     .string({
@@ -13,7 +26,9 @@ export const registerUserFormSchema = z.object({
     .string({
       required_error: 'Please enter your email',
     })
-    .email(),
+    .email({
+      message: 'Please enter a valid email',
+    }),
   password: z
     .string({
       required_error: 'Please enter your password',
@@ -88,6 +103,8 @@ export const changePasswordSchema = z
     message: 'Passwords do not match',
     path: ['confirm_new_password'],
   });
+
+export type LoginForm = z.infer<typeof loginFormSchema>;
 
 export type RegisterUserForm = z.infer<typeof registerUserFormSchema>;
 

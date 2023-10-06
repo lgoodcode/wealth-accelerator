@@ -8,7 +8,9 @@ export const notifierFormSchema = z.object({
     .string({
       required_error: 'Enter an email',
     })
-    .email(),
+    .email({
+      message: 'Enter a valid email',
+    }),
   enabled: z.boolean({
     required_error: 'Select whether this account is enabled or not',
   }),

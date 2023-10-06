@@ -1,12 +1,12 @@
 'use client';
 
-import { z } from 'zod';
 import Link from 'next/link';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
+import { loginFormSchema, type LoginForm } from '@/lib/user-schema';
 import { useLogin } from '@/hooks/auth/use-login';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,13 +19,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
-const loginFormSchema = z.object({
-  email: z.string().nonempty('Please enter your email').email(),
-  password: z.string().nonempty('Please enter your password'),
-});
-
-type LoginForm = z.infer<typeof loginFormSchema>;
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -48,7 +41,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
   return (
     <div className={cn('grid gap-6', className)} {...props}>
       <div className="flex flex-col space-y-2 text-center">
-        <h1 className="text-3xl font-medium tracking-tight">Welcome back</h1>
+        <h1 className="text-2xl font-medium tracking-tight">Welcome back</h1>
         <p className="text-sm text-muted-foreground">Sign in to your account</p>
       </div>
 
@@ -59,7 +52,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
       )}
 
       <Form {...form}>
-        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
           <FormField
             control={form.control}
             name="email"
@@ -108,11 +101,14 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
         </div>
       </div>
 
-      <div className="px-8 text-center text-sm text-muted-foreground">
-        <p>
+      <div className="px-10 text-center text-sm text-muted-foreground">
+        <p className="leading-normal">
           By using our website, you agree to our{' '}
-          <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
-            Terms
+          <Link
+            href="/terms"
+            className="underline underline-offset-4 hover:text-primary whitespace-nowrap"
+          >
+            Terms of Service
           </Link>{' '}
           and{' '}
           <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">

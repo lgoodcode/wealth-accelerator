@@ -11,7 +11,9 @@ export const inviteUserSchema = z.object({
     .string({
       required_error: 'Enter the email',
     })
-    .email(),
+    .email({
+      message: 'Enter a valid email',
+    }),
 });
 
 export type InviteUserForm = z.infer<typeof inviteUserSchema>;

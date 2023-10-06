@@ -19,18 +19,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
-type ServerMessage = {
-  type: 'error' | 'success';
-  message: string;
-} | null;
+import type { ServerMessage } from '@/lib/types/public';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
   const router = useRouter();
   const setPassword = useSetPassword();
-  const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
+  const [serverMessage, setServerMessage] = useState<ServerMessage | null>(null);
   const form = useForm<SetPasswordForm>({
     resolver: zodResolver(setPasswordSchema),
   });
@@ -52,9 +48,9 @@ export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
   };
 
   useEffect(() => {
-    if ((window && !window.location.hash) || !window.location.hash.startsWith('#access_token')) {
-      router.replace('/login');
-    }
+    // if ((window && !window.location.hash) || !window.location.hash.startsWith('#access_token')) {
+    //   router.replace('/login');
+    // }
   }, []);
 
   return (
@@ -71,7 +67,7 @@ export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
       )}
 
       <Form {...form}>
-        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
           <FormField
             control={form.control}
             name="password"
@@ -87,7 +83,7 @@ export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
           />
 
           <Button type="submit" loading={form.formState.isSubmitting}>
-            Set password
+            Set Password
           </Button>
         </form>
       </Form>
