@@ -26,9 +26,9 @@ export default async function NotifiersPage() {
   return (
     <div className="p-8">
       <div className="space-y-1">
-        <h2 className="text-3xl font-bold">Creative Cash Flow Notifiers</h2>
+        <h2 className="text-3xl font-bold">Notifiers</h2>
         <p className="text-muted-foreground">
-          Manage the emails that will be notified when a user shares a Creative Cash Flow Record.
+          Manage the people that will be notified for different features.
         </p>
       </div>
       <Separator className="mt-6" />
