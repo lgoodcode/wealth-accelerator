@@ -23,7 +23,7 @@ export default async function AuthenticationLayout({ children }: AuthenticationL
         />
 
         <div className="col-start-2 min-h-screen flex flex-col items-center justify-center">
-          <div className="px-8 py-12 w-[480px] rounded-md flex flex-col bg-white/90 bd-frost">
+          <div className="px-8 py-12 w-[480px] rounded-md flex flex-col bg-white/90 bd-frost shadow-2xl">
             <Link href="/" className="mb-6">
               <Image
                 src="/img/logo-318x85.png"
