@@ -6,6 +6,7 @@ import { captureException } from '@sentry/nextjs';
 
 import { Header } from '@/components/public/header';
 import { Button } from '@/components/ui/button';
+import { Footer } from '@/components/public/footer';
 
 export default function InternalErrorPage({ error, reset }: any) {
   captureException(error);
@@ -14,7 +15,7 @@ export default function InternalErrorPage({ error, reset }: any) {
     <>
       <Header />
 
-      <div className="container mt-24 lg:mt-0 grid grid-cols-2 gap-8">
+      <div className="container h-full flex-grow grid grid-cols-2 mt-12 lg:mt-0 py-32 gap-12 lg:gap-8 ">
         <div className="md:container col-span-2 lg:col-span-1 my-auto space-y-6">
           <div>
             <h1 className="text-4xl font-semibold leading-snug">Something went wrong</h1>
@@ -34,12 +35,15 @@ export default function InternalErrorPage({ error, reset }: any) {
           <Image
             src="/img/500-dog.png"
             alt="500 error dog with computer - Image by storyset on Freepik"
+            className="max-w-lg lg:max-w-none"
             width={668}
             height={668}
             priority
           />
         </div>
       </div>
+
+      <Footer />
     </>
   );
 }

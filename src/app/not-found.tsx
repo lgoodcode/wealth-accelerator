@@ -10,7 +10,7 @@ export default function NotFound() {
     <>
       <Header />
 
-      <div className="container h-full mt-32 lg:mt-0 flex-grow grid grid-cols-2 gap-8">
+      <div className="container h-full flex-grow grid grid-cols-2 mt-12 lg:mt-0 py-32 gap-12 lg:gap-8 ">
         <div className="md:container col-span-2 lg:col-span-1 my-auto space-y-6">
           <h1 className="text-4xl font-semibold leading-snug">
             Oops, the page you&apos;re looking for wasn&apos;t found.
@@ -26,6 +26,7 @@ export default function NotFound() {
           <Image
             src="/img/404.png"
             alt="404 illustration - Image by pikisuperstar on Freepik"
+            className="max-w-lg lg:max-w-none"
             priority
             width={668}
             height={668}

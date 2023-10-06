@@ -1,26 +1,13 @@
-import { faker } from '@faker-js/faker';
+import Image from 'next/image';
 
-interface TestimonialItemProps {
-  title: string;
-  description: string;
-  name: string;
-  occupation: string;
-}
-
-const TestimonialItem = ({ title, description, name, occupation }: TestimonialItemProps) => {
-  return (
-    <div className="space-y-6 p-6 border shadow-md bg-white">
-      <h3 className="text-lg font-semibold">{title}</h3>
-      <p>{description}</p>
-      <div>
-        <p className="text-lg font-medium">{name}</p>
-        <p className="text-muted-foreground">{occupation}</p>
-      </div>
-    </div>
-  );
-};
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { testimonials } from '../testimonials';
 
 export function Testimonials({ className }: { className?: string }) {
+  const col1 = testimonials.slice(0, 2);
+  const col2 = testimonials.slice(2, 4);
+  const col3 = testimonials.slice(4, 5);
+
   return (
     <div className={className}>
       <div className="mb-12 text-center">
@@ -31,36 +18,66 @@ export function Testimonials({ className }: { className?: string }) {
 
       <div className="grid md:grid-cols-3 gap-8">
         <div className="space-y-8">
-          {new Array(3).fill(0).map(() => (
-            <TestimonialItem
-              key={faker.number.binary()}
-              title={faker.hacker.phrase()}
-              description={`"${faker.lorem.paragraph({ min: 2, max: 6 })}"`}
-              name={faker.person.fullName()}
-              occupation={faker.person.jobTitle()}
-            />
+          {col1.map((testimonial) => (
+            <div key={testimonial.name} className="space-y-6 p-6 border shadow-md bg-white">
+              <div className="flex flex-row gap-4">
+                <Avatar>
+                  <AvatarImage src={testimonial.personalImage} alt={`${testimonial.name}`} />
+                </Avatar>
+                <h3 className="text-lg font-bold">{testimonial.name}</h3>
+              </div>
+              <Image
+                src={testimonial.companyImage}
+                alt={`${testimonial.name}-practice`}
+                width={180}
+                height={47}
+              />
+              <blockquote className="text-muted-foregroud italic line-clamp-[18]">
+                <p>&quot;{testimonial.message}&quot;</p>
+              </blockquote>
+            </div>
           ))}
         </div>
         <div className="space-y-8">
-          {new Array(3).fill(0).map(() => (
-            <TestimonialItem
-              key={faker.number.binary()}
-              title={faker.hacker.phrase()}
-              description={`"${faker.lorem.paragraph({ min: 2, max: 6 })}"`}
-              name={faker.person.fullName()}
-              occupation={faker.person.jobTitle()}
-            />
+          {col2.map((testimonial) => (
+            <div key={testimonial.name} className="space-y-6 p-6 border shadow-md bg-white">
+              <div className="flex flex-row gap-4">
+                <Avatar>
+                  <AvatarImage src={testimonial.personalImage} alt={`${testimonial.name}`} />
+                </Avatar>
+                <h3 className="text-lg font-bold">{testimonial.name}</h3>
+              </div>
+              <Image
+                src={testimonial.companyImage}
+                alt={`${testimonial.name}-practice`}
+                width={180}
+                height={47}
+              />
+              <blockquote className="text-muted-foregroud italic line-clamp-[18]">
+                <p>&quot;{testimonial.message}&quot;</p>
+              </blockquote>
+            </div>
           ))}
         </div>
         <div className="space-y-8">
-          {new Array(3).fill(0).map(() => (
-            <TestimonialItem
-              key={faker.number.binary()}
-              title={faker.hacker.phrase()}
-              description={`"${faker.lorem.paragraph({ min: 2, max: 6 })}"`}
-              name={faker.person.fullName()}
-              occupation={faker.person.jobTitle()}
-            />
+          {col3.map((testimonial) => (
+            <div key={testimonial.name} className="space-y-6 p-6 border shadow-md bg-white">
+              <div className="flex flex-row gap-4">
+                <Avatar>
+                  <AvatarImage src={testimonial.personalImage} alt={`${testimonial.name}`} />
+                </Avatar>
+                <h3 className="text-lg font-bold">{testimonial.name}</h3>
+              </div>
+              <Image
+                src={testimonial.companyImage}
+                alt={`${testimonial.name}-practice`}
+                width={180}
+                height={47}
+              />
+              <blockquote className="text-muted-foregroud italic line-clamp-[18]">
+                <p>&quot;{testimonial.message}&quot;</p>
+              </blockquote>
+            </div>
           ))}
         </div>
       </div>

@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
-import { Header } from '@/components/public/header';
-
 export const metadata: Metadata = {
   title: 'Terms of Service',
 };
@@ -65,7 +63,7 @@ const Group = ({ id, title, children }: GroupProps) => (
 const QuickLinks = () => {
   return (
     <div className="w-[280px] min-w-[280px] lg:block hidden">
-      <ul className="sticky top-12 p-4 rounded-md bg-white leading-relaxed text-muted-foreground shadow-main font-medium">
+      <ul className="sticky top-24 p-4 rounded-md bg-white leading-relaxed text-muted-foreground shadow-main font-medium">
         {quickLinks.map((item, index) => (
           <li className="flex flex-row" key={index}>
             <Link
@@ -83,20 +81,16 @@ const QuickLinks = () => {
 
 export default function TermsPage() {
   return (
-    <>
-      <Header />
-
-      <section id="general" className="container py-12">
+    <div className="bg-gray-100">
+      <section id="general" className="container pt-36 pb-18">
         <div className="flex justify-center max-w-full">
           <div className="flex flex-row gap-8">
             <QuickLinks />
-
             <div className="bg-white shadow-lg max-w-5xl">
               <div className="relative p-12 space-y-2 rounded-t-md bg-gradient-to-br from-cyan-900 from-30% to-cyan-600">
                 <h2 className="text-3xl font-bold text-white">Terms of Service</h2>
                 <p className="text-base text-white opacity-80">Effective: October 1, 2023</p>
               </div>
-
               <div className="px-8 py-12 md:px-12 space-y-12 text-muted-foreground">
                 <div className="space-y-4">
                   <p className="uppercase font-lg mb-8 font-bold text-cyan-900 px-[15%] md:px[20%]">
@@ -129,7 +123,6 @@ export default function TermsPage() {
                     he/she or they, are taken as interchangeable and therefore as referring to same.
                   </p>
                 </div>
-
                 <Group id="cookies" title="Cookies">
                   <p>
                     Please read{' '}
@@ -138,7 +131,6 @@ export default function TermsPage() {
                     </Link>
                   </p>
                 </Group>
-
                 <Group id="privacy" title="Privacy Policy">
                   <p>
                     Please read{' '}
@@ -147,10 +139,8 @@ export default function TermsPage() {
                     </Link>
                   </p>
                 </Group>
-
                 <Group id="user-representations" title="User Representations">
                   <p>By using the Services, you represent and warrant that:</p>
-
                   <ol className="pl-10 !mt-2 list-decimal space-y-1">
                     <li>
                       All registration information you submit will be true, accurate, current, and
@@ -173,14 +163,12 @@ export default function TermsPage() {
                       Your use of the Services will not violate any applicable law or regulation.
                     </li>
                   </ol>
-
                   <p>
                     If you provide any information that is untrue, inaccurate, not current, or
                     incomplete, we have the right to suspend or terminate your account and refuse
                     any and all current or future use of the Services (or any portion thereof).
                   </p>
                 </Group>
-
                 <Group id="disclaimer" title="Disclaimer">
                   <p>
                     To the maximum extent permitted by applicable law, we exclude all
@@ -214,7 +202,6 @@ export default function TermsPage() {
                     nature.
                   </p>
                 </Group>
-
                 <Group id="prohibited-uses" title="Prohibited Uses">
                   <p>
                     You may not access or use the Services for any purpose other than that for which
@@ -327,7 +314,6 @@ export default function TermsPage() {
                     </li>
                   </ul>
                 </Group>
-
                 <Group id="services-management" title="Services Management">
                   <p>
                     We reserve the right, but not the obligation, to: (1) monitor the Services for
@@ -344,7 +330,6 @@ export default function TermsPage() {
                     facilitate the proper functioning of the Services
                   </p>
                 </Group>
-
                 <Group id="term-and-termination" title="Term and Termination">
                   <p>
                     These Legal Terms shall remain in full force and effect while you use the
@@ -371,6 +356,6 @@ export default function TermsPage() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }
