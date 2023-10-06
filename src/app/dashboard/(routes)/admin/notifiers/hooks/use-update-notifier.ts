@@ -9,11 +9,10 @@ export const useUpdateNotifier = () => {
 
   return async (id: number, data: NotifierForm) => {
     const { error, data: updatedNotifer } = await supabase
-      .from('creative_cash_flow_notifiers')
+      .from('notifiers')
       .update({
-        name: data.name,
+        ...data,
         email: data.email.toLowerCase(),
-        enabled: data.enabled,
       })
       .eq('id', id)
       .select('*')

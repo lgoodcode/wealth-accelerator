@@ -7,13 +7,13 @@ import { Separator } from '@/components/ui/separator';
 import { Notifiers } from './components/notifiers';
 
 export const metadata: Metadata = {
-  title: 'CCF Notifications',
+  title: 'Notifiers',
 };
 
-export default async function CreativeCashFlowNotifiersPage() {
+export default async function NotifiersPage() {
   const supabase = createSupabase();
   const { error, data } = await supabase
-    .from('creative_cash_flow_notifiers')
+    .from('notifiers')
     .select('*')
     .order('id', { ascending: true });
 

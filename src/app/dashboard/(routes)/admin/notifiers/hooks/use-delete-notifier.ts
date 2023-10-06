@@ -7,7 +7,7 @@ export const useDeleteNotifier = () => {
   const removeNotifer = useSetAtom(removeNotifierAtom);
 
   return async (id: number) => {
-    const { error } = await supabase.from('creative_cash_flow_notifiers').delete().eq('id', id);
+    const { error } = await supabase.from('notifiers').delete().eq('id', id);
 
     if (error) {
       throw error;

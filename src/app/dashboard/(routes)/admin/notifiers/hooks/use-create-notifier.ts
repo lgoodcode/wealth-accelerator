@@ -7,9 +7,9 @@ import type { Notifier } from '@/lib/types';
 export const useCreateNotifier = () => {
   const addNotifier = useSetAtom(addNotifierAtom);
 
-  return async (notifier: Pick<Notifier, 'name' | 'email' | 'enabled'>) => {
+  return async (notifier: Omit<Notifier, 'id'>) => {
     const { error: insertError, data: newNotifier } = await supabase
-      .from('creative_cash_flow_notifiers')
+      .from('notifiers')
       .insert({
         ...notifier,
         email: notifier.email.toLowerCase(),
