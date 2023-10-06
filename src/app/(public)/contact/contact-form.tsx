@@ -17,16 +17,16 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { contactSchema, type ContactFormType } from './schema';
+import { contactSchema, type ContactForm } from './schema';
 import type { ServerMessage } from '@/lib/types/public';
 
 export function ContactForm() {
   const [serverMessage, setServerMessage] = useState<ServerMessage | null>(null);
-  const form = useForm<ContactFormType>({
+  const form = useForm<ContactForm>({
     resolver: zodResolver(contactSchema),
   });
 
-  const handleContact = async (data: ContactFormType) => {
+  const handleContact = async (data: ContactForm) => {
     await fetcher('/api/contact', {
       method: 'POST',
       body: JSON.stringify(data),

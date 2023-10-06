@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
-import { profileSchema, type ProfileFormType } from '@/lib/user-schema';
+import { profileSchema, type ProfileForm } from '@/lib/user-schema';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,12 +19,12 @@ import {
 import { useUpdateProfile } from '../hooks/use-update-profile';
 
 interface ProfileFormProps {
-  user: ProfileFormType;
+  user: ProfileForm;
 }
 
 export function ProfileForm({ user }: ProfileFormProps) {
   const updateProfile = useUpdateProfile();
-  const form = useForm<ProfileFormType>({
+  const form = useForm<ProfileForm>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       name: user.name,
@@ -32,7 +32,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
     },
   });
 
-  const handleUpdateProfile = async (data: ProfileFormType) => {
+  const handleUpdateProfile = async (data: ProfileForm) => {
     await updateProfile(data)
       .then((profile) => {
         toast.success('Profile updated successfully');

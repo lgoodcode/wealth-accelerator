@@ -4,13 +4,13 @@ import { supabase } from '@/lib/supabase/client';
 import { useUser } from '@/hooks/use-user';
 import { addUserFilterAtom } from '../atoms';
 import type { UserFilter } from '@/lib/plaid/types/transactions';
-import type { CreateUserFilterFormType } from '../schema';
+import type { CreateUserFilterForm } from '../schema';
 
 export const useCreateUserPlaidFilter = () => {
   const user = useUser()!;
   const addUserFilter = useSetAtom(addUserFilterAtom);
 
-  return async (data: CreateUserFilterFormType) => {
+  return async (data: CreateUserFilterForm) => {
     const { error, data: userFilter } = await supabase
       .rpc('create_user_plaid_filter', {
         _filter: {

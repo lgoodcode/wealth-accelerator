@@ -17,4 +17,4 @@ export const contactSchema = z.object({
   }),
 });
 
-export type ContactFormType = z.infer<typeof contactSchema>;
+export type ContactForm = z.infer<typeof contactSchema>;

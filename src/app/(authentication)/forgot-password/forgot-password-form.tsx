@@ -6,10 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
-import {
-  sendResetPasswordEmailSchema,
-  type SendResetPasswordEmailFormType,
-} from '@/lib/user-schema';
+import { sendResetPasswordEmailSchema, type SendResetPasswordEmailForm } from '@/lib/user-schema';
 import { useForgotPassword } from '@/hooks/auth/use-forgot-password';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,11 +29,11 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
   const sendPasswordResetEmail = useForgotPassword();
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
-  const form = useForm<SendResetPasswordEmailFormType>({
+  const form = useForm<SendResetPasswordEmailForm>({
     resolver: zodResolver(sendResetPasswordEmailSchema),
   });
 
-  const onSubmit = async (data: SendResetPasswordEmailFormType) => {
+  const onSubmit = async (data: SendResetPasswordEmailForm) => {
     setServerMessage(null);
 
     await sendPasswordResetEmail(data.email)

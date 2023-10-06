@@ -3,13 +3,13 @@ import { useSetAtom } from 'jotai';
 import { supabase } from '@/lib/supabase/client';
 import { updateUserAtom } from '@/lib/atoms/users';
 import { updateUserAtom as updateGlobalUserAtom } from '@/lib/atoms/user';
-import type { UpdateUserFormType } from '@/lib/user-schema';
+import type { UpdateUserForm } from '@/lib/user-schema';
 
 export const useUpdateUser = () => {
   const updateUser = useSetAtom(updateUserAtom);
   const updateGlobalUser = useSetAtom(updateGlobalUserAtom);
 
-  return async (id: string, data: UpdateUserFormType, isCurrentUser: boolean) => {
+  return async (id: string, data: UpdateUserForm, isCurrentUser: boolean) => {
     const { error, data: user } = await supabase
       .from('users')
       .update({ ...data })

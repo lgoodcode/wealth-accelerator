@@ -89,16 +89,16 @@ export const changePasswordSchema = z
     path: ['confirm_new_password'],
   });
 
-export type RegisterUserFormType = z.infer<typeof registerUserFormSchema>;
+export type RegisterUserForm = z.infer<typeof registerUserFormSchema>;
 
-export type UpdateUserFormType = z.infer<typeof updateUserFormSchema>;
+export type UpdateUserForm = z.infer<typeof updateUserFormSchema>;
 
-export type SendResetPasswordEmailFormType = z.infer<typeof sendResetPasswordEmailSchema>;
+export type SendResetPasswordEmailForm = z.infer<typeof sendResetPasswordEmailSchema>;
 
-export type ResetUserPasswordFormType = z.infer<typeof resetUserPasswordSchema>;
+export type ResetUserPasswordForm = z.infer<typeof resetUserPasswordSchema>;
 
-export type SetPasswordFormType = ResetUserPasswordFormType;
+export type SetPasswordForm = ResetUserPasswordForm;
 
-export type ProfileFormType = z.infer<typeof profileSchema>;
+export type ProfileForm = z.infer<typeof profileSchema>;
 
-export type ChangePasswordFormType = z.infer<typeof changePasswordSchema>;
+export type ChangePasswordForm = z.infer<typeof changePasswordSchema>;

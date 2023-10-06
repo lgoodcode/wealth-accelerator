@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useUpdateNotifier } from '../hooks/use-update-notifier';
-import { notifierFormSchema, type NotifierFormType } from '../schema';
+import { notifierFormSchema, type NotifierForm } from '../schema';
 import type { Notifier } from '@/lib/types';
 
 interface UpdateNotifierDialogProps {
@@ -36,7 +36,7 @@ interface UpdateNotifierDialogProps {
 export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNotifierDialogProps) {
   const updateNotifier = useUpdateNotifier();
   const [isUpdating, setIsUpdating] = useState(false);
-  const form = useForm<NotifierFormType>({
+  const form = useForm<NotifierForm>({
     resolver: zodResolver(notifierFormSchema),
     values: {
       name: notifier.name,
@@ -53,7 +53,7 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
     [form]
   );
 
-  const handleUpdate = async (data: NotifierFormType) => {
+  const handleUpdate = async (data: NotifierForm) => {
     setIsUpdating(true);
 
     await updateNotifier(notifier.id, data)

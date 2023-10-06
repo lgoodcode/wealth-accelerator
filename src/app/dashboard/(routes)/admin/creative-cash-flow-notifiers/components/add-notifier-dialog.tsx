@@ -29,20 +29,20 @@ import {
 } from '@/components/ui/form';
 import { useCreateNotifier } from '../hooks/use-create-notifier';
 import { hasNotifierAtom } from '../atoms';
-import { notifierFormSchema, type NotifierFormType } from '../schema';
+import { notifierFormSchema, type NotifierForm } from '../schema';
 
 export function AddNotifierDialog() {
   const createNotifier = useCreateNotifier();
   const [isOpen, setIsOpen] = useState(false);
   const hasNotifer = useSetAtom(hasNotifierAtom);
-  const form = useForm<NotifierFormType>({
+  const form = useForm<NotifierForm>({
     resolver: zodResolver(notifierFormSchema),
     defaultValues: {
       enabled: true,
     },
   });
 
-  const handleCreate = async (data: NotifierFormType) => {
+  const handleCreate = async (data: NotifierForm) => {
     if (hasNotifer(data.email)) {
       form.setError('email', {
         type: 'manual',

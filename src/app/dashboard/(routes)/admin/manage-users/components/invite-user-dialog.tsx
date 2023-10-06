@@ -26,16 +26,16 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useInviteUser } from '../hooks/use-invite-user';
-import { inviteUserSchema, type InviteUserFormType } from '../schema';
+import { inviteUserSchema, type InviteUserForm } from '../schema';
 
 export function InviteUserDialog() {
   const inviteUser = useInviteUser();
   const [isOpen, setIsOpen] = useState(false);
-  const form = useForm<InviteUserFormType>({
+  const form = useForm<InviteUserForm>({
     resolver: zodResolver(inviteUserSchema),
   });
 
-  const handleInvite = async (data: InviteUserFormType) => {
+  const handleInvite = async (data: InviteUserForm) => {
     await inviteUser(data)
       .then(() => {
         setIsOpen(false);

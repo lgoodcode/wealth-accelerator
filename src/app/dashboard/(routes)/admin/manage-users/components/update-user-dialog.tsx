@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
-import { updateUserFormSchema, type UpdateUserFormType } from '@/lib/user-schema';
+import { updateUserFormSchema, type UpdateUserForm } from '@/lib/user-schema';
 import { Role } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -43,12 +43,12 @@ interface UpdateUserDialog {
 
 export function UpdateUserDialog({ open, onOpenChange, id, user }: UpdateUserDialog) {
   const updateUser = useUpdateUser();
-  const form = useForm<UpdateUserFormType>({
+  const form = useForm<UpdateUserForm>({
     resolver: zodResolver(updateUserFormSchema),
-    values: user as UpdateUserFormType,
+    values: user as UpdateUserForm,
   });
 
-  const handleUpdate = async (data: UpdateUserFormType) => {
+  const handleUpdate = async (data: UpdateUserForm) => {
     await updateUser(user.id, data, id === user.id)
       .then(() => {
         onOpenChange(false);

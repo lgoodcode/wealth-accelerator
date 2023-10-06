@@ -7,7 +7,7 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
-import { createGlobalFilterFormSchema, type CreateGlobalFilterFormType } from '../schema';
+import { createGlobalFilterFormSchema, type CreateGlobalFilterForm } from '../schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -46,11 +46,11 @@ export function CreateGlobalPlaidFilterDialog() {
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const hasFilter = useSetAtom(hasGlobalFilterAtom);
-  const form = useForm<CreateGlobalFilterFormType>({
+  const form = useForm<CreateGlobalFilterForm>({
     resolver: zodResolver(createGlobalFilterFormSchema),
   });
 
-  const handleCreate = async (data: CreateGlobalFilterFormType) => {
+  const handleCreate = async (data: CreateGlobalFilterForm) => {
     if (hasFilter(data.filter)) {
       form.setError('filter', {
         type: 'manual',

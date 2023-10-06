@@ -3,12 +3,12 @@ import { useSetAtom } from 'jotai';
 import { supabase } from '@/lib/supabase/client';
 import { addGlobalFilterAtom } from '../atoms';
 import type { Filter } from '@/lib/plaid/types/transactions';
-import type { CreateGlobalFilterFormType } from '../schema';
+import type { CreateGlobalFilterForm } from '../schema';
 
 export const useCreateGlobalPlaidFilter = () => {
   const addGlobalFilter = useSetAtom(addGlobalFilterAtom);
 
-  return async (data: CreateGlobalFilterFormType) => {
+  return async (data: CreateGlobalFilterForm) => {
     const { error, data: globalFilter } = await supabase
       .rpc('create_global_plaid_filter', {
         _filter: {

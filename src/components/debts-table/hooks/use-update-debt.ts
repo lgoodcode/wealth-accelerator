@@ -3,13 +3,13 @@ import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
 import { updateDebtAtom } from '../atoms';
-import type { DebtFormType } from '../schema';
+import type { DebtForm } from '../schema';
 
 export const useUpdateDebt = () => {
   const router = useRouter();
   const updateDebt = useSetAtom(updateDebtAtom);
 
-  return async (id: number, data: DebtFormType) => {
+  return async (id: number, data: DebtForm) => {
     const { error, data: updatedDebt } = await supabase
       .from('debts')
       .update(data)

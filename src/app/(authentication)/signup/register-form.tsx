@@ -8,7 +8,7 @@ import { captureException } from '@sentry/nextjs';
 
 import { cn } from '@/lib/utils/cn';
 import { useSignUp } from '@/hooks/auth/use-signup';
-import { registerUserFormSchema, type RegisterUserFormType } from '@/lib/user-schema';
+import { registerUserFormSchema, type RegisterUserForm } from '@/lib/user-schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertTitle } from '@/components/ui/alert';
@@ -27,11 +27,11 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const signUp = useSignUp();
   const [serverMessage, setServerMessage] = useState<ServerMessage | null>(null);
-  const form = useForm<RegisterUserFormType>({
+  const form = useForm<RegisterUserForm>({
     resolver: zodResolver(registerUserFormSchema),
   });
 
-  const onSubmit = async (data: RegisterUserFormType) => {
+  const onSubmit = async (data: RegisterUserForm) => {
     setServerMessage(null);
 
     await signUp(data)

@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
-import { resetUserPasswordSchema, type ResetUserPasswordFormType } from '@/lib/user-schema';
+import { resetUserPasswordSchema, type ResetUserPasswordForm } from '@/lib/user-schema';
 import { useResetPassword } from '@/hooks/auth/use-reset-password';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,11 +32,11 @@ export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
   const router = useRouter();
   const resetPassword = useResetPassword();
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
-  const form = useForm<ResetUserPasswordFormType>({
+  const form = useForm<ResetUserPasswordForm>({
     resolver: zodResolver(resetUserPasswordSchema),
   });
 
-  const onSubmit = async (data: ResetUserPasswordFormType) => {
+  const onSubmit = async (data: ResetUserPasswordForm) => {
     setServerMessage(null);
 
     await resetPassword(data.password)

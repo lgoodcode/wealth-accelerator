@@ -14,4 +14,4 @@ export const notifierFormSchema = z.object({
   }),
 });
 
-export type NotifierFormType = z.infer<typeof notifierFormSchema>;
+export type NotifierForm = z.infer<typeof notifierFormSchema>;

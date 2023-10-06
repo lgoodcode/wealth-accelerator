@@ -7,7 +7,7 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
-import { createUserFilterFormSchema, type CreateUserFilterFormType } from '../schema';
+import { createUserFilterFormSchema, type CreateUserFilterForm } from '../schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -46,11 +46,11 @@ export function CreateUserPlaidFilterDialog() {
   const queryClient = useQueryClient();
   const hasFilter = useSetAtom(hasUserFilterAtom);
   const [isOpen, setIsOpen] = useState(false);
-  const form = useForm<CreateUserFilterFormType>({
+  const form = useForm<CreateUserFilterForm>({
     resolver: zodResolver(createUserFilterFormSchema),
   });
 
-  const handleCreate = async (data: CreateUserFilterFormType) => {
+  const handleCreate = async (data: CreateUserFilterForm) => {
     if (hasFilter(data.filter)) {
       form.setError('filter', {
         type: 'manual',

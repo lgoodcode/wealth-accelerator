@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
-import { setPasswordSchema, type SetPasswordFormType } from '@/lib/user-schema';
+import { setPasswordSchema, type SetPasswordForm } from '@/lib/user-schema';
 import { useSetPassword } from '@/hooks/auth/use-set-password';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,11 +31,11 @@ export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
   const router = useRouter();
   const setPassword = useSetPassword();
   const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
-  const form = useForm<SetPasswordFormType>({
+  const form = useForm<SetPasswordForm>({
     resolver: zodResolver(setPasswordSchema),
   });
 
-  const onSubmit = async (data: SetPasswordFormType) => {
+  const onSubmit = async (data: SetPasswordForm) => {
     setServerMessage(null);
 
     await setPassword(data.password)

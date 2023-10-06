@@ -14,4 +14,4 @@ export const inviteUserSchema = z.object({
     .email(),
 });
 
-export type InviteUserFormType = z.infer<typeof inviteUserSchema>;
+export type InviteUserForm = z.infer<typeof inviteUserSchema>;
