@@ -341,6 +341,33 @@ export interface Database {
         }
         Relationships: []
       }
+      notifiers: {
+        Row: {
+          contact_email: boolean
+          creative_cash_flow: boolean
+          debt_snowball: boolean
+          email: string
+          id: number
+          name: string
+        }
+        Insert: {
+          contact_email?: boolean
+          creative_cash_flow?: boolean
+          debt_snowball?: boolean
+          email: string
+          id?: number
+          name: string
+        }
+        Update: {
+          contact_email?: boolean
+          creative_cash_flow?: boolean
+          debt_snowball?: boolean
+          email?: string
+          id?: number
+          name?: string
+        }
+        Relationships: []
+      }
       personal_finance: {
         Row: {
           default_tax_rate: number
