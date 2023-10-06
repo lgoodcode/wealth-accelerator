@@ -1,17 +1,13 @@
 import type { Metadata } from 'next';
 
-import { Header } from '@/components/public/header';
-
 export const metadata: Metadata = {
   title: 'Privacy Policy',
 };
 
 export default function PrivacyPage() {
   return (
-    <>
-      <Header />
-
-      <section className="container py-12 max-w-5xl">
+    <div className="bg-gray-100">
+      <section className="container pt-36 pb-18 max-w-5xl min-h-[95vh]">
         <div className="flex justify-center max-w-full">
           <div className="flex flex-row gap-8">
             <div className="bg-white shadow-lg">
@@ -19,7 +15,6 @@ export default function PrivacyPage() {
                 <h2 className="text-3xl font-bold text-white">Privacy Policy</h2>
                 <p className="text-base text-white opacity-80">Effective: October 1, 2023</p>
               </div>
-
               <div className="px-8 py-12 md:px-12 space-y-12 text-muted-foreground">
                 <div className="space-y-4">
                   <p>
@@ -40,7 +35,6 @@ export default function PrivacyPage() {
                     to any information collected offline or via channels other than this app.
                   </p>
                 </div>
-
                 <div>
                   <h2 className="text-3xl text-cyan-900 font-bold mb-4">Security</h2>
                   <div className="space-y-4">
@@ -84,6 +78,6 @@ export default function PrivacyPage() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

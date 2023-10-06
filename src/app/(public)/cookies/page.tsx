@@ -1,18 +1,14 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
-import { Header } from '@/components/public/header';
-
 export const metadata: Metadata = {
   title: 'Cookies Policy',
 };
 
 export default function CookiesPolicyPage() {
   return (
-    <>
-      <Header />
-
-      <section className="container py-12 max-w-5xl">
+    <div className="bg-gray-100">
+      <section className="container pt-36 pb-18 max-w-5xl min-h-[85vh]">
         <div className="flex justify-center max-w-full">
           <div className="flex flex-row gap-8">
             <div className="bg-white shadow-lg">
@@ -20,7 +16,6 @@ export default function CookiesPolicyPage() {
                 <h2 className="text-3xl font-bold text-white">Cookies Policy</h2>
                 <p className="text-base text-white opacity-80">Effective: October 1, 2023</p>
               </div>
-
               <div className="px-8 py-12 md:px-12 space-y-12 text-muted-foreground">
                 <div className="space-y-4">
                   <p>
@@ -29,7 +24,6 @@ export default function CookiesPolicyPage() {
                       Privacy Policy
                     </Link>
                   </p>
-
                   <p>
                     Cookies are small pieces of data&ndash; usually text files &ndash; placed on
                     your computer, tablet, phone or similar device when you use that device to
@@ -37,7 +31,6 @@ export default function CookiesPolicyPage() {
                     services do not support &ldquo;Do Not Track&rdquo; requests sent from a browser
                     at this time.
                   </p>
-
                   <div>
                     <p className="mb-2">We use the following types of Cookies:</p>
                     <ul className="pl-10 list-disc space-y-1">
@@ -52,7 +45,6 @@ export default function CookiesPolicyPage() {
                       </li>
                     </ul>
                   </div>
-
                   <p>
                     We also utilize the{' '}
                     <Link
@@ -85,7 +77,6 @@ export default function CookiesPolicyPage() {
                       </li>
                     </ul>
                   </div>
-
                   <p>
                     The Plaid API, a necessary third party vendor that connects user financial
                     institutions, also stores data in the LocalStorage.
@@ -108,6 +99,6 @@ export default function CookiesPolicyPage() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

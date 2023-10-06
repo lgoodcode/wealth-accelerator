@@ -1,6 +1,5 @@
 import Image from 'next/image';
 
-import { Header } from '@/components/public/header';
 import { Button } from '@/components/ui/button';
 import { Features } from './components/features';
 import { FAQ } from './components/faq';
@@ -9,8 +8,6 @@ import { Testimonials } from './components/testimonials';
 export default function HomePage() {
   return (
     <>
-      <Header sticky />
-
       <div className="min-h-[75vh] p-0 relative overflow-hidden flex items-center bg-cover bg-[50%]">
         <Image
           className="absolute top-0 right-0 ml-auto w-full lg:w-[50%] h-[90%] z-0 lg:rounded-bl-[10rem] rounded-none"

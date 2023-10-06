@@ -1,3 +1,4 @@
+import { Header } from '@/components/public/header';
 import { Footer } from '@/components/public/footer';
 
 export const dynamic = 'force-static';
@@ -9,7 +10,8 @@ interface PublicLayoutProps {
 export default function PublicLayout({ children }: PublicLayoutProps) {
   return (
     <>
-      <div className="font-sans bg-white flex-grow">{children}</div>
+      <Header />
+      <div className="font-sans flex-grow">{children}</div>
       <Footer />
     </>
   );
