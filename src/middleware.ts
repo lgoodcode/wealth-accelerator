@@ -6,10 +6,15 @@ import { parseAuthCookie } from '@/lib/supabase/server/parse-auth-cookie';
 import type { Database } from '@/lib/supabase/database';
 
 const PROJECT_ID = process.env.SUPABASE_PROJECT_ID;
-const authPagesRegex = /^\/(login|signup|forgot-password|reset-password)/;
+const authPagesRegex = /^\/(login|signup|forgot-password|reset-password|set-password)/;
 
 export async function middleware(request: NextRequest) {
-  const res = NextResponse.next();
+  const res = NextResponse.next({
+    headers: {
+      // Set custom header to allow server components to know the current URL
+      'x-url': `${request.nextUrl.pathname}${request.nextUrl.search}`,
+    },
+  });
   const isLoginPage = request.nextUrl.pathname === '/login';
   const isAuthPage = authPagesRegex.test(request.nextUrl.pathname);
   const supabase = createMiddlewareClient<Database>({ req: request, res });
@@ -87,5 +92,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/login', '/reset-password', '/dashboard/:path*'],
+  matcher: ['/login', '/set-password', '/reset-password', '/dashboard/:path*'],
 };

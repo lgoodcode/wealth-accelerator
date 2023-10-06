@@ -48,9 +48,9 @@ export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
   };
 
   useEffect(() => {
-    // if ((window && !window.location.hash) || !window.location.hash.startsWith('#access_token')) {
-    //   router.replace('/login');
-    // }
+    if ((window && !window.location.hash) || !window.location.hash.startsWith('#access_token')) {
+      router.replace('/login');
+    }
   }, []);
 
   return (
