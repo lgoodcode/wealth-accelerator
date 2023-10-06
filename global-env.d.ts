@@ -24,8 +24,6 @@ export declare global {
       PLAID_WEBHOOK_URI: string;
       SMTP2GO_API_KEY: string;
       SMTP2GO_API_URL: string;
-      EMAIL_SENDER: string;
-      CCF_RECORD_TEMPLATE: string;
     }
   }
 
