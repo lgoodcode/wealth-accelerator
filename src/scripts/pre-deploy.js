@@ -17,8 +17,6 @@ const requiredEnvList = [
   'PLAID_WEBHOOK_URI',
   'SMTP2GO_API_KEY',
   'SMTP2GO_API_URL',
-  'EMAIL_SENDER',
-  'CCF_RECORD_TEMPLATE',
 ];
 
 // Skip checking environment variables if in local development or running on CI

@@ -69,7 +69,7 @@ export function UpdateNotifierDialog({ open, onOpenChange, notifier }: UpdateNot
     <Dialog open={open} onOpenChange={handleUpdateDialogOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update notifier</DialogTitle>
+          <DialogTitle>Update Notifier</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(handleUpdate)}>

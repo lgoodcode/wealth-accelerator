@@ -2,64 +2,17 @@ import { NextResponse } from 'next/server';
 import { captureException } from '@sentry/nextjs';
 
 import { JsonParseApiRequest } from '@/lib/utils/json-parse-api-request';
+import { createEmailBody, sendEmail } from '@/lib/email';
 import { getUser } from '@/lib/supabase/server/get-user';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
-import type { Notifier } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 export const POST = ShareCreativeCashFlowRecord;
+const TEMPLATE_ID = 'share_ccf_record';
 
-type SMTP2GoResponseError = {
-  request_id: string;
-  data: {
-    error: string;
-    error_code: string;
-  };
-};
-
-type SMTP2GoResponseSuccess = {
-  request_id: string;
-  data: {
-    succeeded: number;
-    failed: number;
-  };
-};
-
-type SMTP2GoResponse = SMTP2GoResponseError | SMTP2GoResponseSuccess;
-
-type NotifierToSend = Pick<Notifier, 'name' | 'email'>;
-
-const SMTP2GO_URL = process.env.SMTP2GO_API_URL;
-const EMAIL_SENDER = process.env.EMAIL_SENDER;
-const CCF_RECORD_TEMPLATE = process.env.CCF_RECORD_TEMPLATE;
-
-const createEmailBody = (record_id: string, sharerName: string, notifiers: NotifierToSend[]) => {
-  return JSON.stringify({
-    api_key: process.env.SMTP2GO_API_KEY,
-    to: notifiers.map((notifier) => `${notifier.name} <${notifier.email}>`),
-    sender: EMAIL_SENDER,
-    template_id: CCF_RECORD_TEMPLATE,
-    template_data: {
-      name: sharerName,
-      record_id: record_id,
-    },
-  });
-};
-
-const sendEmail = async (emailBody: string): Promise<SMTP2GoResponseSuccess> => {
-  const response = await fetch(SMTP2GO_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: emailBody,
-  });
-
-  const res = (await response.json()) as SMTP2GoResponse;
-
-  if ('error' in res.data) {
-    throw new Error(res.data.error);
-  } else {
-    return res as SMTP2GoResponseSuccess;
-  }
+type TemplateData = {
+  name: string;
+  record_id: string;
 };
 
 async function ShareCreativeCashFlowRecord(request: Request) {
@@ -88,14 +41,21 @@ async function ShareCreativeCashFlowRecord(request: Request) {
     return NextResponse.json({ error: 'No notifiers found' }, { status: 500 });
   }
 
-  const emailBody = createEmailBody(body.record_id, user.name, notifiers);
+  const emailBody = createEmailBody<TemplateData>(notifiers, TEMPLATE_ID, {
+    name: user.name,
+    record_id: body.record_id,
+  });
+
   try {
-    await sendEmail(emailBody);
+    const res = await sendEmail(emailBody);
+
+    if (res.data.failed > 0) {
+      return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+    }
+
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error, {
-      emailBody: JSON.parse(emailBody),
-    });
+    console.error(error, { emailBody });
     captureException(error, {
       extra: {
         emailBody,
