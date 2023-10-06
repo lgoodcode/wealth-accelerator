@@ -37,6 +37,7 @@ export function NotifiersTable({ notifiers }: NotifiersTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState<string>('');
 
   const table = useReactTable<Notifier>({
     data: notifiers || [],
@@ -45,7 +46,9 @@ export function NotifiersTable({ notifiers }: NotifiersTableProps) {
       sorting,
       columnVisibility,
       columnFilters,
+      globalFilter,
     },
+    enableGlobalFilter: true,
     enableHiding: false,
     autoResetPageIndex: false,
     onSortingChange: setSorting,
@@ -61,7 +64,11 @@ export function NotifiersTable({ notifiers }: NotifiersTableProps) {
 
   return (
     <div className="space-y-4 w-full">
-      <TableToolbar table={table} />
+      <TableToolbar
+        table={table}
+        globalFilter={globalFilter}
+        setGlobalFilter={(value: string) => setGlobalFilter(value)}
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

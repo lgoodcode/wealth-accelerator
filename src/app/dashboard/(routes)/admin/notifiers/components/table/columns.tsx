@@ -3,7 +3,6 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { Check, X } from 'lucide-react';
 
-import { enabledOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
 import type { Notifier } from '@/lib/types';
@@ -20,10 +19,6 @@ export const columns: ColumnDef<Notifier>[] = [
         </div>
       );
     },
-    filterFn: (row, id, value) => {
-      const valueToCompare = row.getValue<string>(id).toLowerCase();
-      return valueToCompare.includes(value.toLowerCase());
-    },
   },
   {
     enableGlobalFilter: true,
@@ -36,13 +31,10 @@ export const columns: ColumnDef<Notifier>[] = [
         </div>
       );
     },
-    filterFn: (row, id, value) => {
-      const valueToCompare = row.getValue<string>(id).toLowerCase();
-      return valueToCompare.includes(value.toLowerCase());
-    },
   },
   {
     accessorKey: 'contact_email',
+    enableGlobalFilter: false,
     header: ({ column }) => <ColumnHeader column={column} title="Contact Email" />,
     cell: ({ row }) => {
       const isEnabled = row.getValue<boolean>('contact_email') ? 'true' : 'false';
@@ -60,6 +52,7 @@ export const columns: ColumnDef<Notifier>[] = [
   },
   {
     accessorKey: 'creative_cash_flow',
+    enableGlobalFilter: false,
     header: ({ column }) => <ColumnHeader column={column} title="Creative Cash Flow" />,
     cell: ({ row }) => {
       const isEnabled = row.getValue<boolean>('creative_cash_flow') ? 'true' : 'false';
@@ -77,6 +70,7 @@ export const columns: ColumnDef<Notifier>[] = [
   },
   {
     accessorKey: 'debt_snowball',
+    enableGlobalFilter: false,
     header: ({ column }) => <ColumnHeader column={column} title="Debt Snowball" />,
     cell: ({ row }) => {
       const isEnabled = row.getValue<boolean>('debt_snowball') ? 'true' : 'false';
