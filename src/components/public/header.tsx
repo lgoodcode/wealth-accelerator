@@ -14,9 +14,7 @@ export function Header() {
 
           <div className="flex gap-2">
             <Button variant="ghost" className="hover:bg-blackAlpha-200">
-              <Link href="/contact">
-                <span className="font-semibold leading-none">Contact Us</span>
-              </Link>
+              <Link href="/contact">Contact Us</Link>
             </Button>
             <Button>
               <Link href="/login">Sign In</Link>
