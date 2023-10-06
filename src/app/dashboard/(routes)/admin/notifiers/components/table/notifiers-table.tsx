@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   ColumnFiltersState,
   SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -34,7 +33,6 @@ interface NotifiersTableProps {
 }
 
 export function NotifiersTable({ notifiers }: NotifiersTableProps) {
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>('');
@@ -44,7 +42,6 @@ export function NotifiersTable({ notifiers }: NotifiersTableProps) {
     columns,
     state: {
       sorting,
-      columnVisibility,
       columnFilters,
       globalFilter,
     },
@@ -53,7 +50,6 @@ export function NotifiersTable({ notifiers }: NotifiersTableProps) {
     autoResetPageIndex: false,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
