@@ -8,7 +8,7 @@ export const updateGlobalFilterFormSchema = z.object({
   }),
 });
 
-export type UpdateGlobalFilterFormType = z.infer<typeof updateGlobalFilterFormSchema>;
+export type UpdateGlobalFilterForm = z.infer<typeof updateGlobalFilterFormSchema>;
 
 export const createGlobalFilterFormSchema = z.object({
   filter: z.string({
@@ -20,7 +20,7 @@ export const createGlobalFilterFormSchema = z.object({
   override: z.boolean().optional(),
 });
 
-export type CreateGlobalFilterFormType = z.infer<typeof createGlobalFilterFormSchema>;
+export type CreateGlobalFilterForm = z.infer<typeof createGlobalFilterFormSchema>;
 
 export const deleteGlobalFilterFormSchema = z.object({
   global_filter_id: z.coerce.number({
@@ -29,4 +29,4 @@ export const deleteGlobalFilterFormSchema = z.object({
   }),
 });
 
-export type DeleteGlobalFilterFormType = z.infer<typeof deleteGlobalFilterFormSchema>;
+export type DeleteGlobalFilterForm = z.infer<typeof deleteGlobalFilterFormSchema>;

@@ -3,12 +3,12 @@ import { useSetAtom } from 'jotai';
 import { supabase } from '@/lib/supabase/client';
 import { updateInstitutionsAtom } from '@/lib/plaid/atoms';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
-import type { RenameFormType } from '../schema';
+import type { RenameForm } from '../schema';
 
 export const useRenameInstitution = () => {
   const updateInstitutions = useSetAtom(updateInstitutionsAtom);
 
-  return async (institution: ClientInstitution, data: RenameFormType) => {
+  return async (institution: ClientInstitution, data: RenameForm) => {
     const { error } = await supabase
       .from('plaid')
       .update({ name: data.name })

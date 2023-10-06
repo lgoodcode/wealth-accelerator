@@ -27,18 +27,18 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useCreateDebt } from '../hooks/use-create-debt';
-import { debtFormSchema, DebtFormType } from '../schema';
+import { debtFormSchema, DebtForm } from '../schema';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { PercentInput } from '@/components/ui/percent-input';
 
 export function CreateDebtDialog() {
   const createDebt = useCreateDebt();
   const [isOpen, setIsOpen] = useState(false);
-  const form = useForm<DebtFormType>({
+  const form = useForm<DebtForm>({
     resolver: zodResolver(debtFormSchema),
   });
 
-  const handleCreate = async (data: DebtFormType) => {
+  const handleCreate = async (data: DebtForm) => {
     await createDebt(data)
       .then(() => {
         setIsOpen(false);

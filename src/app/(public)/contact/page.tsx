@@ -16,7 +16,7 @@ export default function ContactPage() {
       <div className="container z-10">
         <div className="grid grid-cols-12">
           <div className="col-span-12 lg:col-span-7 lg:col-start-2 flex">
-            <div className="w-full flex flex-col gap-8 relative p-12 bg-white/80 bd-frost shadow-main">
+            <div className="w-full flex flex-col gap-8 relative p-12 bg-white/80 bd-frost shadow-2xl">
               <div className="text-center space-y-4">
                 <h2 className="text-3xl text-cyan-900 font-bold tracking-tight">Contact Us</h2>
                 <p className="text-lg text-primary md:pr-12">

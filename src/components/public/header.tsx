@@ -13,7 +13,7 @@ export function Header() {
           </Link>
 
           <div className="flex gap-2">
-            <Button variant="ghost" className="hover:bg-blackAlpha-200">
+            <Button variant="ghost" className="hover:bg-black/10">
               <Link href="/contact">Contact Us</Link>
             </Button>
             <Button>

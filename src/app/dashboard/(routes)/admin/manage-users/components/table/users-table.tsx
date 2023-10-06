@@ -36,7 +36,6 @@ export function UsersTable({ users }: UsersTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>('');
-  const handleGlobalFilter = (value: string) => setGlobalFilter(value);
 
   const table = useReactTable<ManageUser>({
     data: users || [],
@@ -68,7 +67,7 @@ export function UsersTable({ users }: UsersTableProps) {
       <TableToolbar
         table={table}
         globalFilter={globalFilter}
-        handleGlobalFilter={handleGlobalFilter}
+        setGlobalFilter={(value: string) => setGlobalFilter(value)}
       />
       <div className="rounded-md border">
         <Table>

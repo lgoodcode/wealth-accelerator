@@ -2,7 +2,7 @@ import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
 import { updateUserNameAndEmailAtom } from '@/lib/atoms/user';
-import type { ProfileFormType } from '@/lib/user-schema';
+import type { ProfileForm } from '@/lib/user-schema';
 
 export const useUpdateProfile = () => {
   const updateGlobalUser = useSetAtom(updateUserNameAndEmailAtom);
@@ -12,7 +12,7 @@ export const useUpdateProfile = () => {
    * and properly capitalizes the name to update the global user atom and return it to
    * be update the form.
    */
-  return async (data: ProfileFormType) => {
+  return async (data: ProfileForm) => {
     const { error, data: _profile } = await supabase.rpc('update_user_profile', {
       new_name: data.name,
       new_email: data.email.toLowerCase(),

@@ -7,10 +7,11 @@ export type ManageUser = User & {
   confirmed_email: boolean;
 };
 
-/* Creative Cash Flow Notifier */
 export type Notifier = {
   id: number;
   name: string;
   email: string;
-  enabled: boolean;
+  contact_email: boolean;
+  creative_cash_flow: boolean;
+  debt_snowball: boolean;
 };

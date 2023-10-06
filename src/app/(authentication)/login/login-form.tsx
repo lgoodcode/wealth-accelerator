@@ -1,12 +1,12 @@
 'use client';
 
-import { z } from 'zod';
 import Link from 'next/link';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
+import { loginFormSchema, type LoginForm } from '@/lib/user-schema';
 import { useLogin } from '@/hooks/auth/use-login';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,25 +20,16 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-const formSchema = z.object({
-  email: z.string().nonempty('Please enter your email').email(),
-  password: z.string().nonempty('Please enter your password'),
-});
-
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
   const login = useLogin();
   const [serverError, setServerError] = useState('');
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+  const form = useForm<LoginForm>({
+    resolver: zodResolver(loginFormSchema),
   });
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  const onSubmit = async (data: LoginForm) => {
     setServerError('');
 
     await login(data).catch((error) => {
@@ -50,7 +41,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
   return (
     <div className={cn('grid gap-6', className)} {...props}>
       <div className="flex flex-col space-y-2 text-center">
-        <h1 className="text-3xl font-medium tracking-tight">Welcome back</h1>
+        <h1 className="text-2xl font-medium tracking-tight">Welcome back</h1>
         <p className="text-sm text-muted-foreground">Sign in to your account</p>
       </div>
 
@@ -61,7 +52,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
       )}
 
       <Form {...form}>
-        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
           <FormField
             control={form.control}
             name="email"
@@ -108,6 +99,23 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
             Forgot your password?
           </Link>
         </div>
+      </div>
+
+      <div className="px-10 text-center text-sm text-muted-foreground">
+        <p className="leading-normal">
+          By using our website, you agree to our{' '}
+          <Link
+            href="/terms"
+            className="underline underline-offset-4 hover:text-primary whitespace-nowrap"
+          >
+            Terms of Service
+          </Link>{' '}
+          and{' '}
+          <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
+            Privacy Policy
+          </Link>
+          .
+        </p>
       </div>
     </div>
   );

@@ -2,6 +2,19 @@ import { z } from 'zod';
 
 import { Role } from '@/lib/types';
 
+export const loginFormSchema = z.object({
+  email: z
+    .string({
+      required_error: 'Please enter your email',
+    })
+    .email({
+      message: 'Please enter a valid email',
+    }),
+  password: z.string({
+    required_error: 'Please enter your password',
+  }),
+});
+
 export const registerUserFormSchema = z.object({
   name: z
     .string({
@@ -13,7 +26,9 @@ export const registerUserFormSchema = z.object({
     .string({
       required_error: 'Please enter your email',
     })
-    .email(),
+    .email({
+      message: 'Please enter a valid email',
+    }),
   password: z
     .string({
       required_error: 'Please enter your password',
@@ -89,16 +104,18 @@ export const changePasswordSchema = z
     path: ['confirm_new_password'],
   });
 
-export type RegisterUserFormType = z.infer<typeof registerUserFormSchema>;
+export type LoginForm = z.infer<typeof loginFormSchema>;
 
-export type UpdateUserFormType = z.infer<typeof updateUserFormSchema>;
+export type RegisterUserForm = z.infer<typeof registerUserFormSchema>;
 
-export type SendResetPasswordEmailFormType = z.infer<typeof sendResetPasswordEmailSchema>;
+export type UpdateUserForm = z.infer<typeof updateUserFormSchema>;
 
-export type ResetUserPasswordFormType = z.infer<typeof resetUserPasswordSchema>;
+export type SendResetPasswordEmailForm = z.infer<typeof sendResetPasswordEmailSchema>;
 
-export type SetPasswordFormType = ResetUserPasswordFormType;
+export type ResetUserPasswordForm = z.infer<typeof resetUserPasswordSchema>;
 
-export type ProfileFormType = z.infer<typeof profileSchema>;
+export type SetPasswordForm = ResetUserPasswordForm;
 
-export type ChangePasswordFormType = z.infer<typeof changePasswordSchema>;
+export type ProfileForm = z.infer<typeof profileSchema>;
+
+export type ChangePasswordForm = z.infer<typeof changePasswordSchema>;

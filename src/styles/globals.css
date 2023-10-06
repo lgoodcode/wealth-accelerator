@@ -110,6 +110,12 @@
   .bd-frost {
     backdrop-filter: saturate(200%) blur(30px);
   }
+
+  .bd-frost form input,
+  .bd-frost form textarea {
+    background-color: #fff;
+    color: #000;
+  }
 }
 
 .loading-spinner {

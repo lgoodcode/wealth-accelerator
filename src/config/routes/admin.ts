@@ -17,11 +17,10 @@ export const adminRoutes: Route[] = [
       'Manage users of the application. Create, update, and delete users. Manage user insurance policies.',
   },
   {
-    name: 'Creative Cash Flow Notifiers',
-    path: '/dashboard/admin/creative-cash-flow-notifiers',
+    name: 'Notifiers',
+    path: '/dashboard/admin/notifiers',
     Icon: Bell,
-    description:
-      'Manage the people that will be notified when a user shares a Creative Cash Flow Record.',
+    description: 'Manage the people that will be notified for different features.',
   },
   {
     name: 'Insurance Policies',

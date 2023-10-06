@@ -1,5 +1,10 @@
 import type { Transaction as PlaidTransaction } from 'plaid';
-import { Category, type Filter, type Transaction } from '@/lib/plaid/types/transactions';
+import {
+  Category,
+  type Filter,
+  type Transaction,
+  type UserFilter,
+} from '@/lib/plaid/types/transactions';
 
 type ParsedCategory = {
   category: Category;
@@ -12,7 +17,7 @@ type ParsedCategory = {
  */
 export const parseCategory = (
   transaction: PlaidTransaction | Transaction,
-  user_filters: Filter[],
+  user_filters: UserFilter[],
   global_filters: Filter[]
 ): ParsedCategory => {
   // Parse through the user filters first, which, if matches, would override the global filters

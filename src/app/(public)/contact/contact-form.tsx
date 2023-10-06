@@ -17,16 +17,16 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { contactSchema, type ContactFormType } from './schema';
+import { contactSchema, type ContactForm } from './schema';
 import type { ServerMessage } from '@/lib/types/public';
 
 export function ContactForm() {
   const [serverMessage, setServerMessage] = useState<ServerMessage | null>(null);
-  const form = useForm<ContactFormType>({
+  const form = useForm<ContactForm>({
     resolver: zodResolver(contactSchema),
   });
 
-  const handleContact = async (data: ContactFormType) => {
+  const handleContact = async (data: ContactForm) => {
     await fetcher('/api/contact', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -49,7 +49,7 @@ export function ContactForm() {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(handleContact)}>
+      <form className="space-y-6" onSubmit={form.handleSubmit(handleContact)}>
         <div className="grid lg:grid-cols-2 gap-8">
           {serverMessage && (
             <div className="lg:col-span-2">
@@ -66,7 +66,7 @@ export function ContactForm() {
               <FormItem className="lg:col-span-1">
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input className="bg-white" placeholder="Full name" {...field} />
+                  <Input placeholder="Full name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -79,7 +79,7 @@ export function ContactForm() {
               <FormItem className="lg:col-span-1">
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input className="bg-white" placeholder="you@example.com" {...field} />
+                  <Input placeholder="you@example.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -93,7 +93,7 @@ export function ContactForm() {
                 <FormLabel>How can we help you?</FormLabel>
                 <FormControl>
                   <Textarea
-                    className="min-h-[180px] bg-white"
+                    className="min-h-[180px]"
                     placeholder="Describe your problem"
                     {...field}
                   />

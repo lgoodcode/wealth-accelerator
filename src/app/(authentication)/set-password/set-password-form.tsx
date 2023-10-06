@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
-import { setPasswordSchema, type SetPasswordFormType } from '@/lib/user-schema';
+import { setPasswordSchema, type SetPasswordForm } from '@/lib/user-schema';
 import { useSetPassword } from '@/hooks/auth/use-set-password';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,23 +19,19 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
-type ServerMessage = {
-  type: 'error' | 'success';
-  message: string;
-} | null;
+import type { ServerMessage } from '@/lib/types/public';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
   const router = useRouter();
   const setPassword = useSetPassword();
-  const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
-  const form = useForm<SetPasswordFormType>({
+  const [serverMessage, setServerMessage] = useState<ServerMessage | null>(null);
+  const form = useForm<SetPasswordForm>({
     resolver: zodResolver(setPasswordSchema),
   });
 
-  const onSubmit = async (data: SetPasswordFormType) => {
+  const onSubmit = async (data: SetPasswordForm) => {
     setServerMessage(null);
 
     await setPassword(data.password)
@@ -71,7 +67,7 @@ export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
       )}
 
       <Form {...form}>
-        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
           <FormField
             control={form.control}
             name="password"
@@ -87,7 +83,7 @@ export function SetPasswordForm({ className, ...props }: UserAuthFormProps) {
           />
 
           <Button type="submit" loading={form.formState.isSubmitting}>
-            Set password
+            Set Password
           </Button>
         </form>
       </Form>

@@ -31,7 +31,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useUpdateGlobalPlaidFilter } from '../hooks/use-update-global-plaid-filter';
-import { updateGlobalFilterFormSchema, type UpdateGlobalFilterFormType } from '../schema';
+import { updateGlobalFilterFormSchema, type UpdateGlobalFilterForm } from '../schema';
 import { Category, type Filter } from '@/lib/plaid/types/transactions';
 
 interface UpdateFilterDialogProps {
@@ -47,14 +47,14 @@ export function UpdateGlobalPlaidFilterDialog({
 }: UpdateFilterDialogProps) {
   const updateFilter = useUpdateGlobalPlaidFilter();
   const queryClient = useQueryClient();
-  const form = useForm<UpdateGlobalFilterFormType>({
+  const form = useForm<UpdateGlobalFilterForm>({
     resolver: zodResolver(updateGlobalFilterFormSchema),
     values: {
       category: filter.category,
     },
   });
 
-  const handleUpdate = async (data: UpdateGlobalFilterFormType) => {
+  const handleUpdate = async (data: UpdateGlobalFilterForm) => {
     await updateFilter(filter.id, data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {

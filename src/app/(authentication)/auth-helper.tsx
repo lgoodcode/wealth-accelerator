@@ -59,7 +59,7 @@ const TestUsers = () => {
   };
 
   return (
-    <div>
+    <>
       {testUsers.map((user, i) => (
         <Fragment key={user.email}>
           <DropdownMenuItem onClick={() => handleClick(user)}>
@@ -71,7 +71,7 @@ const TestUsers = () => {
           {i !== testUsers.length - 1 && <DropdownMenuSeparator />}
         </Fragment>
       ))}
-    </div>
+    </>
   );
 };
 
@@ -91,7 +91,7 @@ export function AuthHelper() {
             </div>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-64 h-[600px] overflow-y-auto" align="end">
+        <DropdownMenuContent className="w-64 max-h-[600px] overflow-y-auto" align="end">
           <TestUsers />
         </DropdownMenuContent>
       </DropdownMenu>

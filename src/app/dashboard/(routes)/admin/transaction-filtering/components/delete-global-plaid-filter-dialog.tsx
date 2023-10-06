@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/select';
 import { globalFiltersAtom } from '../atoms';
 import { useDeleteGlobalPlaidFilter } from '../hooks/use-delete-global-plaid-filter';
-import { deleteGlobalFilterFormSchema, type DeleteGlobalFilterFormType } from '../schema';
+import { deleteGlobalFilterFormSchema, type DeleteGlobalFilterForm } from '../schema';
 import type { Filter } from '@/lib/plaid/types/transactions';
 
 interface DeleteGlobalPlaidFilterDialogProps {
@@ -42,7 +42,7 @@ export function DeleteGlobalPlaidFilterDialog({
   const deleteFilter = useDeleteGlobalPlaidFilter();
   const queryClient = useQueryClient();
   const globalFilters = useAtomValue(globalFiltersAtom);
-  const form = useForm<DeleteGlobalFilterFormType>({
+  const form = useForm<DeleteGlobalFilterForm>({
     resolver: zodResolver(deleteGlobalFilterFormSchema),
   });
   const matchingGlobalFilters = !globalFilters
@@ -54,7 +54,7 @@ export function DeleteGlobalPlaidFilterDialog({
         );
       });
 
-  const handleDelete = async ({ global_filter_id }: DeleteGlobalFilterFormType) => {
+  const handleDelete = async ({ global_filter_id }: DeleteGlobalFilterForm) => {
     await deleteFilter(filter.id, global_filter_id)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {

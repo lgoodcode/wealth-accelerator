@@ -31,7 +31,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useUpdateUserPlaidFilter } from '../hooks/use-update-user-plaid-filter';
-import { updateUserFilterFormSchema, type UpdateUserFilterFormType } from '../schema';
+import { updateUserFilterFormSchema, type UpdateUserFilterForm } from '../schema';
 import { Category, type UserFilter } from '@/lib/plaid/types/transactions';
 
 interface UpdateUserPlaidFilterDialogProps {
@@ -47,14 +47,14 @@ export function UpdateUserPlaidFilterDialog({
 }: UpdateUserPlaidFilterDialogProps) {
   const updateFilter = useUpdateUserPlaidFilter();
   const queryClient = useQueryClient();
-  const form = useForm<UpdateUserFilterFormType>({
+  const form = useForm<UpdateUserFilterForm>({
     resolver: zodResolver(updateUserFilterFormSchema),
     values: {
       category: filter.category,
     },
   });
 
-  const handleUpdate = async (data: UpdateUserFilterFormType) => {
+  const handleUpdate = async (data: UpdateUserFilterForm) => {
     await updateFilter(filter.id, data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {

@@ -33,12 +33,12 @@ interface UpdateRowDialogProps {
 
 export function UpdateRowDialog({ open, onOpenChange, row }: UpdateRowDialogProps) {
   // const updateDebt = useUpdateDebt();
-  // const form = useForm<DebtFormType>({
+  // const form = useForm<DebtForm>({
   //   resolver: zodResolver(debtFormSchema),
   //   values: debt,
   // });
 
-  // const handleUpdate = async (data: DebtFormType) => {
+  // const handleUpdate = async (data: DebtForm) => {
   //   await updateDebt(debt.id, data)
   //     .then(() => {
   //       onOpenChange(false);

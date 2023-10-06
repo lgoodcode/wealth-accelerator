@@ -22,7 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { renameFormSchema, type RenameFormType } from '../schema';
+import { renameFormSchema, type RenameForm } from '../schema';
 import { useRenameInstitution } from '../hooks/use-rename-institution';
 import type { ClientInstitution } from '@/lib/plaid/types/institutions';
 
@@ -38,11 +38,11 @@ export function RenameInstitutionDialog({
   institution,
 }: RenameInstitutionDialogProps) {
   const renameInstitution = useRenameInstitution();
-  const form = useForm<RenameFormType>({
+  const form = useForm<RenameForm>({
     resolver: zodResolver(renameFormSchema),
   });
 
-  const handleRename = async (data: RenameFormType) => {
+  const handleRename = async (data: RenameForm) => {
     if (!institution) {
       return;
     }

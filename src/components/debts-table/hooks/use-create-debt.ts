@@ -4,14 +4,14 @@ import { useSetAtom } from 'jotai';
 import { useUser } from '@/hooks/use-user';
 import { supabase } from '@/lib/supabase/client';
 import { addDebtAtom } from '../atoms';
-import type { DebtFormType } from '../schema';
+import type { DebtForm } from '../schema';
 
 export const useCreateDebt = () => {
   const user = useUser();
   const router = useRouter();
   const addDebt = useSetAtom(addDebtAtom);
 
-  return async (debt: DebtFormType) => {
+  return async (debt: DebtForm) => {
     if (!user) {
       throw new Error('User is not authenticated');
     }

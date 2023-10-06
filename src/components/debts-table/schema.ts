@@ -41,4 +41,4 @@ export const debtFormSchema = z.object({
     .optional(),
 });
 
-export type DebtFormType = z.infer<typeof debtFormSchema>;
+export type DebtForm = z.infer<typeof debtFormSchema>;

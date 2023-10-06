@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
-import { changePasswordSchema, type ChangePasswordFormType } from '@/lib/user-schema';
+import { changePasswordSchema, type ChangePasswordForm } from '@/lib/user-schema';
 import { useUpdatePassword } from '../hooks/use-update-password';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -20,11 +20,11 @@ import {
 
 export function ChangePasswordForm() {
   const updatePassword = useUpdatePassword();
-  const form = useForm<ChangePasswordFormType>({
+  const form = useForm<ChangePasswordForm>({
     resolver: zodResolver(changePasswordSchema),
   });
 
-  const handleUpdatePassword = async (data: ChangePasswordFormType) => {
+  const handleUpdatePassword = async (data: ChangePasswordForm) => {
     await updatePassword(data.current_password, data.new_password)
       .then(() => {
         toast.success('Password updated successfully');

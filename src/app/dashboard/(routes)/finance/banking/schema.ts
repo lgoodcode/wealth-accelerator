@@ -22,7 +22,7 @@ export const updateAccountFormSchema = z.object({
 
 export type UpdateAccountType = z.infer<typeof updateAccountFormSchema>;
 
-export type RenameFormType = z.infer<typeof renameFormSchema>;
+export type RenameForm = z.infer<typeof renameFormSchema>;
 
 export const updateTransactionFormSchema = z.object({
   name: z.string({

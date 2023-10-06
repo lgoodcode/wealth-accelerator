@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { cn } from '@/lib/utils/cn';
-import { resetUserPasswordSchema, type ResetUserPasswordFormType } from '@/lib/user-schema';
+import { resetUserPasswordSchema, type ResetUserPasswordForm } from '@/lib/user-schema';
 import { useResetPassword } from '@/hooks/auth/use-reset-password';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,23 +20,19 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
-type ServerMessage = {
-  type: 'error' | 'success';
-  message: string;
-} | null;
+import type { ServerMessage } from '@/lib/types/public';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
   const router = useRouter();
   const resetPassword = useResetPassword();
-  const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
-  const form = useForm<ResetUserPasswordFormType>({
+  const [serverMessage, setServerMessage] = useState<ServerMessage | null>(null);
+  const form = useForm<ResetUserPasswordForm>({
     resolver: zodResolver(resetUserPasswordSchema),
   });
 
-  const onSubmit = async (data: ResetUserPasswordFormType) => {
+  const onSubmit = async (data: ResetUserPasswordForm) => {
     setServerMessage(null);
 
     await resetPassword(data.password)
@@ -66,7 +62,7 @@ export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
       )}
 
       <Form {...form}>
-        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
           <FormField
             control={form.control}
             name="password"
@@ -82,7 +78,7 @@ export function ResetPasswordForm({ className, ...props }: UserAuthFormProps) {
           />
 
           <Button type="submit" loading={form.formState.isSubmitting}>
-            Reset password
+            Reset Password
           </Button>
         </form>
       </Form>
