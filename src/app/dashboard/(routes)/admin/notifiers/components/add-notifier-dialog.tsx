@@ -22,6 +22,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -38,7 +39,9 @@ export function AddNotifierDialog() {
   const form = useForm<NotifierForm>({
     resolver: zodResolver(notifierFormSchema),
     defaultValues: {
-      enabled: true,
+      contact_email: false,
+      creative_cash_flow: false,
+      debt_snowball: false,
     },
   });
 
@@ -87,7 +90,7 @@ export function AddNotifierDialog() {
         <DialogHeader>
           <DialogTitle>Create Notifier</DialogTitle>
           <DialogDescription>
-            Create a new notifier to be emailed for shared Creative Cash Flow Records.
+            Create a new notifier and select the features to be notified on.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -120,13 +123,68 @@ export function AddNotifierDialog() {
             />
             <FormField
               control={form.control}
-              name="enabled"
+              name="contact_email"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Enabled</FormLabel>
+                  <div>
+                    <FormLabel>Contact Email</FormLabel>
+                    <FormDescription>Notifies when a user submits a contact form.</FormDescription>
+                  </div>
                   <FormControl>
                     <Checkbox
-                      id="enabled"
+                      id="contact-email"
+                      name={field.name}
+                      className="w-6 h-6"
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="creative_cash_flow"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <div>
+                    <FormLabel>Creative Cash Flow</FormLabel>
+                    <FormDescription>
+                      Notifies when a user shares a Creative Cash Flow record.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Checkbox
+                      id="creative-cash-flow"
+                      name={field.name}
+                      className="w-6 h-6"
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="debt_snowball"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <div>
+                    <FormLabel>Debt Snowball</FormLabel>
+                    <FormDescription>
+                      Notifies when a user shares a Debt Snowball record.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Checkbox
+                      id="debt-snowball"
                       name={field.name}
                       className="w-6 h-6"
                       ref={field.ref}

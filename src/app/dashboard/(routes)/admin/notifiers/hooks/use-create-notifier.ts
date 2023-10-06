@@ -1,6 +1,7 @@
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
+import { initcap } from '@/lib/utils/initcap';
 import { addNotifierAtom } from '../atoms';
 import type { Notifier } from '@/lib/types';
 
@@ -12,6 +13,7 @@ export const useCreateNotifier = () => {
       .from('notifiers')
       .insert({
         ...notifier,
+        name: initcap(notifier.name),
         email: notifier.email.toLowerCase(),
       })
       .select('*')

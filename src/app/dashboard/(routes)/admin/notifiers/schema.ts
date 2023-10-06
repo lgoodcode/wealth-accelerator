@@ -11,9 +11,9 @@ export const notifierFormSchema = z.object({
     .email({
       message: 'Enter a valid email',
     }),
-  contactEmail: z.boolean(),
-  creativeCashFlow: z.boolean(),
-  debtSnowball: z.boolean(),
+  contact_email: z.boolean(),
+  creative_cash_flow: z.boolean(),
+  debt_snowball: z.boolean(),
 });
 
 export type NotifierForm = z.infer<typeof notifierFormSchema>;
