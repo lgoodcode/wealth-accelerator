@@ -49,7 +49,7 @@ export function ContactForm() {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(handleContact)}>
+      <form className="space-y-6" onSubmit={form.handleSubmit(handleContact)}>
         <div className="grid lg:grid-cols-2 gap-8">
           {serverMessage && (
             <div className="lg:col-span-2">

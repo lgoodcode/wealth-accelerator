@@ -21,7 +21,7 @@ export default function HomePage() {
         <div className="container z-10">
           <div className="grid grid-cols-12">
             <div className="col-span-12 lg:col-span-7 lg:col-start-2 flex">
-              <div className="flex flex-col gap-8 relative p-12 bg-white/80 bd-frost text-center md:text-start shadow-main">
+              <div className="flex flex-col gap-8 relative p-12 bg-white/80 bd-frost text-center md:text-start shadow-2xl">
                 <h2 className="text-3xl text-cyan-900 font-bold tracking-tight">
                   Financial Freedom is Within Your Reach
                 </h2>
