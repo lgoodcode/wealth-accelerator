@@ -7,8 +7,8 @@ export const metadata: Metadata = {
 
 export default function CookiesPolicyPage() {
   return (
-    <div className="bg-gray-100">
-      <section className="container pt-36 pb-18 max-w-5xl min-h-[85vh]">
+    <div className="bg-gray-100 pb-16">
+      <section className="container pt-36 max-w-5xl min-h-[85vh]">
         <div className="flex justify-center max-w-full">
           <div className="flex flex-row gap-8">
             <div className="bg-white shadow-lg">

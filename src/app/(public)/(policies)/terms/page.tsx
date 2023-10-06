@@ -81,8 +81,8 @@ const QuickLinks = () => {
 
 export default function TermsPage() {
   return (
-    <div className="bg-gray-100">
-      <section id="general" className="container pt-36 pb-18">
+    <div className="bg-gray-100 pb-16">
+      <section id="general" className="container pt-36">
         <div className="flex justify-center max-w-full">
           <div className="flex flex-row gap-8">
             <QuickLinks />
