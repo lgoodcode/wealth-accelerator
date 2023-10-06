@@ -19,16 +19,13 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-type ServerMessage = {
-  type: 'error' | 'success';
-  message: string;
-} | null;
+import type { ServerMessage } from '@/lib/types/public';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
   const sendPasswordResetEmail = useForgotPassword();
-  const [serverMessage, setServerMessage] = useState<ServerMessage>(null);
+  const [serverMessage, setServerMessage] = useState<ServerMessage | null>(null);
   const form = useForm<SendResetPasswordEmailForm>({
     resolver: zodResolver(sendResetPasswordEmailSchema),
   });
@@ -68,7 +65,7 @@ export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
       )}
 
       <Form {...form}>
-        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
           <FormField
             control={form.control}
             name="email"
@@ -84,7 +81,7 @@ export function ForgotPasswordForm({ className, ...props }: UserAuthFormProps) {
           />
 
           <Button type="submit" loading={form.formState.isSubmitting}>
-            Send email
+            Send Email
           </Button>
         </form>
       </Form>
