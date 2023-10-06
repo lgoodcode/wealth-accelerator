@@ -24,8 +24,11 @@ type Recipients = {
 export type TemplateData = Record<string, string>;
 
 const SMTP2GO_API_URL = process.env.SMTP2GO_API_URL;
-const EMAIL_SENDER = process.env.EMAIL_SENDER;
+const EMAIL_SENDER = 'ChiroWealth <noreply@chirowealth.com>';
 
+/**
+ * Make sure to set the generic type for the body of the email.
+ */
 export const createEmailBody = <T extends TemplateData>(
   recipients: Recipients[],
   template_id: string,

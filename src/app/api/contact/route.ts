@@ -3,6 +3,7 @@ import { captureException } from '@sentry/nextjs';
 
 import { JsonParseApiRequest } from '@/lib/utils/json-parse-api-request';
 import { createEmailBody, sendEmail } from '@/lib/email';
+import { supabaseAdmin } from '@/lib/supabase/server/admin';
 
 export const dynamic = 'force-dynamic';
 export const POST = ContactRoute;
@@ -13,23 +14,11 @@ type ContactBody = {
   message: string;
 };
 
-type ContactTemplateData = {
+type TemplateData = {
   full_name: string;
   email: string;
   message: string;
 };
-
-// TODO: append a column "contact" for the notifiers table and use them here
-const NOTIFIERS = [
-  {
-    name: 'Lawrence Good',
-    email: 'lawrence@chirowealth.com',
-  },
-  // {
-  //   name: 'Win Udomlarp',
-  //   email: 'win@chirowealth.com',
-  // },
-];
 
 async function ContactRoute(request: Request) {
   const body = await JsonParseApiRequest<ContactBody>(request);
@@ -44,9 +33,18 @@ async function ContactRoute(request: Request) {
     return NextResponse.json({ error: 'Missing message' }, { status: 400 });
   }
 
-  // TODO: get the notifiers from the database
+  const { error: notifiersError, data: notifiers } = await supabaseAdmin
+    .from('notifiers')
+    .select('name, email')
+    .eq('contact_email', true);
 
-  const emailBody = createEmailBody<ContactTemplateData>(NOTIFIERS, 'contact', {
+  if (notifiersError || !notifiers.length) {
+    const error = notifiersError || new Error('No notifiers found');
+    captureException(error);
+    return NextResponse.json({ error: 'No notifiers found' }, { status: 500 });
+  }
+
+  const emailBody = createEmailBody<TemplateData>(notifiers, 'contact', {
     full_name: body.fullName,
     email: body.email,
     message: body.message,
@@ -65,6 +63,6 @@ async function ContactRoute(request: Request) {
     captureException(error, {
       extra: { emailBody },
     });
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
   }
 }
