@@ -78,9 +78,9 @@ async function ShareCreativeCashFlowRecord(request: Request) {
   }
 
   const { error: notifiersError, data: notifiers } = await supabaseAdmin
-    .from('creative_cash_flow_notifiers')
+    .from('notifiers')
     .select('name, email')
-    .eq('enabled', true);
+    .eq('creative_cash_flow', true);
 
   if (notifiersError || !notifiers.length) {
     const error = notifiersError || new Error('No notifiers found');
