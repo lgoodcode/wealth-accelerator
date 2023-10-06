@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { captureException } from '@sentry/nextjs';
 
 import { cn } from '@/lib/utils/cn';
 import { useSignUp } from '@/hooks/auth/use-signup';
@@ -28,11 +29,6 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
   const [serverMessage, setServerMessage] = useState<ServerMessage | null>(null);
   const form = useForm<RegisterUserFormType>({
     resolver: zodResolver(registerUserFormSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-    },
   });
 
   const onSubmit = async (data: RegisterUserFormType) => {
@@ -47,6 +43,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
       })
       .catch((error) => {
         console.error(error);
+        captureException(error);
         setServerMessage({
           type: 'error',
           message: error.message,
