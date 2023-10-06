@@ -8,7 +8,7 @@ import { supabaseAdmin } from '@/lib/supabase/server/admin';
 
 export const dynamic = 'force-dynamic';
 export const POST = ShareCreativeCashFlowRecord;
-const TEMPLATE_ID = 'share-creative-cash-flow-record';
+const TEMPLATE_ID = 'share_ccf_record';
 
 type TemplateData = {
   name: string;
