@@ -51,16 +51,16 @@ export const resultsLabels = {
     description: 'Deductible business expenses.',
   },
   waa: {
-    title: 'WAA',
-    description: 'The recommended amount to deposit into your WAA account.',
+    title: 'Recommended WAA',
+    description: 'The amount recommended to deposit into your WAA account.',
   },
   actual_waa: {
     title: 'Actual WAA',
     description: 'Enter the actual amount you will deposit into your WAA account.',
   },
   total_waa: {
-    title: 'Year To Date WAA',
-    description: 'Running total of your WAA.',
+    title: 'WAA Balance',
+    description: 'The current WAA in your bank account.',
   },
   collections: {
     title: 'Collections',

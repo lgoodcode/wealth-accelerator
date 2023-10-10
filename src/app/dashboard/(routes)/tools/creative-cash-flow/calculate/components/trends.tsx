@@ -102,7 +102,7 @@ export function Trends({ createCountUpProps }: TrendsProps) {
               </TableRow>
             </TableBody>
           </Table>
-          <div>
+          {/* <div>
             <CardHeader className="space-y-1 px-0 pb-2">
               <CardTitle className="text-2xl">{resultsLabels.year_to_date.title}</CardTitle>
               <CardDescription className="text-md">
@@ -113,7 +113,7 @@ export function Trends({ createCountUpProps }: TrendsProps) {
               className="text-2xl"
               {...createCountUpProps(results.year_to_date, countUpProps.item1.delay)}
             />
-          </div>
+          </div> */}
           <div>
             <CardHeader className="space-y-1 px-0 pb-2">
               <CardTitle className="text-2xl">
