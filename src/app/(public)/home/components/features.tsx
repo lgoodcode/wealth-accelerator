@@ -1,4 +1,7 @@
+'use client';
+
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { DollarSign, Landmark, Snowflake, type LucideIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
@@ -19,7 +22,23 @@ interface FeatureItemProps {
 
 const FeatureItem = ({ title, description, Icon, image }: FeatureItemProps) => {
   return (
-    <div className="col-span-12 grid grid-cols-12 gap-16 lg:gap-8">
+    <motion.div
+      className="col-span-12 grid grid-cols-12 gap-16 lg:gap-8"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{
+        amount: 0.6,
+        once: true,
+      }}
+      transition={{
+        ease: 'easeInOut',
+        duration: 0.6,
+      }}
+      variants={{
+        hidden: { opacity: 0, y: 100 },
+        visible: { opacity: 1, y: 0 },
+      }}
+    >
       <div
         className={cn('col-span-12 lg:col-span-5 flex items-center justify-center', {
           'order-1 lg:order-2': image.isLeft,
@@ -39,8 +58,9 @@ const FeatureItem = ({ title, description, Icon, image }: FeatureItemProps) => {
           'order-1': image.isLeft,
         })}
       >
-        <div>
+        <div className="shadow-2xl">
           <Image
+            className="shadow-2xl"
             src={image.src}
             alt={image.alt}
             width={image.width}
@@ -49,7 +69,7 @@ const FeatureItem = ({ title, description, Icon, image }: FeatureItemProps) => {
           />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
