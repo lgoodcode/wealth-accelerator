@@ -37,27 +37,31 @@ export function Testimonials({ className }: { className?: string }) {
   const col3 = testimonials.slice(4, 5);
 
   return (
-    <div className={className}>
+    <motion.div
+      className={className}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{
+        amount: 0.6,
+        once: true,
+      }}
+      transition={{
+        ease: 'easeInOut',
+        duration: 0.3,
+        staggerChildren: 0.2,
+      }}
+      variants={{
+        hidden: { opacity: 0, y: 80 },
+        visible: { opacity: 1, y: 0 },
+      }}
+    >
       <div className="mb-12 text-center">
         <h2 className="text-5xl text-cyan-900 font-semibold tracking-tight capitalize">
           What Our Customers Are Saying
         </h2>
       </div>
 
-      <motion.div
-        className="grid md:grid-cols-3 gap-8"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{
-          amount: 0.6,
-          once: true,
-        }}
-        transition={{
-          ease: 'easeInOut',
-          duration: 0.3,
-          staggerChildren: 0.2,
-        }}
-      >
+      <div className="grid md:grid-cols-3 gap-8">
         <div className="space-y-8">
           {col1.map((testimonial) => (
             <TesitmonialItem key={testimonial.name} testimonial={testimonial} />
@@ -73,7 +77,7 @@ export function Testimonials({ className }: { className?: string }) {
             <TesitmonialItem key={testimonial.name} testimonial={testimonial} />
           ))}
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </motion.div>
   );
 }
