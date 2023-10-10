@@ -8,7 +8,7 @@ import { Testimonials } from './components/testimonials';
 export default function HomePage() {
   return (
     <>
-      <div className="min-h-[75vh] p-0 relative overflow-hidden flex items-center bg-cover bg-[50%]">
+      <div className="min-h-[80vh] p-0 relative overflow-hidden flex items-center bg-cover bg-[50%]">
         <Image
           className="absolute top-0 right-0 ml-auto w-full lg:w-[50%] h-[90%] z-0 lg:rounded-bl-[10rem] rounded-none"
           src="/img/curved.jpg"
@@ -26,7 +26,7 @@ export default function HomePage() {
 
       <section className="py-28 lg:py-32">
         <div className="mb-12 text-center">
-          <h2 className="text-4xl text-cyan-900 font-semibold tracking-tight uppercase">FAQ</h2>
+          <h2 className="text-5xl text-cyan-900 font-semibold tracking-tight uppercase">FAQ</h2>
         </div>
         <FAQ className="container" />
       </section>

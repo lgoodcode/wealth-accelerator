@@ -74,7 +74,7 @@ const FaqAccordionItem = ({ question, answer }: FaqAccordionItemProps) => {
 export function FAQ({ className }: { className?: string }) {
   return (
     <div className={className}>
-      <Accordion type="single" collapsible className="w-full shadow-main p-8 lg:p-12">
+      <Accordion type="single" collapsible className="max-w-5xl mx-auto shadow-2xl p-8 lg:p-12">
         {FAQs.map((faq) => (
           <FaqAccordionItem key={faq.question} question={faq.question} answer={faq.answer} />
         ))}

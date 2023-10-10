@@ -11,7 +11,7 @@ export function Testimonials({ className }: { className?: string }) {
   return (
     <div className={className}>
       <div className="mb-12 text-center">
-        <h2 className="text-4xl text-cyan-900 font-semibold tracking-tight capitalize">
+        <h2 className="text-5xl text-cyan-900 font-semibold tracking-tight capitalize">
           What Our Customers Are Saying
         </h2>
       </div>

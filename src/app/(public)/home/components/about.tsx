@@ -16,7 +16,7 @@ export function About() {
         <div className="container z-10">
           <div className="grid grid-cols-11">
             <div className="col-span-12 lg:col-span-5">
-              <div className="flex flex-col gap-8 relative p-12 bg-white/80 bd-frost text-center md:text-start shadow-main">
+              <div className="flex flex-col gap-8 relative p-12 bg-white/80 bd-frost text-center md:text-start shadow-2xl">
                 <h2 className="text-3xl text-cyan-900 font-bold tracking-tight">
                   The Wealth Accelerator Strategy
                 </h2>
@@ -26,7 +26,7 @@ export function About() {
               </div>
             </div>
             <div className="col-span-12 lg:col-span-5 lg:col-start-7">
-              <div className="p-8 border-2 shadow-main text-muted-foreground text-lg space-y-4">
+              <div className="p-8 border-2 shadow-2xl text-muted-foreground text-lg space-y-4">
                 <p>
                   For thousands of years people have used tools to help them achieve life’s tasks
                   more effectively and efficiently. Just because a tool is available, does not
