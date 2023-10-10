@@ -1,3 +1,5 @@
+// import { HelpCircle } from 'lucide-react';
+
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import {
   Table,
@@ -55,7 +57,7 @@ export function TrendsCard({ record }: TrendsCardProps) {
             </TableRow>
           </TableBody>
         </Table>
-        <div>
+        {/* <div>
           <CardHeader className="space-y-1 px-0 pb-2">
             <CardTitle className="text-2xl">{resultsLabels.year_to_date.title}</CardTitle>
             {resultsLabels.year_to_date.description && (
@@ -63,13 +65,14 @@ export function TrendsCard({ record }: TrendsCardProps) {
             )}
           </CardHeader>
           <div className="text-2xl">{dollarFormatter(record.results.year_to_date)}</div>
-        </div>
+        </div> */}
         <div>
           <CardHeader className="space-y-1 px-0 pb-2">
-            <CardTitle className="text-2xl">
+            <CardTitle className="text-2xl flex flex-row gap-2 items-center">
               {resultsLabels.actual_collection_trend.title}
+              {/* <HelpCircle /> */}
             </CardTitle>
-            {resultsLabels.year_to_date.description && (
+            {resultsLabels.actual_collection_trend.description && (
               <CardDescription>{resultsLabels.actual_collection_trend.description}</CardDescription>
             )}
           </CardHeader>

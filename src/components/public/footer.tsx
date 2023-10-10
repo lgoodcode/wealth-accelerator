@@ -1,16 +1,9 @@
 import Link from 'next/link';
 
-import { faker } from '@faker-js/faker';
-
 export function Footer() {
   return (
     <footer className="bg-gray-800 pt-8 pb-4 space-y-6">
       <div className="container mx-auto grid lg:grid-cols-3 gap-8">
-        <div>
-          <h4 className="text-white mb-2">About Us</h4>
-          <p className="text-gray-400">{faker.lorem.sentences(3)}</p>
-        </div>
-
         <div>
           <h4 className="text-white mb-2">Quick Links</h4>
           <div className="flex flex-col gap-1 w-fit">
@@ -40,7 +33,9 @@ export function Footer() {
       </div>
 
       <div className="text-center">
-        <p className="text-gray-400">&copy; 2023 Your Company. All rights reserved.</p>
+        <p className="text-gray-400">
+          &copy; 2023 - ChiroWealth Learning Systems. All rights reserved.
+        </p>
       </div>
     </footer>
   );
