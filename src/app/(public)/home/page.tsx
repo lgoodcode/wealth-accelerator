@@ -25,9 +25,6 @@ export default function HomePage() {
       </section>
 
       <section className="py-28 lg:py-32">
-        <div className="mb-12 text-center">
-          <h2 className="text-5xl text-cyan-900 font-semibold tracking-tight uppercase">FAQ</h2>
-        </div>
         <FAQ className="container" />
       </section>
 
