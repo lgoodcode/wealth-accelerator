@@ -1,4 +1,4 @@
-type Testimonial = {
+export type Testimonial = {
   name: string;
   personalImage: `/img/testimonials/${string}`;
   companyImage: `/img/testimonials/${string}`;
