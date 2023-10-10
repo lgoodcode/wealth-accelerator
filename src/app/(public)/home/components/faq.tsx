@@ -79,8 +79,8 @@ export function FAQ({ className }: { className?: string }) {
   return (
     <motion.div
       className={className}
-      initial="hidden"
-      whileInView="visible"
+      initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{
         amount: 0.6,
         once: true,
@@ -88,10 +88,6 @@ export function FAQ({ className }: { className?: string }) {
       transition={{
         ease: 'easeInOut',
         duration: 0.5,
-      }}
-      variants={{
-        hidden: { opacity: 0, y: 80 },
-        visible: { opacity: 1, y: 0 },
       }}
     >
       <div className="mb-12 text-center">
