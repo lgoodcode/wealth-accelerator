@@ -10,7 +10,7 @@ const TesitmonialItem = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
     <motion.div
       className="space-y-6 p-6 border shadow-md bg-white"
-      variants={{ hidden: { opacity: 0, y: 80 }, visible: { opacity: 1, y: 0 } }}
+      variants={{ hidden: { opacity: 0, y: 60 }, visible: { opacity: 1, y: 0 } }}
     >
       <div className="flex flex-row gap-4">
         <Avatar>

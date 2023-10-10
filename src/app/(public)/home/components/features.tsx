@@ -35,7 +35,7 @@ const FeatureItem = ({ title, description, Icon, image }: FeatureItemProps) => {
         duration: 0.5,
       }}
       variants={{
-        hidden: { opacity: 0, x: image.isLeft ? 80 : -80 },
+        hidden: { opacity: 0, x: image.isLeft ? 60 : -60 },
         visible: { opacity: 1, x: 0 },
       }}
     >
