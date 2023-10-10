@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import { Button } from '@/components/ui/button';
+import { Hero } from './components/hero';
 import { Features } from './components/features';
 import { FAQ } from './components/faq';
 import { Testimonials } from './components/testimonials';
@@ -17,28 +17,7 @@ export default function HomePage() {
           alt="image"
           priority
         />
-
-        <div className="container z-10">
-          <div className="grid grid-cols-12">
-            <div className="col-span-12 lg:col-span-7 lg:col-start-2 flex">
-              <div className="flex flex-col gap-8 relative p-12 bg-white/80 bd-frost text-center md:text-start shadow-2xl">
-                <h2 className="text-3xl text-cyan-900 font-bold tracking-tight">
-                  Financial Freedom is Within Your Reach
-                </h2>
-                <p className="text-2xl text-primary md:pr-12">
-                  Take control of your financial future with our app, designed to help you build
-                  long-term wealth, security and income.
-                </p>
-
-                <div className="flex gap-8">
-                  <Button className="text-xl w-full md:w-auto py-4 px-6 capitalize">
-                    Get Started
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Hero />
       </div>
 
       <section className="py-28 lg:py-32">
