@@ -61,7 +61,7 @@ const FAQs: Array<{ question: string; answer: string }> = [
 const FaqAccordionItem = ({ question, answer }: FaqAccordionItemProps) => {
   return (
     <AccordionItem value={question}>
-      <AccordionTrigger className="text-xl capitalize data-[state=closed]:text-muted-foreground">
+      <AccordionTrigger className="text-xl capitalize data-[state=closed]:text-muted-foreground text-left lg:text-center">
         {question}
       </AccordionTrigger>
       <AccordionContent>
