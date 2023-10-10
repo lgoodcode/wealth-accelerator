@@ -18,10 +18,10 @@ interface FeatureItemProps {
 
 const FeatureItem = ({ title, description, image }: FeatureItemProps) => {
   return (
-    <div className="col-span-12 grid grid-cols-12 gap-8">
+    <div className="col-span-12 grid grid-cols-12 gap-16 lg:gap-8">
       <div
-        className={cn('col-span-5 flex items-center justify-center', {
-          'order-2': image.isLeft,
+        className={cn('col-span-12 lg:col-span-5 flex items-center justify-center', {
+          'order-1 lg:order-2': image.isLeft,
         })}
       >
         <div className="space-y-6 text-center">
@@ -34,7 +34,7 @@ const FeatureItem = ({ title, description, image }: FeatureItemProps) => {
       </div>
 
       <div
-        className={cn('col-span-7', {
+        className={cn('col-span-12 lg:col-span-7', {
           'order-1': image.isLeft,
         })}
       >
@@ -55,7 +55,7 @@ const FeatureItem = ({ title, description, image }: FeatureItemProps) => {
 export function Features({ className }: { className?: string }) {
   return (
     <div className={className}>
-      <div className="space-y-72">
+      <div className="space-y-40 lg:space-y-72">
         <FeatureItem
           title="Connect your bank accounts"
           description="Connect your bank accounts to Wealth Accelerator securely and with ease. Plaid supports over 10,000 financial institutions."
