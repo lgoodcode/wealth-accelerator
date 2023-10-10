@@ -32,11 +32,11 @@ const FeatureItem = ({ title, description, Icon, image }: FeatureItemProps) => {
       }}
       transition={{
         ease: 'easeInOut',
-        duration: 0.6,
+        duration: 0.5,
       }}
       variants={{
-        hidden: { opacity: 0, y: 100 },
-        visible: { opacity: 1, y: 0 },
+        hidden: { opacity: 0, x: image.isLeft ? 80 : -80 },
+        visible: { opacity: 1, x: 0 },
       }}
     >
       <div

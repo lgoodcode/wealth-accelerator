@@ -1,3 +1,7 @@
+'use client';
+
+import { motion } from 'framer-motion';
+
 import {
   Accordion,
   AccordionContent,
@@ -73,12 +77,31 @@ const FaqAccordionItem = ({ question, answer }: FaqAccordionItemProps) => {
 
 export function FAQ({ className }: { className?: string }) {
   return (
-    <div className={className}>
+    <motion.div
+      className={className}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{
+        amount: 0.6,
+        once: true,
+      }}
+      transition={{
+        ease: 'easeInOut',
+        duration: 0.5,
+      }}
+      variants={{
+        hidden: { opacity: 0, y: 80 },
+        visible: { opacity: 1, y: 0 },
+      }}
+    >
+      <div className="mb-12 text-center">
+        <h2 className="text-5xl text-cyan-900 font-semibold tracking-tight uppercase">FAQ</h2>
+      </div>
       <Accordion type="single" collapsible className="max-w-5xl mx-auto shadow-2xl p-8 lg:p-12">
         {FAQs.map((faq) => (
           <FaqAccordionItem key={faq.question} question={faq.question} answer={faq.answer} />
         ))}
       </Accordion>
-    </div>
+    </motion.div>
   );
 }
