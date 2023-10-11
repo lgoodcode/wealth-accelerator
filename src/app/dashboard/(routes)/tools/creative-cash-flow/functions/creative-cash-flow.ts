@@ -1,5 +1,5 @@
 import { centsToDollars, dollarsToCents } from '@/lib/utils/currency';
-import type { CreativeCashFlowManagementArgs, CreativeCashFlowManagementResult } from '../../types';
+import type { CreativeCashFlowManagementArgs, CreativeCashFlowManagementResult } from '../types';
 
 const MONTH_LENGTH = 30;
 const DAYS_IN_WEEK = 7;

@@ -1,7 +1,10 @@
 import * as z from 'zod';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { captureException } from '@sentry/nextjs';
+import { toast } from 'react-toastify';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -22,33 +25,49 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useRenameCcfRecord } from '../../hooks/use-rename-ccf-record';
+import { CreativeCashFlowRecord } from '../../types';
 
-interface SaveDebtSnowballDialogProps {
+interface RenameCcfRecordDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
-  handleSave: (name: string) => Promise<void>;
+  record: CreativeCashFlowRecord;
 }
 
-export function SaveDebtSnowballDialog({
-  open,
-  onOpenChange,
-  handleSave,
-}: SaveDebtSnowballDialogProps) {
+export function RenameCcfRecordDialog({ open, onOpenChange, record }: RenameCcfRecordDialogProps) {
+  const router = useRouter();
+  const renameSnowballRecord = useRenameCcfRecord();
   const form = useForm<{ name: string }>({
     resolver: zodResolver(
       z.object({
         name: z
-          .string({
-            required_error: 'Please enter a name for the record',
-          })
-          .min(2, 'The name must be at least 2 characters long')
-          .max(50, 'The name must be at most 50 characters long'),
+          .string()
+          .nonempty({ message: 'Must enter a name' })
+          .min(2, { message: 'Must be at least 2 characters long' })
+          .max(50, { message: 'Must be at most 50 characters long' }),
       })
     ),
   });
 
-  const handleSaveWithName = async (data: { name: string }) => {
-    await handleSave(data.name);
+  const handleRenameSnowballRecord = async (data: { name: string }) => {
+    await renameSnowballRecord(record.id, data.name)
+      .then(() => {
+        onOpenChange(false);
+        // Refresh the page so that the name is updated in the breadcrumbs and when navigating
+        // back from the record page to the records page
+        router.refresh();
+      })
+      .catch((error) => {
+        console.error(error);
+        captureException(error, {
+          extra: { id: record.id },
+        });
+        toast.error(
+          <span>
+            Failed to rename record <span className="font-bold">{record.name}</span>
+          </span>
+        );
+      });
   };
 
   useEffect(() => {
@@ -59,13 +78,13 @@ export function SaveDebtSnowballDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Save Creative Cash Flow Record</DialogTitle>
+          <DialogTitle>Rename Debt Snowball Record</DialogTitle>
           <DialogDescription>
-            Give a name for the record so you can reference it later.
+            Update the name for <span className="font-bold">{record.name}</span>
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form className="space-y-4" onSubmit={form.handleSubmit(handleSaveWithName, console.log)}>
+          <form className="space-y-4" onSubmit={form.handleSubmit(handleRenameSnowballRecord)}>
             <FormField
               control={form.control}
               name="name"
@@ -82,7 +101,7 @@ export function SaveDebtSnowballDialog({
 
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="secondary" disabled={form.formState.isSubmitting}>
+                <Button type="button" variant="secondary" disabled={form.formState.isSubmitting}>
                   Cancel
                 </Button>
               </DialogClose>

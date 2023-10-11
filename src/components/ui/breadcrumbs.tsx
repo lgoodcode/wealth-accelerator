@@ -18,7 +18,7 @@ export const BreadcrumbItem = ({ children, className, href, active }: Breadcrumb
           'select-none px-3 py-2 hover:text-accent-foreground hover:bg-accent inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
           className,
           {
-            'text-accent-foreground/50': !active,
+            'text-accent-foreground/70': !active,
           }
         )}
       >
@@ -46,7 +46,7 @@ export const Breadcrumbs = ({ children, className }: BreadcrumbProps) => {
       <ul className="flex items-center whitespace-nowrap min-h-fit">
         {Children.map(children, (child, i) => (
           <>
-            {i > 0 && <ChevronRight className="opacity-70" />}
+            {i > 0 && <ChevronRight className="opacity-70 mx-1" />}
             {child}
           </>
         ))}

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { creativeCashFlowResultAtom, resetCreativeCashFlowInputsAtom } from '../../atoms';
+import { ccfResultsAtom, resetCreativeCashFlowInputsAtom } from '../atoms';
 import { SaveAndResetButtons } from './save-and-reset-buttons';
 import { CreativeCashFlowInputs } from './creative-cash-flow-inputs';
 import { CreativeCashFlowResults } from './creative-cash-flow-results';
@@ -16,7 +16,7 @@ enum TabsValue {
 }
 
 interface CcfContainerProps {
-  userId: string;
+  user_id: string;
   transactions: {
     business: Transaction[];
     personal: Transaction[];
@@ -26,13 +26,13 @@ interface CcfContainerProps {
 }
 
 export function CreativeCashFlow({
-  userId,
+  user_id,
   transactions,
   ytd_collections,
   default_tax_rate,
 }: CcfContainerProps) {
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
-  const [results, setResults] = useAtom(creativeCashFlowResultAtom);
+  const [results, setResults] = useAtom(ccfResultsAtom);
   const resetCreativeCashFlowInput = useSetAtom(resetCreativeCashFlowInputsAtom);
   const [hasAnimated, setHasAnimated] = useState(false);
 
@@ -68,14 +68,14 @@ export function CreativeCashFlow({
           </TabsTrigger>
           <SaveAndResetButtons
             className="absolute left-[360px]"
-            userId={userId}
+            user_id={user_id}
             handleReset={handleReset}
           />
         </TabsList>
       </div>
       <TabsContent value={TabsValue.Inputs}>
         <CreativeCashFlowInputs
-          userId={userId}
+          user_id={user_id}
           transactions={transactions}
           ytd_collections={ytd_collections}
           default_tax_rate={default_tax_rate}

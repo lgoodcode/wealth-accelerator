@@ -1,35 +1,38 @@
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useAtomValue } from 'jotai';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
-import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../../atoms';
+import { SaveCreativeCashFlowDialog } from './save-creative-cash-flow-dialog';
+import { ccfInputsAtom, ccfResultsAtom } from '../atoms';
 import { useSaveCcfRecord } from '../hooks/use-save-ccf-record';
 
 interface SaveAndResetButtonsProps {
   className?: string;
-  userId: string;
+  user_id: string;
   handleReset: () => void;
 }
 
-export function SaveAndResetButtons({ className, userId, handleReset }: SaveAndResetButtonsProps) {
+export function SaveAndResetButtons({ className, user_id, handleReset }: SaveAndResetButtonsProps) {
   const router = useRouter();
-  const inputs = useAtomValue(creativeCashFlowInputsAtom);
-  const results = useAtomValue(creativeCashFlowResultAtom);
+  const inputs = useAtomValue(ccfInputsAtom);
+  const results = useAtomValue(ccfResultsAtom);
   const saveCcfRecord = useSaveCcfRecord();
-  const [isSaving, setIsSaving] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
 
-  const handleSave = async () => {
-    if (!results) {
+  const handleSaveDialogOpenChange = useCallback((open?: boolean) => {
+    setShowSaveDialog((prev) => open ?? !prev);
+  }, []);
+
+  const handleSave = async (name: string) => {
+    if (!inputs || !results) {
       return;
     }
 
-    setIsSaving(true);
-
-    await saveCcfRecord(userId, inputs, results)
+    await saveCcfRecord(user_id, name, inputs, results)
       .then(async () => {
         // Wait 1 second
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -37,6 +40,7 @@ export function SaveAndResetButtons({ className, userId, handleReset }: SaveAndR
           'The Creative Cash Flow record has been saved and can be shared with the advisors'
         );
         handleReset();
+        setShowSaveDialog(false);
         router.refresh(); // Need to refresh so that the records page and ytd_collections are updated
       })
       .catch((error) => {
@@ -51,22 +55,27 @@ export function SaveAndResetButtons({ className, userId, handleReset }: SaveAndR
           },
         });
         toast.error('Failed to save the Creative Cash Flow record. Please try again.');
-      })
-      .finally(() => setIsSaving(false));
+      });
   };
 
-  if (!results) {
+  if (!inputs || !results) {
     return null;
   }
 
   return (
     <div className={cn('flex items-center gap-4 ml-4', className)}>
-      <Button size="sm" disabled={!results} loading={isSaving} onClick={handleSave}>
+      <Button size="sm" disabled={!results} onClick={() => setShowSaveDialog(true)}>
         Save
       </Button>
       <Button size="sm" variant="outline" disabled={!results} onClick={handleReset}>
         Reset
       </Button>
+
+      <SaveCreativeCashFlowDialog
+        open={showSaveDialog}
+        onOpenChange={handleSaveDialogOpenChange}
+        handleSave={handleSave}
+      />
     </div>
   );
 }

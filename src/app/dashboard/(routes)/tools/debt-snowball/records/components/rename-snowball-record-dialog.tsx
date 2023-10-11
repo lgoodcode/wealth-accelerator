@@ -28,13 +28,17 @@ import {
 import { useRenameSnowballRecord } from '../../hooks/use-rename-snowball-record';
 import { DebtSnowballRecord } from '../../types';
 
-interface UpdateUserDialog {
+interface RenameSnowballRecordDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
   record: DebtSnowballRecord;
 }
 
-export function RenameSnowballRecordDialog({ open, onOpenChange, record }: UpdateUserDialog) {
+export function RenameSnowballRecordDialog({
+  open,
+  onOpenChange,
+  record,
+}: RenameSnowballRecordDialogProps) {
   const router = useRouter();
   const renameSnowballRecord = useRenameSnowballRecord();
   const form = useForm<{ name: string }>({

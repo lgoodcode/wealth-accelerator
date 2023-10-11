@@ -23,17 +23,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-interface SaveDebtSnowballDialogProps {
+interface UpdateUserDialog {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
   handleSave: (name: string) => Promise<void>;
 }
 
-export function SaveDebtSnowballDialog({
-  open,
-  onOpenChange,
-  handleSave,
-}: SaveDebtSnowballDialogProps) {
+export function SaveCreativeCashFlowDialog({ open, onOpenChange, handleSave }: UpdateUserDialog) {
   const form = useForm<{ name: string }>({
     resolver: zodResolver(
       z.object({
@@ -59,7 +55,7 @@ export function SaveDebtSnowballDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Save Creative Cash Flow Record</DialogTitle>
+          <DialogTitle>Save Debt Snowball Record</DialogTitle>
           <DialogDescription>
             Give a name for the record so you can reference it later.
           </DialogDescription>

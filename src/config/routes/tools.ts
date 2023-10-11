@@ -5,7 +5,7 @@ import type { Route } from './routes';
 export const toolsRoutes: Route[] = [
   {
     name: 'Creative Cash Flow',
-    path: '/dashboard/tools/creative-cash-flow/calculate',
+    path: '/dashboard/tools/creative-cash-flow',
     Icon: DollarSign,
     description: 'View where your money is going and how much you are saving.',
   },

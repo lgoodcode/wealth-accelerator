@@ -6,16 +6,16 @@ import { useAtom } from 'jotai';
 import { Loading } from '@/components/loading';
 import { Card, CardContent } from '@/components/ui/card';
 import { NoRecords } from './no-records';
-import { DebtSnowballRecordsTable } from './table/debt-snowball-records-table';
-import { debtSnowballRecordsAtom } from '../../atoms';
-import type { DebtSnowballRecord } from '../../types';
+import { CreativeCashFlowRecordsTable } from './table/creative-cash-flow-records-table';
+import { ccfRecordsAtom } from '../../atoms';
+import type { CreativeCashFlowRecord } from '../../types';
 
-interface RecordsProps {
-  recordsData: DebtSnowballRecord[];
+interface CreativeCashFlowRecordsProps {
+  recordsData: CreativeCashFlowRecord[];
 }
 
-export function DebtSnowballRecords({ recordsData }: RecordsProps) {
-  const [records, setRecords] = useAtom(debtSnowballRecordsAtom);
+export function CreativeCashFlowRecords({ recordsData }: CreativeCashFlowRecordsProps) {
+  const [records, setRecords] = useAtom(ccfRecordsAtom);
 
   useEffect(() => {
     setRecords(recordsData);
@@ -32,7 +32,7 @@ export function DebtSnowballRecords({ recordsData }: RecordsProps) {
           {!records ? (
             <Loading className="mt-0 py-32" />
           ) : (
-            <DebtSnowballRecordsTable records={records} />
+            <CreativeCashFlowRecordsTable records={records} />
           )}
         </CardContent>
       </Card>

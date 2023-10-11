@@ -35,6 +35,12 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      {
+        // New path route structure
+        source: '/dashboard/tools/creative-cash-flow/calculate',
+        destination: '/dashboard/tools/creative-cash-flow',
+        permanent: true,
+      },
     ];
   },
   rewrites: async () => {
