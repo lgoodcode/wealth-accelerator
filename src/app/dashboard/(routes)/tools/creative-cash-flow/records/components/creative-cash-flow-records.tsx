@@ -6,8 +6,8 @@ import { useAtom } from 'jotai';
 import { Loading } from '@/components/loading';
 import { Card, CardContent } from '@/components/ui/card';
 import { NoRecords } from './no-records';
-import { RecordsList } from './records-list';
-import { creativeCashFlowRecordsAtom } from '../../atoms';
+import { CreativeCashFlowRecordsTable } from './table/creative-cash-flow-records-table';
+import { ccfRecordsAtom } from '../../atoms';
 import type { CreativeCashFlowRecord } from '../../types';
 
 interface CreativeCashFlowRecordsProps {
@@ -15,7 +15,7 @@ interface CreativeCashFlowRecordsProps {
 }
 
 export function CreativeCashFlowRecords({ recordsData }: CreativeCashFlowRecordsProps) {
-  const [records, setRecords] = useAtom(creativeCashFlowRecordsAtom);
+  const [records, setRecords] = useAtom(ccfRecordsAtom);
 
   useEffect(() => {
     setRecords(recordsData);
@@ -25,17 +25,17 @@ export function CreativeCashFlowRecords({ recordsData }: CreativeCashFlowRecords
     return <NoRecords />;
   }
 
-  if (!records) {
-    return (
-      <div className="flex justify-center mx-auto lg:w-[1024px]">
-        <Card className="w-full mt-8">
-          <CardContent>
+  return (
+    <div className="flex justify-center mx-auto lg:w-[1024px]">
+      <Card className="w-full mt-8">
+        <CardContent>
+          {!records ? (
             <Loading className="mt-0 py-32" />
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  return <RecordsList records={records} />;
+          ) : (
+            <CreativeCashFlowRecordsTable records={records} />
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

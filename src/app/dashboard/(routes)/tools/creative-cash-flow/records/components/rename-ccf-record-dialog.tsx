@@ -25,22 +25,18 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useRenameSnowballRecord } from '../../hooks/use-rename-snowball-record';
-import { DebtSnowballRecord } from '../../types';
+import { useRenameCcfRecord } from '../../hooks/use-rename-ccf-record';
+import { CreativeCashFlowRecord } from '../../types';
 
-interface RenameSnowballRecordDialogProps {
+interface RenameCcfRecordDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
-  record: DebtSnowballRecord;
+  record: CreativeCashFlowRecord;
 }
 
-export function RenameSnowballRecordDialog({
-  open,
-  onOpenChange,
-  record,
-}: RenameSnowballRecordDialogProps) {
+export function RenameCcfRecordDialog({ open, onOpenChange, record }: RenameCcfRecordDialogProps) {
   const router = useRouter();
-  const renameSnowballRecord = useRenameSnowballRecord();
+  const renameSnowballRecord = useRenameCcfRecord();
   const form = useForm<{ name: string }>({
     resolver: zodResolver(
       z.object({

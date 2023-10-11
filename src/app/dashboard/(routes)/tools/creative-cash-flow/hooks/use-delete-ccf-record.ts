@@ -1,9 +1,9 @@
 import { supabase } from '@/lib/supabase/client';
 import { useSetAtom } from 'jotai';
-import { removeCcfRecordAtom } from '../../atoms';
+import { removeCcfRecordAtom } from '../atoms';
 
-export const useDeleteRecord = () => {
-  const removeRecord = useSetAtom(removeCcfRecordAtom);
+export const useDeleteCcfRecord = () => {
+  const removeCcfRecord = useSetAtom(removeCcfRecordAtom);
 
   return async (id: string) => {
     const { error } = await supabase.from('creative_cash_flow').delete().eq('id', id);
@@ -12,6 +12,6 @@ export const useDeleteRecord = () => {
       throw error;
     }
 
-    removeRecord(id);
+    removeCcfRecord(id);
   };
 };

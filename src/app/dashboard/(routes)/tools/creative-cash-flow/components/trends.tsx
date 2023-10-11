@@ -13,7 +13,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { animationProps, countUpProps } from '../utils/animations';
 import { resultsLabels } from '../labels';
-import { creativeCashFlowResultAtom } from '../atoms';
+import { ccfResultsAtom } from '../atoms';
 import type { CreateCountUp } from '../utils/create-count-up-props';
 
 interface TrendsProps {
@@ -21,7 +21,7 @@ interface TrendsProps {
 }
 
 export function Trends({ createCountUpProps }: TrendsProps) {
-  const results = useAtomValue(creativeCashFlowResultAtom);
+  const results = useAtomValue(ccfResultsAtom);
   const actual_annual_trend = results ? results.yearly_trend.reduce((a, b) => a + b, 0) / 3 : 0;
 
   if (!results) {

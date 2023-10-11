@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { SaveCreativeCashFlowDialog } from './save-creative-cash-flow-dialog';
-import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../atoms';
+import { ccfInputsAtom, ccfResultsAtom } from '../atoms';
 import { useSaveCcfRecord } from '../hooks/use-save-ccf-record';
 
 interface SaveAndResetButtonsProps {
@@ -18,8 +18,8 @@ interface SaveAndResetButtonsProps {
 
 export function SaveAndResetButtons({ className, user_id, handleReset }: SaveAndResetButtonsProps) {
   const router = useRouter();
-  const inputs = useAtomValue(creativeCashFlowInputsAtom);
-  const results = useAtomValue(creativeCashFlowResultAtom);
+  const inputs = useAtomValue(ccfInputsAtom);
+  const results = useAtomValue(ccfResultsAtom);
   const saveCcfRecord = useSaveCcfRecord();
   const [showSaveDialog, setShowSaveDialog] = useState(false);
 

@@ -21,7 +21,7 @@ import {
 import { inputLabels } from '../labels';
 import { creativeCashFlowManagement } from '../functions/creative-cash-flow';
 import { getTotalWAA } from '../functions/get-total-waa';
-import { creativeCashFlowInputsAtom, creativeCashFlowResultAtom } from '../atoms';
+import { ccfInputsAtom, ccfResultsAtom } from '../atoms';
 import { inputsFormSchema, type InputsFormSchemaType } from '../schema';
 import type { Transaction } from '@/lib/plaid/types/transactions';
 
@@ -41,8 +41,8 @@ export function CreativeCashFlowInputs({
   ytd_collections,
   default_tax_rate,
 }: CcfInputsFormProps) {
-  const [creativeCashFlowInputs, setCreativeCashFlowInputs] = useAtom(creativeCashFlowInputsAtom);
-  const setCreativeCashFlowResults = useSetAtom(creativeCashFlowResultAtom);
+  const [creativeCashFlowInputs, setCreativeCashFlowInputs] = useAtom(ccfInputsAtom);
+  const setCreativeCashFlowResults = useSetAtom(ccfResultsAtom);
   const form = useForm<InputsFormSchemaType>({
     resolver: zodResolver(inputsFormSchema),
     defaultValues: {

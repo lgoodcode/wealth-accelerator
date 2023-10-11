@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { createCountUpPropsFactory } from '../utils/create-count-up-props';
 import { animationProps, countUpProps } from '../utils/animations';
 import { resultsLabels } from '../labels';
-import { creativeCashFlowResultAtom } from '../atoms';
+import { ccfResultsAtom } from '../atoms';
 import { Trends } from './trends';
 import { UpdateWaa } from './update-waa';
 
@@ -20,7 +20,7 @@ interface CreativeCashFlowResultsProps {
 }
 
 export function CreativeCashFlowResults({ hasAnimated }: CreativeCashFlowResultsProps) {
-  const results = useAtomValue(creativeCashFlowResultAtom);
+  const results = useAtomValue(ccfResultsAtom);
   const originalWaaRef = useRef(results?.waa ?? 0);
   const originalTotalWaaRef = useRef((results?.total_waa ?? 0) - (results?.waa ?? 0));
   const createCountUpProps = createCountUpPropsFactory(!hasAnimated);

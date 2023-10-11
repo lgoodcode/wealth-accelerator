@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { creativeCashFlowResultAtom, resetCreativeCashFlowInputsAtom } from '../atoms';
+import { ccfResultsAtom, resetCreativeCashFlowInputsAtom } from '../atoms';
 import { SaveAndResetButtons } from './save-and-reset-buttons';
 import { CreativeCashFlowInputs } from './creative-cash-flow-inputs';
 import { CreativeCashFlowResults } from './creative-cash-flow-results';
@@ -32,7 +32,7 @@ export function CreativeCashFlow({
   default_tax_rate,
 }: CcfContainerProps) {
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
-  const [results, setResults] = useAtom(creativeCashFlowResultAtom);
+  const [results, setResults] = useAtom(ccfResultsAtom);
   const resetCreativeCashFlowInput = useSetAtom(resetCreativeCashFlowInputsAtom);
   const [hasAnimated, setHasAnimated] = useState(false);
 

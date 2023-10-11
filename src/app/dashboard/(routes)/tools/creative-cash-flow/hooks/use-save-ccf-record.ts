@@ -1,7 +1,7 @@
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
-import { addCreativeCashFlowRecordAtom } from '../atoms';
+import { addCcfRecordAtom } from '../atoms';
 import type {
   CreativeCashFlowManagementInputs,
   CreativeCashFlowManagementResult,
@@ -9,7 +9,7 @@ import type {
 } from '../types';
 
 export const useSaveCcfRecord = () => {
-  const addRecord = useSetAtom(addCreativeCashFlowRecordAtom);
+  const addRecord = useSetAtom(addCcfRecordAtom);
 
   return async (
     user_id: string,

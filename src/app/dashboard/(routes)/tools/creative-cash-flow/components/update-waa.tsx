@@ -4,14 +4,14 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { resultsLabels } from '../labels';
-import { creativeCashFlowResultAtom, updatecreativeCashFlowResultWaaAtom } from '../atoms';
+import { ccfResultsAtom, updatecreativeCashFlowResultWaaAtom } from '../atoms';
 
 interface UpdateWaaProps {
   originalTotalWaa: number;
 }
 
 export function UpdateWaa({ originalTotalWaa }: UpdateWaaProps) {
-  const results = useAtomValue(creativeCashFlowResultAtom);
+  const results = useAtomValue(ccfResultsAtom);
   const updateWaa = useSetAtom(updatecreativeCashFlowResultWaaAtom);
   const [waa, setWaa] = useState(results?.waa.toString() ?? '');
 

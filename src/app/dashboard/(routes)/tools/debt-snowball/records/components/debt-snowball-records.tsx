@@ -6,9 +6,9 @@ import { useAtom } from 'jotai';
 import { Loading } from '@/components/loading';
 import { Card, CardContent } from '@/components/ui/card';
 import { NoRecords } from './no-records';
+import { DebtSnowballRecordsTable } from './table/debt-snowball-records-table';
 import { debtSnowballRecordsAtom } from '../../atoms';
 import type { DebtSnowballRecord } from '../../types';
-import { DebtSnowballRecordsTable } from './table/debt-snowball-records-table';
 
 interface RecordsProps {
   recordsData: DebtSnowballRecord[];
