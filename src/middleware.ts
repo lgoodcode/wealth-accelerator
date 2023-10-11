@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
 
   // If in maintenance mode, point the url pathname to the maintenance page
   if (isInMaintenanceMode && /^\/(login|dashboard)/.test(request.nextUrl.pathname)) {
-    request.nextUrl.pathname = `/maintenance`;
+    request.nextUrl.pathname = '/maintenance';
     // Rewrite to the url
     return NextResponse.rewrite(request.nextUrl);
   }

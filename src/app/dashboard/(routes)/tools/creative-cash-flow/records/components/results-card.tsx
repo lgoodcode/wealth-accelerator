@@ -27,7 +27,6 @@ export function ResultsCard({ record }: InputsCardProps) {
             <span>{resultsLabels.tax_on_business_profit.title}</span>
             <span>{dollarFormatter(record.results.tax_account)}</span>
           </div>
-
           <div className="flex py-4 justify-between border-b">
             <span>{resultsLabels.lifestyle_expenses.title}</span>
             <span>{dollarFormatter(record.results.lifestyle_expenses)}</span>
@@ -36,7 +35,10 @@ export function ResultsCard({ record }: InputsCardProps) {
             <span>{resultsLabels.lifestyle_expenses_tax.title}</span>
             <span>{dollarFormatter(record.results.lifestyle_expenses_tax)}</span>
           </div>
-
+          <div className="flex py-4 justify-between border-b">
+            <span>{resultsLabels.business_profit_before_tax.title}</span>
+            <span>{dollarFormatter(record.results.business_profit_before_tax)}</span>
+          </div>
           <div className="flex py-4 justify-between border-b font-bold">
             <span>{resultsLabels.waa.title}</span>
             <span>{dollarFormatter(record.results.waa)}</span>

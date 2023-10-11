@@ -40,7 +40,6 @@ export interface Database {
       creative_cash_flow_inputs: {
         Row: {
           all_other_income: number
-          created_at: string
           end_date: string
           id: string
           lifestyle_expenses_tax_rate: number
@@ -51,7 +50,6 @@ export interface Database {
         }
         Insert: {
           all_other_income: number
-          created_at?: string
           end_date: string
           id: string
           lifestyle_expenses_tax_rate: number
@@ -62,7 +60,6 @@ export interface Database {
         }
         Update: {
           all_other_income?: number
-          created_at?: string
           end_date?: string
           id?: string
           lifestyle_expenses_tax_rate?: number
@@ -608,14 +605,14 @@ export interface Database {
       }
       create_creative_cash_flow: {
         Args: {
-          user_id: string
+          _user_id: string
           name: string
           inputs: unknown
           results: unknown
         }
         Returns: {
-          new_id: string
-          new_created_at: string
+          id: string
+          created_at: string
         }[]
       }
       create_debt_snowball_record: {
@@ -679,16 +676,20 @@ export interface Database {
         }
         Returns: {
           id: string
+          name: string
+          created_at: string
           inputs: Json
           results: Json
         }[]
       }
       get_creative_cash_flow_records: {
         Args: {
-          arg_user_id: string
+          _user_id: string
         }
         Returns: {
           id: string
+          name: string
+          created_at: string
           inputs: Json
           results: Json
         }[]
@@ -803,7 +804,7 @@ export interface Database {
       }
       total_waa_before_date: {
         Args: {
-          user_id: string
+          _user_id: string
           target_date: string
         }
         Returns: number

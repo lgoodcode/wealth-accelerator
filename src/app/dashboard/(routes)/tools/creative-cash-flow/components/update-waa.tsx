@@ -3,8 +3,8 @@ import { useAtomValue, useSetAtom } from 'jotai';
 
 import { CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CurrencyInput } from '@/components/ui/currency-input';
-import { resultsLabels } from '../../labels';
-import { creativeCashFlowResultAtom, updatecreativeCashFlowResultWaaAtom } from '../../atoms';
+import { resultsLabels } from '../labels';
+import { creativeCashFlowResultAtom, updatecreativeCashFlowResultWaaAtom } from '../atoms';
 
 interface UpdateWaaProps {
   originalTotalWaa: number;

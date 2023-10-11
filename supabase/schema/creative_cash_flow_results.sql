@@ -2,7 +2,6 @@
 DROP TABLE IF EXISTS creative_cash_flow_results CASCADE;
 CREATE TABLE creative_cash_flow_results (
   id uuid PRIMARY KEY NOT NULL REFERENCES creative_cash_flow(id) ON DELETE CASCADE,
-  user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
   collections numeric(12,2) NOT NULL,
   lifestyle_expenses numeric(12,2) NOT NULL,
   lifestyle_expenses_tax numeric(12,2) NOT NULL,
@@ -20,17 +19,17 @@ CREATE TABLE creative_cash_flow_results (
 ALTER TABLE creative_cash_flow_results OWNER TO postgres;
 ALTER TABLE creative_cash_flow_results ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Can view own CCF results data" ON public.creative_cash_flow_results
+CREATE POLICY "Can view own creative cash flow result data or if admin" ON creative_cash_flow_results
   FOR SELECT
   TO authenticated
-  USING (auth.uid() = user_id);
+  USING ((SELECT owns_creative_cash_flow()) OR (SELECT is_admin()));
 
-CREATE POLICY "Can insert new CCF results" ON public.creative_cash_flow_results
+CREATE POLICY "Can insert new creative cash flow result data" ON creative_cash_flow_results
   FOR INSERT
   TO authenticated
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK ((SELECT owns_creative_cash_flow()));
 
-CREATE POLICY "Can delete own CCF results" ON public.creative_cash_flow_results
+CREATE POLICY "Can delete own creative cash flow result data" ON creative_cash_flow_results
   FOR DELETE
   TO authenticated
-  USING (auth.uid() = user_id);
+  USING ((SELECT owns_creative_cash_flow()));

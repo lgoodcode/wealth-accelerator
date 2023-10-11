@@ -9,11 +9,11 @@ import { RecordsList } from './records-list';
 import { creativeCashFlowRecordsAtom } from '../../atoms';
 import type { CreativeCashFlowRecord } from '../../types';
 
-interface RecordsProps {
+interface CreativeCashFlowRecordsProps {
   recordsData: CreativeCashFlowRecord[];
 }
 
-export function Records({ recordsData }: RecordsProps) {
+export function CreativeCashFlowRecords({ recordsData }: CreativeCashFlowRecordsProps) {
   const [records, setRecords] = useAtom(creativeCashFlowRecordsAtom);
 
   useEffect(() => {

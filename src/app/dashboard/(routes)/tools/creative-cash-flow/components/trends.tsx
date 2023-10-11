@@ -11,10 +11,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { animationProps, countUpProps } from '../../utils/animations';
-import { resultsLabels } from '../../labels';
-import { creativeCashFlowResultAtom } from '../../atoms';
-import type { CreateCountUp } from '../../utils/create-count-up-props';
+import { animationProps, countUpProps } from '../utils/animations';
+import { resultsLabels } from '../labels';
+import { creativeCashFlowResultAtom } from '../atoms';
+import type { CreateCountUp } from '../utils/create-count-up-props';
 
 interface TrendsProps {
   createCountUpProps: CreateCountUp;

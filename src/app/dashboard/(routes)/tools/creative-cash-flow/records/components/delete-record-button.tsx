@@ -37,7 +37,7 @@ export function DeleteRecordButton({ record }: DeleteRecordButtonProps) {
       .catch((error) => {
         console.error(error);
         captureException(error, {
-          extra: { id: record.inputs.id },
+          extra: { id: record.id },
         });
         toast.error('Failed to delete record');
       })

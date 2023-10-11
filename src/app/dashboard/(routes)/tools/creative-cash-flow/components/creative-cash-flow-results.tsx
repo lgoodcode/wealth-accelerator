@@ -8,10 +8,10 @@ import { MoveDown, MoveRight } from 'lucide-react';
 
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { createCountUpPropsFactory } from '../../utils/create-count-up-props';
-import { animationProps, countUpProps } from '../../utils/animations';
-import { resultsLabels } from '../../labels';
-import { creativeCashFlowResultAtom } from '../../atoms';
+import { createCountUpPropsFactory } from '../utils/create-count-up-props';
+import { animationProps, countUpProps } from '../utils/animations';
+import { resultsLabels } from '../labels';
+import { creativeCashFlowResultAtom } from '../atoms';
 import { Trends } from './trends';
 import { UpdateWaa } from './update-waa';
 

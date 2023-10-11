@@ -2,8 +2,6 @@
 DROP TABLE IF EXISTS creative_cash_flow_inputs CASCADE;
 CREATE TABLE creative_cash_flow_inputs (
   id uuid PRIMARY KEY NOT NULL REFERENCES creative_cash_flow(id) ON DELETE CASCADE,
-  user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
-  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   start_date timestamp with time zone NOT NULL,
   end_date timestamp with time zone NOT NULL,
   all_other_income numeric(12,2) NOT NULL,
@@ -16,17 +14,17 @@ CREATE TABLE creative_cash_flow_inputs (
 ALTER TABLE creative_cash_flow_inputs OWNER TO postgres;
 ALTER TABLE creative_cash_flow_inputs ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Can view own CCF inputs data" ON public.creative_cash_flow_inputs
+CREATE POLICY "Can view own creative cash flow input data or if admin" ON creative_cash_flow_inputs
   FOR SELECT
   TO authenticated
-  USING (auth.uid() = user_id);
+  USING ((SELECT owns_creative_cash_flow()) OR (SELECT is_admin()));
 
-CREATE POLICY "Can insert new CCF inputs" ON public.creative_cash_flow_inputs
+CREATE POLICY "Can insert new creative cash flow input data" ON creative_cash_flow_inputs
   FOR INSERT
   TO authenticated
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK ((SELECT owns_creative_cash_flow()));
 
-CREATE POLICY "Can delete own CCF inputs" ON public.creative_cash_flow_inputs
+CREATE POLICY "Can delete own creative cash flow input data" ON creative_cash_flow_inputs
   FOR DELETE
   TO authenticated
-  USING (auth.uid() = user_id);
+  USING ((SELECT owns_creative_cash_flow()));
