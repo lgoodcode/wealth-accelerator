@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ShareSnowballRecordMenuItem } from './share-snowball-record-menu-item';
 import { RenameSnowballRecordDialog } from './rename-snowball-record-dialog';
 import { DeleteSnowballRecordDialog } from './delete-snowball-record-dialog';
 import type { DebtSnowballRecord } from '../../types';
@@ -79,6 +80,7 @@ export function DebtSnowballMenu({
             <Pen className="mr-2 h-4 w-4 text-muted-foreground/70" />
             Rename
           </DropdownMenuItem>
+          <ShareSnowballRecordMenuItem record={record} />
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onSelect={() => setShowDeleteDialog(true)}
