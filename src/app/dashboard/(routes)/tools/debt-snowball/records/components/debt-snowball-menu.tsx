@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ShareSnowballRecordMenuItem } from './share-snowball-record-menu-item';
 import { RenameSnowballRecordDialog } from './rename-snowball-record-dialog';
 import { DeleteSnowballRecordDialog } from './delete-snowball-record-dialog';
 import type { DebtSnowballRecord } from '../../types';
@@ -21,14 +22,16 @@ import type { DebtSnowballRecord } from '../../types';
 interface RowActionsProps {
   className?: string;
   record: DebtSnowballRecord;
-  hasView?: boolean;
+  inTable?: boolean;
+  isShared?: boolean;
   redirectOnDelete?: boolean;
 }
 
 export function DebtSnowballMenu({
   className,
   record,
-  hasView,
+  inTable,
+  isShared,
   redirectOnDelete,
 }: RowActionsProps) {
   const user = useUser();
@@ -65,7 +68,7 @@ export function DebtSnowballMenu({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className={cn('w-[160px]', className)}>
-          {hasView && (
+          {inTable && (
             <>
               <DropdownMenuItem
                 onClick={() => router.push(`/dashboard/tools/debt-snowball/records/${record.id}`)}
@@ -79,6 +82,9 @@ export function DebtSnowballMenu({
             <Pen className="mr-2 h-4 w-4 text-muted-foreground/70" />
             Rename
           </DropdownMenuItem>
+
+          {!isShared && <ShareSnowballRecordMenuItem record={record} />}
+
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onSelect={() => setShowDeleteDialog(true)}

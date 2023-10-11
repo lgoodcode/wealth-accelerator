@@ -59,7 +59,7 @@ export function SaveDebtSnowballDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Save Creative Cash Flow Record</DialogTitle>
+          <DialogTitle>Save Debt Snowball Record</DialogTitle>
           <DialogDescription>
             Give a name for the record so you can reference it later.
           </DialogDescription>

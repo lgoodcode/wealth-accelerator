@@ -18,9 +18,10 @@ enum TabsValue {
 
 interface DebtSnowballRecordProps {
   record: DebtSnowballRecord;
+  isShared?: boolean;
 }
 
-export function DebtSnowballRecordId({ record }: DebtSnowballRecordProps) {
+export function DebtSnowballRecordId({ record, isShared }: DebtSnowballRecordProps) {
   const comparison = compare_strategies(record.inputs, record.results);
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Results);
   const totalDebt = record.debts.reduce((acc, b) => acc + b.amount, 0) ?? 0;
@@ -37,7 +38,7 @@ export function DebtSnowballRecordId({ record }: DebtSnowballRecordProps) {
           <TabsTrigger value={TabsValue.Results}>Results</TabsTrigger>
           <TabsTrigger value={TabsValue.PaymentSchedule}>Payment Schedule</TabsTrigger>
         </TabsList>
-        <DebtSnowballMenu record={record} redirectOnDelete />
+        <DebtSnowballMenu record={record} isShared={isShared} redirectOnDelete />
       </div>
       <TabsContent value={TabsValue.Inputs}>
         {/* @ts-ignore - the `id` and `user_id` is omitted but will still function as needed to display  */}

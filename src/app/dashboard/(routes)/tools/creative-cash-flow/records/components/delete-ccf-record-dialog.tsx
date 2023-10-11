@@ -33,10 +33,10 @@ export function DeleteCcfRecordDialog({
   const deleteCcfRecord = useDeleteCcfRecord();
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDeleteSnowballRecord = async () => {
+  const handleDeleteCcfRecord = async () => {
     setIsDeleting(true);
 
-    await deleteCcfRecord(record.id)
+    await deleteCcfRecord(record.id, !!callback) // If we have a callback; it's shared
       .then(() => {
         onOpenChange(false);
 
@@ -63,7 +63,7 @@ export function DeleteCcfRecordDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-          <Button variant="destructive" onClick={handleDeleteSnowballRecord} loading={isDeleting}>
+          <Button variant="destructive" onClick={handleDeleteCcfRecord} loading={isDeleting}>
             Delete
           </Button>
         </AlertDialogFooter>

@@ -2,15 +2,15 @@ import { toast } from 'react-toastify';
 import { Share2 } from 'lucide-react';
 
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { useShareCcfRecord } from '../../hooks/use-share-ccf-record';
-import type { CreativeCashFlowRecord } from '../../types';
+import { useShareSnowballRecord } from '../../hooks/use-share-snowball-record';
+import type { DebtSnowballRecord } from '../../types';
 
-interface ShareCcfRecordMenuItemProps {
-  record: CreativeCashFlowRecord;
+interface ShareSnowballRecordMenuItemProps {
+  record: DebtSnowballRecord;
 }
 
-export function ShareCcfRecordMenuItem({ record }: ShareCcfRecordMenuItemProps) {
-  const shareRecord = useShareCcfRecord();
+export function ShareSnowballRecordMenuItem({ record }: ShareSnowballRecordMenuItemProps) {
+  const shareRecord = useShareSnowballRecord();
   const handleShare = async () => {
     await shareRecord(record.id)
       .then(() => {

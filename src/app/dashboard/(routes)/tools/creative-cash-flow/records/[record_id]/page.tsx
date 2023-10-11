@@ -12,23 +12,20 @@ import { ResultsCard } from '../components/results-card';
 import { TrendsCard } from '../components/trends-card';
 import { NoRecordCard } from './no-record-card';
 import type { CreativeCashFlowRecord } from '../../types';
+import { CreativeCashFlowMenu } from '../components/creative-cash-flow-menu';
 
 export const metadata: Metadata = {
   title: 'Record | Creative Cash Flow',
 };
 
 interface CreativeCashFlowRecordPageProps {
-  params: {
-    record_id: string;
-  };
-  searchParams: {
-    sharerName: string;
-  };
+  params: { record_id: string };
+  searchParams: { name: string };
 }
 
 export default async function CreativeCashFlowRecordPage({
   params: { record_id },
-  searchParams: { sharerName },
+  searchParams: { name },
 }: CreativeCashFlowRecordPageProps) {
   if (!isUUID(record_id)) {
     return <NoRecordCard record_id={record_id} />;
@@ -63,25 +60,29 @@ export default async function CreativeCashFlowRecordPage({
         <div className="space-y-1">
           <div className="flex flex-row justify-between items-center">
             <h2 className="text-3xl font-bold">Creative Cash Flow Record</h2>
-            {sharerName && (
+            {!!name && (
               <div className="flex flex-row gap-2 text-lg">
                 <span className="text-muted-foreground">Shared by</span>
-                <span className="font-bold">{sharerName}</span>
+                <span className="font-bold">{name}</span>
               </div>
             )}
           </div>
-          {sharerName && <p className="text-muted-foreground">Viewing a shared record.</p>}
+          {!!name && <p className="text-muted-foreground">Viewing a shared record.</p>}
         </div>
-        <Breadcrumbs>
-          <BreadcrumbItem href="/dashboard/tools/creative-cash-flow/records">
-            <Album size={16} className="mr-2" />
-            Records
-          </BreadcrumbItem>
-          <BreadcrumbItem active>
-            <DollarSign size={16} className="mr-2" />
-            {record.name}
-          </BreadcrumbItem>
-        </Breadcrumbs>
+        <div className="flex flex-row justify-between">
+          <Breadcrumbs>
+            <BreadcrumbItem href="/dashboard/tools/creative-cash-flow/records">
+              <Album size={16} className="mr-2" />
+              Records
+            </BreadcrumbItem>
+            <BreadcrumbItem active>
+              <DollarSign size={16} className="mr-2" />
+              {record.name}
+            </BreadcrumbItem>
+          </Breadcrumbs>
+
+          <CreativeCashFlowMenu record={record} isShared={!!name} redirectOnDelete />
+        </div>
         <Separator className="mt-6" />
       </div>
       <div className="flex flex-row justify-center w-full gap-6 flex-wrap">

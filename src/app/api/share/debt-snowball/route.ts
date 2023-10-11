@@ -7,15 +7,15 @@ import { getUser } from '@/lib/supabase/server/get-user';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 
 export const dynamic = 'force-dynamic';
-export const POST = ShareCreativeCashFlowRecord;
-const TEMPLATE_ID = 'share_ccf';
+export const POST = ShareDebtSnowballRecord;
+const TEMPLATE_ID = 'share_debt_snowball';
 
 type TemplateData = {
   name: string;
   record_id: string;
 };
 
-async function ShareCreativeCashFlowRecord(request: Request) {
+async function ShareDebtSnowballRecord(request: Request) {
   const body = await JsonParseApiRequest<{ record_id: string }>(request);
 
   if (body instanceof Error) {
@@ -33,7 +33,7 @@ async function ShareCreativeCashFlowRecord(request: Request) {
   const { error: notifiersError, data: notifiers } = await supabaseAdmin
     .from('notifiers')
     .select('name, email')
-    .eq('creative_cash_flow', true);
+    .eq('debt_snowball', true);
 
   if (notifiersError || !notifiers.length) {
     const error = notifiersError || new Error('No notifiers found');

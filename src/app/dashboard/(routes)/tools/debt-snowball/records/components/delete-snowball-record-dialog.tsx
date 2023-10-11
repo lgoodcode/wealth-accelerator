@@ -36,7 +36,7 @@ export function DeleteSnowballRecordDialog({
   const handleDeleteSnowballRecord = async () => {
     setIsDeleting(true);
 
-    await deleteSnowballRecord(record.id)
+    await deleteSnowballRecord(record.id, !!callback) // If we have a callback; it's shared
       .then(() => {
         onOpenChange(false);
 

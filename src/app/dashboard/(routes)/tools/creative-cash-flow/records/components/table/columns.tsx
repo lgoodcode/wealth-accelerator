@@ -57,7 +57,7 @@ export const columns: ColumnDef<CreativeCashFlowRecord>[] = [
     id: 'actions',
     cell: ({ row }) => (
       <div className="flex justify-end">
-        <CreativeCashFlowMenu record={row.original} hasView />
+        <CreativeCashFlowMenu record={row.original} inTable />
       </div>
     ),
   },

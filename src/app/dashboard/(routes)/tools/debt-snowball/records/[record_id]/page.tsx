@@ -21,13 +21,13 @@ interface DebtSnowballRecordPageProps {
     record_id: string;
   };
   searchParams: {
-    sharerName: string;
+    name: string;
   };
 }
 
 export default async function DebtSnowballRecordPage({
   params: { record_id },
-  searchParams: { sharerName },
+  searchParams: { name },
 }: DebtSnowballRecordPageProps) {
   if (!isUUID(record_id)) {
     return <NoRecordCard record_id={record_id} />;
@@ -66,14 +66,14 @@ export default async function DebtSnowballRecordPage({
         <div className="space-y-1">
           <div className="flex flex-row justify-between items-center">
             <h2 className="text-3xl font-bold">Debt Snowball Record</h2>
-            {sharerName && (
+            {!!name && (
               <div className="flex flex-row gap-2 text-lg">
                 <span className="text-muted-foreground">Shared by</span>
-                <span className="font-bold">{sharerName}</span>
+                <span className="font-bold">{name}</span>
               </div>
             )}
           </div>
-          {sharerName && <p className="text-muted-foreground">Viewing a shared record.</p>}
+          {!!name && <p className="text-muted-foreground">Viewing a shared record.</p>}
         </div>
         <Breadcrumbs>
           <BreadcrumbItem href="/dashboard/tools/debt-snowball/records">
@@ -88,7 +88,7 @@ export default async function DebtSnowballRecordPage({
         <Separator className="mt-6" />
       </div>
       <div className="flex flex-row justify-center w-full gap-6 flex-wrap">
-        <DebtSnowballRecordId record={record} />
+        <DebtSnowballRecordId record={record} isShared={!!name} />
       </div>
     </div>
   );
