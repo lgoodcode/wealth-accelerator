@@ -11,15 +11,21 @@ export interface Database {
     Tables: {
       creative_cash_flow: {
         Row: {
+          created_at: string
           id: string
+          name: string
           user_id: string
         }
         Insert: {
+          created_at?: string
           id: string
+          name?: string
           user_id: string
         }
         Update: {
+          created_at?: string
           id?: string
+          name?: string
           user_id?: string
         }
         Relationships: [
@@ -42,7 +48,6 @@ export interface Database {
           payroll_and_distributions: number
           start_date: string
           tax_account_rate: number
-          user_id: string
         }
         Insert: {
           all_other_income: number
@@ -54,7 +59,6 @@ export interface Database {
           payroll_and_distributions: number
           start_date: string
           tax_account_rate: number
-          user_id: string
         }
         Update: {
           all_other_income?: number
@@ -66,16 +70,8 @@ export interface Database {
           payroll_and_distributions?: number
           start_date?: string
           tax_account_rate?: number
-          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "creative_cash_flow_inputs_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       creative_cash_flow_notifiers: {
         Row: {
@@ -109,7 +105,6 @@ export interface Database {
           lifestyle_expenses_tax: number
           tax_account: number
           total_waa: number
-          user_id: string
           waa: number
           weekly_trend: number[]
           year_to_date: number
@@ -125,7 +120,6 @@ export interface Database {
           lifestyle_expenses_tax: number
           tax_account: number
           total_waa: number
-          user_id: string
           waa: number
           weekly_trend: number[]
           year_to_date: number
@@ -141,20 +135,12 @@ export interface Database {
           lifestyle_expenses_tax?: number
           tax_account?: number
           total_waa?: number
-          user_id?: string
           waa?: number
           weekly_trend?: number[]
           year_to_date?: number
           yearly_trend?: number[]
         }
-        Relationships: [
-          {
-            foreignKeyName: "creative_cash_flow_results_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       debt_snowball: {
         Row: {
@@ -622,28 +608,15 @@ export interface Database {
       }
       create_creative_cash_flow: {
         Args: {
-          _user_id: string
-          _start_date: string
-          _end_date: string
-          _all_other_income: number
-          _payroll_and_distributions: number
-          _lifestyle_expenses_tax_rate: number
-          _tax_account_rate: number
-          _optimal_savings_strategy: number
-          _collections: number
-          _lifestyle_expenses: number
-          _lifestyle_expenses_tax: number
-          _business_profit_before_tax: number
-          _business_overhead: number
-          _tax_account: number
-          _waa: number
-          _total_waa: number
-          _daily_trend: number[]
-          _weekly_trend: number[]
-          _yearly_trend: number[]
-          _year_to_date: number
+          user_id: string
+          name: string
+          inputs: unknown
+          results: unknown
         }
-        Returns: string
+        Returns: {
+          new_id: string
+          new_created_at: string
+        }[]
       }
       create_debt_snowball_record: {
         Args: {
@@ -809,6 +782,14 @@ export interface Database {
         Returns: boolean
       }
       is_own_plaid_transaction: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      owns_creative_cash_flow: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      owns_creative_cash_flow_inputs: {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
