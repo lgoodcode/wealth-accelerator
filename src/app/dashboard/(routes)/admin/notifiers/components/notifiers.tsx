@@ -20,15 +20,15 @@ export function Notifiers({ notifiersData }: NotifiersProps) {
     setNotifiers(notifiersData);
   }, []);
 
-  if (!notifiers) {
-    return <Loading />;
-  }
-
   return (
     <div className="flex justify-center mx-auto lg:w-[1024px]">
       <Card className="w-full mt-8">
         <CardContent>
-          <NotifiersTable notifiers={notifiers} />
+          {!notifiers ? (
+            <Loading className="mt-0 py-32" />
+          ) : (
+            <NotifiersTable notifiers={notifiers} />
+          )}
         </CardContent>
       </Card>
     </div>
