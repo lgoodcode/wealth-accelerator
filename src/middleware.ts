@@ -8,9 +8,10 @@ import type { Database } from '@/lib/supabase/database';
 
 const PROJECT_ID = process.env.SUPABASE_PROJECT_ID;
 const authPagesRegex = /^\/(login|signup|forgot-password|reset-password|set-password)/;
+const IS_PROD = process.env.NODE_ENV === 'production';
 
 export async function middleware(request: NextRequest) {
-  const isInMaintenanceMode = await get('isInMaintenanceMode');
+  const isInMaintenanceMode = IS_PROD ? await get('isInMaintenanceMode') : false;
 
   // If in maintenance mode, point the url pathname to the maintenance page
   if (isInMaintenanceMode && /^\/(login|dashboard)/.test(request.nextUrl.pathname)) {
