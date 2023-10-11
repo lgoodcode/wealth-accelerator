@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ShareCcfRecordMenuItem } from './share-ccf-record-menu-item';
 import { RenameCcfRecordDialog } from './rename-ccf-record-dialog';
 import { DeleteCcfRecordDialog } from './delete-ccf-record-dialog';
 import type { CreativeCashFlowRecord } from '../../types';
@@ -75,13 +76,15 @@ export function CreativeCashFlowMenu({
                 <Eye className="mr-2 h-4 w-4 text-muted-foreground/70" />
                 View
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
             </>
           )}
           <DropdownMenuItem onClick={() => setShowRenameDialog(true)}>
             <Pen className="mr-2 h-4 w-4 text-muted-foreground/70" />
             Rename
           </DropdownMenuItem>
+
+          <ShareCcfRecordMenuItem record={record} />
+
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onSelect={() => setShowDeleteDialog(true)}

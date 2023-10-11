@@ -33,9 +33,14 @@ export const columns: ColumnDef<CreativeCashFlowRecord>[] = [
     },
   },
   {
-    accessorKey: 'date_range',
-    enableGlobalFilter: true,
+    accessorKey: 'inputs',
+    enableGlobalFilter: false,
     header: ({ column }) => <ColumnHeader column={column} title="Date Range" />,
+    sortingFn: (row) => {
+      const startDate = new Date(row.original.inputs.start_date);
+      const endDate = new Date(row.original.inputs.end_date);
+      return endDate.getTime() - startDate.getTime();
+    },
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
