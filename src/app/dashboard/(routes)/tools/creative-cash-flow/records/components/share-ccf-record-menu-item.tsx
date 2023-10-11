@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import { Share2 } from 'lucide-react';
 
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { useShareRecord } from '../../hooks/use-share-ccf-record';
+import { useShareCcfRecord } from '../../hooks/use-share-ccf-record';
 import type { CreativeCashFlowRecord } from '../../types';
 
 interface ShareCcfRecordMenuItemProps {
@@ -10,7 +10,7 @@ interface ShareCcfRecordMenuItemProps {
 }
 
 export function ShareCcfRecordMenuItem({ record }: ShareCcfRecordMenuItemProps) {
-  const shareRecord = useShareRecord();
+  const shareRecord = useShareCcfRecord();
   const handleShare = async () => {
     await shareRecord(record.id)
       .then(() => {
