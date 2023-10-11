@@ -100,3 +100,7 @@ export async function middleware(request: NextRequest) {
 
   return res;
 }
+
+export const config = {
+  matcher: ['/login', '/set-password', '/reset-password', '/dashboard/:path*'],
+};
