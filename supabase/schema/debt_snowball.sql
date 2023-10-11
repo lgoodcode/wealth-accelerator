@@ -14,7 +14,7 @@ CREATE TABLE debt_snowball (
   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
   name text NOT NULL,
   debts debt_snowball_debt[] NOT NULL,
-  created_at timestamp with time zone NOT NULL DEFAULT NOW()
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
 CREATE INDEX IF NOT EXISTS idx_debt_snowball_user_id ON debt_snowball(user_id);
@@ -118,9 +118,11 @@ BEGIN
   -- Generate a new UUID using the uuid-ossp extension
   SELECT uuid_generate_v4() INTO new_id;
 
+  -- Get the current time in UTC
+  new_created_at := NOW() AT TIME ZONE 'UTC';
+
   INSERT INTO debt_snowball (id, user_id, name, debts, created_at)
-  VALUES (new_id, user_id, name, debts, NOW())
-  RETURNING created_at INTO new_created_at;
+  VALUES (new_id, user_id, name, debts, new_created_at);
 
   INSERT INTO debt_snowball_inputs (id, additional_payment, monthly_payment, opportunity_rate, strategy, lump_amounts, pay_back_loan, pay_interest, loan_interest_rate)
   VALUES (new_id, inputs.additional_payment, inputs.monthly_payment, inputs.opportunity_rate, inputs.strategy, inputs.lump_amounts, inputs.pay_back_loan, inputs.pay_interest, inputs.loan_interest_rate);
