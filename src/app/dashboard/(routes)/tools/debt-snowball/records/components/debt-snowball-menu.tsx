@@ -73,7 +73,6 @@ export function DebtSnowballMenu({
                 <Eye className="mr-2 h-4 w-4 text-muted-foreground/70" />
                 View
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
             </>
           )}
           <DropdownMenuItem onClick={() => setShowRenameDialog(true)}>
