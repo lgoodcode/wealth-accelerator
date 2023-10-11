@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+import { get } from '@vercel/edge-config';
 import { captureException } from '@sentry/nextjs';
 
 import { parseAuthCookie } from '@/lib/supabase/server/parse-auth-cookie';
@@ -9,6 +10,15 @@ const PROJECT_ID = process.env.SUPABASE_PROJECT_ID;
 const authPagesRegex = /^\/(login|signup|forgot-password|reset-password|set-password)/;
 
 export async function middleware(request: NextRequest) {
+  const isInMaintenanceMode = await get('isInMaintenanceMode');
+
+  // If in maintenance mode, point the url pathname to the maintenance page
+  if (request.nextUrl.pathname.startsWith('/dashboard') && isInMaintenanceMode) {
+    request.nextUrl.pathname = `/maintenance`;
+    // Rewrite to the url
+    return NextResponse.rewrite(request.nextUrl);
+  }
+
   const res = NextResponse.next({
     headers: {
       // Set custom header to allow server components to know the current path
@@ -90,7 +100,3 @@ export async function middleware(request: NextRequest) {
 
   return res;
 }
-
-export const config = {
-  matcher: ['/login', '/set-password', '/reset-password', '/dashboard/:path*'],
-};
