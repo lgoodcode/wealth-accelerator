@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 
 import { Loading } from '@/components/loading';
+import { Card, CardContent } from '@/components/ui/card';
 import { NoRecords } from './no-records';
 import { RecordsList } from './records-list';
 import { creativeCashFlowRecordsAtom } from '../../atoms';
@@ -20,10 +21,20 @@ export function CreativeCashFlowRecords({ recordsData }: CreativeCashFlowRecords
     setRecords(recordsData);
   }, []);
 
-  if (!records) {
-    return <Loading />;
-  } else if (!records.length) {
+  if (records && !records.length) {
     return <NoRecords />;
+  }
+
+  if (!records) {
+    return (
+      <div className="flex justify-center mx-auto lg:w-[1024px]">
+        <Card className="w-full mt-8">
+          <CardContent>
+            <Loading className="mt-0 py-32" />
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return <RecordsList records={records} />;
