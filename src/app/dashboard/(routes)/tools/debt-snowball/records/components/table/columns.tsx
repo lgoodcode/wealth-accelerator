@@ -36,7 +36,7 @@ export const columns: ColumnDef<DebtSnowballRecord>[] = [
     id: 'actions',
     cell: ({ row }) => (
       <div className="flex justify-end">
-        <DebtSnowballMenu record={row.original} hasView />
+        <DebtSnowballMenu record={row.original} inTable />
       </div>
     ),
   },

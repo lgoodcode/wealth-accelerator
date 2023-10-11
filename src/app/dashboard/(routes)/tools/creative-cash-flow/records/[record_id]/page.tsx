@@ -22,13 +22,13 @@ interface CreativeCashFlowRecordPageProps {
     record_id: string;
   };
   searchParams: {
-    sharerName: string;
+    name: string;
   };
 }
 
 export default async function CreativeCashFlowRecordPage({
   params: { record_id },
-  searchParams: { sharerName },
+  searchParams: { name },
 }: CreativeCashFlowRecordPageProps) {
   if (!isUUID(record_id)) {
     return <NoRecordCard record_id={record_id} />;
@@ -63,14 +63,14 @@ export default async function CreativeCashFlowRecordPage({
         <div className="space-y-1">
           <div className="flex flex-row justify-between items-center">
             <h2 className="text-3xl font-bold">Creative Cash Flow Record</h2>
-            {sharerName && (
+            {name && (
               <div className="flex flex-row gap-2 text-lg">
                 <span className="text-muted-foreground">Shared by</span>
-                <span className="font-bold">{sharerName}</span>
+                <span className="font-bold">{name}</span>
               </div>
             )}
           </div>
-          {sharerName && <p className="text-muted-foreground">Viewing a shared record.</p>}
+          {name && <p className="text-muted-foreground">Viewing a shared record.</p>}
         </div>
         <Breadcrumbs>
           <BreadcrumbItem href="/dashboard/tools/creative-cash-flow/records">
