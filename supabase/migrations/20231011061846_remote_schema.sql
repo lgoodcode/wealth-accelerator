@@ -148,29 +148,68 @@ $$;
 
 ALTER FUNCTION "public"."change_user_password"("current_password" "text", "new_password" "text") OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" numeric, "_payroll_and_distributions" numeric, "_lifestyle_expenses_tax_rate" numeric, "_tax_account_rate" numeric, "_optimal_savings_strategy" numeric, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_daily_trend" numeric[], "_weekly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) RETURNS "uuid"
+SET default_tablespace = '';
+
+SET default_table_access_method = "heap";
+
+CREATE TABLE IF NOT EXISTS "public"."creative_cash_flow_inputs" (
+    "id" "uuid" NOT NULL,
+    "start_date" timestamp with time zone NOT NULL,
+    "end_date" timestamp with time zone NOT NULL,
+    "all_other_income" numeric(12,2) NOT NULL,
+    "payroll_and_distributions" numeric(12,2) NOT NULL,
+    "lifestyle_expenses_tax_rate" numeric(5,2) NOT NULL,
+    "tax_account_rate" numeric(5,2) NOT NULL,
+    "optimal_savings_strategy" numeric(12,2) NOT NULL
+);
+
+ALTER TABLE "public"."creative_cash_flow_inputs" OWNER TO "postgres";
+
+CREATE TABLE IF NOT EXISTS "public"."creative_cash_flow_results" (
+    "id" "uuid" NOT NULL,
+    "collections" numeric(12,2) NOT NULL,
+    "lifestyle_expenses" numeric(12,2) NOT NULL,
+    "lifestyle_expenses_tax" numeric(12,2) NOT NULL,
+    "business_profit_before_tax" numeric(12,2) NOT NULL,
+    "business_overhead" numeric(12,2) NOT NULL,
+    "tax_account" numeric(12,2) NOT NULL,
+    "waa" numeric(12,2) NOT NULL,
+    "total_waa" numeric(12,2) NOT NULL,
+    "weekly_trend" numeric[] NOT NULL,
+    "daily_trend" numeric[] NOT NULL,
+    "yearly_trend" numeric[] NOT NULL,
+    "year_to_date" numeric(12,2) NOT NULL
+);
+
+ALTER TABLE "public"."creative_cash_flow_results" OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "name" "text", "inputs" "public"."creative_cash_flow_inputs", "results" "public"."creative_cash_flow_results") RETURNS TABLE("id" "uuid", "created_at" timestamp with time zone)
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
 DECLARE
-  new_id uuid;
+  id uuid;
+  created_at timestamp with time zone;
 BEGIN
   -- Generate a new UUID using the uuid-ossp extension
-  SELECT uuid_generate_v4() INTO new_id;
+  SELECT uuid_generate_v4() INTO id;
 
-  INSERT INTO creative_cash_flow (id, user_id)
-  VALUES (new_id, _user_id);
+  -- Get the current time in UTC
+  created_at := NOW() AT TIME ZONE 'UTC';
 
-  INSERT INTO creative_cash_flow_inputs (id, user_id, start_date, end_date, all_other_income, payroll_and_distributions, lifestyle_expenses_tax_rate, tax_account_rate, optimal_savings_strategy)
-  VALUES (new_id, _user_id, _start_date, _end_date, _all_other_income, _payroll_and_distributions, _lifestyle_expenses_tax_rate, _tax_account_rate, _optimal_savings_strategy);
+  INSERT INTO creative_cash_flow (id, user_id, name, created_at)
+  VALUES (id, _user_id, name, created_at);
 
-  INSERT INTO creative_cash_flow_results (id, user_id, collections, lifestyle_expenses, lifestyle_expenses_tax, business_profit_before_tax, business_overhead, tax_account, waa, total_waa, daily_trend, weekly_trend, yearly_trend, year_to_date)
-  VALUES (new_id, _user_id, _collections, _lifestyle_expenses, _lifestyle_expenses_tax, _business_profit_before_tax, _business_overhead, _tax_account, _waa, _total_waa, _daily_trend, _weekly_trend, _yearly_trend, _year_to_date);
+  INSERT INTO creative_cash_flow_inputs (id, start_date, end_date, all_other_income, payroll_and_distributions, lifestyle_expenses_tax_rate, tax_account_rate, optimal_savings_strategy)
+  VALUES (id, inputs.start_date, inputs.end_date, inputs.all_other_income, inputs.payroll_and_distributions, inputs.lifestyle_expenses_tax_rate, inputs.tax_account_rate, inputs.optimal_savings_strategy);
 
-  RETURN new_id;
+  INSERT INTO creative_cash_flow_results (id, collections, lifestyle_expenses, lifestyle_expenses_tax, business_profit_before_tax, business_overhead, tax_account, waa, total_waa, daily_trend, weekly_trend, yearly_trend, year_to_date)
+  VALUES (id, results.collections, results.lifestyle_expenses, results.lifestyle_expenses_tax, results.business_profit_before_tax, results.business_overhead, results.tax_account, results.waa, results.total_waa, results.daily_trend, results.weekly_trend, results.yearly_trend, results.year_to_date);
+
+  RETURN QUERY SELECT id, created_at;
 END;
 $$;
 
-ALTER FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" numeric, "_payroll_and_distributions" numeric, "_lifestyle_expenses_tax_rate" numeric, "_tax_account_rate" numeric, "_optimal_savings_strategy" numeric, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_daily_trend" numeric[], "_weekly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) OWNER TO "postgres";
+ALTER FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "name" "text", "inputs" "public"."creative_cash_flow_inputs", "results" "public"."creative_cash_flow_results") OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") RETURNS TABLE("new_id" "uuid", "new_created_at" timestamp with time zone)
     LANGUAGE "plpgsql"
@@ -182,9 +221,11 @@ BEGIN
   -- Generate a new UUID using the uuid-ossp extension
   SELECT uuid_generate_v4() INTO new_id;
 
+  -- Get the current time in UTC
+  new_created_at := NOW() AT TIME ZONE 'UTC';
+
   INSERT INTO debt_snowball (id, user_id, name, debts, created_at)
-  VALUES (new_id, user_id, name, debts, NOW())
-  RETURNING created_at INTO new_created_at;
+  VALUES (new_id, user_id, name, debts, new_created_at);
 
   INSERT INTO debt_snowball_inputs (id, additional_payment, monthly_payment, opportunity_rate, strategy, lump_amounts, pay_back_loan, pay_interest, loan_interest_rate)
   VALUES (new_id, inputs.additional_payment, inputs.monthly_payment, inputs.opportunity_rate, inputs.strategy, inputs.lump_amounts, inputs.pay_back_loan, inputs.pay_interest, inputs.loan_interest_rate);
@@ -197,10 +238,6 @@ END;
 $$;
 
 ALTER FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") OWNER TO "postgres";
-
-SET default_tablespace = '';
-
-SET default_table_access_method = "heap";
 
 CREATE TABLE IF NOT EXISTS "public"."global_plaid_filters" (
     "id" integer NOT NULL,
@@ -399,42 +436,88 @@ $$;
 
 ALTER FUNCTION "public"."generate_rates"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") RETURNS TABLE("id" "uuid", "inputs" "jsonb", "results" "jsonb")
+CREATE OR REPLACE FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") RETURNS TABLE("id" "uuid", "name" "text", "created_at" timestamp with time zone, "inputs" "json", "results" "json")
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
 BEGIN
-    RETURN QUERY
-        SELECT
-            cc.id,
-            to_jsonb(ccfi.*) AS inputs,
-            to_jsonb(ccfr.*) AS results
-        FROM creative_cash_flow cc
-        JOIN creative_cash_flow_inputs ccfi ON cc.id = ccfi.id
-        JOIN creative_cash_flow_results ccfr ON cc.id = ccfr.id
-        WHERE cc.id = record_id;
+  RETURN QUERY
+    SELECT
+      ccf.id,
+      ccf.name,
+      ccf.created_at,
+      json_build_object(
+        'start_date', ccfi.start_date,
+        'end_date', ccfi.end_date,
+        'all_other_income', ccfi.all_other_income,
+        'payroll_and_distributions', ccfi.payroll_and_distributions,
+        'lifestyle_expenses_tax_rate', ccfi.lifestyle_expenses_tax_rate,
+        'tax_account_rate', ccfi.tax_account_rate,
+        'optimal_savings_strategy', ccfi.optimal_savings_strategy
+      ),
+      json_build_object(
+        'collections', ccfr.collections,
+        'lifestyle_expenses', ccfr.lifestyle_expenses,
+        'lifestyle_expenses_tax', ccfr.lifestyle_expenses_tax,
+        'business_profit_before_tax', ccfr.business_profit_before_tax,
+        'business_overhead', ccfr.business_overhead,
+        'tax_account', ccfr.tax_account,
+        'waa', ccfr.waa,
+        'total_waa', ccfr.total_waa,
+        'daily_trend', ccfr.daily_trend,
+        'weekly_trend', ccfr.weekly_trend,
+        'yearly_trend', ccfr.yearly_trend,
+        'year_to_date', ccfr.year_to_date
+      )
+    FROM creative_cash_flow ccf
+    JOIN creative_cash_flow_inputs ccfi ON ccf.id = ccfi.id
+    JOIN creative_cash_flow_results ccfr ON ccf.id = ccfr.id
+    WHERE ccf.id = record_id;
 END;
 $$;
 
 ALTER FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") RETURNS TABLE("id" "uuid", "inputs" "jsonb", "results" "jsonb")
+CREATE OR REPLACE FUNCTION "public"."get_creative_cash_flow_records"("_user_id" "uuid") RETURNS TABLE("id" "uuid", "name" "text", "created_at" timestamp with time zone, "inputs" "json", "results" "json")
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
 BEGIN
-    RETURN QUERY
-        SELECT
-            cc.id,
-            to_jsonb(ccfi.*) AS ccfi,
-            to_jsonb(ccfr.*) AS ccfr
-        FROM creative_cash_flow cc
-        JOIN creative_cash_flow_inputs ccfi ON cc.id = ccfi.id
-        JOIN creative_cash_flow_results ccfr ON cc.id = ccfr.id
-        WHERE ccfi.user_id = arg_user_id
-        ORDER BY ccfi.created_at DESC;
+  RETURN QUERY
+    SELECT
+      ccf.id,
+      ccf.name,
+      ccf.created_at,
+      json_build_object(
+        'start_date', ccfi.start_date,
+        'end_date', ccfi.end_date,
+        'all_other_income', ccfi.all_other_income,
+        'payroll_and_distributions', ccfi.payroll_and_distributions,
+        'lifestyle_expenses_tax_rate', ccfi.lifestyle_expenses_tax_rate,
+        'tax_account_rate', ccfi.tax_account_rate,
+        'optimal_savings_strategy', ccfi.optimal_savings_strategy
+      ),
+      json_build_object(
+        'collections', ccfr.collections,
+        'lifestyle_expenses', ccfr.lifestyle_expenses,
+        'lifestyle_expenses_tax', ccfr.lifestyle_expenses_tax,
+        'business_profit_before_tax', ccfr.business_profit_before_tax,
+        'business_overhead', ccfr.business_overhead,
+        'tax_account', ccfr.tax_account,
+        'waa', ccfr.waa,
+        'total_waa', ccfr.total_waa,
+        'daily_trend', ccfr.daily_trend,
+        'weekly_trend', ccfr.weekly_trend,
+        'yearly_trend', ccfr.yearly_trend,
+        'year_to_date', ccfr.year_to_date
+      )
+    FROM creative_cash_flow ccf
+    JOIN creative_cash_flow_inputs ccfi ON ccf.id = ccfi.id
+    JOIN creative_cash_flow_results ccfr ON ccf.id = ccfr.id
+    WHERE ccf.user_id = _user_id
+    ORDER BY ccf.created_at DESC;
 END;
 $$;
 
-ALTER FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") OWNER TO "postgres";
+ALTER FUNCTION "public"."get_creative_cash_flow_records"("_user_id" "uuid") OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."get_debt_snowball_record"("record_id" "uuid") RETURNS TABLE("id" "uuid", "user_id" "uuid", "name" "text", "created_at" timestamp with time zone, "debts" "public"."debt_snowball_debt"[], "inputs" "json", "results" "json")
     LANGUAGE "plpgsql"
@@ -717,6 +800,19 @@ $$;
 
 ALTER FUNCTION "public"."is_own_plaid_transaction"() OWNER TO "postgres";
 
+CREATE OR REPLACE FUNCTION "public"."owns_creative_cash_flow"() RETURNS boolean
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM creative_cash_flow AS ccf
+    WHERE ccf.id = id AND auth.uid() = ccf.user_id
+  );
+END;
+$$;
+
+ALTER FUNCTION "public"."owns_creative_cash_flow"() OWNER TO "postgres";
+
 CREATE OR REPLACE FUNCTION "public"."owns_debt_snowball_inputs"() RETURNS boolean
     LANGUAGE "plpgsql"
     AS $$
@@ -761,23 +857,24 @@ $$;
 
 ALTER FUNCTION "public"."recategorize_transactions"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."total_waa_before_date"("user_id" "uuid", "target_date" timestamp with time zone) RETURNS numeric
-    LANGUAGE "plpgsql"
-    AS $_$
+CREATE OR REPLACE FUNCTION "public"."total_waa_before_date"("_user_id" "uuid", "target_date" timestamp with time zone) RETURNS numeric
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
 DECLARE
   total_waa_sum numeric;
 BEGIN
   SELECT COALESCE(SUM(cfr.waa), 0)
   INTO total_waa_sum
   FROM creative_cash_flow_results cfr
-  JOIN creative_cash_flow_inputs cci ON cfr.id = cci.id
-  WHERE cfr.user_id = $1 AND cci.end_date <= target_date;
+  JOIN creative_cash_flow ccf ON cfr.id = ccf.id
+  JOIN creative_cash_flow_inputs cci ON cci.id = ccf.id
+  WHERE ccf.user_id = _user_id AND cci.end_date <= target_date;
 
   RETURN total_waa_sum;
 END;
-$_$;
+$$;
 
-ALTER FUNCTION "public"."total_waa_before_date"("user_id" "uuid", "target_date" timestamp with time zone) OWNER TO "postgres";
+ALTER FUNCTION "public"."total_waa_before_date"("_user_id" "uuid", "target_date" timestamp with time zone) OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."update_global_plaid_filter"() RETURNS "trigger"
     LANGUAGE "plpgsql"
@@ -906,51 +1003,19 @@ ALTER FUNCTION "public"."verify_update_plaid"() OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."creative_cash_flow" (
     "id" "uuid" NOT NULL,
-    "user_id" "uuid" NOT NULL
+    "user_id" "uuid" NOT NULL,
+    "name" "text" DEFAULT 'record'::"text" NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "timezone"('utc'::"text", "now"()) NOT NULL
 );
 
 ALTER TABLE "public"."creative_cash_flow" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."creative_cash_flow_inputs" (
-    "id" "uuid" NOT NULL,
-    "user_id" "uuid" NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "timezone"('utc'::"text", "now"()) NOT NULL,
-    "start_date" timestamp with time zone NOT NULL,
-    "end_date" timestamp with time zone NOT NULL,
-    "all_other_income" numeric(12,2) NOT NULL,
-    "payroll_and_distributions" numeric(12,2) NOT NULL,
-    "lifestyle_expenses_tax_rate" numeric(5,2) NOT NULL,
-    "tax_account_rate" numeric(5,2) NOT NULL,
-    "optimal_savings_strategy" numeric(12,2) NOT NULL
-);
-
-ALTER TABLE "public"."creative_cash_flow_inputs" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."creative_cash_flow_results" (
-    "id" "uuid" NOT NULL,
-    "user_id" "uuid" NOT NULL,
-    "collections" numeric(12,2) NOT NULL,
-    "lifestyle_expenses" numeric(12,2) NOT NULL,
-    "lifestyle_expenses_tax" numeric(12,2) NOT NULL,
-    "business_profit_before_tax" numeric(12,2) NOT NULL,
-    "business_overhead" numeric(12,2) NOT NULL,
-    "tax_account" numeric(12,2) NOT NULL,
-    "waa" numeric(12,2) NOT NULL,
-    "total_waa" numeric(12,2) NOT NULL,
-    "weekly_trend" numeric(12,2)[] NOT NULL,
-    "daily_trend" numeric(12,2)[] NOT NULL,
-    "yearly_trend" numeric(12,2)[] NOT NULL,
-    "year_to_date" numeric(12,2) NOT NULL
-);
-
-ALTER TABLE "public"."creative_cash_flow_results" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."debt_snowball" (
     "id" "uuid" NOT NULL,
     "user_id" "uuid" NOT NULL,
     "name" "text" NOT NULL,
     "debts" "public"."debt_snowball_debt"[] NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "created_at" timestamp with time zone DEFAULT "timezone"('utc'::"text", "now"()) NOT NULL
 );
 
 ALTER TABLE "public"."debt_snowball" OWNER TO "postgres";
@@ -1181,6 +1246,8 @@ ALTER TABLE ONLY "public"."users"
 ALTER TABLE ONLY "public"."users"
     ADD CONSTRAINT "users_pkey" PRIMARY KEY ("id");
 
+CREATE INDEX "idx_creative_cash_flow_user_id" ON "public"."creative_cash_flow" USING "btree" ("user_id");
+
 CREATE INDEX "idx_debt_snowball_user_id" ON "public"."debt_snowball" USING "btree" ("user_id");
 
 CREATE INDEX "idx_debts_user_id" ON "public"."debts" USING "btree" ("user_id");
@@ -1210,12 +1277,6 @@ CREATE TRIGGER "on_update_plaid" BEFORE UPDATE ON "public"."plaid" FOR EACH ROW 
 CREATE TRIGGER "on_update_user_plaid_filter" BEFORE UPDATE ON "public"."user_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."update_user_plaid_filter"();
 
 CREATE TRIGGER "on_user_created_init_personal_finance" AFTER INSERT ON "public"."users" FOR EACH ROW EXECUTE FUNCTION "public"."handle_init_personal_finance"();
-
-ALTER TABLE ONLY "public"."creative_cash_flow_inputs"
-    ADD CONSTRAINT "creative_cash_flow_inputs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
-
-ALTER TABLE ONLY "public"."creative_cash_flow_results"
-    ADD CONSTRAINT "creative_cash_flow_results_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
 
 ALTER TABLE ONLY "public"."creative_cash_flow"
     ADD CONSTRAINT "creative_cash_flow_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
@@ -1278,11 +1339,11 @@ CREATE POLICY "Admins can update notifiers" ON "public"."notifiers" FOR UPDATE T
 
 CREATE POLICY "Admins can view notifiers" ON "public"."notifiers" FOR SELECT TO "authenticated" USING (( SELECT "public"."is_admin"() AS "is_admin"));
 
-CREATE POLICY "Can delete own CCF data" ON "public"."creative_cash_flow" FOR DELETE TO "authenticated" USING (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can delete own creative cash flow data" ON "public"."creative_cash_flow" FOR DELETE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Can delete own CCF inputs" ON "public"."creative_cash_flow_inputs" FOR DELETE TO "authenticated" USING (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can delete own creative cash flow input data" ON "public"."creative_cash_flow_inputs" FOR DELETE TO "authenticated" USING (( SELECT "public"."owns_creative_cash_flow"() AS "owns_creative_cash_flow"));
 
-CREATE POLICY "Can delete own CCF results" ON "public"."creative_cash_flow_results" FOR DELETE TO "authenticated" USING (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can delete own creative cash flow result data" ON "public"."creative_cash_flow_results" FOR DELETE TO "authenticated" USING (( SELECT "public"."owns_creative_cash_flow"() AS "owns_creative_cash_flow"));
 
 CREATE POLICY "Can delete own debt snowball data" ON "public"."debt_snowball" FOR DELETE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
@@ -1300,11 +1361,11 @@ CREATE POLICY "Can delete own plaid accounts" ON "public"."plaid_accounts" FOR D
 
 CREATE POLICY "Can delete own plaid transactions" ON "public"."plaid_transactions" FOR DELETE TO "authenticated" USING ("public"."is_own_plaid_transaction"());
 
-CREATE POLICY "Can insert new CCF data" ON "public"."creative_cash_flow" FOR INSERT TO "authenticated" WITH CHECK (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can insert new creative cash flow data" ON "public"."creative_cash_flow" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Can insert new CCF inputs" ON "public"."creative_cash_flow_inputs" FOR INSERT TO "authenticated" WITH CHECK (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can insert new creative cash flow input data" ON "public"."creative_cash_flow_inputs" FOR INSERT TO "authenticated" WITH CHECK (( SELECT "public"."owns_creative_cash_flow"() AS "owns_creative_cash_flow"));
 
-CREATE POLICY "Can insert new CCF results" ON "public"."creative_cash_flow_results" FOR INSERT TO "authenticated" WITH CHECK (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can insert new creative cash flow result data" ON "public"."creative_cash_flow_results" FOR INSERT TO "authenticated" WITH CHECK (( SELECT "public"."owns_creative_cash_flow"() AS "owns_creative_cash_flow"));
 
 CREATE POLICY "Can insert new debt snowball data" ON "public"."debt_snowball" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
@@ -1322,7 +1383,7 @@ CREATE POLICY "Can insert own plaid accounts" ON "public"."plaid_accounts" FOR I
 
 CREATE POLICY "Can insert own plaid transactions" ON "public"."plaid_transactions" FOR INSERT TO "authenticated" WITH CHECK ("public"."is_own_plaid_transaction"());
 
-CREATE POLICY "Can update own CCF data" ON "public"."creative_cash_flow" FOR UPDATE TO "authenticated" USING (("auth"."uid"() = "user_id")) WITH CHECK (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can update own creative cash flow data" ON "public"."creative_cash_flow" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 CREATE POLICY "Can update own debt data" ON "public"."debts" FOR UPDATE TO "authenticated" USING (("auth"."uid"() = "user_id")) WITH CHECK (("auth"."uid"() = "user_id"));
 
@@ -1340,11 +1401,11 @@ CREATE POLICY "Can update own plaid transactions" ON "public"."plaid_transaction
 
 CREATE POLICY "Can update own user data or admins can update all users data" ON "public"."users" FOR UPDATE TO "authenticated" USING ((("auth"."uid"() = "id") OR "public"."is_admin"("auth"."uid"()))) WITH CHECK (((("auth"."uid"() = "id") AND ("role" = "role")) OR "public"."is_admin"("auth"."uid"())));
 
-CREATE POLICY "Can view own CCF inputs data" ON "public"."creative_cash_flow_inputs" FOR SELECT TO "authenticated" USING (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can view own creative cash flow data or if is admin" ON "public"."creative_cash_flow" FOR SELECT TO "authenticated" USING (((( SELECT "auth"."uid"() AS "uid") = "user_id") OR ( SELECT "public"."is_admin"() AS "is_admin")));
 
-CREATE POLICY "Can view own CCF or if is admin" ON "public"."creative_cash_flow" FOR SELECT TO "authenticated" USING ((("auth"."uid"() = "user_id") OR "public"."is_admin"("auth"."uid"())));
+CREATE POLICY "Can view own creative cash flow input data or if admin" ON "public"."creative_cash_flow_inputs" FOR SELECT TO "authenticated" USING ((( SELECT "public"."owns_creative_cash_flow"() AS "owns_creative_cash_flow") OR ( SELECT "public"."is_admin"() AS "is_admin")));
 
-CREATE POLICY "Can view own CCF results data" ON "public"."creative_cash_flow_results" FOR SELECT TO "authenticated" USING (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can view own creative cash flow result data or if admin" ON "public"."creative_cash_flow_results" FOR SELECT TO "authenticated" USING ((( SELECT "public"."owns_creative_cash_flow"() AS "owns_creative_cash_flow") OR ( SELECT "public"."is_admin"() AS "is_admin")));
 
 CREATE POLICY "Can view own debt snowball data or if is admin" ON "public"."debt_snowball" FOR SELECT TO "authenticated" USING (((( SELECT "auth"."uid"() AS "uid") = "user_id") OR ( SELECT "public"."is_admin"() AS "is_admin")));
 
@@ -1417,9 +1478,17 @@ GRANT ALL ON FUNCTION "public"."change_user_password"("current_password" "text",
 GRANT ALL ON FUNCTION "public"."change_user_password"("current_password" "text", "new_password" "text") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."change_user_password"("current_password" "text", "new_password" "text") TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" numeric, "_payroll_and_distributions" numeric, "_lifestyle_expenses_tax_rate" numeric, "_tax_account_rate" numeric, "_optimal_savings_strategy" numeric, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_daily_trend" numeric[], "_weekly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) TO "anon";
-GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" numeric, "_payroll_and_distributions" numeric, "_lifestyle_expenses_tax_rate" numeric, "_tax_account_rate" numeric, "_optimal_savings_strategy" numeric, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_daily_trend" numeric[], "_weekly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "_start_date" timestamp with time zone, "_end_date" timestamp with time zone, "_all_other_income" numeric, "_payroll_and_distributions" numeric, "_lifestyle_expenses_tax_rate" numeric, "_tax_account_rate" numeric, "_optimal_savings_strategy" numeric, "_collections" numeric, "_lifestyle_expenses" numeric, "_lifestyle_expenses_tax" numeric, "_business_profit_before_tax" numeric, "_business_overhead" numeric, "_tax_account" numeric, "_waa" numeric, "_total_waa" numeric, "_daily_trend" numeric[], "_weekly_trend" numeric[], "_yearly_trend" numeric[], "_year_to_date" numeric) TO "service_role";
+GRANT ALL ON TABLE "public"."creative_cash_flow_inputs" TO "anon";
+GRANT ALL ON TABLE "public"."creative_cash_flow_inputs" TO "authenticated";
+GRANT ALL ON TABLE "public"."creative_cash_flow_inputs" TO "service_role";
+
+GRANT ALL ON TABLE "public"."creative_cash_flow_results" TO "anon";
+GRANT ALL ON TABLE "public"."creative_cash_flow_results" TO "authenticated";
+GRANT ALL ON TABLE "public"."creative_cash_flow_results" TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "name" "text", "inputs" "public"."creative_cash_flow_inputs", "results" "public"."creative_cash_flow_results") TO "anon";
+GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "name" "text", "inputs" "public"."creative_cash_flow_inputs", "results" "public"."creative_cash_flow_results") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."create_creative_cash_flow"("_user_id" "uuid", "name" "text", "inputs" "public"."creative_cash_flow_inputs", "results" "public"."creative_cash_flow_results") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") TO "anon";
 GRANT ALL ON FUNCTION "public"."create_debt_snowball_record"("user_id" "uuid", "name" "text", "debts" "public"."debt_snowball_debt"[], "inputs" "public"."debt_snowball_inputs_data", "results" "public"."debt_snowball_results_data") TO "authenticated";
@@ -1461,9 +1530,9 @@ GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_record"("record_id" "uuid") TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("arg_user_id" "uuid") TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("_user_id" "uuid") TO "anon";
+GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("_user_id" "uuid") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_creative_cash_flow_records"("_user_id" "uuid") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."get_debt_snowball_record"("record_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_debt_snowball_record"("record_id" "uuid") TO "authenticated";
@@ -1517,6 +1586,10 @@ GRANT ALL ON FUNCTION "public"."is_own_plaid_transaction"() TO "anon";
 GRANT ALL ON FUNCTION "public"."is_own_plaid_transaction"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."is_own_plaid_transaction"() TO "service_role";
 
+GRANT ALL ON FUNCTION "public"."owns_creative_cash_flow"() TO "anon";
+GRANT ALL ON FUNCTION "public"."owns_creative_cash_flow"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."owns_creative_cash_flow"() TO "service_role";
+
 GRANT ALL ON FUNCTION "public"."owns_debt_snowball_inputs"() TO "anon";
 GRANT ALL ON FUNCTION "public"."owns_debt_snowball_inputs"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."owns_debt_snowball_inputs"() TO "service_role";
@@ -1529,9 +1602,9 @@ GRANT ALL ON FUNCTION "public"."recategorize_transactions"() TO "anon";
 GRANT ALL ON FUNCTION "public"."recategorize_transactions"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."recategorize_transactions"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."total_waa_before_date"("user_id" "uuid", "target_date" timestamp with time zone) TO "anon";
-GRANT ALL ON FUNCTION "public"."total_waa_before_date"("user_id" "uuid", "target_date" timestamp with time zone) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."total_waa_before_date"("user_id" "uuid", "target_date" timestamp with time zone) TO "service_role";
+GRANT ALL ON FUNCTION "public"."total_waa_before_date"("_user_id" "uuid", "target_date" timestamp with time zone) TO "anon";
+GRANT ALL ON FUNCTION "public"."total_waa_before_date"("_user_id" "uuid", "target_date" timestamp with time zone) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."total_waa_before_date"("_user_id" "uuid", "target_date" timestamp with time zone) TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."update_global_plaid_filter"() TO "anon";
 GRANT ALL ON FUNCTION "public"."update_global_plaid_filter"() TO "authenticated";
@@ -1560,14 +1633,6 @@ GRANT ALL ON FUNCTION "public"."verify_update_plaid"() TO "service_role";
 GRANT ALL ON TABLE "public"."creative_cash_flow" TO "anon";
 GRANT ALL ON TABLE "public"."creative_cash_flow" TO "authenticated";
 GRANT ALL ON TABLE "public"."creative_cash_flow" TO "service_role";
-
-GRANT ALL ON TABLE "public"."creative_cash_flow_inputs" TO "anon";
-GRANT ALL ON TABLE "public"."creative_cash_flow_inputs" TO "authenticated";
-GRANT ALL ON TABLE "public"."creative_cash_flow_inputs" TO "service_role";
-
-GRANT ALL ON TABLE "public"."creative_cash_flow_results" TO "anon";
-GRANT ALL ON TABLE "public"."creative_cash_flow_results" TO "authenticated";
-GRANT ALL ON TABLE "public"."creative_cash_flow_results" TO "service_role";
 
 GRANT ALL ON TABLE "public"."debt_snowball" TO "anon";
 GRANT ALL ON TABLE "public"."debt_snowball" TO "authenticated";
