@@ -1,21 +1,17 @@
-import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Share2 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { useShareRecord } from '../hooks/use-share-record';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { useShareRecord } from '../../hooks/use-share-ccf-record';
 import type { CreativeCashFlowRecord } from '../../types';
 
-interface ShareRecordButtonProps {
+interface ShareCcfRecordMenuItemProps {
   record: CreativeCashFlowRecord;
 }
 
-export function ShareRecordButton({ record }: ShareRecordButtonProps) {
+export function ShareCcfRecordMenuItem({ record }: ShareCcfRecordMenuItemProps) {
   const shareRecord = useShareRecord();
-  const [isSharing, setIsSharing] = useState(false);
   const handleShare = async () => {
-    setIsSharing(true);
-
     await shareRecord(record.id)
       .then(() => {
         toast.success('An email has been sent to all advisors');
@@ -28,14 +24,13 @@ export function ShareRecordButton({ record }: ShareRecordButtonProps) {
 
         console.error(error);
         toast.error('Failed to share record');
-      })
-      .finally(() => setIsSharing(false));
+      });
   };
 
   return (
-    <Button loading={isSharing} onClick={handleShare}>
-      <Share2 size={20} className="mr-2" />
-      Share to Advisors
-    </Button>
+    <DropdownMenuItem onClick={handleShare}>
+      <Share2 className="mr-2 h-4 w-4 text-muted-foreground/70" />
+      Share
+    </DropdownMenuItem>
   );
 }
