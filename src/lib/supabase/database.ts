@@ -70,27 +70,6 @@ export interface Database {
         }
         Relationships: []
       }
-      creative_cash_flow_notifiers: {
-        Row: {
-          email: string
-          enabled: boolean
-          id: number
-          name: string
-        }
-        Insert: {
-          email: string
-          enabled?: boolean
-          id?: number
-          name: string
-        }
-        Update: {
-          email?: string
-          enabled?: boolean
-          id?: number
-          name?: string
-        }
-        Relationships: []
-      }
       creative_cash_flow_results: {
         Row: {
           business_overhead: number
@@ -787,10 +766,6 @@ export interface Database {
         Returns: boolean
       }
       owns_creative_cash_flow: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      owns_creative_cash_flow_inputs: {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
