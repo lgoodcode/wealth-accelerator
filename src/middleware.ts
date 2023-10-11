@@ -11,7 +11,7 @@ const authPagesRegex = /^\/(login|signup|forgot-password|reset-password|set-pass
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 export async function middleware(request: NextRequest) {
-  console.log('middleware', process.env.NODE_ENV);
+  console.log('middleware', process.env.NODE_ENV, await get('isInMaintenanceMode'));
   const isInMaintenanceMode = IS_PROD ? await get('isInMaintenanceMode') : false;
 
   // If in maintenance mode, point the url pathname to the maintenance page
