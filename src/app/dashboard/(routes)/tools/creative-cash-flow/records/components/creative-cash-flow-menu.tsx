@@ -22,14 +22,16 @@ import type { CreativeCashFlowRecord } from '../../types';
 interface RowActionsProps {
   className?: string;
   record: CreativeCashFlowRecord;
-  hasView?: boolean;
+  inTable?: boolean;
+  isShared?: boolean;
   redirectOnDelete?: boolean;
 }
 
 export function CreativeCashFlowMenu({
   className,
   record,
-  hasView,
+  inTable,
+  isShared,
   redirectOnDelete,
 }: RowActionsProps) {
   const user = useUser();
@@ -66,7 +68,7 @@ export function CreativeCashFlowMenu({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className={cn('w-[160px]', className)}>
-          {hasView && (
+          {inTable && (
             <>
               <DropdownMenuItem
                 onClick={() =>
@@ -83,7 +85,7 @@ export function CreativeCashFlowMenu({
             Rename
           </DropdownMenuItem>
 
-          <ShareCcfRecordMenuItem record={record} />
+          {!isShared && <ShareCcfRecordMenuItem record={record} />}
 
           <DropdownMenuSeparator />
           <DropdownMenuItem

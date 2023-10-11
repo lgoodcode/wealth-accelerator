@@ -82,7 +82,9 @@ export function DebtSnowballMenu({
             <Pen className="mr-2 h-4 w-4 text-muted-foreground/70" />
             Rename
           </DropdownMenuItem>
+
           {!isShared && <ShareSnowballRecordMenuItem record={record} />}
+
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onSelect={() => setShowDeleteDialog(true)}
