@@ -7,7 +7,7 @@ export const inputsFormSchema = z
       invalid_type_error: 'Select a date',
     }),
     end_date: z.date({
-      required_error: 'Select a data',
+      required_error: 'Select a date',
       invalid_type_error: 'Select a date',
     }),
     all_other_income: z.coerce

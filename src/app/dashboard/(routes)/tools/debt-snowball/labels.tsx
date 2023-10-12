@@ -6,13 +6,13 @@ export const labels = {
   monthlyPayment: {
     title: 'Current Monthly Payment',
     description: (
-      <div className="flex flex-col gap-1">
+      <span className="flex flex-col gap-1">
         <span>The amount of money you can put towards your debt each month.</span>
         <span>
           (This value is derived from the &quot;Additional monthly payments&quot; field and the sum
           of the &quot;payment&quot; from the debts.)
         </span>
-      </div>
+      </span>
     ),
   },
   opportunityRate: {

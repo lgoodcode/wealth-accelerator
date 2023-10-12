@@ -172,8 +172,12 @@ export const serverSyncTransactions = async (
       },
     };
   } catch (error: any) {
-    console.error(error);
-    captureException(error);
+    const errorData = {
+      message: error.message,
+      response: error?.response ?? null,
+    };
+    console.error(errorData);
+    captureException(errorData);
 
     const errorCode = error?.response?.data?.error_code as string;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;

@@ -32,17 +32,13 @@ const PaymentScheduleHeaders = ({ debtPayoffs }: PaymentScheduleHeadersProps) =>
   );
 };
 
-interface PaymentScheduleHeadersLeftProps {
+interface LoanPaymentScheduleRows {
   inputs: DebtCalculationInputs;
   results: SnowballDebtCalculation;
   years: number[][];
 }
 
-const PaymentScheduleHeadersLeft = ({
-  inputs,
-  results,
-  years,
-}: PaymentScheduleHeadersLeftProps) => {
+const LoanPaymentScheduleRows = ({ inputs, results, years }: LoanPaymentScheduleRows) => {
   return (
     <>
       {years.map((_, yearIndex) =>
@@ -84,16 +80,15 @@ export function PaymentScheduleTable({ inputs, results }: PaymentScheduleTablePr
   }
 
   const { strategy: strategyResults } = results;
-  const numYears = Math.max(
-    strategyResults.balance_tracking.length,
-    strategyResults.loan_payback.tracking.length
-  );
-  const lastMonth = Math.max(
-    strategyResults.balance_tracking[numYears - 1].length,
-    strategyResults.loan_payback.tracking[numYears - 1].length
-  );
+  const numYears = inputs.pay_back_loan
+    ? strategyResults.loan_payback.tracking.length
+    : strategyResults.balance_tracking.length;
+  const lastMonth = inputs.pay_back_loan
+    ? strategyResults.loan_payback.tracking[numYears - 1].length
+    : strategyResults.balance_tracking[numYears - 1].length;
+
   const years = Array.from({ length: numYears }, (_, i) =>
-    Array.from({ length: i === numYears - 1 ? lastMonth : 12 }, (_, j) => j)
+    Array.from({ length: i === numYears - 1 ? lastMonth : 12 }, () => 0)
   );
 
   return (
@@ -109,7 +104,7 @@ export function PaymentScheduleTable({ inputs, results }: PaymentScheduleTablePr
               </TableRow>
             </TableHeader>
             <TableBody className="text-center whitespace-nowrap">
-              <PaymentScheduleHeadersLeft inputs={inputs} results={strategyResults} years={years} />
+              <LoanPaymentScheduleRows inputs={inputs} results={strategyResults} years={years} />
             </TableBody>
           </Table>
         </div>
@@ -120,20 +115,23 @@ export function PaymentScheduleTable({ inputs, results }: PaymentScheduleTablePr
             </TableRow>
           </TableHeader>
           <TableBody className="text-center">
-            {years.map((_, yearIndex) =>
-              years[yearIndex].map((_, monthIndex) => (
-                <TableRow key={`content-${yearIndex * 12 + monthIndex + 1}`}>
-                  {strategyResults.debt_payoffs.map((debtPayoff, i) => (
-                    <TableCell
-                      key={`${debtPayoff.debt.description}-${yearIndex}-${monthIndex}-${i}`}
-                    >
-                      {debtPayoff.payment_tracking[yearIndex][monthIndex]
-                        ? dollarFormatter(debtPayoff.payment_tracking[yearIndex][monthIndex])
-                        : '-'}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+            {years.map(
+              (_, yearIndex) =>
+                !!years[yearIndex] &&
+                years[yearIndex].map((_, monthIndex) => (
+                  <TableRow key={`content-${yearIndex * 12 + monthIndex + 1}`}>
+                    {strategyResults.debt_payoffs.map((debtPayoff, i) => (
+                      <TableCell
+                        key={`${debtPayoff.debt.description}-${yearIndex}-${monthIndex}-${i}`}
+                      >
+                        {!!debtPayoff.payment_tracking[yearIndex] &&
+                        !!debtPayoff.payment_tracking[yearIndex][monthIndex]
+                          ? dollarFormatter(debtPayoff.payment_tracking[yearIndex][monthIndex])
+                          : '-'}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
             )}
           </TableBody>
         </Table>

@@ -52,15 +52,12 @@ export const resultsLabels = {
   },
   waa: {
     title: 'Recommended WAA',
-    description: 'The amount recommended to deposit into your WAA account.',
+    description: (dateStr: string) =>
+      `The recommended amount to deposit into your WAA account for ${dateStr}.`,
   },
   actual_waa: {
     title: 'Actual WAA',
-    description: 'Enter the actual amount you will deposit into your WAA account.',
-  },
-  total_waa: {
-    title: 'WAA Balance',
-    description: 'The current WAA in your bank account.',
+    description: 'Your current balance of your WAA account.',
   },
   collections: {
     title: 'Collections',

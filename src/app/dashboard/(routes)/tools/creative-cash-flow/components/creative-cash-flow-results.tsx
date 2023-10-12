@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { useAtomValue } from 'jotai';
 import { AnimatePresence, motion } from 'framer-motion';
+import { format } from 'date-fns';
 import CountUp from 'react-countup';
 import { MoveDown, MoveRight } from 'lucide-react';
 
@@ -11,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { createCountUpPropsFactory } from '../utils/create-count-up-props';
 import { animationProps, countUpProps } from '../utils/animations';
 import { resultsLabels } from '../labels';
-import { ccfResultsAtom } from '../atoms';
+import { ccfInputsAtom, ccfResultsAtom } from '../atoms';
 import { Trends } from './trends';
 import { UpdateWaa } from './update-waa';
 
@@ -20,6 +21,7 @@ interface CreativeCashFlowResultsProps {
 }
 
 export function CreativeCashFlowResults({ hasAnimated }: CreativeCashFlowResultsProps) {
+  const inputs = useAtomValue(ccfInputsAtom);
   const results = useAtomValue(ccfResultsAtom);
   const originalWaaRef = useRef(results?.waa ?? 0);
   const originalTotalWaaRef = useRef((results?.total_waa ?? 0) - (results?.waa ?? 0));
@@ -192,18 +194,24 @@ export function CreativeCashFlowResults({ hasAnimated }: CreativeCashFlowResults
           <Card>
             <CardHeader className="space-y-1 pb-2">
               <CardTitle className="text-2xl">{resultsLabels.waa.title}</CardTitle>
-              <CardDescription className="text-md">{resultsLabels.waa.description}</CardDescription>
+              <CardDescription className="text-md">
+                {resultsLabels.waa.description(
+                  format(new Date(inputs.start_date), 'LLL d, y') +
+                    ' - ' +
+                    format(new Date(inputs.end_date), 'LLL d, y')
+                )}
+              </CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
               <span className="text-2xl">{dollarFormatter(originalWaaRef.current)}</span>
             </CardContent>
 
-            <UpdateWaa originalTotalWaa={originalTotalWaaRef.current} />
+            {/* <UpdateWaa originalTotalWaa={originalTotalWaaRef.current} /> */}
 
             <CardHeader className="space-y-1 pb-2">
-              <CardTitle className="text-2xl">{resultsLabels.total_waa.title}</CardTitle>
+              <CardTitle className="text-2xl">{resultsLabels.actual_waa.title}</CardTitle>
               <CardDescription className="text-md">
-                {resultsLabels.total_waa.description}
+                {resultsLabels.actual_waa.description}
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
