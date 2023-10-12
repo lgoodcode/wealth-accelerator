@@ -82,7 +82,7 @@ export function FAQ({ className }: { className?: string }) {
       initial={{ opacity: 0, y: 80 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{
-        amount: 0.6,
+        amount: 0.3,
         once: true,
       }}
       transition={{
