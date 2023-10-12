@@ -42,7 +42,7 @@ export function Testimonials({ className }: { className?: string }) {
       initial="hidden"
       whileInView="visible"
       viewport={{
-        amount: 0.3,
+        amount: 0.1,
         once: true,
       }}
       transition={{

@@ -27,7 +27,7 @@ const FeatureItem = ({ title, description, Icon, image }: FeatureItemProps) => {
       initial="hidden"
       whileInView="visible"
       viewport={{
-        amount: 0.6,
+        amount: 0.3,
         once: true,
       }}
       transition={{
