@@ -1,8 +1,8 @@
 import type { Transaction } from '@/lib/plaid/types/transactions';
 
 export type CreativeCashFlowManagementInputs = {
-  start_date: Date | undefined;
-  end_date: Date | undefined;
+  start_date: Date;
+  end_date: Date;
   all_other_income: number;
   payroll_and_distributions: number;
   /** The rate is given as a whole number and needs to be divided by 100 */

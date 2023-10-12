@@ -15,7 +15,6 @@ import type {
   DebtCalculationResults,
   SnowballDebtCalculation,
 } from '../types';
-import { captureMessage } from '@sentry/nextjs';
 
 interface PaymentScheduleHeadersProps {
   debtPayoffs: SnowballDebtCalculation['debt_payoffs'];
@@ -85,29 +84,10 @@ export function PaymentScheduleTable({ inputs, results }: PaymentScheduleTablePr
   }
 
   const { strategy: strategyResults } = results;
-  const numYears = Math.max(
-    strategyResults.balance_tracking.length,
-    strategyResults.loan_payback.tracking.length
-  );
-
-  let lastMonth = 0;
-
-  try {
-    lastMonth = Math.max(
-      strategyResults.balance_tracking[numYears - 1].length,
-      strategyResults.loan_payback.tracking[numYears - 1].length
-    );
-  } catch (e) {
-    console.log({ inputs, results, strategyResults, numYears });
-
-    lastMonth = Math.max(
-      strategyResults.balance_tracking[numYears - 2].length,
-      strategyResults.loan_payback.tracking[numYears - 2].length
-    );
-  }
-
+  const numYears = strategyResults.balance_tracking.length;
+  const lastMonth = strategyResults.balance_tracking[numYears - 1].length;
   const years = Array.from({ length: numYears }, (_, i) =>
-    Array.from({ length: i === numYears - 1 ? lastMonth : 12 }, (_, j) => j)
+    Array.from({ length: i === numYears - 1 ? lastMonth : 12 }, () => 0)
   );
 
   return (

@@ -21,6 +21,7 @@ const defaultValues = {
   optimal_savings_strategy: 0,
 };
 
+/** @ts-ignore */
 export const ccfInputsAtom = atom<CreativeCashFlowManagementInputs>(defaultValues);
 
 export const resetCreativeCashFlowInputsAtom = atom(null, (_, set) => {
