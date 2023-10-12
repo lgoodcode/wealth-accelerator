@@ -99,30 +99,11 @@ export function PaymentScheduleTable({ inputs, results }: PaymentScheduleTablePr
     );
   } catch (e) {
     console.log({ inputs, results, strategyResults, numYears });
-    captureMessage('PaymentScheduleTableProps', {
-      extra: {
-        inputs,
-        results,
-        strategyResults,
-        numYears,
-      },
-    });
 
-    try {
-      lastMonth = Math.max(
-        strategyResults.balance_tracking[numYears - 2].length,
-        strategyResults.loan_payback.tracking[numYears - 2].length
-      );
-    } catch (e) {
-      captureMessage('PaymentScheduleTableProps', {
-        extra: {
-          inputs,
-          results,
-          strategyResults,
-          numYears,
-        },
-      });
-    }
+    lastMonth = Math.max(
+      strategyResults.balance_tracking[numYears - 2].length,
+      strategyResults.loan_payback.tracking[numYears - 2].length
+    );
   }
 
   const years = Array.from({ length: numYears }, (_, i) =>
