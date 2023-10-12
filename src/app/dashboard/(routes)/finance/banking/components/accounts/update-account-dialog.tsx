@@ -33,7 +33,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useUpdateAccount } from '../../hooks/use-update-account';
-import { updateAccountFormSchema, type UpdateAccountType } from '../../schema';
+import { updateAccountFormSchema, type UpdateAccountForm } from '../../schema';
 import type { Account } from '@/lib/plaid/types/institutions';
 
 interface UpdateAccountDialogProps {
@@ -45,7 +45,7 @@ interface UpdateAccountDialogProps {
 export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDialogProps) {
   const updateAccount = useUpdateAccount();
   const queryClient = useQueryClient();
-  const form = useForm<UpdateAccountType>({
+  const form = useForm<UpdateAccountForm>({
     resolver: zodResolver(updateAccountFormSchema),
     values: {
       name: row.original.name,
@@ -55,7 +55,7 @@ export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDi
   });
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: (data: UpdateAccountType) => updateAccount(row.original.account_id, data),
+    mutationFn: (data: UpdateAccountForm) => updateAccount(row.original.account_id, data),
     onError: (error) => {
       console.error(error);
       captureException(error);
@@ -83,7 +83,7 @@ export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDi
     onSettled: () => onOpenChange(false),
   });
 
-  const onSubmitUpdate = useCallback((data: UpdateAccountType) => mutate(data), [mutate]);
+  const onSubmitUpdate = useCallback((data: UpdateAccountForm) => mutate(data), [mutate]);
 
   useEffect(() => {
     form.reset();
@@ -127,6 +127,7 @@ export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDi
                       <SelectContent>
                         <SelectItem value="business">Business</SelectItem>
                         <SelectItem value="personal">Personal</SelectItem>
+                        <SelectItem value="waa">WAA</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

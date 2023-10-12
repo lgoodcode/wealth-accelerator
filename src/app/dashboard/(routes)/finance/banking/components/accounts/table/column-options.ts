@@ -22,6 +22,10 @@ export const typeOptions: TypeOption[] = [
     label: 'Business',
     value: 'business',
   },
+  {
+    label: 'WAA',
+    value: 'waa',
+  },
 ];
 
 export const enabledOptions: EnabledOption[] = [

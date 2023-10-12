@@ -1,13 +1,13 @@
-DROP TYPE IF EXISTS account_type CASCADE;
-CREATE TYPE account_type AS enum ('personal', 'business');
-ALTER TYPE account_type OWNER TO postgres;
+DROP TYPE IF EXISTS plaid_account_type CASCADE;
+CREATE TYPE plaid_account_type AS enum ('personal', 'business', 'waa');
+ALTER TYPE plaid_account_type OWNER TO postgres;
 
 DROP TABLE IF EXISTS plaid_accounts CASCADE;
 CREATE TABLE plaid_accounts (
   account_id text PRIMARY KEY,
   item_id text NOT NULL REFERENCES plaid(item_id) ON DELETE CASCADE,
   name text NOT NULL,
-  type text NOT NULL DEFAULT 'business'::account_type,
+  type plaid_account_type NOT NULL,
   enabled boolean NOT NULL DEFAULT true
 );
 
