@@ -422,21 +422,21 @@ export interface Database {
           enabled: boolean
           item_id: string
           name: string
-          type: Database["public"]["Enums"]["account_type"]
+          type: Database["public"]["Enums"]["plaid_account_type"]
         }
         Insert: {
           account_id: string
           enabled?: boolean
           item_id: string
           name: string
-          type?: Database["public"]["Enums"]["account_type"]
+          type: Database["public"]["Enums"]["plaid_account_type"]
         }
         Update: {
           account_id?: string
           enabled?: boolean
           item_id?: string
           name?: string
-          type?: Database["public"]["Enums"]["account_type"]
+          type?: Database["public"]["Enums"]["plaid_account_type"]
         }
         Relationships: [
           {
@@ -793,8 +793,8 @@ export interface Database {
       }
     }
     Enums: {
-      account_type: "personal" | "business"
       category: "Transfer" | "Money-In" | "Money-Out"
+      plaid_account_type: "personal" | "business" | "waa"
       user_role: "USER" | "ADMIN"
     }
     CompositeTypes: {

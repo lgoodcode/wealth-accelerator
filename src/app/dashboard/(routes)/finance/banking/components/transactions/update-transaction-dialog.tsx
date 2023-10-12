@@ -32,7 +32,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUpdateTransaction } from '../../hooks/use-update-transaction';
-import { updateTransactionFormSchema, type UpdateTransactionType } from '../../schema';
+import { updateTransactionFormSchema, type UpdateTransactionForm } from '../../schema';
 import { Category, type TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 
 interface UpdateTransactionDialogProps {
@@ -44,7 +44,7 @@ interface UpdateTransactionDialogProps {
 export function UpdateTransactionDialog({ open, onOpenChange, row }: UpdateTransactionDialogProps) {
   const updateTransaction = useUpdateTransaction();
   const queryClient = useQueryClient();
-  const form = useForm<UpdateTransactionType>({
+  const form = useForm<UpdateTransactionForm>({
     resolver: zodResolver(updateTransactionFormSchema),
     values: {
       name: row.original.name,
@@ -53,7 +53,7 @@ export function UpdateTransactionDialog({ open, onOpenChange, row }: UpdateTrans
   });
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: (data: UpdateTransactionType) => updateTransaction(row.original.id, data),
+    mutationFn: (data: UpdateTransactionForm) => updateTransaction(row.original.id, data),
     onError: (error) => {
       console.error(error);
       captureException(error);
@@ -86,7 +86,7 @@ export function UpdateTransactionDialog({ open, onOpenChange, row }: UpdateTrans
     onSettled: () => onOpenChange(false),
   });
 
-  const onSubmitUpdate = useCallback((data: UpdateTransactionType) => mutate(data), [mutate]);
+  const onSubmitUpdate = useCallback((data: UpdateTransactionForm) => mutate(data), [mutate]);
 
   useEffect(() => {
     form.reset();

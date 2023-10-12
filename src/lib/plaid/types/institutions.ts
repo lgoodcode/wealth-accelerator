@@ -13,7 +13,7 @@ export type Institution = {
  */
 export type ClientInstitution = Omit<Institution, 'access_token' | 'user_id'>;
 
-export type AccountType = 'business' | 'personal';
+export type AccountType = 'business' | 'personal' | 'waa';
 
 export type Account = {
   account_id: string;

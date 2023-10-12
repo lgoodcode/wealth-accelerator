@@ -1,9 +1,9 @@
 import { supabase } from '@/lib/supabase/client';
-import type { UpdateAccountType } from '../schema';
+import type { UpdateAccountForm } from '../schema';
 import type { Account } from '@/lib/plaid/types/institutions';
 
 export const useUpdateAccount = () => {
-  return async (account_id: string, data: UpdateAccountType) => {
+  return async (account_id: string, data: UpdateAccountForm) => {
     const { error, data: updatedAccount } = await supabase
       .from('plaid_accounts')
       .update({

@@ -9,6 +9,7 @@ import type {
   ExchangeLinkTokenBody,
   ExchangeLinkTokenResponse,
 } from '@/lib/plaid/types/link-token';
+import { AccountType } from '@/lib/plaid/types/institutions';
 
 export const dynamic = 'force-dynamic';
 export const POST = exchangeLinkToken;
@@ -86,6 +87,7 @@ async function exchangeLinkToken(request: Request) {
           account_id: account.id,
           item_id,
           name: account.name,
+          type: 'business' as AccountType,
         }))
       );
 
