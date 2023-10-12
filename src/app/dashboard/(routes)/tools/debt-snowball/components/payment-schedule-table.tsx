@@ -98,6 +98,7 @@ export function PaymentScheduleTable({ inputs, results }: PaymentScheduleTablePr
       strategyResults.loan_payback.tracking[numYears - 1].length
     );
   } catch (e) {
+    console.log({ inputs, results, strategyResults, numYears });
     captureMessage('PaymentScheduleTableProps', {
       extra: {
         inputs,
