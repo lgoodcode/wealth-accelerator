@@ -24,7 +24,9 @@ async function syncTransactionsWebhook(request: Request) {
 
   switch (webhook_code) {
     // Fired when new transactions data becomes available.
-    case 'SYNC_UPDATES_AVAILABLE': {
+    case 'SYNC_UPDATES_AVAILABLE':
+    // Fired when an item has exited the ITEM_LOGIN_REQUIRED state without any action required by the user.
+    case 'LOGIN_REPAIRED': {
       const { error: itemError, data: item } = await getItemFromItemId(item_id, true);
 
       if (itemError || !item) {
