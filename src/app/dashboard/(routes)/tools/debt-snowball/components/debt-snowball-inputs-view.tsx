@@ -18,19 +18,19 @@ export function DebtSnowballInputsView({ inputs }: DebtSnowballInputsViewProps) 
       <CardContent className="pt-4 text-lg">
         <div className="space-y-8">
           <div className="space-y-2">
-            <div className="flex py-4 justify-between border-b">
+            <div className="flex py-4 justify-between gap-8 flex-wrap border-b">
               <span>{labels.additionalPayment.title}</span>
               <span>{dollarFormatter(inputs.additional_payment)}</span>
             </div>
-            <div className="flex py-4 justify-between border-b">
+            <div className="flex py-4 justify-between gap-8 flex-wrap border-b">
               <span>{labels.monthlyPayment.title}</span>
               <span>{dollarFormatter(inputs.monthly_payment)}</span>
             </div>
-            <div className="flex py-4 justify-between border-b">
+            <div className="flex py-4 justify-between gap-8 flex-wrap border-b">
               <span>{labels.opportunityRate.title}</span>
               <span>{inputs.opportunity_rate}%</span>
             </div>
-            <div className="flex py-4 justify-between border-b">
+            <div className="flex py-4 justify-between gap-8 flex-wrap border-b">
               <span>{labels.strategy.title}</span>
               <span>{inputs.strategy}</span>
             </div>
@@ -44,11 +44,11 @@ export function DebtSnowballInputsView({ inputs }: DebtSnowballInputsViewProps) 
                 </h3>
               </div>
               <div className="space-y-2">
-                <div className="flex py-4 justify-between border-b">
+                <div className="flex py-4 justify-between gap-8 flex-wrap border-b">
                   <span>{labels.payBackLoan.title}</span>
                   <span>{inputs.pay_back_loan ? 'Yes' : 'No'}</span>
                 </div>
-                <div className="flex py-4 justify-between border-b">
+                <div className="flex py-4 justify-between gap-8 flex-wrap border-b">
                   <span>{labels.loanInterestRate.title}</span>
                   <span>{inputs.loan_interest_rate}%</span>
                 </div>

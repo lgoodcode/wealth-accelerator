@@ -84,7 +84,7 @@ export function PaymentScheduleTable({ inputs, results }: PaymentScheduleTablePr
     ? strategyResults.loan_payback.tracking.length
     : strategyResults.balance_tracking.length;
   const lastMonth = inputs.pay_back_loan
-    ? strategyResults.loan_payback.tracking.length
+    ? strategyResults.loan_payback.tracking[numYears - 1].length
     : strategyResults.balance_tracking[numYears - 1].length;
 
   const years = Array.from({ length: numYears }, (_, i) =>
