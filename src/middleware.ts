@@ -11,6 +11,10 @@ const authPagesRegex = /^\/(login|signup|forgot-password|reset-password|set-pass
 const IS_PROD = process.env.NODE_ENV === 'production';
 const IS_PREVIEW = process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
 
+export const config = {
+  matcher: ['/login', '/set-password', '/reset-password', '/dashboard/:path*'],
+};
+
 export async function middleware(request: NextRequest) {
   const isInMaintenanceMode = IS_PROD && !IS_PREVIEW ? await get('isInMaintenanceMode') : false;
 
@@ -102,7 +106,3 @@ export async function middleware(request: NextRequest) {
 
   return res;
 }
-
-export const config = {
-  matcher: ['/login', '/set-password', '/reset-password', '/dashboard/:path*'],
-};
