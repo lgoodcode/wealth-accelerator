@@ -39,23 +39,23 @@ ALTER FUNCTION is_own_plaid_transaction() OWNER TO postgres;
 CREATE POLICY "Can view own plaid transactions" ON public.plaid_transactions
   FOR SELECT
   TO authenticated
-  USING (is_own_plaid_transaction());
+  USING ((SELECT is_own_plaid_transaction()));
 
 CREATE POLICY "Can insert own plaid transactions" ON public.plaid_transactions
   FOR INSERT
   TO authenticated
-  WITH CHECK (is_own_plaid_transaction());
+  WITH CHECK ((SELECT is_own_plaid_transaction()));
 
 CREATE POLICY "Can update own plaid transactions" ON public.plaid_transactions
   FOR UPDATE
   TO authenticated
-  USING (is_own_plaid_transaction())
-  WITH CHECK (is_own_plaid_transaction());
+  USING ((SELECT is_own_plaid_transaction()))
+  WITH CHECK ((SELECT is_own_plaid_transaction()));
 
 CREATE POLICY "Can delete own plaid transactions" ON public.plaid_transactions
   FOR DELETE
   TO authenticated
-  USING (is_own_plaid_transaction());
+  USING ((SELECT is_own_plaid_transaction()));
 
 
 
