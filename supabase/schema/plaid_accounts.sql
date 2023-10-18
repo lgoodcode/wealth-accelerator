@@ -29,23 +29,23 @@ $$ LANGUAGE plpgsql;
 
 ALTER FUNCTION is_own_plaid_account() OWNER TO postgres;
 
-CREATE POLICY "Can view own plaid accounts" ON public.plaid_accounts
+CREATE POLICY "Can view own plaid accounts" ON plaid_accounts
   FOR SELECT
   TO authenticated
-  USING (is_own_plaid_account());
+  USING ((SELECT is_own_plaid_account()));
 
-CREATE POLICY "Can insert own plaid accounts" ON public.plaid_accounts
+CREATE POLICY "Can insert own plaid accounts" ON plaid_accounts
   FOR INSERT
   TO authenticated
-  WITH CHECK (is_own_plaid_account());
+  WITH CHECK ((SELECT is_own_plaid_account()));
 
-CREATE POLICY "Can update own plaid accounts" ON public.plaid_accounts
+CREATE POLICY "Can update own plaid accounts" ON plaid_accounts
   FOR UPDATE
   TO authenticated
-  USING (is_own_plaid_account())
-  WITH CHECK (is_own_plaid_account());
+  USING ((SELECT is_own_plaid_account()))
+  WITH CHECK ((SELECT is_own_plaid_account()));
 
-CREATE POLICY "Can delete own plaid accounts" ON public.plaid_accounts
+CREATE POLICY "Can delete own plaid accounts" ON plaid_accounts
   FOR DELETE
   TO authenticated
-  USING (is_own_plaid_account());
+  USING ((SELECT is_own_plaid_account()));
