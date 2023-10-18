@@ -32,6 +32,12 @@ CREATE POLICY "Can delete own creative cash flow data" ON creative_cash_flow
   TO authenticated
   USING ((SELECT auth.uid()) = user_id);
 
+DROP TRIGGER IF EXISTS on_update_creative_cash_flow ON creative_cash_flow;
+CREATE TRIGGER on_update_creative_cash_flow
+  BEFORE UPDATE ON creative_cash_flow
+    FOR EACH ROW
+      EXECUTE FUNCTION verify_update_creative_cash_flow();
+
 
 
 /**
@@ -49,6 +55,28 @@ END;
 $$ language plpgsql SECURITY DEFINER;
 
 ALTER FUNCTION owns_creative_cash_flow() OWNER TO postgres;
+
+
+
+-- Only allow the "name" column to be updated
+CREATE OR REPLACE FUNCTION verify_update_creative_cash_flow()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.id <> OLD.id THEN
+    RAISE EXCEPTION 'Updating "id" is not allowed';
+  END IF;
+  IF NEW.user_id <> OLD.user_id THEN
+    RAISE EXCEPTION 'Updating "user_id" is not allowed';
+  END IF;
+  IF NEW.created_at <> OLD.created_at THEN
+    RAISE EXCEPTION 'Updating "created_at" is not allowed';
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION verify_update_creative_cash_flow() OWNER TO postgres;
 
 
 
