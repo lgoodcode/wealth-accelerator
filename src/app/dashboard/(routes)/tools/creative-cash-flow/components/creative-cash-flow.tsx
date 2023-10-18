@@ -23,6 +23,15 @@ interface CcfContainerProps {
   };
   ytd_collections: number;
   default_tax_rate: number;
+  actual_waa:
+    | {
+        error: string;
+        data: null;
+      }
+    | {
+        error: null;
+        data: string;
+      };
 }
 
 export function CreativeCashFlow({
@@ -30,6 +39,7 @@ export function CreativeCashFlow({
   transactions,
   ytd_collections,
   default_tax_rate,
+  actual_waa,
 }: CcfContainerProps) {
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
   const [results, setResults] = useAtom(ccfResultsAtom);
@@ -76,6 +86,7 @@ export function CreativeCashFlow({
       <TabsContent value={TabsValue.Inputs}>
         <CreativeCashFlowInputs
           user_id={user_id}
+          actual_waa={actual_waa}
           transactions={transactions}
           ytd_collections={ytd_collections}
           default_tax_rate={default_tax_rate}

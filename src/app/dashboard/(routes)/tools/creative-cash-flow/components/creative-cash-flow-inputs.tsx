@@ -1,6 +1,7 @@
 'use client';
 
 import { useAtom, useSetAtom } from 'jotai';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,6 +34,15 @@ interface CcfInputsFormProps {
   };
   ytd_collections: number;
   default_tax_rate: number;
+  actual_waa:
+    | {
+        error: string;
+        data: null;
+      }
+    | {
+        error: null;
+        data: string;
+      };
 }
 
 export function CreativeCashFlowInputs({
@@ -40,6 +50,7 @@ export function CreativeCashFlowInputs({
   transactions,
   ytd_collections,
   default_tax_rate,
+  actual_waa,
 }: CcfInputsFormProps) {
   const [creativeCashFlowInputs, setCreativeCashFlowInputs] = useAtom(ccfInputsAtom);
   const setCreativeCashFlowResults = useSetAtom(ccfResultsAtom);
@@ -51,8 +62,13 @@ export function CreativeCashFlowInputs({
       optimal_savings_strategy: 0,
     },
   });
+  const isDisabled = actual_waa.error === 'Multiple WAA accounts found'; // Message is defined in CCF schema SQL function
 
   const calculate = async (data: InputsFormSchemaType) => {
+    if (isDisabled) {
+      return;
+    }
+
     if (!transactions.business.length && !transactions.personal.length) {
       toast.error(
         'There are no transactions to calculate the Creative Cash Flow. Please check your bank accounts.'
@@ -85,6 +101,20 @@ export function CreativeCashFlowInputs({
     setCreativeCashFlowResults(result);
   };
 
+  useEffect(() => {
+    if (isDisabled) {
+      toast.error(
+        'There are multiple WAA accounts found. Please correct your accounts and only set one.',
+        {
+          // Keep the toast open so the user knows they must fix the issue
+          autoClose: false,
+          closeOnClick: false,
+          draggable: false,
+        }
+      );
+    }
+  }, []);
+
   return (
     <Card className="w-[480px] mx-auto">
       <CardContent>
@@ -96,7 +126,12 @@ export function CreativeCashFlowInputs({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>{inputLabels.start_date.title}</FormLabel>
-                  <DatePicker className="w-full" date={field.value} onSelect={field.onChange} />
+                  <DatePicker
+                    className="w-full"
+                    date={field.value}
+                    onSelect={field.onChange}
+                    disabled={isDisabled}
+                  />
                   <FormDescription>{inputLabels.start_date.description}</FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -108,7 +143,12 @@ export function CreativeCashFlowInputs({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>{inputLabels.end_date.title}</FormLabel>
-                  <DatePicker className="w-full" date={field.value} onSelect={field.onChange} />
+                  <DatePicker
+                    className="w-full"
+                    date={field.value}
+                    onSelect={field.onChange}
+                    disabled={isDisabled}
+                  />
                   <FormDescription>{inputLabels.end_date.description}</FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -120,7 +160,7 @@ export function CreativeCashFlowInputs({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>{inputLabels.all_other_income.title}</FormLabel>
-                  <CurrencyInput placeholder="$100,000" {...field} />
+                  <CurrencyInput placeholder="$100,000" {...field} disabled={isDisabled} />
                   <FormDescription>{inputLabels.all_other_income.description}</FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -132,7 +172,7 @@ export function CreativeCashFlowInputs({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>{inputLabels.payroll_and_distributions.title}</FormLabel>
-                  <CurrencyInput placeholder="$100,000" {...field} />
+                  <CurrencyInput placeholder="$100,000" {...field} disabled={isDisabled} />
                   <FormDescription>
                     {inputLabels.payroll_and_distributions.description}
                   </FormDescription>
@@ -146,7 +186,7 @@ export function CreativeCashFlowInputs({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>{inputLabels.lifestyle_expenses_tax_rate.title}</FormLabel>
-                  <PercentInput placeholder="25%" {...field} />
+                  <PercentInput placeholder="25%" {...field} disabled={isDisabled} />
                   <FormDescription>
                     {inputLabels.lifestyle_expenses_tax_rate.description}
                   </FormDescription>
@@ -160,7 +200,7 @@ export function CreativeCashFlowInputs({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>{inputLabels.tax_account_rate.title}</FormLabel>
-                  <PercentInput placeholder="25%" {...field} />
+                  <PercentInput placeholder="25%" {...field} disabled={isDisabled} />
                   <FormDescription>{inputLabels.tax_account_rate.description}</FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -181,7 +221,12 @@ export function CreativeCashFlowInputs({
               )}
             /> */}
             <div className="flex justify-end">
-              <Button type="submit" className="w-full" loading={form.formState.isSubmitting}>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isDisabled}
+                loading={form.formState.isSubmitting}
+              >
                 Calculate
               </Button>
             </div>

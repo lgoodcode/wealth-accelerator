@@ -736,6 +736,10 @@ export interface Database {
           account: string
         }[]
       }
+      get_waa_account_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       is_admin:
         | {
             Args: Record<PropertyKey, never>
