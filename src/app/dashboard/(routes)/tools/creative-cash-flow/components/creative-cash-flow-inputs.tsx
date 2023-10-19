@@ -24,6 +24,7 @@ import { creativeCashFlowManagement } from '../functions/creative-cash-flow';
 import { getTotalWAA } from '../functions/get-total-waa';
 import { ccfInputsAtom, ccfResultsAtom } from '../atoms';
 import { inputsFormSchema, type InputsFormSchemaType } from '../schema';
+import type { ErrorCode } from '@/lib/utils/CustomError';
 import type { Transaction } from '@/lib/plaid/types/transactions';
 
 interface CcfInputsFormProps {
@@ -34,9 +35,9 @@ interface CcfInputsFormProps {
   };
   ytd_collections: number;
   default_tax_rate: number;
-  actual_waa:
+  waa_account_id:
     | {
-        error: string;
+        error: ErrorCode;
         data: null;
       }
     | {
@@ -50,7 +51,7 @@ export function CreativeCashFlowInputs({
   transactions,
   ytd_collections,
   default_tax_rate,
-  actual_waa,
+  waa_account_id,
 }: CcfInputsFormProps) {
   const [creativeCashFlowInputs, setCreativeCashFlowInputs] = useAtom(ccfInputsAtom);
   const setCreativeCashFlowResults = useSetAtom(ccfResultsAtom);
@@ -62,7 +63,8 @@ export function CreativeCashFlowInputs({
       optimal_savings_strategy: 0,
     },
   });
-  const isDisabled = actual_waa.error === 'Multiple WAA accounts found'; // Message is defined in CCF schema SQL function
+  const isDisabled = waa_account_id.error === 'MULTIPLE_WAA_ACCOUNTS';
+  const noWaaAccount = waa_account_id.error === 'NO_WAA_ACCOUNT';
 
   const calculate = async (data: InputsFormSchemaType) => {
     if (isDisabled) {
@@ -111,6 +113,10 @@ export function CreativeCashFlowInputs({
           closeOnClick: false,
           draggable: false,
         }
+      );
+    } else if (noWaaAccount) {
+      toast.warn(
+        'There is no WAA account found. Please set one to get a balance snapshot for the WAA tracking.'
       );
     }
   }, []);

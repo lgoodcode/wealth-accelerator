@@ -1,4 +1,5 @@
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
+import { CustomError } from '@/lib/utils/CustomError';
 
 export const getWaaAccountId = async () => {
   const supabase = createSupabase();
@@ -6,7 +7,12 @@ export const getWaaAccountId = async () => {
 
   if (waaAccountError) {
     return {
-      error: waaAccountError.message,
+      error: new CustomError(
+        waaAccountError,
+        waaAccountError.message === 'No WAA account found'
+          ? 'NO_WAA_ACCOUNT'
+          : 'MULTIPLE_WAA_ACCOUNTS'
+      ).code,
       data: null,
     };
   }

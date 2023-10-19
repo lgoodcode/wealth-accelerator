@@ -16,8 +16,7 @@ export const metadata: Metadata = {
 export default async function CreativeCashFlowPage() {
   const user = (await getUser()) as User;
   const { error, data } = await getData(user.id);
-  const actual_waa = await getWaaAccountId();
-  // TODO: get WAA balance from Plaid with the account_id
+  const waa_account_id = await getWaaAccountId();
 
   if (error) {
     console.error(error);
@@ -49,7 +48,7 @@ export default async function CreativeCashFlowPage() {
         transactions={data.transactions}
         ytd_collections={data.ytd_collections}
         default_tax_rate={data.default_tax_rate}
-        actual_waa={actual_waa}
+        waa_account_id={waa_account_id}
       />
     </div>
   );
