@@ -63,19 +63,20 @@ export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDi
       }
 
       // Check if the user is attempting to set a second WAA account
-      const cache = queryClient.getQueryData<Account[]>(['accounts', row.original.item_id]);
+      if (data.type === 'waa' && row.original.type !== 'waa') {
+        const cache = queryClient.getQueryData<Account[]>(['accounts', row.original.item_id]);
 
-      if (
-        cache?.some(
-          (account) => account.type === 'waa' && account.account_id !== row.original.account_id
-        )
-      ) {
-        throw new CustomError('Only one WAA account is allowed per institution');
+        if (
+          cache?.some(
+            (account) => account.type === 'waa' && account.account_id !== row.original.account_id
+          )
+        ) {
+          throw new CustomError('Only one WAA account is allowed per institution');
+        }
       }
 
       return updateAccount(row.original.account_id, data);
     },
-
     onError: (error: Error | CustomError) => {
       if (error instanceof CustomError) {
         form.setError('type', {
