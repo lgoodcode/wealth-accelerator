@@ -80,31 +80,6 @@ ALTER FUNCTION verify_update_creative_cash_flow() OWNER TO postgres;
 
 
 
--- Gets the running total of the user's WAA before the start date of the range used when
--- calculating the CCF
-CREATE OR REPLACE FUNCTION total_waa_before_date(_user_id uuid, target_date timestamp with time zone)
-RETURNS NUMERIC AS $$
-DECLARE
-  total_waa_sum numeric;
-BEGIN
-  SELECT COALESCE(SUM(cfr.waa), 0)
-  INTO total_waa_sum
-  FROM creative_cash_flow_results cfr
-  JOIN creative_cash_flow ccf ON cfr.id = ccf.id
-  JOIN creative_cash_flow_inputs cci ON cci.id = ccf.id
-  WHERE ccf.user_id = _user_id AND cci.end_date <= target_date;
-
-  RETURN total_waa_sum;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-ALTER FUNCTION total_waa_before_date(
-  user_id uuid,
-  target_date timestamp with time zone
-) OWNER TO postgres;
-
-
-
 CREATE OR REPLACE function create_creative_cash_flow (
   _user_id uuid,
   name text,
@@ -112,25 +87,25 @@ CREATE OR REPLACE function create_creative_cash_flow (
   results creative_cash_flow_results
 ) RETURNS TABLE (id uuid, created_at timestamp with time zone) AS $$
 DECLARE
-  id uuid;
-  created_at timestamp with time zone;
+  new_id uuid;
+  new_created_at timestamp with time zone;
 BEGIN
   -- Generate a new UUID using the uuid-ossp extension
-  SELECT uuid_generate_v4() INTO id;
+  SELECT uuid_generate_v4() INTO new_id;
 
   -- Get the current time in UTC
-  created_at := NOW() AT TIME ZONE 'UTC';
+  new_created_at := NOW() AT TIME ZONE 'UTC';
 
   INSERT INTO creative_cash_flow (id, user_id, name, created_at)
-  VALUES (id, _user_id, name, created_at);
+  VALUES (new_id, _user_id, name, new_created_at);
 
   INSERT INTO creative_cash_flow_inputs (id, start_date, end_date, all_other_income, payroll_and_distributions, lifestyle_expenses_tax_rate, tax_account_rate, optimal_savings_strategy)
-  VALUES (id, inputs.start_date, inputs.end_date, inputs.all_other_income, inputs.payroll_and_distributions, inputs.lifestyle_expenses_tax_rate, inputs.tax_account_rate, inputs.optimal_savings_strategy);
+  VALUES (new_id, inputs.start_date, inputs.end_date, inputs.all_other_income, inputs.payroll_and_distributions, inputs.lifestyle_expenses_tax_rate, inputs.tax_account_rate, inputs.optimal_savings_strategy);
 
   INSERT INTO creative_cash_flow_results (id, collections, lifestyle_expenses, lifestyle_expenses_tax, business_profit_before_tax, business_overhead, tax_account, waa, actual_waa, total_waa, daily_trend, weekly_trend, yearly_trend, year_to_date)
-  VALUES (id, results.collections, results.lifestyle_expenses, results.lifestyle_expenses_tax, results.business_profit_before_tax, results.business_overhead, results.tax_account, results.waa, results.actual_waa, results.total_waa, results.daily_trend, results.weekly_trend, results.yearly_trend, results.year_to_date);
+  VALUES (new_id, results.collections, results.lifestyle_expenses, results.lifestyle_expenses_tax, results.business_profit_before_tax, results.business_overhead, results.tax_account, results.waa, results.actual_waa, results.total_waa, results.daily_trend, results.weekly_trend, results.yearly_trend, results.year_to_date);
 
-  RETURN QUERY SELECT id, created_at;
+  RETURN QUERY SELECT new_id, new_created_at;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

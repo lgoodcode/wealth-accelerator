@@ -50,10 +50,10 @@ export const useSaveSnowballRecord = () => {
     }
 
     const record: DebtSnowballRecord = {
-      id: data.new_id,
+      id: data.id,
       user_id: userId,
       name,
-      created_at: data.new_created_at,
+      created_at: data.created_at,
       debts: strippedDebts,
       inputs: structuredClone(inputs),
       results: structuredClone(results),

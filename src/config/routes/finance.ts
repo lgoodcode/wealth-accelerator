@@ -1,4 +1,4 @@
-import { Banknote, Filter, Landmark, Receipt, BookOpen, LineChart, Shield } from 'lucide-react';
+import { Banknote, Filter, Landmark, Receipt } from 'lucide-react';
 
 import type { Route } from './routes';
 
@@ -27,25 +27,4 @@ export const financeRoutes: Route[] = [
     Icon: Filter,
     description: 'Filter transaction categories received from your bank accounts.',
   },
-  // {
-  //   name: 'Statistics',
-  //   path: '/statistics',
-  //   Icon: LineChart,
-  //   description: 'View statistics of your finances and the Wealth Accelerator.',
-  //   disabled: true,
-  // },
-  // {
-  //   name: 'Insurance Policies',
-  //   path: '/insurance-policies',
-  //   Icon: Shield,
-  //   description: 'View insurance policies.',
-  //   disabled: true,
-  // },
-  // {
-  //   name: 'Glossary',
-  //   path: '/glossary',
-  //   Icon: BookOpen,
-  //   description: 'View vocabulary and their definitions used in the app.',
-  //   disabled: true,
-  // },
 ];

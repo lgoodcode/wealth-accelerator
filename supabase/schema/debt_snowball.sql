@@ -110,7 +110,7 @@ CREATE OR REPLACE FUNCTION create_debt_snowball_record (
   debts debt_snowball_debt[],
   inputs debt_snowball_inputs_data,
   results debt_snowball_results_data
-) RETURNS TABLE (new_id uuid, new_created_at timestamp with time zone) AS $$
+) RETURNS TABLE (id uuid, created_at timestamp with time zone) AS $$
 DECLARE
   new_id uuid;
   new_created_at timestamp with time zone;
