@@ -1,6 +1,6 @@
 'use client';
 
-import { captureException, type SeverityLevel } from '@sentry/nextjs';
+import { captureException, captureMessage, type SeverityLevel } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
 import { Card, CardContent } from '@/components/ui/card';
@@ -38,6 +38,15 @@ const createError = (level?: SeverityLevel | undefined) => {
   }
 };
 
+const createLog = (level?: SeverityLevel | undefined) => {
+  captureMessage('test', { level });
+  toast.success(
+    <div className="flex flex-col gap-4">
+      <span>Message created on client:</span>
+    </div>
+  );
+};
+
 export function TestingContent() {
   return (
     <Card>
@@ -54,10 +63,7 @@ export function TestingContent() {
           <Button variant="destructive" onClick={() => createError()}>
             Error
           </Button>
-          <Button variant="secondary" onClick={() => createError('info')}>
-            Info
-          </Button>
-          <Button variant="secondary" onClick={() => createError('log')}>
+          <Button variant="secondary" onClick={() => createLog()}>
             Log
           </Button>
         </div>
