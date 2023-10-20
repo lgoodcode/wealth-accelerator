@@ -38,7 +38,7 @@ export default async function DebtPage() {
           </p>
         </div>
 
-        <HelpButton title="Debts" content={DebtsHelpContent} />
+        <HelpButton title="Debts Help" content={DebtsHelpContent} />
       </div>
       <Separator className="mt-6" />
       <Debts debtsData={debts} />

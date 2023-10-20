@@ -20,13 +20,13 @@ export const BankingHelpContent = (
       your transactions.
     </p>
     <p>
-      The transactions will be automatically categorized into one of three categories: Money-In,
-      Money-Out, and Transfer. These categories are determined by filters set by your admin or
-      yourself. If there are no filters that match the name of the transaction, it will be
-      categorized based on the amount of the transaction. If the amount is positive, it will be
-      categorized as Money-In, and if it is negative, it will be categorized as Money-Out. You can
-      also manually change the category of a transaction by selecting the dropdown menu on the
-      transaction and choosing a new category.
+      The transactions will be automatically categorized into one of three categories:{' '}
+      <b>Money-In</b>,<b>Money-Out</b>, and <b>Transfer</b>. These categories are determined by
+      filters set by your admin or yourself. If there are no filters that match the name of the
+      transaction, it will be categorized based on the amount of the transaction. If the amount is
+      positive, it will be categorized as Money-In, and if it is negative, it will be categorized as
+      Money-Out. You can also manually change the category of a transaction by selecting the
+      dropdown menu on the transaction and choosing a new category.
     </p>
   </div>
 );

@@ -44,7 +44,7 @@ export default async function CreativeCashFlowPage() {
             </div>
           </div>
 
-          <HelpButton title="Creative Cash Flow" content={CreativeCashFlowHelpContent} />
+          <HelpButton title="Creative Cash Flow Help" content={CreativeCashFlowHelpContent} />
         </div>
       </div>
       <Separator className="mt-6" />

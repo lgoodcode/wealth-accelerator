@@ -38,7 +38,7 @@ export default async function BankingPage() {
           </p>
         </div>
 
-        <HelpButton title="Banking" content={BankingHelpContent} />
+        <HelpButton title="Banking Help" content={BankingHelpContent} />
       </div>
       <Separator className="mt-6" />
       <Institutions institutionsData={institutions} />

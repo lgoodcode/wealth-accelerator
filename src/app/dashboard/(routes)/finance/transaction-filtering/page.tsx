@@ -51,7 +51,7 @@ export default async function UserTransactionFilteringPage() {
         </div>
 
         <HelpButton
-          title="User Transaction Filtering"
+          title="User Transaction Filtering Help"
           content={UserTransactionFilteringHelpContent}
         />
       </div>

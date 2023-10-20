@@ -2,7 +2,7 @@ export const UserTransactionFilteringHelpContent = (
   <div className="space-y-4">
     <p>
       Here, you can specify filters, that are text, that will be matched against transactions. When
-      they match any text (case-insensitive), they will be asigned the category that is assigned.
+      they match any text (case-insensitive), they will be asigned the category that you select.
     </p>
     <p>
       An override is used to specify that a transaction should be assigned a category, even if they
