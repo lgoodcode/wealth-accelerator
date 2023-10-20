@@ -5,9 +5,11 @@ import type { Metadata } from 'next';
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { getUser } from '@/lib/supabase/server/get-user';
 import { PageError } from '@/components/page-error';
+import { HelpButton } from '@/components/help-button';
 import { Breadcrumbs, BreadcrumbItem } from '@/components/ui/breadcrumbs';
 import { Separator } from '@/components/ui/separator';
 import { CreativeCashFlowRecords } from './components/creative-cash-flow-records';
+import { CcfRecordHelpContent } from './ccf-record-help';
 import type { CreativeCashFlowRecord } from '../types';
 
 export const metadata: Metadata = {
@@ -31,18 +33,22 @@ export default async function CreativeCashFlowRecordsPage() {
 
   return (
     <div className="p-8 space-y-8">
-      <div className="space-y-2">
-        <div className="space-y-1">
-          <h2 className="text-3xl font-bold">Creative Cash Flow Records</h2>
+      <div className="flex flex-row justify-between">
+        <div className="space-y-2">
+          <div className="space-y-1">
+            <h2 className="text-3xl font-bold">Creative Cash Flow Records</h2>
+          </div>
+          <Breadcrumbs>
+            <BreadcrumbItem active>
+              <Album size={16} className="mr-2" />
+              Records
+            </BreadcrumbItem>
+          </Breadcrumbs>
         </div>
-        <Breadcrumbs>
-          <BreadcrumbItem active>
-            <Album size={16} className="mr-2" />
-            Records
-          </BreadcrumbItem>
-        </Breadcrumbs>
-        <Separator />
+
+        <HelpButton title="Understanding Your Results" content={CcfRecordHelpContent} />
       </div>
+      <Separator className="!mt-6" />
       <CreativeCashFlowRecords recordsData={records} />
     </div>
   );

@@ -14,12 +14,15 @@ export function ClientError({
   return (
     <div
       className={cn(
-        'flex flex-col space-y-6 mt-32 items-center justify-center pointer-events-none select-none',
+        'flex flex-row py-32 h-6 items-center justify-center pointer-events-none select-none text-center',
         className
       )}
     >
-      <h1 className="text-4xl font-medium">{title}</h1>
-      <span className="text-lg">{children || 'Reload the page and try again.'}</span>
+      <div className="flex flex-col space-y-2">
+        <h1 className="text-4xl font-medium capitalize">{title}</h1>
+        <span className="text-lg text-muted-foreground">Please reload the page and try again.</span>
+      </div>
+      {children}
     </div>
   );
 }
