@@ -4,8 +4,10 @@ import type { Metadata } from 'next';
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { getUser } from '@/lib/supabase/server/get-user';
 import { PageError } from '@/components/page-error';
+import { HelpButton } from '@/components/help-button';
 import { Separator } from '@/components/ui/separator';
 import { Institutions } from './components/institutions';
+import { HelpContent } from './help-content';
 
 export const metadata: Metadata = {
   title: 'Banking',
@@ -28,11 +30,15 @@ export default async function BankingPage() {
 
   return (
     <div className="p-8">
-      <div className="space-y-1">
-        <h2 className="text-3xl font-bold">Banking</h2>
-        <p className="text-muted-foreground">
-          Manage institutions and view transactions for your bank accounts.
-        </p>
+      <div className="flex flex-row justify-between">
+        <div className="space-y-1">
+          <h2 className="text-3xl font-bold">Banking</h2>
+          <p className="text-muted-foreground">
+            Manage institutions and view transactions for your bank accounts.
+          </p>
+        </div>
+
+        <HelpButton title="Banking" content={HelpContent} />
       </div>
       <Separator className="mt-6" />
       <Institutions institutionsData={institutions} />
