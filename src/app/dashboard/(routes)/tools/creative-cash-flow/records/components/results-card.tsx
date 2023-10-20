@@ -3,13 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { resultsLabels } from '../../labels';
 import type { CreativeCashFlowRecord } from '../../types';
 
-interface InputsCardProps {
+interface ResultsCardProps {
   record: CreativeCashFlowRecord;
 }
 
-export function ResultsCard({ record }: InputsCardProps) {
+export function ResultsCard({ record }: ResultsCardProps) {
+  console.log({ record });
   return (
-    <Card className="flex flex-col max-w-[500px] w-full min-w-[280px]">
+    <Card className="flex flex-col max-w-[500px] w-full min-w-[280px] h-fit">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">Results</CardTitle>
       </CardHeader>
@@ -43,11 +44,12 @@ export function ResultsCard({ record }: InputsCardProps) {
             <span>{resultsLabels.waa.title}</span>
             <span>{dollarFormatter(record.results.waa)}</span>
           </div>
-          {/* TODO: removed until we actually add the "WAA" account category */}
-          {/* <div className="flex py-4 justify-between border-b font-bold">
-            <span>{resultsLabels.total_waa.title}</span>
-            <span>{dollarFormatter(record.results.total_waa)}</span>
-          </div> */}
+          <div className="flex py-4 justify-between border-b font-bold">
+            <span>{resultsLabels.actual_waa.title}</span>
+            <span>
+              {!!record.results.actual_waa ? dollarFormatter(record.results.actual_waa) : 'None'}
+            </span>
+          </div>
         </div>
       </CardContent>
     </Card>
