@@ -7,7 +7,7 @@ import { PageError } from '@/components/page-error';
 import { HelpButton } from '@/components/help-button';
 import { Separator } from '@/components/ui/separator';
 import { Debts } from './debts';
-import { HelpContent } from './help-content';
+import { DebtsHelpContent } from './debts-help-content';
 
 export const metadata: Metadata = {
   title: 'Debts',
@@ -38,7 +38,7 @@ export default async function DebtPage() {
           </p>
         </div>
 
-        <HelpButton title="Debts" content={HelpContent} />
+        <HelpButton title="Debts" content={DebtsHelpContent} />
       </div>
       <Separator className="mt-6" />
       <Debts debtsData={debts} />

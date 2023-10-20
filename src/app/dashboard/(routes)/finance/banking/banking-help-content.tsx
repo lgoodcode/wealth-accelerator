@@ -1,4 +1,4 @@
-export const HelpContent = (
+export const BankingHelpContent = (
   <div className="space-y-4">
     <p>
       To get started, select the dropdown menu and add an institution. You will be redirected to

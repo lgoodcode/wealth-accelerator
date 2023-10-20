@@ -20,7 +20,7 @@ export function HelpDialog({ open, onOpenChange, title = 'Help', content }: Help
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-2xl">{title}</DialogTitle>
+          <DialogTitle className="text-2xl capitalize">{title}</DialogTitle>
         </DialogHeader>
 
         <DialogDescription>{content}</DialogDescription>
