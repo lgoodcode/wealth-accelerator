@@ -1,31 +1,5 @@
-import Link from 'next/link';
-
-export const CreativeCashFlowHelpContent = (
+export const CcfRecordHelpContent = (
   <div className="space-y-6">
-    <div className="space-y-4">
-      <p>
-        This will utilize all of the transactions from the institutions you connected in the{' '}
-        <Link href="/dashboard/finance/banking" className="link">
-          Banking
-        </Link>{' '}
-        feature to create a cash flow to visualize your income and expenses.
-      </p>
-      <p>
-        Select the date range (inclusive) for the transactions that you want to use as well as any
-        additional options that fit your financial profile and calculate the results.
-      </p>
-      <p>
-        Note: A WAA account, which you can set in the{' '}
-        <Link href="/dashboard/finance/banking" className="link">
-          banking
-        </Link>{' '}
-        feature, the Creative Cash Flow can pull your current balance and save that to view your
-        savings over time.
-      </p>
-    </div>
-
-    <h1 className="text-xl font-semibold capitalize text-primary">Understanding your results</h1>
-
     <div className="space-y-2">
       <h3 className="text-lg text-primary font-medium">Trends</h3>
       <div className="space-y-4">
