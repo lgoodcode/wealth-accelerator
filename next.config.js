@@ -60,13 +60,6 @@ const nextConfig = {
       },
     ];
   },
-  // Omitted until the pdfjslib library is used for the insurance policies feature
-  // // This is required for the pdfjslib library to work
-  // webpack: (config) => {
-  //   config.resolve.alias.canvas = false;
-  //   config.resolve.alias.encoding = false;
-  //   return config;
-  // },
 };
 
 module.exports = withBundleAnalyzer(

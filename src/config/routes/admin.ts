@@ -1,4 +1,4 @@
-import { Bell, FileText, Filter, Users } from 'lucide-react';
+import { Bell, Filter, Users } from 'lucide-react';
 
 import type { Route } from './routes';
 
@@ -13,20 +13,12 @@ export const adminRoutes: Route[] = [
     name: 'Manage Users',
     path: '/dashboard/admin/manage-users',
     Icon: Users,
-    description:
-      'Manage users of the application. Create, update, and delete users. Manage user insurance policies.',
+    description: 'Manage users of the application. Create, update, and delete users.',
   },
   {
     name: 'Notifiers',
     path: '/dashboard/admin/notifiers',
     Icon: Bell,
     description: 'Manage the people that will be notified for different features.',
-  },
-  {
-    name: 'Insurance Policies',
-    path: '/dashboard/admin/insurance-policies',
-    Icon: FileText,
-    description: 'Manage insurance policies for users.',
-    disabled: true,
   },
 ];
