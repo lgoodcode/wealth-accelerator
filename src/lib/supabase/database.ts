@@ -606,8 +606,8 @@ export interface Database {
           results: Database["public"]["CompositeTypes"]["debt_snowball_results_data"]
         }
         Returns: {
-          new_id: string
-          new_created_at: string
+          id: string
+          created_at: string
         }[]
       }
       create_global_plaid_filter: {

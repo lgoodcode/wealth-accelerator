@@ -33,3 +33,46 @@ ALTER FUNCTION create_creative_cash_flow(
   inputs creative_cash_flow_inputs,
   results creative_cash_flow_results
 ) OWNER TO postgres;
+
+
+
+drop function create_debt_snowball_record;
+
+CREATE OR REPLACE FUNCTION create_debt_snowball_record (
+  user_id uuid,
+  name text,
+  debts debt_snowball_debt[],
+  inputs debt_snowball_inputs_data,
+  results debt_snowball_results_data
+) RETURNS TABLE (id uuid, created_at timestamp with time zone) AS $$
+DECLARE
+  new_id uuid;
+  new_created_at timestamp with time zone;
+BEGIN
+  -- Generate a new UUID using the uuid-ossp extension
+  SELECT uuid_generate_v4() INTO new_id;
+
+  -- Get the current time in UTC
+  new_created_at := NOW() AT TIME ZONE 'UTC';
+
+  INSERT INTO debt_snowball (id, user_id, name, debts, created_at)
+  VALUES (new_id, user_id, name, debts, new_created_at);
+
+  INSERT INTO debt_snowball_inputs (id, additional_payment, monthly_payment, opportunity_rate, strategy, lump_amounts, pay_back_loan, pay_interest, loan_interest_rate)
+  VALUES (new_id, inputs.additional_payment, inputs.monthly_payment, inputs.opportunity_rate, inputs.strategy, inputs.lump_amounts, inputs.pay_back_loan, inputs.pay_interest, inputs.loan_interest_rate);
+
+  INSERT INTO debt_snowball_results (id, current, strategy)
+  VALUES (new_id, results.current, results.strategy);
+
+  RETURN QUERY SELECT new_id, new_created_at;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION create_debt_snowball_record(
+  user_id uuid,
+  name text,
+  debts debt_snowball_debt[],
+  inputs debt_snowball_inputs_data,
+  results debt_snowball_results_data
+) OWNER TO postgres;
+
