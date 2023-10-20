@@ -40,7 +40,7 @@ export default async function DebtSnowballPage() {
           </p>
         </div>
 
-        <HelpButton title="Debt Snowball" content={DebtSnowballHelpContent} />
+        <HelpButton title="Debt Snowball Help" content={DebtSnowballHelpContent} />
       </div>
       <Separator className="mt-6" />
       <DebtSnowball debtsData={debts} userId={user.id} />
