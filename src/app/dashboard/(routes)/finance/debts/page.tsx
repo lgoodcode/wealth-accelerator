@@ -2,10 +2,12 @@ import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
+import { getUser } from '@/lib/supabase/server/get-user';
 import { PageError } from '@/components/page-error';
+import { HelpButton } from '@/components/help-button';
 import { Separator } from '@/components/ui/separator';
 import { Debts } from './debts';
-import { getUser } from '@/lib/supabase/server/get-user';
+import { HelpContent } from './help-content';
 
 export const metadata: Metadata = {
   title: 'Debts',
@@ -28,11 +30,15 @@ export default async function DebtPage() {
 
   return (
     <div className="p-8">
-      <div className="space-y-1">
-        <h2 className="text-3xl font-bold">Debts</h2>
-        <p className="text-muted-foreground">
-          Manage debt information such as credit cards, loans, and mortgages.
-        </p>
+      <div className="flex flex-row justify-between">
+        <div className="space-y-1">
+          <h2 className="text-3xl font-bold">Debts</h2>
+          <p className="text-muted-foreground">
+            Manage debt information such as credit cards, loans, and mortgages.
+          </p>
+        </div>
+
+        <HelpButton title="Debts" content={HelpContent} />
       </div>
       <Separator className="mt-6" />
       <Debts debtsData={debts} />
