@@ -39,6 +39,7 @@ export interface Database {
       }
       creative_cash_flow_inputs: {
         Row: {
+          actual_waa: number
           all_other_income: number
           end_date: string
           id: string
@@ -49,6 +50,7 @@ export interface Database {
           tax_account_rate: number
         }
         Insert: {
+          actual_waa: number
           all_other_income: number
           end_date: string
           id: string
@@ -59,6 +61,7 @@ export interface Database {
           tax_account_rate: number
         }
         Update: {
+          actual_waa?: number
           all_other_income?: number
           end_date?: string
           id?: string
@@ -72,6 +75,7 @@ export interface Database {
       }
       creative_cash_flow_results: {
         Row: {
+          actual_waa: number
           business_overhead: number
           business_profit_before_tax: number
           collections: number
@@ -87,6 +91,7 @@ export interface Database {
           yearly_trend: number[]
         }
         Insert: {
+          actual_waa: number
           business_overhead: number
           business_profit_before_tax: number
           collections: number
@@ -102,6 +107,7 @@ export interface Database {
           yearly_trend: number[]
         }
         Update: {
+          actual_waa?: number
           business_overhead?: number
           business_profit_before_tax?: number
           collections?: number
@@ -738,7 +744,10 @@ export interface Database {
       }
       get_waa_account_id: {
         Args: Record<PropertyKey, never>
-        Returns: string
+        Returns: {
+          account_id: string
+          item_id: string
+        }[]
       }
       is_admin:
         | {

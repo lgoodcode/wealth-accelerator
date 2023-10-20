@@ -14,7 +14,6 @@ import { animationProps, countUpProps } from '../utils/animations';
 import { resultsLabels } from '../labels';
 import { ccfInputsAtom, ccfResultsAtom } from '../atoms';
 import { Trends } from './trends';
-import { UpdateWaa } from './update-waa';
 
 interface CreativeCashFlowResultsProps {
   hasAnimated: boolean;
@@ -24,7 +23,6 @@ export function CreativeCashFlowResults({ hasAnimated }: CreativeCashFlowResults
   const inputs = useAtomValue(ccfInputsAtom);
   const results = useAtomValue(ccfResultsAtom);
   const originalWaaRef = useRef(results?.waa ?? 0);
-  const originalTotalWaaRef = useRef((results?.total_waa ?? 0) - (results?.waa ?? 0));
   const createCountUpProps = createCountUpPropsFactory(!hasAnimated);
 
   if (!results) {
@@ -206,8 +204,6 @@ export function CreativeCashFlowResults({ hasAnimated }: CreativeCashFlowResults
               <span className="text-2xl">{dollarFormatter(originalWaaRef.current)}</span>
             </CardContent>
 
-            {/* <UpdateWaa originalTotalWaa={originalTotalWaaRef.current} /> */}
-
             <CardHeader className="space-y-1 pb-2">
               <CardTitle className="text-2xl">{resultsLabels.actual_waa.title}</CardTitle>
               <CardDescription className="text-md">
@@ -215,7 +211,9 @@ export function CreativeCashFlowResults({ hasAnimated }: CreativeCashFlowResults
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
-              <span className="text-2xl">{dollarFormatter(results.total_waa)}</span>
+              <span className="text-2xl">
+                {!!results.actual_waa ? dollarFormatter(results.actual_waa) : 'None'}
+              </span>
             </CardContent>
           </Card>
         </motion.div>

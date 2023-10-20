@@ -16,7 +16,6 @@ export type CreativeCashFlowManagementArgs = CreativeCashFlowManagementInputs & 
   business_transactions: Transaction[];
   personal_transactions: Transaction[];
   ytd_collections: number;
-  total_waa: number;
 };
 
 export type CreativeCashFlowManagementResult = {
@@ -28,7 +27,8 @@ export type CreativeCashFlowManagementResult = {
   /** tax on business profit */
   tax_account: number;
   waa: number;
-  total_waa: number;
+  /** The value of the bank account WAA snapshot */
+  actual_waa: number | null;
   daily_trend: number[];
   weekly_trend: number[];
   yearly_trend: number[];

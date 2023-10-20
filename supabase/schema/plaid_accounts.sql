@@ -57,25 +57,33 @@ $$ LANGUAGE plpgsql;
 ALTER FUNCTION is_own_plaid_account() OWNER TO postgres;
 
 
--- Retrieves the WAA account ID for a given user
+
+-- Retrieves the WAA account ID and item ID for a given user
 CREATE OR REPLACE FUNCTION get_waa_account_id()
-RETURNS TEXT AS $$
+RETURNS TABLE (account_id TEXT, item_id TEXT) AS $$
 DECLARE
-    v_account_ids TEXT[];
+  subquery_result INTEGER;
 BEGIN
-    -- Try to select the accounts
-    SELECT ARRAY_AGG(account_id) INTO v_account_ids FROM plaid_accounts pa
+  -- Define the temporary table to store the results of the CTE
+  CREATE TEMPORARY TABLE waa_accounts_temp AS (
+    SELECT p.item_id, pa.account_id
+    FROM plaid_accounts pa
     JOIN plaid p ON p.item_id = pa.item_id
     WHERE pa.type = 'waa' AND p.user_id = auth.uid()
-    LIMIT 2; -- Limit to 2 because an exception will be raised if more than 1 is found
+    LIMIT 2 -- Limit to 2 because an exception will be raised if more than 1 is found
+  );
 
-    IF v_account_ids IS NULL THEN
-        RAISE EXCEPTION 'No WAA account found';
-    ELSIF array_length(v_account_ids, 1) > 1 THEN
-        RAISE EXCEPTION 'Multiple WAA accounts found';
-    ELSE
-        RETURN v_account_ids[1];
-    END IF;
+  -- Check the number of rows returned by the subquery
+  SELECT COUNT(*) INTO subquery_result FROM waa_accounts_temp;
+  IF subquery_result = 0 THEN
+    RAISE EXCEPTION 'No WAA account found';
+  ELSIF subquery_result > 1 THEN
+    RAISE EXCEPTION 'Multiple WAA accounts found';
+  END IF;
+
+  RETURN QUERY SELECT waa_accounts_temp.account_id, waa_accounts_temp.item_id FROM waa_accounts_temp LIMIT 1;
+
+  DROP TABLE waa_accounts_temp;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

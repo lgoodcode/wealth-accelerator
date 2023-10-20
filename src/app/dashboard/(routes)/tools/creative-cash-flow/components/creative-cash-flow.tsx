@@ -8,7 +8,6 @@ import { ccfResultsAtom, resetCreativeCashFlowInputsAtom } from '../atoms';
 import { SaveAndResetButtons } from './save-and-reset-buttons';
 import { CreativeCashFlowInputs } from './creative-cash-flow-inputs';
 import { CreativeCashFlowResults } from './creative-cash-flow-results';
-import type { ErrorCode } from '@/lib/utils/CustomError';
 import type { Transaction } from '@/lib/plaid/types/transactions';
 
 enum TabsValue {
@@ -24,15 +23,6 @@ interface CcfContainerProps {
   };
   ytd_collections: number;
   default_tax_rate: number;
-  waa_account_id:
-    | {
-        error: ErrorCode;
-        data: null;
-      }
-    | {
-        error: null;
-        data: string;
-      };
 }
 
 export function CreativeCashFlow({
@@ -40,7 +30,6 @@ export function CreativeCashFlow({
   transactions,
   ytd_collections,
   default_tax_rate,
-  waa_account_id,
 }: CcfContainerProps) {
   const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Inputs);
   const [results, setResults] = useAtom(ccfResultsAtom);
@@ -87,7 +76,6 @@ export function CreativeCashFlow({
       <TabsContent value={TabsValue.Inputs}>
         <CreativeCashFlowInputs
           user_id={user_id}
-          waa_account_id={waa_account_id}
           transactions={transactions}
           ytd_collections={ytd_collections}
           default_tax_rate={default_tax_rate}

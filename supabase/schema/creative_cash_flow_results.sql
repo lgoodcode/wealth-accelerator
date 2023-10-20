@@ -9,6 +9,7 @@ CREATE TABLE creative_cash_flow_results (
   business_overhead numeric(12,2) NOT NULL,
   tax_account numeric(12,2) NOT NULL,
   waa numeric(12,2) NOT NULL,
+  actual_waa numeric(12,2),
   total_waa numeric(12,2) NOT NULL,
   daily_trend numeric(12,2)[] NOT NULL,
   weekly_trend numeric(12,2)[] NOT NULL,

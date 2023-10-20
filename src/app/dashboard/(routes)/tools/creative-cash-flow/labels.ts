@@ -57,7 +57,8 @@ export const resultsLabels = {
   },
   actual_waa: {
     title: 'Actual WAA',
-    description: 'Your current balance of your WAA account.',
+    description:
+      'Your current balance of your WAA account. If no there is no WAA account, this will be "None".',
   },
   collections: {
     title: 'Collections',
