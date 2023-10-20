@@ -11,7 +11,7 @@ interface ResultsCardProps {
 
 export function InputsCard({ record }: ResultsCardProps) {
   return (
-    <Card className="flex flex-col max-w-[500px] w-full min-w-[280px]">
+    <Card className="flex flex-col max-w-[500px] w-full min-w-[280px] h-fit">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">Inputs</CardTitle>
       </CardHeader>
@@ -41,11 +41,6 @@ export function InputsCard({ record }: ResultsCardProps) {
             <span>{inputLabels.tax_account_rate.title}</span>
             <span>{record.inputs.tax_account_rate}%</span>
           </div>
-          {/* Disabled by client until further notice */}
-          {/* <div className="flex py-4 justify-between border-b">
-            <span>{inputLabels.optimal_savings_strategy.title}</span>
-            <span>{dollarFormatter(record.inputs.optimal_savings_strategy)}</span>
-          </div> */}
         </div>
       </CardContent>
     </Card>

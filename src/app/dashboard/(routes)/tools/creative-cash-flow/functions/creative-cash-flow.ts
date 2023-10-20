@@ -16,8 +16,7 @@ export function creativeCashFlowManagement({
   payroll_and_distributions,
   lifestyle_expenses_tax_rate,
   tax_account_rate,
-  total_waa,
-}: CreativeCashFlowManagementArgs): CreativeCashFlowManagementResult {
+}: CreativeCashFlowManagementArgs): Omit<CreativeCashFlowManagementResult, 'actual_waa'> {
   // Convert the tax rates to decimal values
   lifestyle_expenses_tax_rate /= 100;
   tax_account_rate /= 100;
@@ -34,7 +33,6 @@ export function creativeCashFlowManagement({
   ytd_collections = dollarsToCents(ytd_collections);
   all_other_income = dollarsToCents(all_other_income);
   payroll_and_distributions = dollarsToCents(payroll_and_distributions);
-  total_waa = dollarsToCents(total_waa);
 
   // Verify the tax rates are decimal values.
   if (lifestyle_expenses_tax_rate > 1 || tax_account_rate > 1) {
@@ -175,7 +173,6 @@ export function creativeCashFlowManagement({
     business_overhead: centsToDollars(business_overhead),
     tax_account: centsToDollars(tax_account),
     waa: centsToDollars(waa),
-    total_waa: centsToDollars(total_waa + waa),
     daily_trend: daily_trend.map((trend) => centsToDollars(trend)),
     weekly_trend: daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_WEEK)),
     yearly_trend: daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_YEAR)),

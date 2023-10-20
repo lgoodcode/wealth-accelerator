@@ -1,8 +1,8 @@
 import { createSupabase, type SupabaseServer } from '@/lib/supabase/server/create-supabase';
 import { Transaction } from '@/lib/plaid/types/transactions';
 
+// Get all of the users transactions data split into business and personal
 const getTransactions = async (supabase: SupabaseServer, user_id: string) => {
-  // Get all of the users transactions data split into business and personal
   const { error: transactionsError, data: transactionsData } = await supabase.rpc(
     'get_transactions_by_user_id',
     { user_id }
@@ -18,8 +18,8 @@ const getTransactions = async (supabase: SupabaseServer, user_id: string) => {
   };
 };
 
+// Get the users year to date collections value to add to the Year to Date results
 const getCollections = async (supabase: SupabaseServer, user_id: string) => {
-  // Get the users year to date collections value to add to the Year to Date results
   const { error: collectionsError, data: collectionsData } = await supabase
     .from('personal_finance')
     .select('ytd_collections, default_tax_rate')

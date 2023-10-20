@@ -1,6 +1,6 @@
 'use client';
 
-import { captureException } from '@sentry/nextjs';
+import { captureException, captureMessage, type SeverityLevel } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
 import { Card, CardContent } from '@/components/ui/card';
@@ -23,12 +23,12 @@ const getError = async () => {
   }
 };
 
-const createError = () => {
+const createError = (level?: SeverityLevel | undefined) => {
   try {
     throw new Error('Test Error');
   } catch (error: any) {
     console.error(error);
-    captureException(error);
+    captureException(error, { level });
     toast.success(
       <div className="flex flex-col gap-4">
         <span>Error created on client:</span>
@@ -36,6 +36,15 @@ const createError = () => {
       </div>
     );
   }
+};
+
+const createLog = (level?: SeverityLevel | undefined) => {
+  captureMessage('test', { level });
+  toast.success(
+    <div className="flex flex-col gap-4">
+      <span>Message created on client:</span>
+    </div>
+  );
 };
 
 export function TestingContent() {
@@ -51,8 +60,11 @@ export function TestingContent() {
         </div>
         <div className="flex flex-row justify-between gap-8 items-center">
           <span>Client</span>
-          <Button variant="destructive" onClick={createError}>
-            Generate
+          <Button variant="destructive" onClick={() => createError()}>
+            Error
+          </Button>
+          <Button variant="secondary" onClick={() => createLog()}>
+            Log
           </Button>
         </div>
       </CardContent>

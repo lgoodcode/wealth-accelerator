@@ -21,7 +21,7 @@ export function TrendsCard({ record }: TrendsCardProps) {
   const actual_annual_trend = record.results.yearly_trend.reduce((a, b) => a + b, 0) / 3;
 
   return (
-    <Card className="flex flex-col max-w-[500px] w-full min-w-[280px]">
+    <Card className="flex flex-col max-w-[500px] w-full min-w-[280px] h-fit">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">{resultsLabels.trends.title}</CardTitle>
         <CardDescription>{resultsLabels.trends.description}</CardDescription>

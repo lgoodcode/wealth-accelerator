@@ -24,8 +24,6 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA "extensions";
 
 CREATE EXTENSION IF NOT EXISTS "pgjwt" WITH SCHEMA "extensions";
 
-CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
-
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 CREATE TYPE "public"."category" AS ENUM (
@@ -961,6 +959,26 @@ $$;
 
 ALTER FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") OWNER TO "postgres";
 
+CREATE OR REPLACE FUNCTION "public"."verify_update_creative_cash_flow"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+  IF NEW.id <> OLD.id THEN
+    RAISE EXCEPTION 'Updating "id" is not allowed';
+  END IF;
+  IF NEW.user_id <> OLD.user_id THEN
+    RAISE EXCEPTION 'Updating "user_id" is not allowed';
+  END IF;
+  IF NEW.created_at <> OLD.created_at THEN
+    RAISE EXCEPTION 'Updating "created_at" is not allowed';
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+ALTER FUNCTION "public"."verify_update_creative_cash_flow"() OWNER TO "postgres";
+
 CREATE OR REPLACE FUNCTION "public"."verify_update_debt_snowball"() RETURNS "trigger"
     LANGUAGE "plpgsql"
     AS $$
@@ -1271,6 +1289,8 @@ CREATE INDEX "idx_plaid_user_id" ON "public"."plaid" USING "btree" ("user_id");
 
 CREATE TRIGGER "on_insert_plaid_transactions" BEFORE INSERT ON "public"."plaid_transactions" FOR EACH ROW EXECUTE FUNCTION "public"."format_transaction"();
 
+CREATE TRIGGER "on_update_creative_cash_flow" BEFORE UPDATE ON "public"."creative_cash_flow" FOR EACH ROW EXECUTE FUNCTION "public"."verify_update_creative_cash_flow"();
+
 CREATE TRIGGER "on_update_debt_snowball" BEFORE UPDATE ON "public"."debt_snowball" FOR EACH ROW EXECUTE FUNCTION "public"."verify_update_debt_snowball"();
 
 CREATE TRIGGER "on_update_global_plaid_filter" BEFORE UPDATE ON "public"."global_plaid_filters" FOR EACH ROW EXECUTE FUNCTION "public"."update_global_plaid_filter"();
@@ -1360,9 +1380,9 @@ CREATE POLICY "Can delete own debts" ON "public"."debts" FOR DELETE TO "authenti
 
 CREATE POLICY "Can delete own institutions" ON "public"."plaid" FOR DELETE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Can delete own plaid accounts" ON "public"."plaid_accounts" FOR DELETE TO "authenticated" USING ("public"."is_own_plaid_account"());
+CREATE POLICY "Can delete own plaid accounts" ON "public"."plaid_accounts" FOR DELETE TO "authenticated" USING (( SELECT "public"."is_own_plaid_account"() AS "is_own_plaid_account"));
 
-CREATE POLICY "Can delete own plaid transactions" ON "public"."plaid_transactions" FOR DELETE TO "authenticated" USING ("public"."is_own_plaid_transaction"());
+CREATE POLICY "Can delete own plaid transactions" ON "public"."plaid_transactions" FOR DELETE TO "authenticated" USING (( SELECT "public"."is_own_plaid_transaction"() AS "is_own_plaid_transaction"));
 
 CREATE POLICY "Can insert new creative cash flow data" ON "public"."creative_cash_flow" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
@@ -1382,9 +1402,9 @@ CREATE POLICY "Can insert new debts" ON "public"."debts" FOR INSERT TO "authenti
 
 CREATE POLICY "Can insert new institutions" ON "public"."plaid" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Can insert own plaid accounts" ON "public"."plaid_accounts" FOR INSERT TO "authenticated" WITH CHECK ("public"."is_own_plaid_account"());
+CREATE POLICY "Can insert own plaid accounts" ON "public"."plaid_accounts" FOR INSERT TO "authenticated" WITH CHECK (( SELECT "public"."is_own_plaid_account"() AS "is_own_plaid_account"));
 
-CREATE POLICY "Can insert own plaid transactions" ON "public"."plaid_transactions" FOR INSERT TO "authenticated" WITH CHECK ("public"."is_own_plaid_transaction"());
+CREATE POLICY "Can insert own plaid transactions" ON "public"."plaid_transactions" FOR INSERT TO "authenticated" WITH CHECK (( SELECT "public"."is_own_plaid_transaction"() AS "is_own_plaid_transaction"));
 
 CREATE POLICY "Can update own creative cash flow data" ON "public"."creative_cash_flow" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
@@ -1398,9 +1418,9 @@ CREATE POLICY "Can update own institutions" ON "public"."plaid" FOR UPDATE TO "a
 
 CREATE POLICY "Can update own personal finances" ON "public"."personal_finance" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Can update own plaid accounts" ON "public"."plaid_accounts" FOR UPDATE TO "authenticated" USING ("public"."is_own_plaid_account"()) WITH CHECK ("public"."is_own_plaid_account"());
+CREATE POLICY "Can update own plaid accounts" ON "public"."plaid_accounts" FOR UPDATE TO "authenticated" USING (( SELECT "public"."is_own_plaid_account"() AS "is_own_plaid_account")) WITH CHECK (( SELECT "public"."is_own_plaid_account"() AS "is_own_plaid_account"));
 
-CREATE POLICY "Can update own plaid transactions" ON "public"."plaid_transactions" FOR UPDATE TO "authenticated" USING ("public"."is_own_plaid_transaction"()) WITH CHECK ("public"."is_own_plaid_transaction"());
+CREATE POLICY "Can update own plaid transactions" ON "public"."plaid_transactions" FOR UPDATE TO "authenticated" USING (( SELECT "public"."is_own_plaid_transaction"() AS "is_own_plaid_transaction")) WITH CHECK (( SELECT "public"."is_own_plaid_transaction"() AS "is_own_plaid_transaction"));
 
 CREATE POLICY "Can update own user data or admins can update all users data" ON "public"."users" FOR UPDATE TO "authenticated" USING ((("auth"."uid"() = "id") OR "public"."is_admin"("auth"."uid"()))) WITH CHECK (((("auth"."uid"() = "id") AND ("role" = "role")) OR "public"."is_admin"("auth"."uid"())));
 
@@ -1424,9 +1444,9 @@ CREATE POLICY "Can view own institutions" ON "public"."plaid" FOR SELECT TO "aut
 
 CREATE POLICY "Can view own personal finances" ON "public"."personal_finance" FOR SELECT TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Can view own plaid accounts" ON "public"."plaid_accounts" FOR SELECT TO "authenticated" USING ("public"."is_own_plaid_account"());
+CREATE POLICY "Can view own plaid accounts" ON "public"."plaid_accounts" FOR SELECT TO "authenticated" USING (( SELECT "public"."is_own_plaid_account"() AS "is_own_plaid_account"));
 
-CREATE POLICY "Can view own plaid transactions" ON "public"."plaid_transactions" FOR SELECT TO "authenticated" USING ("public"."is_own_plaid_transaction"());
+CREATE POLICY "Can view own plaid transactions" ON "public"."plaid_transactions" FOR SELECT TO "authenticated" USING (( SELECT "public"."is_own_plaid_transaction"() AS "is_own_plaid_transaction"));
 
 CREATE POLICY "Can view their own data and admins can view all user data" ON "public"."users" FOR SELECT TO "authenticated" USING ((("auth"."uid"() = "id") OR "public"."is_admin"("auth"."uid"())));
 
@@ -1624,6 +1644,10 @@ GRANT ALL ON FUNCTION "public"."update_user_plaid_filter"() TO "service_role";
 GRANT ALL ON FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") TO "anon";
 GRANT ALL ON FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."update_user_profile"("new_name" "text", "new_email" "text") TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."verify_update_creative_cash_flow"() TO "anon";
+GRANT ALL ON FUNCTION "public"."verify_update_creative_cash_flow"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."verify_update_creative_cash_flow"() TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."verify_update_debt_snowball"() TO "anon";
 GRANT ALL ON FUNCTION "public"."verify_update_debt_snowball"() TO "authenticated";

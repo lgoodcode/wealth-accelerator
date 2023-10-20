@@ -13,6 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 interface DatePickerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   date?: Date;
   variant?: Variant;
+  disabled?: boolean;
   onSelect?: (date: Date | undefined) => void;
   calendarProps?: Omit<DayPickerSingleProps, 'mode'>;
   onOpenChange?: (isOpen: boolean) => void;
@@ -21,6 +22,7 @@ interface DatePickerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSel
 export function DatePicker({
   className,
   date,
+  disabled = false,
   onSelect,
   calendarProps,
   placeholder = 'Pick a date',
@@ -45,6 +47,7 @@ export function DatePicker({
       <PopoverTrigger asChild>
         <Button
           variant={variant}
+          disabled={disabled}
           className={cn(
             'w-[280px] justify-start text-left font-normal',
             !date && 'text-muted-foreground',
@@ -60,6 +63,7 @@ export function DatePicker({
         <Calendar
           mode="single"
           selected={date}
+          disabled={disabled}
           onSelect={handleSelect}
           initialFocus
           {...calendarProps}

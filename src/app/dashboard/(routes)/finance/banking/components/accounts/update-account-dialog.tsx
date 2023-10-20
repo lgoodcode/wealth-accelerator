@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 import type { Row } from '@tanstack/react-table';
 
+import { CustomError } from '@/lib/utils/CustomError';
 import {
   Select,
   SelectContent,
@@ -47,16 +48,45 @@ export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDi
   const queryClient = useQueryClient();
   const form = useForm<UpdateAccountForm>({
     resolver: zodResolver(updateAccountFormSchema),
-    values: {
-      name: row.original.name,
-      type: row.original.type,
-      enabled: row.original.enabled,
-    },
+    values: { ...row.original },
   });
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: (data: UpdateAccountForm) => updateAccount(row.original.account_id, data),
-    onError: (error) => {
+    mutationFn: (data: UpdateAccountForm) => {
+      // If the data is the same, don't make the request
+      if (
+        data.name === row.original.name &&
+        data.type === row.original.type &&
+        data.enabled === row.original.enabled
+      ) {
+        return Promise.resolve(row.original);
+      }
+
+      // Check if the user is attempting to set a second WAA account
+      if (data.type === 'waa' && row.original.type !== 'waa') {
+        const cache = queryClient.getQueryData<Account[]>(['accounts', row.original.item_id]);
+
+        if (
+          cache?.some(
+            (account) => account.type === 'waa' && account.account_id !== row.original.account_id
+          )
+        ) {
+          throw new CustomError('Only one WAA account is allowed per institution');
+        }
+      }
+
+      return updateAccount(row.original.account_id, data);
+    },
+    onError: (error: Error | CustomError) => {
+      if (error instanceof CustomError) {
+        form.setError('type', {
+          type: 'manual',
+          message: error.message,
+        });
+        return;
+      }
+
+      onOpenChange(false);
       console.error(error);
       captureException(error);
       toast.error('An error occurred while updating the account');
@@ -79,8 +109,9 @@ export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDi
         }
         return oldAccounts;
       });
+
+      onOpenChange(false);
     },
-    onSettled: () => onOpenChange(false),
   });
 
   const onSubmitUpdate = useCallback((data: UpdateAccountForm) => mutate(data), [mutate]);

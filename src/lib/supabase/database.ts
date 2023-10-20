@@ -72,6 +72,7 @@ export interface Database {
       }
       creative_cash_flow_results: {
         Row: {
+          actual_waa: number | null
           business_overhead: number
           business_profit_before_tax: number
           collections: number
@@ -80,13 +81,14 @@ export interface Database {
           lifestyle_expenses: number
           lifestyle_expenses_tax: number
           tax_account: number
-          total_waa: number
+          total_waa: number | null
           waa: number
           weekly_trend: number[]
           year_to_date: number
           yearly_trend: number[]
         }
         Insert: {
+          actual_waa?: number | null
           business_overhead: number
           business_profit_before_tax: number
           collections: number
@@ -95,13 +97,14 @@ export interface Database {
           lifestyle_expenses: number
           lifestyle_expenses_tax: number
           tax_account: number
-          total_waa: number
+          total_waa?: number | null
           waa: number
           weekly_trend: number[]
           year_to_date: number
           yearly_trend: number[]
         }
         Update: {
+          actual_waa?: number | null
           business_overhead?: number
           business_profit_before_tax?: number
           collections?: number
@@ -110,7 +113,7 @@ export interface Database {
           lifestyle_expenses?: number
           lifestyle_expenses_tax?: number
           tax_account?: number
-          total_waa?: number
+          total_waa?: number | null
           waa?: number
           weekly_trend?: number[]
           year_to_date?: number
@@ -734,6 +737,13 @@ export interface Database {
           category: Database["public"]["Enums"]["category"]
           date: string
           account: string
+        }[]
+      }
+      get_waa_account_id: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          account_id: string
+          item_id: string
         }[]
       }
       is_admin:

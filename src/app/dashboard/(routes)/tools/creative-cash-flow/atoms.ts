@@ -6,13 +6,10 @@ import type {
   CreativeCashFlowRecord,
 } from './types';
 
-type UpdateWaa = {
-  originalTotalWaa: number;
-  newWaa: number;
-};
-
-const defaultValues = {
+const defaultValues: CreativeCashFlowManagementInputs = {
+  // @ts-ignore
   start_date: undefined,
+  // @ts-ignore
   end_date: undefined,
   all_other_income: 0,
   payroll_and_distributions: 0,
@@ -29,23 +26,6 @@ export const resetCreativeCashFlowInputsAtom = atom(null, (_, set) => {
 });
 
 export const ccfResultsAtom = atom<CreativeCashFlowManagementResult | null>(null);
-
-export const updatecreativeCashFlowResultWaaAtom = atom(
-  null,
-  (get, set, { originalTotalWaa, newWaa }: UpdateWaa) => {
-    const results = get(ccfResultsAtom);
-
-    if (!results) {
-      throw new Error('creativeCashFlowResultAtom is not initialized');
-    }
-
-    set(ccfResultsAtom, {
-      ...results,
-      waa: newWaa,
-      total_waa: originalTotalWaa + newWaa,
-    });
-  }
-);
 
 /**
  * Records
