@@ -12,6 +12,7 @@ interface SyncInstitutionParams {
   };
 }
 
+export const maxDuration = 120;
 export const dynamic = 'force-dynamic';
 export const GET = syncTransactions;
 
