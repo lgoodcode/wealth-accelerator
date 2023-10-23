@@ -5,6 +5,7 @@ import { getUser } from '@/lib/supabase/server/get-user';
 import { plaidClient } from '@/lib/plaid/config';
 import { getItemFromItemId } from '@/lib/plaid/get-item-from-item-id';
 
+export const maxDuration = 120;
 export const dynamic = 'force-dynamic';
 export const GET = getAccountBalance;
 
