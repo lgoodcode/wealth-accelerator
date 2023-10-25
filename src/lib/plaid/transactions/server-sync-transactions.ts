@@ -106,6 +106,7 @@ export const serverSyncTransactions = async (
   }
 
   try {
+    console.log({ cursor: item.cursor ?? undefined });
     const { data } = await plaidClient.transactionsSync({
       access_token: item.access_token,
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
@@ -126,8 +127,6 @@ export const serverSyncTransactions = async (
       supabaseAdmin
     );
     const removedError = await removeTransactions(data.removed, supabaseAdmin);
-
-    console.log({ data });
 
     if (addedError || updatedError || removedError) {
       return {
@@ -169,17 +168,16 @@ export const serverSyncTransactions = async (
       };
     }
 
-    console.log({
-      cursor: item.cursor,
-      has_more: data.has_more,
-    });
+    const isFirstSync = !item.cursor && !data.has_more;
+    const hasData = data.added.length || data.modified.length || data.next_cursor;
 
     return {
       error: null,
       data: {
         // If it's the first sync, has_more will be false, so we need to set it to true
         // so that the client will continue to make requests until has_more is false
-        hasMore: !item.cursor && !data.has_more ? true : data.has_more,
+        // only if the account actually has transaction data
+        hasMore: isFirstSync && hasData ? true : data.has_more,
         transactions: null,
       },
     };
