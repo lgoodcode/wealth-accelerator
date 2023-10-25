@@ -13,6 +13,8 @@ import type {
  * This will return an error if the request fails or if the Plaid error is a credential
  * error. If the Plaid error is a rate limit error, it will wait a minute and continue
  * making requests.
+ *
+ * NOTE: this just syncs the data on the server, it does not actually retrieve any data
  */
 export const clientSyncTransactions = async (item_id: string) => {
   // Track the number of requests made to Plaid - rate limit is 50 per minute

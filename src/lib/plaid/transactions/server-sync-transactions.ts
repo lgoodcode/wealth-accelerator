@@ -1,4 +1,5 @@
-import { PLAID_SYNC_BATCH_SIZE } from '@/config/app';
+import { captureException } from '@sentry/nextjs';
+
 import { createLinkTokenRequest, plaidClient } from '@/lib/plaid/config';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { updateTransactions } from '@/lib/plaid/transactions/update-transactions';
@@ -12,7 +13,11 @@ import {
 import type { Institution } from '@/lib/plaid/types/institutions';
 import type { Filter, UserFilter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
-import { captureException } from '@sentry/nextjs';
+
+/**
+ * The number of transactions to retrieve per request. The maximum is 500.
+ */
+export const PLAID_SYNC_BATCH_SIZE = 500;
 
 type GetFilters<F> =
   | {
@@ -162,12 +167,16 @@ export const serverSyncTransactions = async (
       };
     }
 
+    const isFirstSync = !item.cursor && !data.has_more;
+    const hasData = data.added.length || data.modified.length || data.next_cursor;
+
     return {
       error: null,
       data: {
         // If it's the first sync, has_more will be false, so we need to set it to true
         // so that the client will continue to make requests until has_more is false
-        hasMore: !item.cursor && !data.has_more ? true : data.has_more,
+        // only if the account actually has transaction data
+        hasMore: isFirstSync && hasData ? true : data.has_more,
         transactions: null,
       },
     };

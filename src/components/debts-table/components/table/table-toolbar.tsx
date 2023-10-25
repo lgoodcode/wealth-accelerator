@@ -23,16 +23,16 @@ export function TableToolbar({ table }: TableToolbarProps) {
           placeholder="Filter debts"
           value={(table.getColumn('description')?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn('description')?.setFilterValue(event.target.value)}
-          className="h-8 w-[150px] lg:w-[250px]"
+          className="h-9 w-[150px] lg:w-[250px]"
         />
         {isFiltered && (
           <Button
             variant="ghost"
             onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3"
+            className="px-2 lg:px-3"
           >
             Reset
-            <X className="ml-2 h-4 w-4" />
+            <X className="ml-1 h-5 w-5 my-auto" />
           </Button>
         )}
       </div>
