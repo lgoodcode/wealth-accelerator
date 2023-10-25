@@ -5,7 +5,7 @@ import { useState } from 'react';
 import {
   ColumnFiltersState,
   SortingState,
-  VisibilityState,
+  // VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -38,7 +38,7 @@ interface AccountsTableProps {
 }
 
 export function AccountsTable({ item_id }: AccountsTableProps) {
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  // const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const { isError, isFetching, accounts } = useAccounts(item_id);
@@ -48,14 +48,14 @@ export function AccountsTable({ item_id }: AccountsTableProps) {
     columns,
     state: {
       sorting,
-      columnVisibility,
+      // columnVisibility,
       columnFilters,
     },
     enableHiding: false,
     autoResetPageIndex: false,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
+    // onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

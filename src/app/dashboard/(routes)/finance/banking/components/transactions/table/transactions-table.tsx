@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   ColumnFiltersState,
   SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -38,8 +37,6 @@ interface TransactionsTableProps {
 }
 
 export function TransactionsTable({ item }: TransactionsTableProps) {
-  // const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const { isError, isFetching, transactions } = useTransactions(item);
@@ -49,8 +46,6 @@ export function TransactionsTable({ item }: TransactionsTableProps) {
     columns,
     state: {
       sorting,
-      columnVisibility,
-      // rowSelection,
       columnFilters,
     },
     initialState: {
@@ -59,11 +54,8 @@ export function TransactionsTable({ item }: TransactionsTableProps) {
       },
     },
     autoResetPageIndex: false,
-    // enableRowSelection: true,
-    // onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
