@@ -19,7 +19,7 @@ export function ClientError({
       )}
     >
       <div className="flex flex-col space-y-2">
-        <h1 className="text-4xl font-medium capitalize">{title}</h1>
+        <h1 className="text-4xl font-medium">{title}</h1>
         <span className="text-lg text-muted-foreground">Please reload the page and try again.</span>
       </div>
       {children}
