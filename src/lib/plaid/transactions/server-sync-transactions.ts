@@ -1,4 +1,5 @@
-import { PLAID_SYNC_BATCH_SIZE } from '@/config/app';
+import { captureException } from '@sentry/nextjs';
+
 import { createLinkTokenRequest, plaidClient } from '@/lib/plaid/config';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { updateTransactions } from '@/lib/plaid/transactions/update-transactions';
@@ -12,7 +13,11 @@ import {
 import type { Institution } from '@/lib/plaid/types/institutions';
 import type { Filter, UserFilter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
-import { captureException } from '@sentry/nextjs';
+
+/**
+ * The number of transactions to retrieve per request. The maximum is 500.
+ */
+export const PLAID_SYNC_BATCH_SIZE = 500;
 
 type GetFilters<F> =
   | {
@@ -122,6 +127,8 @@ export const serverSyncTransactions = async (
     );
     const removedError = await removeTransactions(data.removed, supabaseAdmin);
 
+    console.log({ data });
+
     if (addedError || updatedError || removedError) {
       return {
         error: {
@@ -161,6 +168,11 @@ export const serverSyncTransactions = async (
         },
       };
     }
+
+    console.log({
+      cursor: item.cursor,
+      has_more: data.has_more,
+    });
 
     return {
       error: null,
