@@ -52,10 +52,10 @@ export function TableToolbar({ table }: TableToolbarProps) {
           <Button
             variant="ghost"
             onClick={() => table.resetColumnFilters()}
-            className="h-9 px-2 lg:px-3"
+            className="px-2 lg:px-3"
           >
             Reset
-            <X className="ml-2 h-4 w-4" />
+            <X className="ml-1 h-5 w-5 my-auto" />
           </Button>
         )}
       </div>
