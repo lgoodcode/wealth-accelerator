@@ -1,8 +1,8 @@
 import { supabase } from '@/lib/supabase/client';
-import type { FinanceInfoSchemaType } from '../schema';
+import type { financeInfoSchema } from '../schema';
 
 export const useUpdateFinanceInfo = () => {
-  return async (user_id: string, data: FinanceInfoSchemaType) => {
+  return async (user_id: string, data: FinanceInfoSchema) => {
     const { error } = await supabase
       .from('personal_finance')
       .update({

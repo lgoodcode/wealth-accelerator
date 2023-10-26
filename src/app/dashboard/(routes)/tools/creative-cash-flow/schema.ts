@@ -56,4 +56,17 @@ export const inputsFormSchema = z
     path: ['start_date'],
   });
 
-export type InputsFormSchemaType = z.infer<typeof inputsFormSchema>;
+export const visualizerInputFormSchema = z.object({
+  start_date: z.date({
+    required_error: 'Select a date',
+    invalid_type_error: 'Select a date',
+  }),
+  end_date: z.date({
+    required_error: 'Select a date',
+    invalid_type_error: 'Select a date',
+  }),
+});
+
+export type InputsFormSchema = z.infer<typeof inputsFormSchema>;
+
+export type VisualizerInputFormSchema = z.infer<typeof visualizerInputFormSchema>;
