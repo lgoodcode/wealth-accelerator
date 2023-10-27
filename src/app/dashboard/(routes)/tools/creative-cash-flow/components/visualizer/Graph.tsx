@@ -82,7 +82,10 @@ const Base = withTooltip<AreaProps, TooltipData>(
       () =>
         scaleLinear({
           range: [innerHeight + margin.top, margin.top],
-          domain: [min(data, getCcfValue) || 0, (max(data, getCcfValue) || 0) + innerHeight / 3],
+          domain: [
+            Math.min(0, min(data, getCcfValue) || 0),
+            (max(data, getCcfValue) || 0) + innerHeight / 3,
+          ],
           nice: true,
         }),
       [margin.top, innerHeight, data]
