@@ -206,8 +206,8 @@ const Base = withTooltip<AreaProps, TooltipData>(
               {`$${getCcfValue(tooltipData)}`}
             </TooltipWithBounds>
             <Tooltip
-              top={innerHeight + margin.top - 14}
-              left={tooltipLeft}
+              top={tooltipTop - 12}
+              left={tooltipLeft - 78}
               style={{
                 ...defaultStyles,
                 minWidth: 72,
