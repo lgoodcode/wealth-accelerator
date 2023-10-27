@@ -243,7 +243,7 @@ export function Graph({ label, dataKey, height, width }: VisualizerResultsProps)
 
   return (
     <div className="flex flex-col gap-2 mx-auto">
-      <h3 className="text-lg text-center capitalize">{label}</h3>
+      <h3 className="text-lg font-semibold text-center capitalize">{label}</h3>
       <Base data={data} dataKey={dataKey} width={width} height={height} />
     </div>
   );
