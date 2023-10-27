@@ -652,6 +652,15 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: unknown
       }
+      get_ccf_transactions_by_user_id: {
+        Args: {
+          user_id: string
+        }
+        Returns: {
+          personal: Database["public"]["CompositeTypes"]["ccf_plaid_transaction"][]
+          business: Database["public"]["CompositeTypes"]["ccf_plaid_transaction"][]
+        }[]
+      }
       get_creative_cash_flow_record: {
         Args: {
           record_id: string
@@ -722,9 +731,15 @@ export interface Database {
         }
         Returns: Json
       }
+      get_transactions_count: {
+        Args: {
+          _item_id: string
+        }
+        Returns: number
+      }
       get_transactions_with_account_name: {
         Args: {
-          ins_item_id: string
+          _item_id: string
           offset_val: number
           limit_val: number
         }
@@ -808,6 +823,14 @@ export interface Database {
       user_role: "USER" | "ADMIN"
     }
     CompositeTypes: {
+      ccf_plaid_transaction: {
+        id: string
+        item_id: string
+        name: string
+        amount: number
+        category: unknown
+        date: string
+      }
       current_calculation_results: {
         debt_payoffs: unknown
         balance_tracking: unknown

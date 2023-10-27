@@ -5,6 +5,7 @@ import type {
   CreativeCashFlowManagementResult,
   CreativeCashFlowRecord,
 } from './types';
+import type { VisualizeCcf } from './types';
 
 const defaultValues: CreativeCashFlowManagementInputs = {
   // @ts-ignore
@@ -26,6 +27,8 @@ export const resetCreativeCashFlowInputsAtom = atom(null, (_, set) => {
 });
 
 export const ccfResultsAtom = atom<CreativeCashFlowManagementResult | null>(null);
+
+export const visualizeCcfAtom = atom<VisualizeCcf[]>([]);
 
 /**
  * Records

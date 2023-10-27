@@ -1,4 +1,4 @@
-import type { Transaction } from '@/lib/plaid/types/transactions';
+import type { Category, Transaction } from '@/lib/plaid/types/transactions';
 
 export type CreativeCashFlowManagementInputs = {
   start_date: Date;
@@ -44,4 +44,27 @@ export type CreativeCashFlowRecord = {
     end_date: string;
   };
   results: CreativeCashFlowManagementResult;
+};
+
+export type CcfTransaction = {
+  id: string;
+  item_id: string;
+  name: string;
+  amount: number;
+  category: Category;
+  date: string;
+};
+
+export type VisualizeCcf = {
+  range: {
+    start: Date;
+    end: Date;
+  };
+  collections: number;
+  lifestyle_expenses: number;
+  lifestyle_expenses_tax: number;
+  business_profit_before_tax: number;
+  business_overhead: number;
+  tax_account: number;
+  waa: number;
 };
