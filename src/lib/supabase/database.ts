@@ -739,7 +739,7 @@ export interface Database {
       }
       get_transactions_with_account_name: {
         Args: {
-          _item_id: string
+          ins_item_id: string
           offset_val: number
           limit_val: number
         }
@@ -828,7 +828,7 @@ export interface Database {
         item_id: string
         name: string
         amount: number
-        category: unknown
+        category: string
         date: string
       }
       current_calculation_results: {

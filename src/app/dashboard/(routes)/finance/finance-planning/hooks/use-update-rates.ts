@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 
 import { supabase } from '@/lib/supabase/client';
-import type { ratesFormSchema } from '../schema';
+import type { RatesFormSchema } from '../schema';
 
 export const useUpdateRates = () => {
   const router = useRouter();

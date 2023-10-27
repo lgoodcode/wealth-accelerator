@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase/client';
-import type { financeInfoSchema } from '../schema';
+import type { FinanceInfoSchema } from '../schema';
 
 export const useUpdateFinanceInfo = () => {
   return async (user_id: string, data: FinanceInfoSchema) => {
