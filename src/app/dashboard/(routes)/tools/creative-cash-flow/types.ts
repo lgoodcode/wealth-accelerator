@@ -68,3 +68,5 @@ export type VisualizeCcf = {
   tax_account: number;
   waa: number;
 };
+
+export type VisualizeCcfDataKey = keyof Omit<VisualizeCcf, 'range'>;

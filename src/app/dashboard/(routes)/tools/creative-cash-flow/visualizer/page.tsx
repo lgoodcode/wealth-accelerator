@@ -40,9 +40,9 @@ export default async function CreativeCashFlowVisualizerPage() {
       <div className="flex flex-row justify-between">
         <div className="space-y-1">
           <h2 className="text-3xl font-bold">Creative Cash Flow Visualizer</h2>
-          <p className="text-muted-foreground">
+          {/* <p className="text-muted-foreground">
             Visually see to understand where your money is going.
-          </p>
+          </p> */}
         </div>
 
         <HelpButton title="Creative Cash Flow Help" content={CreativeCashFlowHelpContent} />
@@ -53,7 +53,7 @@ export default async function CreativeCashFlowVisualizerPage() {
           <VisualizerInputs transactions={transactions} />
         </div>
         <div className="col-span-9">
-          <VisualizerResults height={300} width={420} />
+          <VisualizerResults />
         </div>
       </div>
     </div>
