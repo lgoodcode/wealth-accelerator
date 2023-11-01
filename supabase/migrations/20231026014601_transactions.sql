@@ -34,7 +34,7 @@ BEGIN
     INNER JOIN plaid p ON p.item_id = pa.item_id
     INNER JOIN users u ON u.id = p.user_id
   WHERE
-    pa.type = 'personal' AND
+    pa.type IN ('personal', 'waa') AND
     u.id = $1 AND
     pa.enabled = true;
 

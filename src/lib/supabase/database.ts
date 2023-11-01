@@ -731,12 +731,6 @@ export interface Database {
         }
         Returns: Json
       }
-      get_transactions_count: {
-        Args: {
-          _item_id: string
-        }
-        Returns: number
-      }
       get_transactions_with_account_name: {
         Args: {
           ins_item_id: string
