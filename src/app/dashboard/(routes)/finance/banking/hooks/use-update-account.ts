@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase/client';
 import type { UpdateAccountForm } from '../schema';
 import type { Account } from '@/lib/plaid/types/institutions';
+import { CustomError } from '@/lib/utils/CustomError';
 
 export const useUpdateAccount = () => {
   return async (account_id: string, data: UpdateAccountForm) => {
@@ -16,6 +17,9 @@ export const useUpdateAccount = () => {
       .single();
 
     if (error) {
+      if (error.message.toLowerCase().includes('duplicate account name')) {
+        throw new CustomError(error, 'DUPLICATE_ACCOUNT_NAME');
+      }
       throw error;
     }
 

@@ -79,7 +79,7 @@ export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDi
     },
     onError: (error: Error | CustomError) => {
       if (error instanceof CustomError) {
-        form.setError('type', {
+        form.setError(error.code === 'DUPLICATE_ACCOUNT_NAME' ? 'name' : 'type', {
           type: 'manual',
           message: error.message,
         });
