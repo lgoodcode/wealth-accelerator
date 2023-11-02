@@ -10,6 +10,7 @@ import { CreativeCashFlowHelpContent } from '../creative-cash-flow-help-content'
 import { VisualizerInputs } from '../components/visualizer/VisualizerInputs';
 import { VisualizerResults } from '../components/visualizer/VisualizerResults';
 import type { CcfTransaction } from '../types';
+import { Badge } from '@/components/ui/badge';
 
 export const metadata: Metadata = {
   title: 'Visualizer | Creative Cash Flow',
@@ -39,7 +40,12 @@ export default async function CreativeCashFlowVisualizerPage() {
     <div className="p-8 space-y-6">
       <div className="flex flex-row justify-between">
         <div className="space-y-1">
-          <h2 className="text-3xl font-bold">Creative Cash Flow Visualizer</h2>
+          <div className="flex flex-row items-center">
+            <h2 className="text-3xl font-bold">Creative Cash Flow Visualizer</h2>
+            <Badge className="ml-2 h-7" size="md">
+              Beta
+            </Badge>
+          </div>
           {/* <p className="text-muted-foreground">
             Visually see to understand where your money is going.
           </p> */}
