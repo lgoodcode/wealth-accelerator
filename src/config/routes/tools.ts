@@ -20,7 +20,6 @@ export const toolsRoutes: Route[] = [
     path: '/dashboard/tools/creative-cash-flow/visualizer',
     Icon: AreaChart,
     description: 'Visualize the flow of your money with the creative cash flow algorithm.',
-    disabled: true,
   },
   {
     name: 'Debt Snowball',

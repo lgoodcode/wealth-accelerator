@@ -1,3 +1,6 @@
+'use client';
+
+import { useAtomValue } from 'jotai';
 import React, { useMemo, useCallback } from 'react';
 import { AreaClosed, Line, Bar } from '@visx/shape';
 import { curveMonotoneX } from '@visx/curve';
@@ -7,11 +10,11 @@ import { withTooltip, Tooltip, TooltipWithBounds, defaultStyles } from '@visx/to
 import { WithTooltipProvidedProps } from '@visx/tooltip/lib/enhancers/withTooltip';
 import { localPoint } from '@visx/event';
 import { LinearGradient } from '@visx/gradient';
-import { min, max, extent, bisector } from '@visx/vendor/d3-array';
+import { max, extent, bisector } from '@visx/vendor/d3-array';
 import { timeFormat } from '@visx/vendor/d3-time-format';
-import type { VisualizeCcf, VisualizeCcfDataKey } from '../../types';
-import { useAtomValue } from 'jotai';
+
 import { visualizeCcfAtom } from '../../atoms';
+import type { VisualizeCcf, VisualizeCcfDataKey } from '../../types';
 
 type TooltipData = VisualizeCcf;
 
@@ -66,7 +69,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
 
     // accessors
     const getCcfValue = (data: VisualizeCcf) => {
-      return data[dataKey];
+      return !data ? 0 : data[dataKey];
     };
 
     // scales
@@ -199,15 +202,15 @@ const Base = withTooltip<AreaProps, TooltipData>(
           <div>
             <TooltipWithBounds
               key={Math.random()}
-              top={tooltipTop - 12}
-              left={tooltipLeft + 12}
+              top={tooltipTop - 14}
+              left={tooltipLeft + 50}
               style={tooltipStyles}
             >
               {`$${getCcfValue(tooltipData)}`}
             </TooltipWithBounds>
             <Tooltip
-              top={tooltipTop - 12}
-              left={tooltipLeft - 78}
+              top={innerHeight + margin.top - 14}
+              left={tooltipLeft}
               style={{
                 ...defaultStyles,
                 minWidth: 72,
@@ -225,23 +228,13 @@ const Base = withTooltip<AreaProps, TooltipData>(
 );
 
 interface VisualizerResultsProps {
-  label: string;
   dataKey: VisualizeCcfDataKey;
   height: number;
   width: number;
 }
 
-export function Graph({ label, dataKey, height, width }: VisualizerResultsProps) {
+export function Graph({ dataKey, height, width }: VisualizerResultsProps) {
   const data = useAtomValue(visualizeCcfAtom);
 
-  if (!data.length) {
-    return null;
-  }
-
-  return (
-    <div className="flex flex-col gap-2 mx-auto">
-      <h3 className="text-lg font-semibold text-center capitalize">{label}</h3>
-      <Base data={data} dataKey={dataKey} width={width} height={height} />
-    </div>
-  );
+  return <Base data={data} dataKey={dataKey} width={width} height={height} />;
 }
