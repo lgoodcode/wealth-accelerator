@@ -27,7 +27,7 @@ export type CreativeCashFlowManagementResult = {
   /** tax on business profit */
   tax_account: number;
   waa: number;
-  /** The value of the bank account WAA snapshot */
+  /** The value of the bank account WAA snapshot - is null if there is no WAA account */
   actual_waa: number | null;
   daily_trend: number[];
   weekly_trend: number[];

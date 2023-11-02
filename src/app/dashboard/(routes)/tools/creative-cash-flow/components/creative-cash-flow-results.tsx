@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { AnimatePresence, motion } from 'framer-motion';
 import { format } from 'date-fns';
 import CountUp from 'react-countup';
@@ -12,8 +12,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { createCountUpPropsFactory } from '../utils/create-count-up-props';
 import { animationProps, countUpProps } from '../utils/animations';
 import { resultsLabels } from '../labels';
-import { ccfInputsAtom, ccfResultsAtom } from '../atoms';
+import { ccfInputsAtom, ccfResultsAtom, hasActualWaaAtom, updateActualWaaAtom } from '../atoms';
 import { Trends } from './trends';
+import { CurrencyInput } from '@/components/ui/currency-input';
 
 interface CreativeCashFlowResultsProps {
   hasAnimated: boolean;
@@ -22,11 +23,16 @@ interface CreativeCashFlowResultsProps {
 export function CreativeCashFlowResults({ hasAnimated }: CreativeCashFlowResultsProps) {
   const inputs = useAtomValue(ccfInputsAtom);
   const results = useAtomValue(ccfResultsAtom);
-  const originalWaaRef = useRef(results?.waa ?? 0);
+  const setActualWaa = useSetAtom(updateActualWaaAtom);
+  const [hasActualWaa, setHasActualWaa] = useAtom(hasActualWaaAtom);
   const createCountUpProps = createCountUpPropsFactory(!hasAnimated);
 
   if (!results) {
     return null;
+  }
+
+  if (hasActualWaa === null) {
+    setHasActualWaa(results.actual_waa !== null);
   }
 
   return (
@@ -201,20 +207,41 @@ export function CreativeCashFlowResults({ hasAnimated }: CreativeCashFlowResults
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
-              <span className="text-2xl">{dollarFormatter(originalWaaRef.current)}</span>
+              <span className="text-2xl">{dollarFormatter(results.waa)}</span>
             </CardContent>
 
-            <CardHeader className="space-y-1 pb-2">
-              <CardTitle className="text-2xl">{resultsLabels.actual_waa.title}</CardTitle>
-              <CardDescription className="text-md">
-                {resultsLabels.actual_waa.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <span className="text-2xl">
-                {!!results.actual_waa ? dollarFormatter(results.actual_waa) : 'None'}
-              </span>
-            </CardContent>
+            {hasActualWaa ? (
+              <>
+                <CardHeader className="space-y-1 pb-2">
+                  <CardTitle className="text-2xl">{resultsLabels.actual_waa.title}</CardTitle>
+                  <CardDescription className="text-md">
+                    {resultsLabels.actual_waa.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <span className="text-2xl">
+                    {!!results.actual_waa ? dollarFormatter(results.actual_waa) : 'None'}
+                  </span>
+                </CardContent>
+              </>
+            ) : (
+              <>
+                <CardHeader className="space-y-1 pb-2">
+                  <CardTitle className="text-2xl">{resultsLabels.input_waa.title}</CardTitle>
+                  <CardDescription className="text-md">
+                    {resultsLabels.input_waa.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <CurrencyInput
+                    className="text-lg"
+                    placeholder="$100,000"
+                    value={results.actual_waa ?? ''}
+                    onChange={setActualWaa}
+                  />
+                </CardContent>
+              </>
+            )}
           </Card>
         </motion.div>
       </motion.div>
