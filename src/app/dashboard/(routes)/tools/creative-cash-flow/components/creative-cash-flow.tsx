@@ -4,12 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  ccfResultsAtom,
-  hasActualWaaAtom,
-  resetCreativeCashFlowInputsAtom,
-  updateActualWaaAtom,
-} from '../atoms';
+import { ccfResultsAtom, resetCreativeCashFlowInputsAtom } from '../atoms';
 import { SaveAndResetButtons } from './save-and-reset-buttons';
 import { CreativeCashFlowInputs } from './creative-cash-flow-inputs';
 import { CreativeCashFlowResults } from './creative-cash-flow-results';
@@ -40,14 +35,12 @@ export function CreativeCashFlow({
   const [results, setResults] = useAtom(ccfResultsAtom);
   const resetCreativeCashFlowInput = useSetAtom(resetCreativeCashFlowInputsAtom);
   const [hasAnimated, setHasAnimated] = useState(false);
-  const setHasActualWaa = useSetAtom(hasActualWaaAtom);
 
   const handleReset = () => {
     setActiveTab(TabsValue.Inputs);
     setResults(null);
     resetCreativeCashFlowInput();
     setHasAnimated(false);
-    setHasActualWaa(null);
   };
 
   const onTabChange = (value: string) => {

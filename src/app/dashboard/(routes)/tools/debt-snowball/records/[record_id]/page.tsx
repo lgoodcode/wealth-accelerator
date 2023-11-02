@@ -1,5 +1,5 @@
 import { captureException } from '@sentry/nextjs';
-import { MountainSnow } from 'lucide-react';
+import { MountainSnow, Snowflake } from 'lucide-react';
 import type { Metadata } from 'next';
 
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
@@ -80,7 +80,10 @@ export default async function DebtSnowballRecordPage({
             <MountainSnow size={16} className="mr-2" />
             Records
           </BreadcrumbItem>
-          <BreadcrumbItem active>{record.name}</BreadcrumbItem>
+          <BreadcrumbItem active>
+            <Snowflake size={16} className="mr-2" />
+            {record.name}
+          </BreadcrumbItem>
         </Breadcrumbs>
         <Separator className="mt-6" />
       </div>

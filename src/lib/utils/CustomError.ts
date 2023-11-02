@@ -1,9 +1,5 @@
 // Define the valid error codes as a TypeScript type
-export type ErrorCode =
-  | 'GENERAL'
-  | 'NO_WAA_ACCOUNT' // CCF - If there is no WAA bank account link - to display a warning message
-  | 'MULTIPLE_WAA_ACCOUNTS' // CCF - Cannot have multiple WAA bank account linked
-  | 'DUPLICATE_ACCOUNT_NAME'; // Banking - Cannot have duplicate account names
+export type ErrorCode = 'GENERAL' | 'NO_WAA_ACCOUNT' | 'MULTIPLE_WAA_ACCOUNTS';
 
 export class CustomError extends Error {
   private _name = 'CustomError';

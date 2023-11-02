@@ -31,7 +31,7 @@ export function CreativeCashFlowMenu({
   className,
   record,
   inTable,
-  isShared = false,
+  isShared,
   redirectOnDelete,
 }: RowActionsProps) {
   const user = useUser();
@@ -108,7 +108,6 @@ export function CreativeCashFlowMenu({
         open={showDeleteDialog}
         onOpenChange={handleDeleteDialogOpenChange}
         record={record}
-        isShared={isShared}
         callback={ccfRecordDeleteCallback}
       />
     </>

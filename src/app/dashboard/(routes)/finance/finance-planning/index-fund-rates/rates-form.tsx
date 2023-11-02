@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useUpdateRates } from '../hooks/use-update-rates';
-import { ratesFormSchema, type RatesFormSchema } from '../schema';
+import { RatesFormSchema, type RatesFormSchemaType } from '../schema';
 import { PercentInput } from '@/components/ui/percent-input';
 
 const NUM_RATE_YEARS = 60;
@@ -25,12 +25,12 @@ interface RatesFormProps {
 export function RatesForm({ user, rates }: RatesFormProps) {
   const updateRates = useUpdateRates();
   const [allRates, setAllRates] = useState<string>();
-  const form = useForm<RatesFormSchema>({
-    resolver: zodResolver(ratesFormSchema(NUM_RATE_YEARS)),
+  const form = useForm<RatesFormSchemaType>({
+    resolver: zodResolver(RatesFormSchema(NUM_RATE_YEARS)),
     values: { rates: rates ?? [] },
   });
 
-  const onSubmit = async (data: RatesFormSchema) => {
+  const onSubmit = async (data: RatesFormSchemaType) => {
     await updateRates(user.id, data)
       .then(() => {
         toast.success('Your information has been saved');

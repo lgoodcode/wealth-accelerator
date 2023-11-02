@@ -60,10 +60,6 @@ export const resultsLabels = {
     description:
       'Your current balance of your WAA account. If no there is no WAA account, this will be "None".',
   },
-  input_waa: {
-    title: 'Input WAA',
-    description: 'Enter the amount you will deposit into your WAA account.',
-  },
   collections: {
     title: 'Collections',
     description: 'Collections within the selected timeframe.',
