@@ -53,11 +53,13 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
     console.error(errMsg, {
       item_id,
       error,
+      transactions: data?.transactions,
     });
     captureException(new Error(errMsg), {
       extra: {
         item_id,
         error,
+        transactions: data?.transactions,
       },
     });
 
