@@ -3,12 +3,12 @@ import { add } from 'date-fns';
 import { centsToDollars, dollarsToCents } from '@/lib/utils/currency';
 import type { CcfTransaction } from '../types';
 
-const MONTH_LENGTH = 30;
-const DAYS_IN_WEEK = 7;
-const DAYS_IN_YEAR = 365;
 const MS_IN_DAY = 86400000;
+const DAYS_IN_WEEK = 7;
+const DAYS_IN_MONTH = 30;
 
 interface CreativeCashFlowManagementArgs {
+  interval: 'weekly' | 'monthly';
   business_transactions: CcfTransaction[];
   personal_transactions: CcfTransaction[];
   start_date: Date;
@@ -29,6 +29,7 @@ const filterTransactionsByDate = (
 };
 
 export function visualizeCcf({
+  interval = 'weekly',
   business_transactions,
   personal_transactions,
   start_date,
@@ -70,15 +71,18 @@ export function visualizeCcf({
   const num_days = Math.abs(
     Math.round(end_date.getTime() / MS_IN_DAY - start_date.getTime() / MS_IN_DAY)
   );
-  const num_weeks = Math.ceil(num_days / DAYS_IN_WEEK);
+
+  const period_length = interval === 'weekly' ? DAYS_IN_WEEK : DAYS_IN_MONTH;
+  const num_periods = Math.ceil(num_days / period_length);
+
   const results = [];
   let collections = 0;
   let business_overhead = 0;
   let lifestyle_expenses = 0;
 
-  for (let i = 0; i < num_weeks; i++) {
+  for (let i = 0; i < num_periods; i++) {
     // Get the start and end dates for this window
-    const window_start_date = add(start_date, { days: DAYS_IN_WEEK * i });
+    const window_start_date = add(start_date, { days: period_length * i });
     const _window_end_date = add(window_start_date, { days: DAYS_IN_WEEK });
     const window_end_date = _window_end_date > end_date ? end_date : _window_end_date;
     // Get the transactions within this window

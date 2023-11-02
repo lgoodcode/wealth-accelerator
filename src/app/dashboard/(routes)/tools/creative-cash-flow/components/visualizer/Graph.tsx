@@ -5,8 +5,8 @@ import React, { useMemo, useCallback } from 'react';
 import { AreaClosed, Line, Bar } from '@visx/shape';
 import { curveMonotoneX } from '@visx/curve';
 import { GridRows, GridColumns } from '@visx/grid';
-import { scaleTime, scaleLinear, coerceNumber } from '@visx/scale';
-import { AxisLeft, AxisBottom, Orientation, SharedAxisProps, AxisScale } from '@visx/axis';
+import { scaleTime, scaleLinear } from '@visx/scale';
+import { AxisLeft, AxisBottom } from '@visx/axis';
 import { withTooltip, Tooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
 import { WithTooltipProvidedProps } from '@visx/tooltip/lib/enhancers/withTooltip';
 import { localPoint } from '@visx/event';
@@ -41,11 +41,6 @@ const tickLabelProps = {
   fontFamily: 'sans-serif',
   textAnchor: 'middle',
 } as const;
-
-const getMinMax = (vals: (number | { valueOf(): number })[]) => {
-  const numericVals = vals.map(coerceNumber);
-  return [Math.min(...numericVals), Math.max(...numericVals)];
-};
 
 // accessors
 const getDate = (data: VisualizeCcf) => new Date(data.range.start);

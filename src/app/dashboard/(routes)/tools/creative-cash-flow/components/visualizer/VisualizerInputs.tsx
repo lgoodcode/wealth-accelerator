@@ -51,6 +51,7 @@ export function VisualizerInputs({ transactions }: VisualizerInputsProps) {
 
     const results = visualizeCcf({
       ...data,
+      interval: 'weekly',
       business_transactions: transactions.business,
       personal_transactions: transactions.personal,
     });
