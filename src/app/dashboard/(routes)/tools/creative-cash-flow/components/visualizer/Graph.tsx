@@ -13,7 +13,6 @@ import { localPoint } from '@visx/event';
 import { LinearGradient } from '@visx/gradient';
 import { max, extent, bisector } from '@visx/vendor/d3-array';
 import { timeFormat } from '@visx/vendor/d3-time-format';
-import { mean } from 'd3-array';
 
 import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import { visualizeCcfAtom } from '../../atoms';
@@ -105,15 +104,6 @@ const Base = withTooltip<AreaProps, TooltipData>(
       [margin.top, innerHeight, data, scalePaddingY]
     );
 
-    // Calculate the average CCF value
-    const averageCcfValue = mean(data, getCcfValue);
-
-    // Create an array of objects with the average CCF value
-    const averageData = data.map((d) => ({
-      ...d,
-      ccfValue: averageCcfValue,
-    }));
-
     // Define the number of ticks for the axes
     const numTicksForHeight = (height: number) => {
       if (height <= 300) return 3;
@@ -187,16 +177,6 @@ const Base = withTooltip<AreaProps, TooltipData>(
             strokeWidth={1}
             stroke="url(#area-gradient)"
             fill="url(#area-gradient)"
-            curve={curveMonotoneX}
-          />
-          <AreaClosed<VisualizeCcf>
-            data={averageData}
-            x={(d) => dateScale(getDate(d)) ?? 0 + scalePaddingX}
-            y={(d) => ccfValueScale(getCcfValue(d)) ?? 0 + scalePaddingY}
-            yScale={ccfValueScale}
-            strokeWidth={1}
-            stroke="red"
-            fill="transparent"
             curve={curveMonotoneX}
           />
           <Bar
