@@ -21,7 +21,6 @@ interface DeleteRecordButtonProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
   record: DebtSnowballRecord;
-  isShared: boolean;
   callback?: () => void;
 }
 
@@ -29,7 +28,6 @@ export function DeleteSnowballRecordDialog({
   open,
   onOpenChange,
   record,
-  isShared,
   callback,
 }: DeleteRecordButtonProps) {
   const deleteSnowballRecord = useDeleteSnowballRecord();
@@ -38,7 +36,7 @@ export function DeleteSnowballRecordDialog({
   const handleDeleteSnowballRecord = async () => {
     setIsDeleting(true);
 
-    await deleteSnowballRecord(record.id, isShared)
+    await deleteSnowballRecord(record.id, !!callback) // If we have a callback; it's shared
       .then(() => {
         onOpenChange(false);
 

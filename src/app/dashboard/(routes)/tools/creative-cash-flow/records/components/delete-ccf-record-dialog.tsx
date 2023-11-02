@@ -21,7 +21,6 @@ interface DeleteRecordButtonProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
   record: CreativeCashFlowRecord;
-  isShared: boolean;
   callback?: () => void;
 }
 
@@ -29,7 +28,6 @@ export function DeleteCcfRecordDialog({
   open,
   onOpenChange,
   record,
-  isShared,
   callback,
 }: DeleteRecordButtonProps) {
   const deleteCcfRecord = useDeleteCcfRecord();
@@ -38,7 +36,7 @@ export function DeleteCcfRecordDialog({
   const handleDeleteCcfRecord = async () => {
     setIsDeleting(true);
 
-    await deleteCcfRecord(record.id, isShared)
+    await deleteCcfRecord(record.id, !!callback) // If we have a callback; it's shared
       .then(() => {
         onOpenChange(false);
 

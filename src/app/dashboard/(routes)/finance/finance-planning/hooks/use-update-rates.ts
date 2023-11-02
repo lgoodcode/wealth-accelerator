@@ -1,12 +1,12 @@
 import { useRouter } from 'next/navigation';
 
 import { supabase } from '@/lib/supabase/client';
-import type { RatesFormSchema } from '../schema';
+import type { RatesFormSchemaType } from '../schema';
 
 export const useUpdateRates = () => {
   const router = useRouter();
 
-  return async (user_id: string, data: RatesFormSchema) => {
+  return async (user_id: string, data: RatesFormSchemaType) => {
     console.log(data);
     const { error } = await supabase
       .from('personal_finance')

@@ -32,7 +32,7 @@ import { labels } from '../labels';
 import { debtCalculationInputsAtom, sortDebtsAtom } from '../atoms';
 import { Strategies } from '../strategies';
 import { useSnowballCalculate } from '../hooks/use-snowball-calculate';
-import { debtCalculationSchema, type DebtCalculationSchema } from '../schema';
+import { debtCalculationSchema, type DebtCalculationSchemaType } from '../schema';
 import type { Debt } from '@/lib/types/debts';
 
 interface DebtSnowballInputsFormProps {
@@ -45,7 +45,7 @@ export function DebtSnowballInputsForm({ debts }: DebtSnowballInputsFormProps) {
   const snowballCalculate = useSnowballCalculate();
   const sortDebts = useSetAtom(sortDebtsAtom);
   const [numLumps, setNumLumps] = useState(1);
-  const form = useForm<DebtCalculationSchema>({
+  const form = useForm<DebtCalculationSchemaType>({
     resolver: zodResolver(debtCalculationSchema),
     resetOptions: {
       keepValues: true,
