@@ -5,7 +5,8 @@ import React, { useMemo, useCallback } from 'react';
 import { AreaClosed, Line, Bar } from '@visx/shape';
 import { curveMonotoneX } from '@visx/curve';
 import { GridRows, GridColumns } from '@visx/grid';
-import { scaleTime, scaleLinear } from '@visx/scale';
+import { scaleTime, scaleLinear, coerceNumber } from '@visx/scale';
+import { AxisLeft, AxisBottom, Orientation, SharedAxisProps, AxisScale } from '@visx/axis';
 import { withTooltip, Tooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
 import { WithTooltipProvidedProps } from '@visx/tooltip/lib/enhancers/withTooltip';
 import { localPoint } from '@visx/event';
@@ -15,13 +16,16 @@ import { timeFormat } from '@visx/vendor/d3-time-format';
 
 import { visualizeCcfAtom } from '../../atoms';
 import type { VisualizeCcf, VisualizeCcfDataKey } from '../../types';
+import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 
 type TooltipData = VisualizeCcf;
 
-export const background = '#3b6978';
-export const background2 = '#204051';
-export const accentColor = '#edffea';
-export const accentColorDark = '#75daad';
+const axisColor = '#fff';
+const tickLabelColor = '#fff';
+const background = '#3b6978';
+const background2 = '#204051';
+const accentColor = '#edffea';
+const accentColorDark = '#75daad';
 const tooltipStyles = {
   ...defaultStyles,
   background,
@@ -31,12 +35,23 @@ const tooltipStyles = {
 
 // util
 const formatDate = timeFormat("%b %d, '%y");
+const tickLabelProps = {
+  fill: tickLabelColor,
+  fontSize: 12,
+  fontFamily: 'sans-serif',
+  textAnchor: 'middle',
+} as const;
+
+const getMinMax = (vals: (number | { valueOf(): number })[]) => {
+  const numericVals = vals.map(coerceNumber);
+  return [Math.min(...numericVals), Math.max(...numericVals)];
+};
 
 // accessors
 const getDate = (data: VisualizeCcf) => new Date(data.range.start);
 const bisectDate = bisector<VisualizeCcf, Date>((d) => new Date(d.range.start)).left;
 
-export type AreaProps = {
+type AreaProps = {
   data: VisualizeCcf[];
   dataKey: VisualizeCcfDataKey;
   width: number;
@@ -66,30 +81,46 @@ const Base = withTooltip<AreaProps, TooltipData>(
     // bounds
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
+    const scalePaddingX = 50;
+    const scalePaddingY = 30;
 
     // accessors
     const getCcfValue = (data: VisualizeCcf) => {
       return !data ? 0 : data[dataKey];
     };
 
-    // scales
+    // Adjust the scales to include padding
     const dateScale = useMemo(
       () =>
         scaleTime({
-          range: [margin.left, innerWidth + margin.left],
+          range: [margin.left + scalePaddingX, innerWidth + margin.left - scalePaddingX],
           domain: extent(data, getDate) as [Date, Date],
         }),
-      [innerWidth, margin.left, data]
+      [innerWidth, margin.left, data, scalePaddingX]
     );
+
     const ccfValueScale = useMemo(
       () =>
         scaleLinear({
-          range: [innerHeight + margin.top, margin.top],
+          range: [innerHeight + margin.top - scalePaddingY, margin.top + scalePaddingY],
           domain: [0, (max(data, getCcfValue) || 0) + innerHeight / 3],
           nice: true,
         }),
-      [margin.top, innerHeight, data]
+      [margin.top, innerHeight, data, scalePaddingY]
     );
+
+    // Define the number of ticks for the axes
+    const numTicksForHeight = (height: number) => {
+      if (height <= 300) return 3;
+      if (300 < height && height <= 600) return 5;
+      return 6;
+    };
+
+    const numTicksForWidth = (width: number) => {
+      if (width <= 300) return 3;
+      if (300 < width && width <= 400) return 5;
+      return 6;
+    };
 
     // tooltip handler
     const handleTooltip = useCallback(
@@ -145,8 +176,8 @@ const Base = withTooltip<AreaProps, TooltipData>(
           />
           <AreaClosed<VisualizeCcf>
             data={data}
-            x={(d) => dateScale(getDate(d)) ?? 0}
-            y={(d) => ccfValueScale(getCcfValue(d)) ?? 0}
+            x={(d) => dateScale(getDate(d)) ?? 0 + scalePaddingX}
+            y={(d) => ccfValueScale(getCcfValue(d)) ?? 0 + scalePaddingY}
             yScale={ccfValueScale}
             strokeWidth={1}
             stroke="url(#area-gradient)"
@@ -164,6 +195,32 @@ const Base = withTooltip<AreaProps, TooltipData>(
             onTouchMove={handleTooltip}
             onMouseMove={handleTooltip}
             onMouseLeave={() => hideTooltip()}
+          />
+          <AxisLeft
+            left={margin.left + scalePaddingX}
+            scale={ccfValueScale}
+            numTicks={numTicksForHeight(height)}
+            stroke={axisColor}
+            // tickStroke={axisColor}
+            tickStroke="transparent"
+            tickFormat={(d) =>
+              dollarFormatter(d.valueOf(), {
+                maximumFractionDigits: 0,
+              })
+            }
+            tickLabelProps={(d) => ({
+              ...tickLabelProps,
+              dx: d.valueOf() >= 1000 ? -16 : -13,
+              dy: 4,
+            })}
+          />
+          <AxisBottom
+            top={innerHeight + margin.top - scalePaddingY}
+            scale={dateScale}
+            numTicks={numTicksForWidth(width)}
+            stroke={axisColor}
+            tickStroke={axisColor}
+            tickLabelProps={() => tickLabelProps}
           />
           {tooltipData && (
             <g>
@@ -203,7 +260,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
             <TooltipWithBounds
               key={Math.random()}
               top={tooltipTop - 14}
-              left={tooltipLeft + 50}
+              left={tooltipLeft}
               style={tooltipStyles}
             >
               {`$${getCcfValue(tooltipData)}`}

@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { ParentSize } from '@visx/responsive';
+import { motion, AnimatePresence } from 'framer-motion';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Graph } from './Graph';
 
 enum TabsValue {
@@ -25,9 +26,16 @@ export function VisualizerResults() {
         </TabsList>
       </Tabs>
 
-      <ParentSize>
-        {({ width, height }) => <Graph dataKey={activeTab} width={width} height={height} />}
-      </ParentSize>
+      {activeTab === TabsValue.Collections && (
+        <ParentSize>
+          {({ width, height }) => <Graph dataKey="collections" width={width} height={height} />}
+        </ParentSize>
+      )}
+      {activeTab === TabsValue.WAA && (
+        <ParentSize>
+          {({ width, height }) => <Graph dataKey="waa" width={width} height={height} />}
+        </ParentSize>
+      )}
     </div>
   );
 }
