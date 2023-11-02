@@ -52,4 +52,4 @@ export const debtCalculationSchema = z.object({
     }),
 });
 
-export type DebtCalculationSchemaType = z.infer<typeof debtCalculationSchema>;
+export type DebtCalculationSchema = z.infer<typeof debtCalculationSchema>;

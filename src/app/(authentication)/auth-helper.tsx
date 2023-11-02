@@ -19,7 +19,7 @@ type TestUser = {
   password: string;
 };
 
-const NUM_USERS = 16; // The number of test{n}@gmail.com users in the seed data
+const NUM_USERS = 4;
 // Hard code the names for known tests users data
 const USER_NAMES: Record<number, string> = {
   1: 'Lawrence Doe',

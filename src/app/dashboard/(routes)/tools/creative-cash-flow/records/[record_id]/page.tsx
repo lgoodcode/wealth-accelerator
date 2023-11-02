@@ -1,5 +1,5 @@
 import { captureException } from '@sentry/nextjs';
-import { Album, DollarSign } from 'lucide-react';
+import { Album } from 'lucide-react';
 import type { Metadata } from 'next';
 
 import { createSupabase } from '@/lib/supabase/server/create-supabase';
@@ -75,10 +75,7 @@ export default async function CreativeCashFlowRecordPage({
               <Album size={16} className="mr-2" />
               Records
             </BreadcrumbItem>
-            <BreadcrumbItem active>
-              <DollarSign size={16} className="mr-2" />
-              {record.name}
-            </BreadcrumbItem>
+            <BreadcrumbItem active>{record.name}</BreadcrumbItem>
           </Breadcrumbs>
 
           <CreativeCashFlowMenu record={record} isShared={!!name} redirectOnDelete />

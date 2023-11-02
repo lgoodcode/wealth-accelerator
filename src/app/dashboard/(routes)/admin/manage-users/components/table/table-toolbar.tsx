@@ -29,7 +29,7 @@ export function TableToolbar({ table, globalFilter, setGlobalFilter }: TableTool
       <div className="flex flex-1 items-center space-x-3">
         <Input
           placeholder="Filter users"
-          value={globalFilter}
+          value={globalFilter || ''}
           onChange={(event) => setGlobalFilter(event.target.value)}
           className="h-9 w-[150px] lg:w-[250px]"
         />
@@ -37,7 +37,7 @@ export function TableToolbar({ table, globalFilter, setGlobalFilter }: TableTool
           <FacetedFilter column={table.getColumn('role')} title="Role" options={roleOptions} />
         )}
         {isFiltered && (
-          <Button variant="ghost" onClick={handleReset} className="px-2 lg:px-3">
+          <Button variant="ghost" onClick={handleReset} className="h-9 px-2 lg:px-3">
             Reset
             <X className="ml-1 h-5 w-5 my-auto" />
           </Button>

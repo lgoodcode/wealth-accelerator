@@ -24,7 +24,7 @@ import {
 import { inputLabels } from '../labels';
 import { creativeCashFlowManagement } from '../functions/creative-cash-flow';
 import { ccfInputsAtom, ccfResultsAtom } from '../atoms';
-import { inputsFormSchema, type InputsFormSchemaType } from '../schema';
+import { inputsFormSchema, type InputsFormSchema } from '../schema';
 import type { Transaction } from '@/lib/plaid/types/transactions';
 
 interface CcfInputsFormProps {
@@ -44,7 +44,7 @@ export function CreativeCashFlowInputs({
 }: CcfInputsFormProps) {
   const [creativeCashFlowInputs, setCreativeCashFlowInputs] = useAtom(ccfInputsAtom);
   const setCreativeCashFlowResults = useSetAtom(ccfResultsAtom);
-  const form = useForm<InputsFormSchemaType>({
+  const form = useForm<InputsFormSchema>({
     resolver: zodResolver(inputsFormSchema),
     defaultValues: {
       ...creativeCashFlowInputs,
@@ -57,7 +57,7 @@ export function CreativeCashFlowInputs({
     null
   );
 
-  const calculate = async (data: InputsFormSchemaType) => {
+  const calculate = async (data: InputsFormSchema) => {
     if (isDisabled) {
       return;
     }

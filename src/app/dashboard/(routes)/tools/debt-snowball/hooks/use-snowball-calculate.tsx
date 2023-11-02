@@ -11,7 +11,7 @@ import {
   debtSnowballComparisonAtom,
 } from '../atoms';
 import type { Debt } from '@/lib/types/debts';
-import type { DebtCalculationSchemaType } from '../schema';
+import type { DebtCalculationSchema } from '../schema';
 
 export const useSnowballCalculate = () => {
   const debts = useAtomValue(debtsAtom) as Debt[];
@@ -19,7 +19,7 @@ export const useSnowballCalculate = () => {
   const setDebtCalculationResults = useSetAtom(debtCalculationResultsAtom);
   const setDebtSnowballComparison = useSetAtom(debtSnowballComparisonAtom);
 
-  return async (data: DebtCalculationSchemaType) => {
+  return async (data: DebtCalculationSchema) => {
     if (!debts.length) {
       toast.error('You must have at least one debt entry to calculate');
       return;
