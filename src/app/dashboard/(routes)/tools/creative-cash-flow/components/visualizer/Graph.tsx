@@ -14,9 +14,9 @@ import { LinearGradient } from '@visx/gradient';
 import { max, extent, bisector } from '@visx/vendor/d3-array';
 import { timeFormat } from '@visx/vendor/d3-time-format';
 
+import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 import { visualizeCcfAtom } from '../../atoms';
 import type { VisualizeCcf, VisualizeCcfDataKey } from '../../types';
-import { dollarFormatter } from '@/lib/utils/dollar-formatter';
 
 type TooltipData = VisualizeCcf;
 
