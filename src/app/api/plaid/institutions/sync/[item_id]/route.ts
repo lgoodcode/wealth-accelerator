@@ -48,30 +48,18 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
   const { error, data } = await serverSyncTransactions(item);
 
   if (error) {
-    const transactions = !data.transactions
-      ? []
-      : {
-          added: data.transactions.added.map((t) => ({
-            transaction_id: t.transaction_id,
-            account_id: t.account_id,
-            name: t.name,
-          })),
-          modified: data.transactions.modified.map((t) => ({
-            transaction_id: t.transaction_id,
-            account_id: t.account_id,
-            name: t.name,
-          })),
-          removed: data.transactions.removed.map((t) => ({
-            transaction_id: t.transaction_id,
-          })),
-        };
+    const errMsg = 'Failed to sync transactions';
 
-    console.error(error, { item_id }, transactions);
-    captureException(new Error('Failed to sync transactions'), {
+    console.error(errMsg, {
+      item_id,
+      error,
+      transactions: data?.transactions,
+    });
+    captureException(new Error(errMsg), {
       extra: {
         item_id,
         error,
-        transactions: JSON.stringify(transactions),
+        transactions: data?.transactions,
       },
     });
 
@@ -79,7 +67,7 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
       {
         hasMore: false,
         error: {
-          general: 'Failed to sync transactions',
+          general: error.general,
           link_token: error.link_token,
           plaid: error.plaid,
         },

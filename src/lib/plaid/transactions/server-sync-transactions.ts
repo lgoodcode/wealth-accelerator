@@ -138,9 +138,9 @@ export const serverSyncTransactions = async (
         data: {
           hasMore: false,
           transactions: {
-            added: data.added,
-            modified: data.modified,
-            removed: data.removed,
+            added: data.added.length,
+            modified: data.modified.length,
+            removed: data.removed.length,
           },
         },
       };
