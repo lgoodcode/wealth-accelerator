@@ -45,7 +45,7 @@ export default async function CreativeCashFlowVisualizerPage() {
           </p> */}
         </div>
 
-        <HelpButton title="Creative Cash Flow Help" content={CreativeCashFlowHelpContent} />
+        {/* <HelpButton title="Creative Cash Flow Help" content={CreativeCashFlowHelpContent} /> */}
       </div>
       <Separator className="mt-6" />
       <div className="grid grid-cols-12 gap-8">
