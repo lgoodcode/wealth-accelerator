@@ -31,7 +31,7 @@ export function DebtSnowballMenu({
   className,
   record,
   inTable,
-  isShared,
+  isShared = false,
   redirectOnDelete,
 }: RowActionsProps) {
   const user = useUser();
@@ -106,6 +106,7 @@ export function DebtSnowballMenu({
         open={showDeleteDialog}
         onOpenChange={handleDeleteDialogOpenChange}
         record={record}
+        isShared={isShared}
         callback={snowballRecordDeleteCallback}
       />
     </>

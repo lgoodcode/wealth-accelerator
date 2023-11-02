@@ -20,20 +20,20 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useUpdateFinanceInfo } from '../hooks/use-update-finance-info';
-import { FinanceInfoSchema, type FinanceInfoSchemaType as FinanceInfoSchemaType } from '../schema';
+import { financeInfoSchema, type FinanceInfoSchema } from '../schema';
 
 // Override the type for the start_date because Supabase returns a string.
 interface FinanceInfoFormProps {
   user: User;
-  initialValues?: Omit<FinanceInfoSchemaType, 'start_date'> & {
+  initialValues?: Omit<FinanceInfoSchema, 'start_date'> & {
     start_date: Date | string;
   };
 }
 
 export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
   const updateFinanceInfo = useUpdateFinanceInfo();
-  const form = useForm<FinanceInfoSchemaType>({
-    resolver: zodResolver(FinanceInfoSchema),
+  const form = useForm<FinanceInfoSchema>({
+    resolver: zodResolver(financeInfoSchema),
     values: {
       ...initialValues,
       // @ts-ignore
@@ -41,7 +41,7 @@ export function FinanceInfoForm({ user, initialValues }: FinanceInfoFormProps) {
     },
   });
 
-  const onSubmit = async (data: FinanceInfoSchemaType) => {
+  const onSubmit = async (data: FinanceInfoSchema) => {
     await updateFinanceInfo(user.id, data)
       .then((data) => {
         toast.success('Your information has been saved');

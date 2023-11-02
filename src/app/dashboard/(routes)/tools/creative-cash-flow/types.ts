@@ -1,4 +1,4 @@
-import type { Transaction } from '@/lib/plaid/types/transactions';
+import type { Category, Transaction } from '@/lib/plaid/types/transactions';
 
 export type CreativeCashFlowManagementInputs = {
   start_date: Date;
@@ -27,7 +27,7 @@ export type CreativeCashFlowManagementResult = {
   /** tax on business profit */
   tax_account: number;
   waa: number;
-  /** The value of the bank account WAA snapshot */
+  /** The value of the bank account WAA snapshot - is null if there is no WAA account */
   actual_waa: number | null;
   daily_trend: number[];
   weekly_trend: number[];
@@ -45,3 +45,28 @@ export type CreativeCashFlowRecord = {
   };
   results: CreativeCashFlowManagementResult;
 };
+
+export type CcfTransaction = {
+  id: string;
+  item_id: string;
+  name: string;
+  amount: number;
+  category: Category;
+  date: string;
+};
+
+export type VisualizeCcf = {
+  range: {
+    start: Date;
+    end: Date;
+  };
+  collections: number;
+  lifestyle_expenses: number;
+  lifestyle_expenses_tax: number;
+  business_profit_before_tax: number;
+  business_overhead: number;
+  tax_account: number;
+  waa: number;
+};
+
+export type VisualizeCcfDataKey = keyof Omit<VisualizeCcf, 'range'>;
