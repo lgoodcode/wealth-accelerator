@@ -65,7 +65,7 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
       {
         hasMore: false,
         error: {
-          general: errMsg,
+          general: error.general,
           link_token: error.link_token,
           plaid: error.plaid,
         },
