@@ -5,12 +5,12 @@ import { X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { CalendarDateRangePicker } from '@/components/ui/date-range-picker';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { ViewOptions } from './view-options';
 import { FacetedFilter } from './faceted-filter';
 import { useAccountOptions, categoryOptions } from './column-options';
+import type { DateRange } from 'react-day-picker';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
-import { DateRange } from 'react-day-picker';
 
 interface TableToolbarProps {
   table: Table<TransactionWithAccountName>;
@@ -44,7 +44,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
             options={categoryOptions}
           />
         )}
-        <CalendarDateRangePicker
+        <DateRangePicker
           selected={table.getColumn('date')?.getFilterValue() as DateRange}
           onSelect={(dateRange) => table.getColumn('date')?.setFilterValue(dateRange)}
         />
