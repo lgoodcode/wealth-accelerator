@@ -1,4 +1,14 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  colorScheme: 'light',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#fff' },
+    { media: '(prefers-color-scheme: dark)', color: '#040916' },
+  ],
+};
 
 export const metadata: Metadata = {
   title: {
@@ -8,12 +18,6 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://app.chirowealth.com'),
   keywords: ['Wealth Accelerator'],
   description: 'Wealth Accelerator app.',
-  colorScheme: 'light',
-  viewport: 'width=device-width, initial-scale=1',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fff' },
-    { media: '(prefers-color-scheme: dark)', color: '#040916' },
-  ],
   icons: {
     icon: '/favicon.ico',
     shortcut: '/img/icon.png',

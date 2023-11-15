@@ -1,4 +1,4 @@
-import { metadata as siteMetadata } from '@/config/site';
+import { metadata as siteMetadata, viewport as siteViewport } from '@/config/site';
 import { inter, openSans } from '@/lib/fonts';
 import { cn } from '@/lib/utils/cn';
 import { TailwindIndicator } from '@/components/tailwind-indicator';
@@ -6,6 +6,7 @@ import { TailwindIndicator } from '@/components/tailwind-indicator';
 import '@/styles/globals.css';
 
 export const metadata = siteMetadata;
+export const viewport = siteViewport;
 export const dynamic = 'force-dynamic';
 
 interface RootLayoutProps {
