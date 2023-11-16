@@ -69,7 +69,7 @@ export function VisualizerResults() {
       )}
 
       {activeViewTab === ViewTabs.Table && (
-        <Card>
+        <Card className="w-fit mx-auto">
           <CardContent>
             <VisualizeResultsTable />
           </CardContent>
