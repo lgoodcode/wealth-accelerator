@@ -11,6 +11,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PercentInput } from '@/components/ui/percent-input';
 import { DatePicker } from '@/components/ui/date-picker';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   Form,
   FormField,
   FormItem,
@@ -40,7 +47,9 @@ export function VisualizerInputs({ transactions }: VisualizerInputsProps) {
       tax_account_rate: 25,
     },
   });
-  const isDisabled = !transactions.business.length && !transactions.personal.length;
+  const interval = form.watch('interval');
+  const noTransactions = !transactions.business.length && !transactions.personal.length;
+  const isDisabled = noTransactions || !interval;
 
   const handleSubmit = (data: VisualizerInputFormSchema) => {
     if (isDisabled) {
@@ -51,7 +60,6 @@ export function VisualizerInputs({ transactions }: VisualizerInputsProps) {
 
     const results = visualizeCcf({
       ...data,
-      interval: 'weekly',
       business_transactions: transactions.business,
       personal_transactions: transactions.personal,
     });
@@ -62,7 +70,7 @@ export function VisualizerInputs({ transactions }: VisualizerInputsProps) {
   };
 
   useEffect(() => {
-    if (isDisabled) {
+    if (noTransactions) {
       toast.error('No transactions found for the selected date range. Cannot visualize data.');
     }
   }, []);
@@ -72,6 +80,27 @@ export function VisualizerInputs({ transactions }: VisualizerInputsProps) {
       <CardContent>
         <Form {...form}>
           <form noValidate onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="interval"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Interval</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select an interval" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="weekly">Weekly</SelectItem>
+                      <SelectItem value="monthly">Monthly</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    The interval in which the calculations will be done.
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="start_date"
