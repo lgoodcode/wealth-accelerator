@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
+import { useQuery } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
+import { supabase } from '@/lib/supabase/client';
+import { PageError } from '@/components/page-error';
+import { Loading } from '@/components/loading';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ccfResultsAtom, hasActualWaaAtom, resetCreativeCashFlowInputsAtom } from '../atoms';
 import { SaveAndResetButtons } from './save-and-reset-buttons';
@@ -17,7 +22,7 @@ enum TabsValue {
 
 interface CcfContainerProps {
   user_id: string;
-  transactions: {
+  initial_transactions: {
     business: Transaction[];
     personal: Transaction[];
   };
@@ -25,9 +30,25 @@ interface CcfContainerProps {
   default_tax_rate: number;
 }
 
+const getTransactions = async (user_id: string) => {
+  const { error: transactionsError, data: transactionsData } = await supabase.rpc(
+    'get_transactions_by_user_id',
+    { user_id }
+  );
+
+  if (transactionsError || !transactionsData) {
+    throw transactionsError || new Error('No transactionsData returned');
+  }
+
+  return transactionsData as {
+    business: Transaction[];
+    personal: Transaction[];
+  };
+};
+
 export function CreativeCashFlow({
   user_id,
-  transactions,
+  initial_transactions,
   ytd_collections,
   default_tax_rate,
 }: CcfContainerProps) {
@@ -36,6 +57,21 @@ export function CreativeCashFlow({
   const resetCreativeCashFlowInput = useSetAtom(resetCreativeCashFlowInputsAtom);
   const [hasAnimated, setHasAnimated] = useState(false);
   const setHasActualWaa = useSetAtom(hasActualWaaAtom);
+  const [updatedAt, setUpdatedAt] = useState(Date.now());
+  const {
+    isError,
+    isFetching,
+    isRefetching,
+    dataUpdatedAt,
+    data: transactions,
+  } = useQuery<{
+    business: Transaction[];
+    personal: Transaction[];
+  }>(['ccf'], () => getTransactions(user_id), {
+    initialData: initial_transactions,
+    keepPreviousData: true,
+    staleTime: Infinity,
+  });
 
   const handleReset = () => {
     setActiveTab(TabsValue.Inputs);
@@ -59,6 +95,21 @@ export function CreativeCashFlow({
       setActiveTab(TabsValue.Results);
     }
   }, [results]);
+
+  useEffect(() => {
+    if (dataUpdatedAt && dataUpdatedAt !== updatedAt) {
+      setUpdatedAt(dataUpdatedAt);
+      toast.info('Transaction data updated, please recalculate results.');
+    }
+  });
+
+  if (isError) {
+    return <PageError />;
+  } else if (isFetching) {
+    return (
+      <Loading title={isRefetching ? 'Refetching Data' : 'Fetching Data'} className="mt-0 py-32" />
+    );
+  }
 
   return (
     <Tabs className="w-full" value={activeTab} onValueChange={onTabChange}>
