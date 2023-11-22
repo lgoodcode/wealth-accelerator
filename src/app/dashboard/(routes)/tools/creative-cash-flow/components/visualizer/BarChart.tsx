@@ -44,6 +44,8 @@ const tickLabelProps = {
 
 // accessors
 const getDate = (data: VisualizeCcf) => new Date(data.range.start);
+const getFormattedDateRange = (data: VisualizeCcf) =>
+  `${formatDate(data.range.start)} - ${formatDate(data.range.end)}`;
 const bisectDate = bisector<VisualizeCcf, Date>((d) => new Date(d.range.start)).left;
 
 type AreaProps = {
@@ -80,6 +82,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
     const scalePaddingY = 30;
     const xMax = innerWidth - scalePaddingX;
     const yMax = innerHeight - scalePaddingY;
+    const gapSize = 5;
 
     // accessors
     const getCcfValue = (data: VisualizeCcf) => {
@@ -153,27 +156,9 @@ const Base = withTooltip<AreaProps, TooltipData>(
           />
           <LinearGradient id="area-background-gradient" from={background} to={background2} />
           <LinearGradient id="area-gradient" from={accentColor} to={accentColor} toOpacity={0.1} />
-          <GridRows
-            left={margin.left}
-            scale={yScale}
-            width={innerWidth}
-            strokeDasharray="1,3"
-            stroke={accentColor}
-            strokeOpacity={0}
-            pointerEvents="none"
-          />
-          <GridColumns
-            top={margin.top}
-            scale={xScale}
-            height={innerHeight}
-            strokeDasharray="1,3"
-            stroke={accentColor}
-            strokeOpacity={0.2}
-            pointerEvents="none"
-          />
           <Group>
             {data.map((d) => {
-              const barWidth = 20;
+              const barWidth = width / data.length;
               const barHeight = yMax - (yScale(getCcfValue(d)) ?? 0);
               const barX = xScale(getDate(d)) ?? 0 + scalePaddingX;
               const barY = yScale(getCcfValue(d)) ?? 0 + scalePaddingY;
@@ -280,7 +265,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
                 transform: 'translateX(-50%)',
               }}
             >
-              {formatDate(getDate(tooltipData))}
+              {getFormattedDateRange(tooltipData)}
             </Tooltip>
           </div>
         )}
