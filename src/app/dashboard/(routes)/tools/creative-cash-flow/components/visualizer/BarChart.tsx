@@ -2,10 +2,10 @@
 
 import { useAtomValue } from 'jotai';
 import React, { useMemo, useCallback } from 'react';
-import { AreaClosed, Line, Bar } from '@visx/shape';
-import { curveMonotoneX } from '@visx/curve';
+import { Line, Bar } from '@visx/shape';
 import { GridRows, GridColumns } from '@visx/grid';
 import { scaleTime, scaleLinear } from '@visx/scale';
+import { Group } from '@visx/group';
 import { AxisLeft, AxisBottom } from '@visx/axis';
 import { withTooltip, Tooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
 import { WithTooltipProvidedProps } from '@visx/tooltip/lib/enhancers/withTooltip';
@@ -78,6 +78,8 @@ const Base = withTooltip<AreaProps, TooltipData>(
     const innerHeight = height - margin.top - margin.bottom;
     const scalePaddingX = 50;
     const scalePaddingY = 30;
+    const xMax = innerWidth - scalePaddingX;
+    const yMax = innerHeight - scalePaddingY;
 
     // accessors
     const getCcfValue = (data: VisualizeCcf) => {
@@ -85,7 +87,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
     };
 
     // Adjust the scales to include padding
-    const dateScale = useMemo(
+    const xScale = useMemo(
       () =>
         scaleTime({
           range: [margin.left + scalePaddingX, innerWidth + margin.left - scalePaddingX],
@@ -94,7 +96,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
       [innerWidth, margin.left, data, scalePaddingX]
     );
 
-    const ccfValueScale = useMemo(
+    const yScale = useMemo(
       () =>
         scaleLinear({
           range: [innerHeight + margin.top - scalePaddingY, margin.top + scalePaddingY],
@@ -121,7 +123,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
     const handleTooltip = useCallback(
       (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
         const { x } = localPoint(event) || { x: 0 };
-        const x0 = dateScale.invert(x);
+        const x0 = xScale.invert(x);
         const index = bisectDate(data, x0, 1);
         const d0 = data[index - 1];
         const d1 = data[index];
@@ -132,10 +134,10 @@ const Base = withTooltip<AreaProps, TooltipData>(
         showTooltip({
           tooltipData: d,
           tooltipLeft: x,
-          tooltipTop: ccfValueScale(getCcfValue(d)),
+          tooltipTop: yScale(getCcfValue(d)),
         });
       },
-      [showTooltip, ccfValueScale, dateScale, data]
+      [showTooltip, yScale, xScale, data]
     );
 
     return (
@@ -153,7 +155,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
           <LinearGradient id="area-gradient" from={accentColor} to={accentColor} toOpacity={0.1} />
           <GridRows
             left={margin.left}
-            scale={ccfValueScale}
+            scale={yScale}
             width={innerWidth}
             strokeDasharray="1,3"
             stroke={accentColor}
@@ -162,23 +164,31 @@ const Base = withTooltip<AreaProps, TooltipData>(
           />
           <GridColumns
             top={margin.top}
-            scale={dateScale}
+            scale={xScale}
             height={innerHeight}
             strokeDasharray="1,3"
             stroke={accentColor}
             strokeOpacity={0.2}
             pointerEvents="none"
           />
-          <AreaClosed<VisualizeCcf>
-            data={data}
-            x={(d) => dateScale(getDate(d)) ?? 0 + scalePaddingX}
-            y={(d) => ccfValueScale(getCcfValue(d)) ?? 0 + scalePaddingY}
-            yScale={ccfValueScale}
-            strokeWidth={1}
-            stroke="url(#area-gradient)"
-            fill="url(#area-gradient)"
-            curve={curveMonotoneX}
-          />
+          <Group>
+            {data.map((d) => {
+              const barWidth = 20;
+              const barHeight = yMax - (yScale(getCcfValue(d)) ?? 0);
+              const barX = xScale(getDate(d)) ?? 0 + scalePaddingX;
+              const barY = yScale(getCcfValue(d)) ?? 0 + scalePaddingY;
+              return (
+                <Bar
+                  key={`bar-${getDate(d).valueOf()}`}
+                  x={barX}
+                  y={barY}
+                  width={barWidth}
+                  height={barHeight}
+                  fill="rgba(23, 233, 217, .5)"
+                />
+              );
+            })}
+          </Group>
           <Bar
             x={margin.left}
             y={margin.top}
@@ -193,7 +203,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
           />
           <AxisLeft
             left={margin.left + scalePaddingX}
-            scale={ccfValueScale}
+            scale={yScale}
             numTicks={numTicksForHeight(height)}
             stroke={axisColor}
             // tickStroke={axisColor}
@@ -211,7 +221,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
           />
           <AxisBottom
             top={innerHeight + margin.top - scalePaddingY}
-            scale={dateScale}
+            scale={xScale}
             numTicks={numTicksForWidth(width)}
             stroke={axisColor}
             tickStroke={axisColor}
@@ -285,7 +295,7 @@ interface VisualizerResultsProps {
   width: number;
 }
 
-export function Graph({ dataKey, height, width }: VisualizerResultsProps) {
+export function BarChart({ dataKey, height, width }: VisualizerResultsProps) {
   const data = useAtomValue(visualizeCcfAtom);
 
   return <Base data={data} dataKey={dataKey} width={width} height={height} />;

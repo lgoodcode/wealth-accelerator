@@ -6,7 +6,7 @@ import { AreaChart, Table } from 'lucide-react';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
-import { Graph } from './Graph';
+import { BarChart } from './BarChart';
 import { VisualizeResultsTable } from './table/visualize-results-table';
 
 enum DataTabs {
@@ -57,12 +57,14 @@ export function VisualizerResults() {
         <>
           {activeDataTab === DataTabs.Collections && (
             <ParentSize>
-              {({ width, height }) => <Graph dataKey="collections" width={width} height={height} />}
+              {({ width, height }) => (
+                <BarChart dataKey="collections" width={width} height={height} />
+              )}
             </ParentSize>
           )}
           {activeDataTab === DataTabs.WAA && (
             <ParentSize>
-              {({ width, height }) => <Graph dataKey="waa" width={width} height={height} />}
+              {({ width, height }) => <BarChart dataKey="waa" width={width} height={height} />}
             </ParentSize>
           )}
         </>
