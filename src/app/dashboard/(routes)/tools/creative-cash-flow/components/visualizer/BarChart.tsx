@@ -79,13 +79,12 @@ const Base = withTooltip<AreaProps, TooltipData>(
     const innerHeight = height - margin.top - margin.bottom;
     const scalePaddingX = 50;
     const scalePaddingY = 30;
-    const xMax = innerWidth - scalePaddingX;
     const yMax = innerHeight - scalePaddingY;
-    const gapSize = 5;
 
     // accessors
     const getCcfValue = (data: VisualizeCcf) => {
-      return !data ? 0 : data[dataKey];
+      // return !data ? 0 : data[dataKey];
+      return 100;
     };
 
     // Adjust the scales to include padding
@@ -93,7 +92,8 @@ const Base = withTooltip<AreaProps, TooltipData>(
       () =>
         scaleBand({
           domain: data.map(getDate),
-          range: [margin.left, width - margin.right],
+          range: [margin.left, width - margin.right - scalePaddingX],
+          padding: 0.2,
         }),
       [innerWidth, margin.left, data, scalePaddingX]
     );
@@ -125,18 +125,18 @@ const Base = withTooltip<AreaProps, TooltipData>(
     const handleTooltip = useCallback(
       (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
         const { x } = localPoint(event) || { x: 0 };
+        const adjustedX = x - margin.left - scalePaddingX;
+        const step = xScale.bandwidth() + xScale.step() * xScale.padding();
+        const index = Math.round(adjustedX / step);
+        const d = data[index];
 
-        if (x > scalePaddingX) {
-          const index = Math.round((x - scalePaddingX / 2) / xScale.bandwidth());
-          const d = data[index];
-          showTooltip({
-            tooltipData: d,
-            tooltipLeft: x,
-            tooltipTop: yScale(getCcfValue(d)),
-          });
-        }
+        showTooltip({
+          tooltipData: d,
+          tooltipLeft: x,
+          tooltipTop: yScale(getCcfValue(d)),
+        });
       },
-      [showTooltip, yScale, xScale, data]
+      [margin.left, scalePaddingX, xScale.bandwidth(), data, showTooltip, yScale, getCcfValue]
     );
 
     return (
@@ -152,9 +152,9 @@ const Base = withTooltip<AreaProps, TooltipData>(
           />
           <LinearGradient id="area-background-gradient" from={background} to={background2} />
           <LinearGradient id="area-gradient" from={accentColor} to={accentColor} toOpacity={0.1} />
-          <Group>
+          <Group left={margin.left + scalePaddingX}>
             {data.map((d, index) => {
-              const barWidth = xScale.bandwidth();
+              const barWidth = xScale.bandwidth() - 10;
               const barHeight = yMax - (yScale(getCcfValue(d)) ?? 0);
               const barX = xScale(getDate(d)) ?? 0;
               const barY = yScale(getCcfValue(d)) ?? 0;
@@ -169,81 +169,82 @@ const Base = withTooltip<AreaProps, TooltipData>(
                 />
               );
             })}
+            <AxisLeft
+              scale={yScale}
+              numTicks={numTicksForHeight(height)}
+              stroke={axisColor}
+              // tickStroke={axisColor}
+              tickStroke="transparent"
+              tickFormat={(d, i) =>
+                i === 0
+                  ? ''
+                  : dollarFormatter(d.valueOf(), {
+                      maximumFractionDigits: 0,
+                    })
+              }
+              tickLabelProps={(d) => ({
+                ...tickLabelProps,
+                dx: d.valueOf() >= 1000 ? -16 : -13,
+                dy: 4,
+              })}
+            />
+            <AxisBottom
+              top={innerHeight + margin.top - scalePaddingY}
+              scale={xScale}
+              // tickFormat={(d) => timeFormat('%B')(new Date(d))}
+              numTicks={numTicksForWidth(width)}
+              stroke={axisColor}
+              tickStroke={axisColor}
+              tickLabelProps={() => tickLabelProps}
+            />
           </Group>
-          <Bar
-            x={margin.left}
-            y={margin.top}
-            width={innerWidth}
-            height={innerHeight}
-            fill="transparent"
-            rx={14}
-            onTouchStart={handleTooltip}
-            onTouchMove={handleTooltip}
-            onMouseMove={handleTooltip}
-            onMouseLeave={() => hideTooltip()}
-          />
-          <AxisLeft
-            left={margin.left + scalePaddingX}
-            scale={yScale}
-            numTicks={numTicksForHeight(height)}
-            stroke={axisColor}
-            // tickStroke={axisColor}
-            tickStroke="transparent"
-            tickFormat={(d, i) =>
-              i === 0
-                ? ''
-                : dollarFormatter(d.valueOf(), {
-                    maximumFractionDigits: 0,
-                  })
-            }
-            tickLabelProps={(d) => ({
-              ...tickLabelProps,
-              dx: d.valueOf() >= 1000 ? -16 : -13,
-              dy: 4,
-            })}
-          />
-          <AxisBottom
-            top={innerHeight + margin.top - scalePaddingY}
-            left={margin.left + scalePaddingX}
-            scale={xScale}
-            // tickFormat={(d) => timeFormat('%B')(new Date(d))}
-            numTicks={numTicksForWidth(width)}
-            stroke={axisColor}
-            tickStroke={axisColor}
-            tickLabelProps={() => tickLabelProps}
-          />
-          {tooltipData && (
-            <g>
-              <Line
-                from={{ x: tooltipLeft, y: margin.top }}
-                to={{ x: tooltipLeft, y: innerHeight + margin.top }}
-                stroke={accentColorDark}
-                strokeWidth={2}
-                pointerEvents="none"
-                strokeDasharray="5,2"
-              />
-              <circle
-                cx={tooltipLeft}
-                cy={tooltipTop + 1}
-                r={4}
-                fill="black"
-                fillOpacity={0.1}
-                stroke="black"
-                strokeOpacity={0.1}
-                strokeWidth={2}
-                pointerEvents="none"
-              />
-              <circle
-                cx={tooltipLeft}
-                cy={tooltipTop}
-                r={4}
-                fill={accentColorDark}
-                stroke="white"
-                strokeWidth={2}
-                pointerEvents="none"
-              />
-            </g>
-          )}
+          <Group>
+            <Bar
+              id="test"
+              x={margin.left + scalePaddingX}
+              y={margin.top + scalePaddingY}
+              width={width + scalePaddingX}
+              height={innerHeight - scalePaddingY * 2}
+              fill="transparent"
+              rx={14}
+              // onTouchStart={handleTooltip}
+              // onTouchMove={handleTooltip}
+              // onMouseMove={handleTooltip}
+              // onMouseLeave={() => hideTooltip()}
+            />
+            {tooltipData && (
+              <g>
+                <Line
+                  from={{ x: tooltipLeft, y: margin.top }}
+                  to={{ x: tooltipLeft, y: innerHeight + margin.top }}
+                  stroke={accentColorDark}
+                  strokeWidth={2}
+                  pointerEvents="none"
+                  strokeDasharray="5,2"
+                />
+                <circle
+                  cx={tooltipLeft}
+                  cy={tooltipTop + 1}
+                  r={4}
+                  fill="black"
+                  fillOpacity={0.1}
+                  stroke="black"
+                  strokeOpacity={0.1}
+                  strokeWidth={2}
+                  pointerEvents="none"
+                />
+                <circle
+                  cx={tooltipLeft}
+                  cy={tooltipTop}
+                  r={4}
+                  fill={accentColorDark}
+                  stroke="white"
+                  strokeWidth={2}
+                  pointerEvents="none"
+                />
+              </g>
+            )}
+          </Group>
         </svg>
         {tooltipData && (
           <div>
