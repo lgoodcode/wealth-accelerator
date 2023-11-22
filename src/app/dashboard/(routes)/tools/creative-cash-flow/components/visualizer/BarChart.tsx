@@ -82,8 +82,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
     const yMax = innerHeight - scalePaddingY;
     // accessors
     const getCcfValue = (data: VisualizeCcf) => {
-      // return !data ? 0 : data[dataKey];
-      return 100;
+      return !data ? 0 : data[dataKey];
     };
 
     // Adjust the scales to include padding
