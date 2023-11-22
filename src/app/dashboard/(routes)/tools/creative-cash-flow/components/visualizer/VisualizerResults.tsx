@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ParentSize } from '@visx/responsive';
 import { AreaChart, Table } from 'lucide-react';
+import type { PaginationState } from '@tanstack/react-table';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
@@ -26,6 +27,11 @@ export function VisualizerResults() {
     setActiveDataTab(value === 'collections' ? DataTabs.Collections : DataTabs.WAA);
   const handleViewTabChange = (value: string) =>
     setActiveViewTab(value === 'graph' ? ViewTabs.Graph : ViewTabs.Table);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const handlePaginationChange = (value: PaginationState) => setPagination(value);
 
   return (
     <div className="w-full h-full flex flex-col flex-grow gap-8">
@@ -73,7 +79,10 @@ export function VisualizerResults() {
       {activeViewTab === ViewTabs.Table && (
         <Card className="w-fit mx-auto">
           <CardContent>
-            <VisualizeResultsTable />
+            <VisualizeResultsTable
+              pagination={pagination}
+              handlePaginationChange={handlePaginationChange}
+            />
           </CardContent>
         </Card>
       )}

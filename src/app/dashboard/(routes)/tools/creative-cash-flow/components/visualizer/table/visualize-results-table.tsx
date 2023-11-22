@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAtomValue } from 'jotai';
 import {
   ColumnFiltersState,
+  PaginationState,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -28,7 +29,15 @@ import { visualizeCcfAtom } from '../../../atoms';
 import { TablePagination } from './table-pagination';
 import type { VisualizeCcf } from '../../../types';
 
-export function VisualizeResultsTable() {
+interface VisualizeResultsTableProps {
+  pagination: PaginationState;
+  handlePaginationChange: (pagination: PaginationState) => void;
+}
+
+export function VisualizeResultsTable({
+  pagination,
+  handlePaginationChange,
+}: VisualizeResultsTableProps) {
   const data = useAtomValue(visualizeCcfAtom);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -41,6 +50,7 @@ export function VisualizeResultsTable() {
       sorting,
       columnFilters,
       globalFilter,
+      pagination,
     },
     globalFilterFn: (row, id, value) => {
       return row.getValue<string>(id).toLowerCase().includes(value.toLowerCase());
@@ -51,6 +61,9 @@ export function VisualizeResultsTable() {
     onGlobalFilterChange: setGlobalFilter,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    onPaginationChange: (updater: any) => {
+      handlePaginationChange(updater(pagination));
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
