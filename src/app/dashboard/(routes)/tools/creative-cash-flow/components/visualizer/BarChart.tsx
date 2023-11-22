@@ -4,7 +4,7 @@ import { useAtomValue } from 'jotai';
 import React, { useMemo, useCallback } from 'react';
 import { Line, Bar } from '@visx/shape';
 import { GridRows, GridColumns } from '@visx/grid';
-import { scaleTime, scaleLinear } from '@visx/scale';
+import { scaleTime, scaleLinear, scaleBand } from '@visx/scale';
 import { Group } from '@visx/group';
 import { AxisLeft, AxisBottom } from '@visx/axis';
 import { withTooltip, Tooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
@@ -43,10 +43,9 @@ const tickLabelProps = {
 } as const;
 
 // accessors
-const getDate = (data: VisualizeCcf) => new Date(data.range.start);
+const getDate = (data: VisualizeCcf) => formatDate(new Date(data.range.start));
 const getFormattedDateRange = (data: VisualizeCcf) =>
   `${formatDate(data.range.start)} - ${formatDate(data.range.end)}`;
-const bisectDate = bisector<VisualizeCcf, Date>((d) => new Date(d.range.start)).left;
 
 type AreaProps = {
   data: VisualizeCcf[];
@@ -92,9 +91,9 @@ const Base = withTooltip<AreaProps, TooltipData>(
     // Adjust the scales to include padding
     const xScale = useMemo(
       () =>
-        scaleTime({
-          range: [margin.left + scalePaddingX, innerWidth + margin.left - scalePaddingX],
-          domain: extent(data, getDate) as [Date, Date],
+        scaleBand({
+          domain: data.map(getDate),
+          range: [margin.left, width - margin.right],
         }),
       [innerWidth, margin.left, data, scalePaddingX]
     );
@@ -126,19 +125,16 @@ const Base = withTooltip<AreaProps, TooltipData>(
     const handleTooltip = useCallback(
       (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
         const { x } = localPoint(event) || { x: 0 };
-        const x0 = xScale.invert(x);
-        const index = bisectDate(data, x0, 1);
-        const d0 = data[index - 1];
-        const d1 = data[index];
-        let d = d0;
-        if (d1 && getDate(d1)) {
-          d = x0.valueOf() - getDate(d0).valueOf() > getDate(d1).valueOf() - x0.valueOf() ? d1 : d0;
+
+        if (x > scalePaddingX) {
+          const index = Math.round((x - scalePaddingX / 2) / xScale.bandwidth());
+          const d = data[index];
+          showTooltip({
+            tooltipData: d,
+            tooltipLeft: x,
+            tooltipTop: yScale(getCcfValue(d)),
+          });
         }
-        showTooltip({
-          tooltipData: d,
-          tooltipLeft: x,
-          tooltipTop: yScale(getCcfValue(d)),
-        });
       },
       [showTooltip, yScale, xScale, data]
     );
@@ -157,14 +153,14 @@ const Base = withTooltip<AreaProps, TooltipData>(
           <LinearGradient id="area-background-gradient" from={background} to={background2} />
           <LinearGradient id="area-gradient" from={accentColor} to={accentColor} toOpacity={0.1} />
           <Group>
-            {data.map((d) => {
-              const barWidth = width / data.length;
+            {data.map((d, index) => {
+              const barWidth = xScale.bandwidth();
               const barHeight = yMax - (yScale(getCcfValue(d)) ?? 0);
-              const barX = xScale(getDate(d)) ?? 0 + scalePaddingX;
-              const barY = yScale(getCcfValue(d)) ?? 0 + scalePaddingY;
+              const barX = xScale(getDate(d)) ?? 0;
+              const barY = yScale(getCcfValue(d)) ?? 0;
               return (
                 <Bar
-                  key={`bar-${getDate(d).valueOf()}`}
+                  key={`bar-${index}`}
                   x={barX}
                   y={barY}
                   width={barWidth}
@@ -193,10 +189,12 @@ const Base = withTooltip<AreaProps, TooltipData>(
             stroke={axisColor}
             // tickStroke={axisColor}
             tickStroke="transparent"
-            tickFormat={(d) =>
-              dollarFormatter(d.valueOf(), {
-                maximumFractionDigits: 0,
-              })
+            tickFormat={(d, i) =>
+              i === 0
+                ? ''
+                : dollarFormatter(d.valueOf(), {
+                    maximumFractionDigits: 0,
+                  })
             }
             tickLabelProps={(d) => ({
               ...tickLabelProps,
@@ -206,7 +204,9 @@ const Base = withTooltip<AreaProps, TooltipData>(
           />
           <AxisBottom
             top={innerHeight + margin.top - scalePaddingY}
+            left={margin.left + scalePaddingX}
             scale={xScale}
+            // tickFormat={(d) => timeFormat('%B')(new Date(d))}
             numTicks={numTicksForWidth(width)}
             stroke={axisColor}
             tickStroke={axisColor}
