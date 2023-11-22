@@ -14,6 +14,7 @@ import { SaveAndResetButtons } from './save-and-reset-buttons';
 import { CreativeCashFlowInputs } from './creative-cash-flow-inputs';
 import { CreativeCashFlowResults } from './creative-cash-flow-results';
 import type { Transaction } from '@/lib/plaid/types/transactions';
+import { set } from 'date-fns';
 
 enum TabsValue {
   Inputs = 'inputs',
@@ -57,7 +58,8 @@ export function CreativeCashFlow({
   const resetCreativeCashFlowInput = useSetAtom(resetCreativeCashFlowInputsAtom);
   const [hasAnimated, setHasAnimated] = useState(false);
   const setHasActualWaa = useSetAtom(hasActualWaaAtom);
-  const [updatedAt, setUpdatedAt] = useState(Date.now());
+  const [updatedAt, setUpdatedAt] = useState<number>(Date.now());
+  const [isMounted, setIsMounted] = useState(false);
   const {
     isError,
     isFetching,
@@ -69,8 +71,7 @@ export function CreativeCashFlow({
     personal: Transaction[];
   }>(['ccf'], () => getTransactions(user_id), {
     initialData: initial_transactions,
-    keepPreviousData: true,
-    staleTime: Infinity,
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
   const handleReset = () => {
@@ -97,11 +98,16 @@ export function CreativeCashFlow({
   }, [results]);
 
   useEffect(() => {
-    if (dataUpdatedAt && dataUpdatedAt !== updatedAt) {
+    if (!isMounted) {
+      setIsMounted(true);
+      return;
+    }
+
+    if (dataUpdatedAt !== updatedAt) {
       setUpdatedAt(dataUpdatedAt);
       toast.info('Transaction data updated, please recalculate results.');
     }
-  });
+  }, [dataUpdatedAt]);
 
   if (isError) {
     return <PageError />;
