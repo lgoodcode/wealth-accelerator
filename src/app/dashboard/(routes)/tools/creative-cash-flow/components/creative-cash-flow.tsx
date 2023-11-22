@@ -104,7 +104,7 @@ export function CreativeCashFlow({
 
     if (dataUpdatedAt !== updatedAt) {
       setUpdatedAt(dataUpdatedAt);
-      toast.info('Transaction data updated, please recalculate results.');
+      toast.info('Account data updated, please recalculate results.');
     }
   }, [dataUpdatedAt]);
 
