@@ -83,8 +83,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
 
     // accessors
     const getCcfValue = (data: VisualizeCcf) => {
-      // return !data ? 0 : data[dataKey];
-      return 100;
+      return !data ? 0 : data[dataKey];
     };
 
     // Adjust the scales to include padding
@@ -122,22 +121,22 @@ const Base = withTooltip<AreaProps, TooltipData>(
     };
 
     // tooltip handler
-    const handleTooltip = useCallback(
-      (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
-        const { x } = localPoint(event) || { x: 0 };
-        const adjustedX = x - margin.left - scalePaddingX;
-        const step = xScale.bandwidth() + xScale.step() * xScale.padding();
-        const index = Math.round(adjustedX / step);
-        const d = data[index];
+    // const handleTooltip = useCallback(
+    //   (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
+    //     const { x } = localPoint(event) || { x: 0 };
+    //     const adjustedX = x - margin.left - scalePaddingX;
+    //     const step = xScale.bandwidth() + xScale.step() * xScale.padding();
+    //     const index = Math.round(adjustedX / step);
+    //     const d = data[index];
 
-        showTooltip({
-          tooltipData: d,
-          tooltipLeft: x,
-          tooltipTop: yScale(getCcfValue(d)),
-        });
-      },
-      [margin.left, scalePaddingX, xScale.bandwidth(), data, showTooltip, yScale, getCcfValue]
-    );
+    //     showTooltip({
+    //       tooltipData: d,
+    //       tooltipLeft: x,
+    //       tooltipTop: yScale(getCcfValue(d)),
+    //     });
+    //   },
+    //   [margin.left, scalePaddingX, xScale.bandwidth(), data, showTooltip, yScale, getCcfValue]
+    // );
 
     return (
       <div>
@@ -154,7 +153,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
           <LinearGradient id="area-gradient" from={accentColor} to={accentColor} toOpacity={0.1} />
           <Group left={margin.left + scalePaddingX}>
             {data.map((d, index) => {
-              const barWidth = xScale.bandwidth() - 10;
+              const barWidth = xScale.bandwidth();
               const barHeight = yMax - (yScale(getCcfValue(d)) ?? 0);
               const barX = xScale(getDate(d)) ?? 0;
               const barY = yScale(getCcfValue(d)) ?? 0;
