@@ -14,8 +14,11 @@
     --popover-foreground: 222.2 47.4% 11.2%;
 
     /* --card: 0 0% 98%; */
-    --card: 0 0% 98.5%;
+    --card: 0 0% 98%;
     --card-foreground: 222.2 47.4% 11.2%;
+
+    --tab: 0 0% 96%;
+    --tab-foreground: 222.2 47.4% 11.2%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
@@ -56,6 +59,9 @@
 
     --card: 224 71% 4%;
     --card-foreground: 213 31% 91%;
+
+    --tab: 224 71% 4%;
+    --tab-foreground: 213 31% 91%;
 
     /* --border: 216 34% 17%; */
     --border: 216 34% 25%;

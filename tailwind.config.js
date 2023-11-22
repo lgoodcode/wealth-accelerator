@@ -63,6 +63,10 @@ export const theme = {
         DEFAULT: 'hsl(var(--card))',
         foreground: 'hsl(var(--card-foreground))',
       },
+      tab: {
+        DEFAULT: 'hsl(var(--tab))',
+        foreground: 'hsl(var(--tab-foreground))',
+      },
     },
     borderRadius: {
       lg: `var(--radius)`,
