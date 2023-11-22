@@ -44,7 +44,6 @@ const tickLabelProps = {
 
 // accessors
 const getDate = (data: VisualizeCcf) => formatDate(new Date(data.range.start));
-const getMonth = (data: VisualizeCcf) => timeFormat('%B')(new Date(data.range.start));
 const getFormattedDateRange = (data: VisualizeCcf) =>
   `${formatDate(data.range.start)} - ${formatDate(data.range.end)}`;
 
@@ -81,22 +80,22 @@ const Base = withTooltip<AreaProps, TooltipData>(
     const scalePaddingX = 50;
     const scalePaddingY = 30;
     const yMax = innerHeight - scalePaddingY;
-
     // accessors
     const getCcfValue = (data: VisualizeCcf) => {
-      return !data ? 0 : data[dataKey];
+      // return !data ? 0 : data[dataKey];
+      return 100;
     };
 
     // Adjust the scales to include padding
-    const xScale = useMemo(() => {
-      // Extracting unique months
-      const uniqueMonths = Array.from(new Set(data.map(getMonth)));
-      return scaleBand({
-        domain: uniqueMonths,
-        range: [margin.left, width - margin.right - scalePaddingX],
-        padding: 0.2,
-      });
-    }, [innerWidth, margin.left, data, scalePaddingX]);
+    const xScale = useMemo(
+      () =>
+        scaleBand({
+          domain: data.map(getDate),
+          range: [margin.left, width - margin.right - scalePaddingX],
+          padding: 0.2,
+        }),
+      [innerWidth, margin.left, data, scalePaddingX]
+    );
 
     const yScale = useMemo(
       () =>
@@ -132,7 +131,8 @@ const Base = withTooltip<AreaProps, TooltipData>(
 
     //     showTooltip({
     //       tooltipData: d,
-    //       tooltipLeft: x,
+    //       // tooltipLeft: (xScale(getDate(d)) ?? 0) + scalePaddingX,
+    //       tooltipLeft: x + xScale.bandwidth() / 2,
     //       tooltipTop: yScale(getCcfValue(d)),
     //     });
     //   },
@@ -203,7 +203,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
               id="test"
               x={margin.left + scalePaddingX}
               y={margin.top + scalePaddingY}
-              width={width + scalePaddingX}
+              width={width - scalePaddingX}
               height={innerHeight - scalePaddingY * 2}
               fill="transparent"
               rx={14}
