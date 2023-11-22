@@ -58,6 +58,7 @@ export const inputsFormSchema = z
 
 export const visualizerInputFormSchema = z
   .object({
+    interval: z.enum(['weekly', 'monthly']),
     start_date: z.date({
       required_error: 'Select a date',
       invalid_type_error: 'Select a date',

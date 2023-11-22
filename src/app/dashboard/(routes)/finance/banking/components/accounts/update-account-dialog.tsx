@@ -92,11 +92,15 @@ export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDi
       toast.error('An error occurred while updating the account');
     },
     onSuccess: (updatedAccount) => {
-      // If the enabled status has changed then invalidate the query cache for the
-      // transactions so that they are refetched (if an account is disabled, omit those transactions)
-      if (row.original.enabled !== updatedAccount.enabled) {
-        queryClient.invalidateQueries(['transactions', row.original.item_id]);
+      // If the account type or enabled status changed, invalidate the CCF query cache so that the
+      // updated account is reflected
+      if (
+        row.original.enabled !== updatedAccount.enabled ||
+        row.original.type !== updatedAccount.type
+      ) {
+        queryClient.invalidateQueries(['ccf']);
       }
+
       // Mutate the query cache for the accounts so that the updated account is reflected
       queryClient.setQueryData<Account[]>(['accounts', row.original.item_id], (oldAccounts) => {
         if (oldAccounts) {

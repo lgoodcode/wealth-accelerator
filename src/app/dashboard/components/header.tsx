@@ -17,7 +17,7 @@ export function Header({ height }: HeaderProps) {
 
   return (
     <div
-      className="flex flex-col md:flex shadow-md dark:shadow-white-sm"
+      className="flex flex-col md:flex shadow-sm dark:shadow-white-sm"
       style={{
         height,
       }}

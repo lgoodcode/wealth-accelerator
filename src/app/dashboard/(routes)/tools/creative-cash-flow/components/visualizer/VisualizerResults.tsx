@@ -2,38 +2,89 @@
 
 import { useState } from 'react';
 import { ParentSize } from '@visx/responsive';
+import { AreaChart, Table } from 'lucide-react';
+import type { PaginationState } from '@tanstack/react-table';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Graph } from './Graph';
+import { Card, CardContent } from '@/components/ui/card';
+import { BarChart } from './BarChart';
+import { VisualizeResultsTable } from './table/visualize-results-table';
 
-enum TabsValue {
+enum DataTabs {
   Collections = 'collections',
   WAA = 'waa',
 }
 
+enum ViewTabs {
+  Graph = 'graph',
+  Table = 'table',
+}
+
 export function VisualizerResults() {
-  const [activeTab, setActiveTab] = useState<TabsValue>(TabsValue.Collections);
-  const handleTabChange = (value: string) =>
-    setActiveTab(value === 'collections' ? TabsValue.Collections : TabsValue.WAA);
+  const [activeDataTab, setActiveDataTab] = useState<DataTabs>(DataTabs.Collections);
+  const [activeViewTab, setActiveViewTab] = useState<ViewTabs>(ViewTabs.Graph);
+  const handleDataTabChange = (value: string) =>
+    setActiveDataTab(value === 'collections' ? DataTabs.Collections : DataTabs.WAA);
+  const handleViewTabChange = (value: string) =>
+    setActiveViewTab(value === 'graph' ? ViewTabs.Graph : ViewTabs.Table);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const handlePaginationChange = (value: PaginationState) => setPagination(value);
 
   return (
     <div className="w-full h-full flex flex-col flex-grow gap-8">
-      <Tabs className="w-full" value={activeTab} onValueChange={handleTabChange}>
-        <TabsList className="relative grid w-[360px] grid-cols-2 mx-auto">
-          <TabsTrigger value={TabsValue.Collections}>Collections</TabsTrigger>
-          <TabsTrigger value={TabsValue.WAA}>WAA</TabsTrigger>
-        </TabsList>
-      </Tabs>
+      <div className="flex justify-between">
+        <Tabs className="w-full" value={activeDataTab} onValueChange={handleDataTabChange}>
+          <TabsList className="relative grid w-[360px] grid-cols-2">
+            <TabsTrigger value={DataTabs.Collections} disabled={activeViewTab === ViewTabs.Table}>
+              Collections
+            </TabsTrigger>
+            <TabsTrigger value={DataTabs.WAA} disabled={activeViewTab === ViewTabs.Table}>
+              WAA
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
 
-      {activeTab === TabsValue.Collections && (
-        <ParentSize>
-          {({ width, height }) => <Graph dataKey="collections" width={width} height={height} />}
-        </ParentSize>
+        <Tabs className="w-full" value={activeViewTab} onValueChange={handleViewTabChange}>
+          <TabsList className="relative grid w-fit grid-cols-2 ml-auto">
+            <TabsTrigger value={ViewTabs.Graph}>
+              <AreaChart size={20} />
+            </TabsTrigger>
+            <TabsTrigger value={ViewTabs.Table}>
+              <Table size={20} />
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
+      {activeViewTab === ViewTabs.Graph && (
+        <>
+          {activeDataTab === DataTabs.Collections && (
+            <ParentSize>
+              {({ width, height }) => (
+                <BarChart dataKey="collections" width={width} height={height} />
+              )}
+            </ParentSize>
+          )}
+          {activeDataTab === DataTabs.WAA && (
+            <ParentSize>
+              {({ width, height }) => <BarChart dataKey="waa" width={width} height={height} />}
+            </ParentSize>
+          )}
+        </>
       )}
-      {activeTab === TabsValue.WAA && (
-        <ParentSize>
-          {({ width, height }) => <Graph dataKey="waa" width={width} height={height} />}
-        </ParentSize>
+
+      {activeViewTab === ViewTabs.Table && (
+        <Card className="w-fit mx-auto">
+          <CardContent>
+            <VisualizeResultsTable
+              pagination={pagination}
+              handlePaginationChange={handlePaginationChange}
+            />
+          </CardContent>
+        </Card>
       )}
     </div>
   );

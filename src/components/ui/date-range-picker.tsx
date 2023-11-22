@@ -10,8 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-interface CalendarDateRangePickerProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
+interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
   selected?: DateRange;
   from?: Date;
   to?: Date;
@@ -19,14 +18,14 @@ interface CalendarDateRangePickerProps
   onOpenChange?: (isOpen: boolean) => void;
 }
 
-export function CalendarDateRangePicker({
+export function DateRangePicker({
   className,
   selected,
   from,
   to,
   onSelect,
   onOpenChange,
-}: CalendarDateRangePickerProps) {
+}: DateRangePickerProps) {
   const date = selected ?? { from, to };
   const [isOpen, setIsOpen] = React.useState(false);
   const isRangeSelected = date.from && date.to;
