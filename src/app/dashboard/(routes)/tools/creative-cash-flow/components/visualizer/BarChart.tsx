@@ -44,6 +44,7 @@ const tickLabelProps = {
 
 // accessors
 const getDate = (data: VisualizeCcf) => formatDate(new Date(data.range.start));
+const getMonth = (data: VisualizeCcf) => timeFormat('%B')(new Date(data.range.start));
 const getFormattedDateRange = (data: VisualizeCcf) =>
   `${formatDate(data.range.start)} - ${formatDate(data.range.end)}`;
 
@@ -87,15 +88,15 @@ const Base = withTooltip<AreaProps, TooltipData>(
     };
 
     // Adjust the scales to include padding
-    const xScale = useMemo(
-      () =>
-        scaleBand({
-          domain: data.map(getDate),
-          range: [margin.left, width - margin.right - scalePaddingX],
-          padding: 0.2,
-        }),
-      [innerWidth, margin.left, data, scalePaddingX]
-    );
+    const xScale = useMemo(() => {
+      // Extracting unique months
+      const uniqueMonths = Array.from(new Set(data.map(getMonth)));
+      return scaleBand({
+        domain: uniqueMonths,
+        range: [margin.left, width - margin.right - scalePaddingX],
+        padding: 0.2,
+      });
+    }, [innerWidth, margin.left, data, scalePaddingX]);
 
     const yScale = useMemo(
       () =>
