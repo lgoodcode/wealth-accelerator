@@ -186,6 +186,10 @@ export const serverSyncTransactions = async (
       has_more: data.has_more,
       isFirstSync,
       hasData,
+      data: {
+        hasMore: isFirstSync && hasData ? true : data.has_more,
+        transactions: null,
+      },
     });
 
     return {
