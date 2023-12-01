@@ -111,7 +111,7 @@ export const serverSyncTransactions = async (
 
   try {
     const { data } = await plaidClient.transactionsSync({
-      access_token: item.access_token,
+      access_token: item.access_token + 'test',
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
       count: PLAID_SYNC_BATCH_SIZE,
     });
