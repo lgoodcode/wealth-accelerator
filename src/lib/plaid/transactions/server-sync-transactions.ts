@@ -179,7 +179,7 @@ export const serverSyncTransactions = async (
       };
     }
 
-    const hasData = !!data.added.length || !!data.modified.length || !!data.next_cursor;
+    const hasData = !!data.added.length || !!data.modified.length;
 
     console.log({
       has_more: data.has_more,
@@ -188,7 +188,7 @@ export const serverSyncTransactions = async (
       modified: data.modified.length,
       hasData,
       data: {
-        hasMore: Boolean(item.cursor) && hasData ? true : data.has_more,
+        hasMore: !item.cursor && hasData ? true : data.has_more,
         transactions: null,
       },
     });
