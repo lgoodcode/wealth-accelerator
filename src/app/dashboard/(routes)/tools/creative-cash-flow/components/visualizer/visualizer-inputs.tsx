@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSetAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
@@ -68,13 +68,10 @@ export function VisualizerInputs({
       tax_account_rate: 25,
     },
   });
-  const [updatedAt, setUpdatedAt] = useState<number>(Date.now());
-  const [isMounted, setIsMounted] = useState(false);
   const {
     isError,
     isFetching,
     isRefetching,
-    dataUpdatedAt,
     data: waaInfos,
   } = useQuery<WaaInfo[]>(['visualizer_waa'], () => getWaaInfo(user_id), {
     initialData: initial_WaaInfo,
@@ -89,16 +86,12 @@ export function VisualizerInputs({
       return;
     }
 
-    console.log({ data, waaInfos });
-
     const results = visualizeCcf({
       ...data,
       business_transactions: transactions.business,
       personal_transactions: transactions.personal,
       waaInfos,
     });
-
-    console.log({ results });
 
     setVisualizeCcf(results);
   };
@@ -107,19 +100,9 @@ export function VisualizerInputs({
     if (noTransactions) {
       toast.error('No transactions found for the selected date range. Cannot visualize data.');
     }
+
+    setVisualizeCcf([]);
   }, []);
-
-  useEffect(() => {
-    if (!isMounted) {
-      setIsMounted(true);
-      return;
-    }
-
-    if (dataUpdatedAt !== updatedAt) {
-      setUpdatedAt(dataUpdatedAt);
-      toast.info('WAA data updated, please recalculate results.');
-    }
-  }, [dataUpdatedAt]);
 
   if (isError) {
     return <PageError />;
