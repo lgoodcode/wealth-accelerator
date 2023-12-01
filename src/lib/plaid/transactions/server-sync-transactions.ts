@@ -203,13 +203,6 @@ export const serverSyncTransactions = async (
       },
     };
   } catch (error: any) {
-    const errorData = {
-      message: error.message,
-      response: error?.response ?? null,
-    };
-    console.error(errorData);
-    captureException(errorData);
-
     const errorCode = error?.response?.data?.error_code as string;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
     const isSyncMutationError = errorCode === PlaidTransactionsSyncMutationErrorCode;
@@ -240,7 +233,7 @@ export const serverSyncTransactions = async (
       }
     }
 
-    return {
+    const customError = {
       error: {
         status,
         general: generalError,
@@ -257,5 +250,13 @@ export const serverSyncTransactions = async (
         transactions: null,
       },
     };
+
+    console.error(customError);
+    captureException(error, {
+      level: isCredentialError ? 'warning' : 'error',
+      extra: customError,
+    });
+
+    return customError;
   }
 };
