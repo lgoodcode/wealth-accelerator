@@ -39,7 +39,7 @@ export const columns: ColumnDef<WaaInfo>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
-          <span>{dollarFormatter(row.getValue<number>('amount') * -1)}</span>
+          <span>{dollarFormatter(row.getValue<number>('amount'))}</span>
         </div>
       );
     },

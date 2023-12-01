@@ -21,6 +21,10 @@ const sidebarNavItems: SidebarNavItem[] = [
     title: 'Index Fund Rates',
     relativePath: '/index-fund-rates',
   },
+  {
+    title: 'WAA Information',
+    relativePath: '/waa-info',
+  },
 ];
 
 interface PersonalFinanceLayoutProps {

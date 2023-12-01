@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -22,10 +23,12 @@ interface DeleteWaaInfoDialogProps {
 
 export function DeleteWaaInfoDialog({ open, onOpenChange, record }: DeleteWaaInfoDialogProps) {
   const deleteWaaInfo = useDeleteWaaInfo();
+  const queryClient = useQueryClient();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     const date = new Date(record.date).toLocaleDateString();
+
     setIsDeleting(true);
 
     await deleteWaaInfo(record.id)
@@ -36,6 +39,7 @@ export function DeleteWaaInfoDialog({ open, onOpenChange, record }: DeleteWaaInf
           </span>
         );
         onOpenChange(false);
+        queryClient.invalidateQueries({ queryKey: ['visualizer_waa'] });
       })
       .catch((error) => {
         console.error(error);

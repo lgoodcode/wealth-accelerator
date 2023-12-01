@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
@@ -37,6 +38,7 @@ interface UpdateWaaInfoDialogProps {
 
 export function UpdateWaaInfoDialog({ open, onOpenChange, record }: UpdateWaaInfoDialogProps) {
   const updateWaaInfo = useUpdateWaaInfo();
+  const queryClient = useQueryClient();
   const form = useForm<WaaInfoSchema>({
     resolver: zodResolver(waaInfoSchema),
     values: {
@@ -50,6 +52,7 @@ export function UpdateWaaInfoDialog({ open, onOpenChange, record }: UpdateWaaInf
     await updateWaaInfo(record.id, data)
       .then(() => {
         onOpenChange(false);
+        queryClient.invalidateQueries({ queryKey: ['visualizer_waa'] });
       })
       .catch((error) => {
         console.error(error);

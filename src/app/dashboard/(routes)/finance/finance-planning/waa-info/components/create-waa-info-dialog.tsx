@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { captureException } from '@sentry/nextjs';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
@@ -32,6 +33,7 @@ import { waaInfoSchema, type WaaInfoSchema } from '../../schema';
 
 export function CreateWaaInfoDialog() {
   const createWaaInfo = useCreateWaaInfo();
+  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const form = useForm<WaaInfoSchema>({
     resolver: zodResolver(waaInfoSchema),
@@ -43,6 +45,7 @@ export function CreateWaaInfoDialog() {
       .then(() => {
         setIsOpen(false);
         toast.success(`Created WAA record for ${date}`);
+        queryClient.invalidateQueries({ queryKey: ['visualizer_waa'] });
       })
       .catch((error) => {
         console.error(error);

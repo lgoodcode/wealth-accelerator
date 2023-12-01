@@ -22,7 +22,7 @@ export function WaaInfos({ waaInfosData }: WaaInfosProps) {
 
   return (
     <div className="flex justify-center mx-auto lg:w-[1024px]">
-      <Card className="w-full mt-8">
+      <Card className="w-full">
         <CardContent>
           {!waaInfos ? <Loading className="mt-0 py-32" /> : <WaaInfoTable users={waaInfos} />}
         </CardContent>

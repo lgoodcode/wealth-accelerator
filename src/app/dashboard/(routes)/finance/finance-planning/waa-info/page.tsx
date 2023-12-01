@@ -4,7 +4,7 @@ import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { getUser } from '@/lib/supabase/server/get-user';
 import { Separator } from '@/components/ui/separator';
 import { PageError } from '@/components/page-error';
-// import { WaaInfoForm } from './waa-info-form';
+import { WaaInfos } from './components/waa-infos';
 
 export default async function WaaInfoPage() {
   const user = (await getUser()) as User;
@@ -27,7 +27,9 @@ export default async function WaaInfoPage() {
         <p className="text-sm text-muted-foreground">Manage your actual WAA deposits.</p>
       </div>
       <Separator />
-      <div className="max-w-xl">{/* <WaaInfoForm user={user} initialValues={data} /> */}</div>
+      <div className="max-w-xl">
+        <WaaInfos waaInfosData={data} />
+      </div>
     </div>
   );
 }
