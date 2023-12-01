@@ -1,6 +1,7 @@
 import { add, differenceInWeeks, differenceInMonths } from 'date-fns';
 
 import { centsToDollars, dollarsToCents } from '@/lib/utils/currency';
+import type { WaaInfo } from '@/lib/types/waa-info';
 import type { CcfTransaction } from '../types';
 
 interface CreativeCashFlowManagementArgs {
@@ -11,6 +12,7 @@ interface CreativeCashFlowManagementArgs {
   end_date: Date;
   lifestyle_expenses_tax_rate: number;
   tax_account_rate: number;
+  waaInfos: WaaInfo[];
 }
 
 const filterTransactionsByDate = (
@@ -32,6 +34,7 @@ export function visualizeCcf({
   end_date,
   lifestyle_expenses_tax_rate,
   tax_account_rate,
+  waaInfos,
 }: CreativeCashFlowManagementArgs) {
   if (!business_transactions.length && !personal_transactions.length) {
     throw new Error('There are no transactions to analyze.');
@@ -47,6 +50,8 @@ export function visualizeCcf({
     throw new Error('lifestyle_expenses_tax_rate is not defined');
   } else if (!tax_account_rate) {
     throw new Error('tax_account_rate is not defined');
+  } else if (!waaInfos) {
+    throw new Error('waaInfos is not defined');
   }
 
   // Convert the dollars to cents
@@ -57,6 +62,10 @@ export function visualizeCcf({
   personal_transactions = personal_transactions.map((transaction) => ({
     ...transaction,
     amount: dollarsToCents(transaction.amount),
+  }));
+  waaInfos = waaInfos.map((waaInfo) => ({
+    ...waaInfo,
+    amount: dollarsToCents(waaInfo.amount),
   }));
 
   // Convert the tax rates to decimal values
@@ -81,18 +90,23 @@ export function visualizeCcf({
     const _window_end_date = add(window_start_date, { [duration]: 1 });
     const window_end_date = _window_end_date > end_date ? end_date : _window_end_date;
     // Get the transactions within this window
-    const week_business_transactions = filterTransactionsByDate(
+    const window_business_transactions = filterTransactionsByDate(
       business_transactions,
       window_start_date,
       window_end_date
     );
-    const week_personal_transactions = filterTransactionsByDate(
+    const window_personal_transactions = filterTransactionsByDate(
       personal_transactions,
       window_start_date,
       window_end_date
     );
+    // Get the WaaInfo within this range
+    const window_waa_infos = waaInfos.filter((waaInfo) => {
+      const waaInfoDate = new Date(waaInfo.date);
+      return waaInfoDate >= window_start_date && waaInfoDate <= window_end_date;
+    });
 
-    for (const transaction of week_business_transactions) {
+    for (const transaction of window_business_transactions) {
       if (transaction.category === 'Money-In') {
         collections -= transaction.amount;
       } else {
@@ -102,7 +116,7 @@ export function visualizeCcf({
 
     business_overhead = Math.max(business_overhead, 0);
 
-    for (const transaction of week_personal_transactions) {
+    for (const transaction of window_personal_transactions) {
       if (transaction.category === 'Money-Out') {
         lifestyle_expenses += transaction.amount;
       }
@@ -122,16 +136,17 @@ export function visualizeCcf({
         end: window_end_date,
       },
       collections: centsToDollars(collections),
-      lifestyle_expenses: centsToDollars(lifestyle_expenses),
-      lifestyle_expenses_tax: centsToDollars(lifestyle_expenses_tax),
-      business_profit_before_tax: centsToDollars(business_profit_before_tax),
-      business_overhead: centsToDollars(business_overhead),
-      tax_account: centsToDollars(tax_account),
-      waa: centsToDollars(waa),
+      waa: centsToDollars(window_waa_infos.reduce((acc, waaInfo) => acc + waaInfo.amount, 0)),
+      // lifestyle_expenses: centsToDollars(lifestyle_expenses),
+      // lifestyle_expenses_tax: centsToDollars(lifestyle_expenses_tax),
+      // business_profit_before_tax: centsToDollars(business_profit_before_tax),
+      // business_overhead: centsToDollars(business_overhead),
+      // tax_account: centsToDollars(tax_account),
       // waa: centsToDollars(waa),
-      // daily_trend: daily_trend.map((trend) => centsToDollars(trend)),
-      // weekly_trend: daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_WEEK)),
-      // yearly_trend: daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_YEAR)),
+      // // waa: centsToDollars(waa),
+      // // daily_trend: daily_trend.map((trend) => centsToDollars(trend)),
+      // // weekly_trend: daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_WEEK)),
+      // // yearly_trend: daily_trend.map((trend) => centsToDollars(trend * DAYS_IN_YEAR)),
     });
 
     collections = 0;
