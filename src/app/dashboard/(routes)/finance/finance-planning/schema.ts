@@ -83,6 +83,23 @@ export const ratesFormSchema = (numOfYears: number) =>
       .length(numOfYears, `Enter ${numOfYears} rates`),
   });
 
+export const waaInfoSchema = z.object({
+  date: z.date({
+    required_error: 'Select a date.',
+    invalid_type_error: 'Select a date.',
+  }),
+  amount: z.coerce
+    .number({
+      required_error: 'Enter the amount',
+      invalid_type_error: 'Enter the amount',
+    })
+    .positive({
+      message: 'Enter a positive amount',
+    }),
+});
+
 export type FinanceInfoSchema = z.infer<typeof financeInfoSchema>;
 
 export type RatesFormSchema = z.infer<ReturnType<typeof ratesFormSchema>>;
+
+export type WaaInfoSchema = z.infer<typeof waaInfoSchema>;

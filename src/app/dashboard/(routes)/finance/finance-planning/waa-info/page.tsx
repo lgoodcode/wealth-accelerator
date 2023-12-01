@@ -4,16 +4,15 @@ import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { getUser } from '@/lib/supabase/server/get-user';
 import { Separator } from '@/components/ui/separator';
 import { PageError } from '@/components/page-error';
-import { FinanceInfoForm } from './finance-info-form';
+// import { WaaInfoForm } from './waa-info-form';
 
-export default async function FinanceInfoPage() {
+export default async function WaaInfoPage() {
   const user = (await getUser()) as User;
   const supabase = createSupabase();
   const { error, data } = await supabase
-    .from('personal_finance')
-    .select('*')
-    .eq('user_id', user.id)
-    .single();
+    .from('waa')
+    .select('id, date, amount')
+    .eq('user_id', user.id);
 
   if (error) {
     console.error(error);
@@ -24,16 +23,11 @@ export default async function FinanceInfoPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h3 className="text-lg font-medium">Finance Information</h3>
-        <p className="text-sm text-muted-foreground">
-          Manage information used in calculations for your finances for the Wealth Accelerator and
-          Creative Cash Flow.
-        </p>
+        <h3 className="text-lg font-medium">WAA Information</h3>
+        <p className="text-sm text-muted-foreground">Manage your actual WAA deposits.</p>
       </div>
       <Separator />
-      <div className="max-w-xl">
-        <FinanceInfoForm user={user} initialValues={data} />
-      </div>
+      <div className="max-w-xl">{/* <WaaInfoForm user={user} initialValues={data} /> */}</div>
     </div>
   );
 }
