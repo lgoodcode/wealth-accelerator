@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { captureException } from '@sentry/nextjs';
+import { captureException, captureMessage } from '@sentry/nextjs';
 
 import { getUser } from '@/lib/supabase/server/get-user';
 import { getItemFromItemId } from '@/lib/plaid/get-item-from-item-id';
@@ -48,20 +48,27 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
   const { error, data } = await serverSyncTransactions(item);
 
   if (error) {
-    const errMsg = 'Failed to sync transactions';
+    const errTitle = 'Failed to sync transactions';
 
-    console.error(errMsg, {
-      item_id,
-      error,
-      transactions: data?.transactions,
-    });
-    captureException(new Error(errMsg), {
-      extra: {
-        item_id,
-        error,
-        transactions: data?.transactions,
-      },
-    });
+    console.error(errTitle, error);
+
+    if (error.plaid && error.plaid.isCredentialError) {
+      captureMessage('Credentials error', {
+        extra: {
+          item_id,
+          error,
+          transactions: data?.transactions,
+        },
+      });
+    } else {
+      captureException(errTitle, {
+        extra: {
+          item_id,
+          error,
+          transactions: data?.transactions,
+        },
+      });
+    }
 
     return NextResponse.json<SyncTransactionsResponse>(
       {
