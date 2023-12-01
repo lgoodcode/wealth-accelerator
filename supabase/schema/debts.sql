@@ -14,23 +14,24 @@ CREATE INDEX IF NOT EXISTS idx_debts_user_id ON debts(user_id);
 ALTER TABLE debts OWNER TO postgres;
 ALTER TABLE debts ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Can view own debts or is admin" ON public.debts
+CREATE POLICY "Can view own debts or is admin" ON debts
   FOR SELECT
   TO authenticated
-  USING (auth.uid() = user_id OR is_admin());
+  USING ((SELECT auth.uid()) = user_id OR (SELECT is_admin()));
 
-CREATE POLICY "Can insert new debts" ON public.debts
+CREATE POLICY "Can insert new debts" ON debts
   FOR INSERT
   TO authenticated
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK ((SELECT auth.uid()) = user_id);
 
-CREATE POLICY "Can update own debt data" ON public.debts
+CREATE POLICY "Can update own debt data" ON debts
   FOR UPDATE
   TO authenticated
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
 
-CREATE POLICY "Can delete own debts" ON public.debts
+CREATE POLICY "Can delete own debts" ON debts
   FOR DELETE
   TO authenticated
-  USING (auth.uid() = user_id);
+  USING ((SELECT auth.uid()) = user_id);
+
