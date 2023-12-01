@@ -24,10 +24,10 @@ CREATE POLICY "Can insert new waa" ON waa
 CREATE POLICY "Can update own debt data" ON waa
   FOR UPDATE
   TO authenticated
-  USING ((SELECT auth.uid()) = user_id);
-  WITH CHECK ((SELECT auth.uid()) = user_id);;
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
 
 CREATE POLICY "Can delete own waa" ON waa
   FOR DELETE
   TO authenticated
-  USING ((SELECT auth.uid()) = user_id);;
+  USING ((SELECT auth.uid()) = user_id);
