@@ -7,7 +7,7 @@ import type { PaginationState } from '@tanstack/react-table';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
-import { BarChart } from './BarChart';
+import { BarChart } from './bar-chart';
 import { VisualizeResultsTable } from './table/visualize-results-table';
 
 enum DataTabs {
