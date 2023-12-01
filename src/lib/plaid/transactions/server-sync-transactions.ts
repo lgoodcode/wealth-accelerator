@@ -179,27 +179,16 @@ export const serverSyncTransactions = async (
       };
     }
 
-    const hasData = !!data.added.length || !!data.modified.length;
-
-    console.log({
-      has_more: data.has_more,
-      next_cursor: data.next_cursor,
-      added: data.added.length,
-      modified: data.modified.length,
-      hasData,
-      data: {
-        hasMore: !item.cursor && hasData ? true : data.has_more,
-        transactions: null,
-      },
-    });
-
     return {
       error: null,
       data: {
         // If it's the first sync, has_more will be false, so we need to set it to true
         // so that the client will continue to make requests until has_more is false
         // only if the account actually has transaction data
-        hasMore: Boolean(item.cursor) && hasData ? true : data.has_more,
+        hasMore:
+          Boolean(item.cursor) && (!!data.added.length || !!data.modified.length)
+            ? true
+            : data.has_more,
         transactions: null,
       },
     };
