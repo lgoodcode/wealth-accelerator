@@ -105,6 +105,10 @@ export const serverSyncTransactions = async (
     return userFilters;
   }
 
+  console.log({
+    cursor: item.cursor,
+  });
+
   try {
     const { data } = await plaidClient.transactionsSync({
       access_token: item.access_token,
@@ -128,6 +132,14 @@ export const serverSyncTransactions = async (
     const removedError = await removeTransactions(data.removed, supabaseAdmin);
 
     if (addedError || updatedError || removedError) {
+      console.log({
+        error: {
+          status: 500,
+          general: addedError || updatedError || removedError,
+          plaid: null,
+          link_token: null,
+        },
+      });
       return {
         error: {
           status: 500,
@@ -169,6 +181,11 @@ export const serverSyncTransactions = async (
 
     const isFirstSync = !item.cursor && !data.has_more;
     const hasData = data.added.length || data.modified.length || data.next_cursor;
+
+    console.log({
+      isFirstSync,
+      hasData,
+    });
 
     return {
       error: null,
