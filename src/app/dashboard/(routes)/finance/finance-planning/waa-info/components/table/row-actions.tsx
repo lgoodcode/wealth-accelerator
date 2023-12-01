@@ -4,7 +4,6 @@ import { useState, useCallback } from 'react';
 import { MoreHorizontal, Pen, Trash } from 'lucide-react';
 import type { Row } from '@tanstack/react-table';
 
-import { useUser } from '@/hooks/use-user';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -22,7 +21,6 @@ interface RowActionsProps {
 }
 
 export function RowActions({ row }: RowActionsProps) {
-  const user = useUser();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -33,10 +31,6 @@ export function RowActions({ row }: RowActionsProps) {
   const handleDeleteDialogOpenChange = useCallback((open?: boolean) => {
     setShowDeleteDialog((prev) => open ?? !prev);
   }, []);
-
-  if (!user) {
-    return null;
-  }
 
   return (
     <>
