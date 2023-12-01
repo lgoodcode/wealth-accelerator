@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 
-import { Debt } from '@/lib/types/debts';
+import type { Debt } from '@/lib/types/debts';
 
 export const debtsAtom = atom<Debt[] | null>(null);
 
