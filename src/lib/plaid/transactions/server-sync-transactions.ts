@@ -107,7 +107,7 @@ export const serverSyncTransactions = async (
 
   try {
     const { data } = await plaidClient.transactionsSync({
-      access_token: item.access_token + 'test',
+      access_token: item.access_token,
       cursor: item.cursor ?? undefined, // Pass the current cursor, if any, to fetch transactions after that cursor
       count: PLAID_SYNC_BATCH_SIZE,
     });
@@ -239,7 +239,7 @@ export const serverSyncTransactions = async (
 
     console.error(customError);
 
-    if (!isCredentialError) {
+    if (isCredentialError) {
       captureMessage('Credentials error', {
         extra: customError,
       });
