@@ -34,14 +34,14 @@ import {
 } from '@/components/ui/form';
 import { useUpdateUser } from '../hooks/use-update-user';
 
-interface UpdateUserDialog {
+interface UpdateUserDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
   id: string;
   user: User;
 }
 
-export function UpdateUserDialog({ open, onOpenChange, id, user }: UpdateUserDialog) {
+export function UpdateUserDialog({ open, onOpenChange, id, user }: UpdateUserDialogProps) {
   const updateUser = useUpdateUser();
   const form = useForm<UpdateUserForm>({
     resolver: zodResolver(updateUserFormSchema),

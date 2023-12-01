@@ -13,14 +13,14 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useDeleteUser } from '../hooks/use-delete-user';
 
-interface DeleteUserProps {
+interface DeleteUserDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
   id: string;
   user: User;
 }
 
-export function DeleteUserDialog({ open, onOpenChange, id, user }: DeleteUserProps) {
+export function DeleteUserDialog({ open, onOpenChange, id, user }: DeleteUserDialogProps) {
   const deleteUser = useDeleteUser();
   const [isDeleting, setIsDeleting] = useState(false);
 
