@@ -179,7 +179,7 @@ export const serverSyncTransactions = async (
       };
     }
 
-    const isFirstSync = !!item.cursor && !data.has_more;
+    const isFirstSync = !!item.cursor;
     const hasData = !!data.added.length || !!data.modified.length || !!data.next_cursor;
 
     console.log({
