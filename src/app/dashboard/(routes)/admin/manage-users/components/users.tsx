@@ -9,11 +9,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { UsersTable } from './table/users-table';
 import type { ManageUser } from '@/lib/types';
 
-interface FiltersProps {
+interface UsersProps {
   usersData: ManageUser[] | null;
 }
 
-export function Users({ usersData }: FiltersProps) {
+export function Users({ usersData }: UsersProps) {
   const [users, setUsers] = useAtom(usersAtom);
 
   useEffect(() => {
