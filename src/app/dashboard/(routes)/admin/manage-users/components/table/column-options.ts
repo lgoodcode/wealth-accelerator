@@ -1,4 +1,4 @@
-import { Role } from '@/lib/types';
+import { Role } from '@/lib/types/role';
 
 type RoleOption = {
   label: string;

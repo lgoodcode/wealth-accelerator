@@ -2,7 +2,7 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 
-import { Role } from '@/lib/types';
+import { Role } from '@/lib/types/role';
 import { roleOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';

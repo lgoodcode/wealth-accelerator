@@ -5,7 +5,7 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
 import { updateUserFormSchema, type UpdateUserForm } from '@/lib/user-schema';
-import { Role } from '@/lib/types';
+import { Role } from '@/lib/types/role';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {

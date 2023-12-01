@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase/client';
-import { Role } from '@/lib/types';
+import { Role } from '@/lib/types/role';
 import type { RegisterUserForm } from '@/lib/user-schema';
 
 export const useSignUp = () => {
