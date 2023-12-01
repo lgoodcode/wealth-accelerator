@@ -1,3 +1,5 @@
+import { captureException, captureMessage } from '@sentry/nextjs';
+
 import { createLinkTokenRequest, plaidClient } from '@/lib/plaid/config';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { updateTransactions } from '@/lib/plaid/transactions/update-transactions';
@@ -88,6 +90,12 @@ const getUserFilters = async (user_id: string): Promise<GetFilters<UserFilter>> 
   };
 };
 
+/**
+ * Performs the sync between Plaid. This handles the error logging.
+ *
+ * @param item
+ * @returns data or custom error data
+ */
 export const serverSyncTransactions = async (
   item: Institution
 ): Promise<ServerSyncTransactions> => {
@@ -234,6 +242,24 @@ export const serverSyncTransactions = async (
         transactions: null,
       },
     };
+
+    console.error(customError);
+
+    if (error.plaid && error.plaid.isCredentialError) {
+      captureMessage('Credentials error', {
+        extra: {
+          item_id: item.item_id,
+          error,
+        },
+      });
+    } else {
+      captureException('Failed to sync transactions', {
+        extra: {
+          item_id: item.item_id,
+          error,
+        },
+      });
+    }
 
     return customError;
   }
