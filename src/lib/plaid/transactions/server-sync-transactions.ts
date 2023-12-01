@@ -180,9 +180,10 @@ export const serverSyncTransactions = async (
     }
 
     const isFirstSync = !item.cursor && !data.has_more;
-    const hasData = data.added.length || data.modified.length || data.next_cursor;
+    const hasData = !!data.added.length || !!data.modified.length || !!data.next_cursor;
 
     console.log({
+      has_more: data.has_more,
       isFirstSync,
       hasData,
     });
