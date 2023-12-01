@@ -1,4 +1,4 @@
-import { captureException } from '@sentry/nextjs';
+import { captureException, captureMessage } from '@sentry/nextjs';
 
 import { createLinkTokenRequest, plaidClient } from '@/lib/plaid/config';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
@@ -238,10 +238,16 @@ export const serverSyncTransactions = async (
     };
 
     console.error(customError);
-    captureException(error, {
-      level: !isCredentialError ? 'warning' : 'error',
-      extra: customError,
-    });
+
+    if (!isCredentialError) {
+      captureMessage('Credentials error', {
+        extra: customError,
+      });
+    } else {
+      captureException(error, {
+        extra: customError,
+      });
+    }
 
     return customError;
   }
