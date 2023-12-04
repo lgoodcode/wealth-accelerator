@@ -21,7 +21,7 @@ export default async function ManageUsersPage() {
     return <PageError />;
   }
 
-  const data = users as unknown as ManageUser[];
+  const data = users as ManageUser[];
 
   return (
     <div className="p-8">
