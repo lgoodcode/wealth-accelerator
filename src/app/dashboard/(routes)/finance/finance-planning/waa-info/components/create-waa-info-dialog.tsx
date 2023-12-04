@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
+import { VISUALIZER_WAA_KEY } from '@/config/constants/react-query';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { CurrencyInput } from '@/components/ui/currency-input';
@@ -45,7 +46,7 @@ export function CreateWaaInfoDialog() {
       .then(() => {
         setIsOpen(false);
         toast.success(`Created WAA record for ${date}`);
-        queryClient.invalidateQueries({ queryKey: ['visualizer_waa'] });
+        queryClient.invalidateQueries({ queryKey: [VISUALIZER_WAA_KEY] });
       })
       .catch((error) => {
         console.error(error);

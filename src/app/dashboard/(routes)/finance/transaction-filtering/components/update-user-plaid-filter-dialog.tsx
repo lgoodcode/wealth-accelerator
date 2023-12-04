@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
+import { TRANSACTIONS_KEY } from '@/config/constants/react-query';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -58,7 +59,7 @@ export function UpdateUserPlaidFilterDialog({
     await updateFilter(filter.id, data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {
-        queryClient.invalidateQueries({ queryKey: ['transactions'] });
+        queryClient.invalidateQueries({ queryKey: [TRANSACTIONS_KEY] });
         onOpenChange(false);
         toast.success(
           <span>

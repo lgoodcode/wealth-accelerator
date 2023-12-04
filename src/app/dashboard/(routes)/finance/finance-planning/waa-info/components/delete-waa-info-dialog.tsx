@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { VISUALIZER_WAA_KEY } from '@/config/constants/react-query';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -39,7 +40,7 @@ export function DeleteWaaInfoDialog({ open, onOpenChange, record }: DeleteWaaInf
           </span>
         );
         onOpenChange(false);
-        queryClient.invalidateQueries({ queryKey: ['visualizer_waa'] });
+        queryClient.invalidateQueries({ queryKey: [VISUALIZER_WAA_KEY] });
       })
       .catch((error) => {
         console.error(error);

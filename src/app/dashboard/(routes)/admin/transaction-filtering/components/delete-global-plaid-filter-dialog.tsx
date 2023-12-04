@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
+import { TRANSACTIONS_KEY } from '@/config/constants/react-query';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import {
@@ -58,7 +59,7 @@ export function DeleteGlobalPlaidFilterDialog({
     await deleteFilter(filter.id, global_filter_id)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {
-        queryClient.invalidateQueries({ queryKey: ['transactions'] });
+        queryClient.invalidateQueries({ queryKey: [TRANSACTIONS_KEY] });
         toast.success(
           <span>
             Filter <span className="font-bold">{filter.filter}</span> has been removed
