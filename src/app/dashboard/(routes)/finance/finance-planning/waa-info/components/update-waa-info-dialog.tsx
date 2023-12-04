@@ -53,7 +53,11 @@ export function UpdateWaaInfoDialog({ open, onOpenChange, record }: UpdateWaaInf
     await updateWaaInfo(record.id, data)
       .then(() => {
         onOpenChange(false);
-        queryClient.invalidateQueries({ queryKey: [VISUALIZER_WAA_KEY] });
+
+        // Only invalidate the query if the data has changed
+        if (record.date !== data.date.toLocaleDateString() || record.amount !== data.amount) {
+          queryClient.invalidateQueries({ queryKey: [VISUALIZER_WAA_KEY] });
+        }
       })
       .catch((error) => {
         console.error(error);
