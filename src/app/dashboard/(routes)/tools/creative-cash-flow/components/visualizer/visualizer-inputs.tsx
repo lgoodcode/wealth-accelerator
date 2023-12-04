@@ -3,9 +3,13 @@
 import { useEffect } from 'react';
 import { useSetAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
+import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
+import { supabase } from '@/lib/supabase/client';
+import { PageError } from '@/components/page-error';
+import { Loading } from '@/components/loading';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { PercentInput } from '@/components/ui/percent-input';
@@ -29,16 +33,33 @@ import { inputLabels } from '../../labels';
 import { visualizerInputFormSchema, type VisualizerInputFormSchema } from '../../schema';
 import { visualizeCcfAtom } from '../../atoms';
 import { visualizeCcf } from '../../functions/creative-cash-flow-visualizer';
-import type { CcfTransaction } from '../../types';
+import type { WaaInfo } from '@/lib/types/waa-info';
+import type { VisualizerTransactions } from '../../types';
 
 interface VisualizerInputsProps {
-  transactions: {
-    business: CcfTransaction[];
-    personal: CcfTransaction[];
-  };
+  user_id: string;
+  transactions: VisualizerTransactions;
+  initial_WaaInfo: WaaInfo[];
 }
 
-export function VisualizerInputs({ transactions }: VisualizerInputsProps) {
+const getWaaInfo = async (user_id: string) => {
+  const { error, data } = await supabase
+    .from('waa')
+    .select('id, date, amount')
+    .eq('user_id', user_id);
+
+  if (error || !data) {
+    throw error || new Error('No transactions returned');
+  }
+
+  return data as WaaInfo[];
+};
+
+export function VisualizerInputs({
+  user_id,
+  transactions,
+  initial_WaaInfo,
+}: VisualizerInputsProps) {
   const setVisualizeCcf = useSetAtom(visualizeCcfAtom);
   const form = useForm<VisualizerInputFormSchema>({
     resolver: zodResolver(visualizerInputFormSchema),
@@ -46,6 +67,15 @@ export function VisualizerInputs({ transactions }: VisualizerInputsProps) {
       lifestyle_expenses_tax_rate: 25,
       tax_account_rate: 25,
     },
+  });
+  const {
+    isError,
+    isFetching,
+    isRefetching,
+    data: waaInfos,
+  } = useQuery<WaaInfo[]>(['visualizer_waa'], () => getWaaInfo(user_id), {
+    initialData: initial_WaaInfo,
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
   const interval = form.watch('interval');
   const noTransactions = !transactions.business.length && !transactions.personal.length;
@@ -56,15 +86,12 @@ export function VisualizerInputs({ transactions }: VisualizerInputsProps) {
       return;
     }
 
-    console.log({ data });
-
     const results = visualizeCcf({
       ...data,
       business_transactions: transactions.business,
       personal_transactions: transactions.personal,
+      waaInfos,
     });
-
-    console.log({ results });
 
     setVisualizeCcf(results);
   };
@@ -73,7 +100,17 @@ export function VisualizerInputs({ transactions }: VisualizerInputsProps) {
     if (noTransactions) {
       toast.error('No transactions found for the selected date range. Cannot visualize data.');
     }
+
+    setVisualizeCcf([]);
   }, []);
+
+  if (isError) {
+    return <PageError />;
+  } else if (isFetching) {
+    return (
+      <Loading title={isRefetching ? 'Refetching Data' : 'Fetching Data'} className="mt-0 py-32" />
+    );
+  }
 
   return (
     <Card>

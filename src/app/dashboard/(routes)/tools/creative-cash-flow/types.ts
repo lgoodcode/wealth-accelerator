@@ -55,17 +55,22 @@ export type CcfTransaction = {
   date: string;
 };
 
+export type VisualizerTransactions = {
+  business: CcfTransaction[];
+  personal: CcfTransaction[];
+};
+
 export type VisualizeCcf = {
   range: {
     start: Date;
     end: Date;
   };
   collections: number;
-  lifestyle_expenses: number;
-  lifestyle_expenses_tax: number;
-  business_profit_before_tax: number;
-  business_overhead: number;
-  tax_account: number;
+  // lifestyle_expenses: number;
+  // lifestyle_expenses_tax: number;
+  // business_profit_before_tax: number;
+  // business_overhead: number;
+  // tax_account: number;
   waa: number;
 };
 

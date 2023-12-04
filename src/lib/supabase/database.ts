@@ -573,6 +573,34 @@ export interface Database {
           }
         ]
       }
+      waa: {
+        Row: {
+          amount: number
+          date: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          date: string
+          id?: number
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          date?: string
+          id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "waa_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

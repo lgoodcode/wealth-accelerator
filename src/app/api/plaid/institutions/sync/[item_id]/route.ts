@@ -48,21 +48,6 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
   const { error, data } = await serverSyncTransactions(item);
 
   if (error) {
-    const errMsg = 'Failed to sync transactions';
-
-    console.error(errMsg, {
-      item_id,
-      error,
-      transactions: data?.transactions,
-    });
-    captureException(new Error(errMsg), {
-      extra: {
-        item_id,
-        error,
-        transactions: data?.transactions,
-      },
-    });
-
     return NextResponse.json<SyncTransactionsResponse>(
       {
         hasMore: false,

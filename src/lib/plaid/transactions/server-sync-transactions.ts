@@ -1,4 +1,4 @@
-import { captureException } from '@sentry/nextjs';
+import { captureException, captureMessage } from '@sentry/nextjs';
 
 import { createLinkTokenRequest, plaidClient } from '@/lib/plaid/config';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
@@ -90,6 +90,12 @@ const getUserFilters = async (user_id: string): Promise<GetFilters<UserFilter>> 
   };
 };
 
+/**
+ * Performs the sync between Plaid. This handles the error logging.
+ *
+ * @param item
+ * @returns data or custom error data
+ */
 export const serverSyncTransactions = async (
   item: Institution
 ): Promise<ServerSyncTransactions> => {
@@ -128,6 +134,14 @@ export const serverSyncTransactions = async (
     const removedError = await removeTransactions(data.removed, supabaseAdmin);
 
     if (addedError || updatedError || removedError) {
+      console.log({
+        error: {
+          status: 500,
+          general: addedError || updatedError || removedError,
+          plaid: null,
+          link_token: null,
+        },
+      });
       return {
         error: {
           status: 500,
@@ -167,27 +181,20 @@ export const serverSyncTransactions = async (
       };
     }
 
-    const isFirstSync = !item.cursor && !data.has_more;
-    const hasData = data.added.length || data.modified.length || data.next_cursor;
-
     return {
       error: null,
       data: {
         // If it's the first sync, has_more will be false, so we need to set it to true
         // so that the client will continue to make requests until has_more is false
         // only if the account actually has transaction data
-        hasMore: isFirstSync && hasData ? true : data.has_more,
+        hasMore:
+          Boolean(item.cursor) && (!!data.added.length || !!data.modified.length)
+            ? true
+            : data.has_more,
         transactions: null,
       },
     };
   } catch (error: any) {
-    const errorData = {
-      message: error.message,
-      response: error?.response ?? null,
-    };
-    console.error(errorData);
-    captureException(errorData);
-
     const errorCode = error?.response?.data?.error_code as string;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
     const isSyncMutationError = errorCode === PlaidTransactionsSyncMutationErrorCode;
@@ -218,7 +225,7 @@ export const serverSyncTransactions = async (
       }
     }
 
-    return {
+    const customError = {
       error: {
         status,
         general: generalError,
@@ -235,5 +242,25 @@ export const serverSyncTransactions = async (
         transactions: null,
       },
     };
+
+    console.error(customError);
+
+    if (error.plaid && error.plaid.isCredentialError) {
+      captureMessage('Credentials error', {
+        extra: {
+          item_id: item.item_id,
+          error,
+        },
+      });
+    } else {
+      captureException('Failed to sync transactions', {
+        extra: {
+          item_id: item.item_id,
+          error,
+        },
+      });
+    }
+
+    return customError;
   }
 };

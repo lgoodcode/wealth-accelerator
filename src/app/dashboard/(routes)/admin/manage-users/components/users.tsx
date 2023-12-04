@@ -7,13 +7,13 @@ import { usersAtom } from '@/lib/atoms/users';
 import { Loading } from '@/components/loading';
 import { Card, CardContent } from '@/components/ui/card';
 import { UsersTable } from './table/users-table';
-import type { ManageUser } from '@/lib/types';
+import type { ManageUser } from '@/lib/types/manage-user';
 
-interface FiltersProps {
+interface UsersProps {
   usersData: ManageUser[] | null;
 }
 
-export function Users({ usersData }: FiltersProps) {
+export function Users({ usersData }: UsersProps) {
   const [users, setUsers] = useAtom(usersAtom);
 
   useEffect(() => {

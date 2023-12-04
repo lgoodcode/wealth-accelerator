@@ -5,7 +5,7 @@ import type { Row } from '@tanstack/react-table';
 
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useDeleteNotifier } from '../hooks/use-delete-notifier';
-import type { Notifier } from '@/lib/types';
+import type { Notifier } from '@/lib/types/notifier';
 
 interface DeleteFilterMenuItemProps {
   row: Row<Notifier>;

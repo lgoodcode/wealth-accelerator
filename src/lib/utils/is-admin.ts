@@ -1,4 +1,4 @@
-import { Role } from '../types';
+import { Role } from '../types/role';
 
 export const isAdmin = (user: User | Role) => {
   if (typeof user === 'string') {

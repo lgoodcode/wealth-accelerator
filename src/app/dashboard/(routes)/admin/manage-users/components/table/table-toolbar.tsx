@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { FacetedFilter } from './faceted-filter';
 import { roleOptions } from './column-options';
 import { InviteUserDialog } from '../invite-user-dialog';
-import type { ManageUser } from '@/lib/types';
+import type { ManageUser } from '@/lib/types/manage-user';
 
 interface TableToolbarProps {
   table: Table<ManageUser>;

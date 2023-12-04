@@ -6,7 +6,7 @@ import { JsonParseApiRequest } from '@/lib/utils/json-parse-api-request';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { getUser } from '@/lib/supabase/server/get-user';
 import { initcap } from '@/lib/utils/initcap';
-import { Role } from '@/lib/types';
+import { Role } from '@/lib/types/role';
 
 export const dynamic = 'force-dynamic';
 export const POST = inviteUser;

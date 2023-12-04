@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { UpdateUserDialog } from '../update-user-dialog';
 import { DeleteUserDialog } from '../delete-user-dialog';
-import type { ManageUser } from '@/lib/types';
+import type { ManageUser } from '@/lib/types/manage-user';
 
 interface RowActionsProps {
   row: Row<ManageUser>;

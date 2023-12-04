@@ -7,7 +7,7 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { PlusCircle } from 'lucide-react';
 
-import { createUserFilterFormSchema, type CreateUserFilterForm } from '../schema';
+import { TRANSACTIONS_KEY } from '@/config/constants/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -38,6 +38,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useCreateUserPlaidFilter } from '../hooks/use-create-user-plaid-filter';
+import { createUserFilterFormSchema, type CreateUserFilterForm } from '../schema';
 import { hasUserFilterAtom } from '../atoms';
 import { Category } from '@/lib/plaid/types/transactions';
 
@@ -62,7 +63,7 @@ export function CreateUserPlaidFilterDialog() {
     await createFilter(data)
       // Update the filters and invalidate the transactions query to force a refetch
       .then(() => {
-        queryClient.invalidateQueries({ queryKey: ['transactions'] });
+        queryClient.invalidateQueries({ queryKey: [TRANSACTIONS_KEY] });
         setIsOpen(false);
         toast.success(
           <span>

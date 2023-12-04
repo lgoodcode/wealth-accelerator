@@ -2,12 +2,12 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 
-import { Role } from '@/lib/types';
+import { Role } from '@/lib/types/role';
+import { Badge } from '@/components/ui/badge';
 import { roleOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
-import type { ManageUser } from '@/lib/types';
-import { Badge } from '@/components/ui/badge';
+import type { ManageUser } from '@/lib/types/manage-user';
 
 export const columns: ColumnDef<ManageUser>[] = [
   {

@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import type { ManageUser } from '@/lib/types';
+import type { ManageUser } from '@/lib/types/manage-user';
 
 export const usersAtom = atom<ManageUser[] | null>(null);
 

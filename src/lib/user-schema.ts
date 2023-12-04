@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { Role } from '@/lib/types';
+import { Role } from '@/lib/types/role';
 
 export const loginFormSchema = z.object({
   email: z

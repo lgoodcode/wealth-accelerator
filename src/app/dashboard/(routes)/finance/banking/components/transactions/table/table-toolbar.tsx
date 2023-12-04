@@ -2,6 +2,7 @@
 
 import { Table } from '@tanstack/react-table';
 import { X } from 'lucide-react';
+import type { DateRange } from 'react-day-picker';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +10,6 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { ViewOptions } from './view-options';
 import { FacetedFilter } from './faceted-filter';
 import { useAccountOptions, categoryOptions } from './column-options';
-import type { DateRange } from 'react-day-picker';
 import type { TransactionWithAccountName } from '@/lib/plaid/types/transactions';
 
 interface TableToolbarProps {

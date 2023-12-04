@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 import type { Row } from '@tanstack/react-table';
 
+import { CREATIVE_CASH_FLOW_KEY } from '@/config/constants/react-query';
 import { CustomError } from '@/lib/utils/CustomError';
 import {
   Select,
@@ -98,7 +99,7 @@ export function UpdateAccountDialog({ open, onOpenChange, row }: UpdateAccountDi
         row.original.enabled !== updatedAccount.enabled ||
         row.original.type !== updatedAccount.type
       ) {
-        queryClient.invalidateQueries(['ccf']);
+        queryClient.invalidateQueries([CREATIVE_CASH_FLOW_KEY]);
       }
 
       // Mutate the query cache for the accounts so that the updated account is reflected
