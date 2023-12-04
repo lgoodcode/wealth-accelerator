@@ -3,7 +3,7 @@ import { useSetAtom } from 'jotai';
 import { supabase } from '@/lib/supabase/client';
 import { initcap } from '@/lib/utils/initcap';
 import { addNotifierAtom } from '../atoms';
-import type { Notifier } from '@/lib/types';
+import type { Notifier } from '@/lib/types/notifier';
 
 export const useCreateNotifier = () => {
   const addNotifier = useSetAtom(addNotifierAtom);

@@ -26,7 +26,7 @@ import {
 import { columns } from './columns';
 import { TableToolbar } from './table-toolbar';
 import { TablePagination } from './table-pagination';
-import type { ManageUser } from '@/lib/types';
+import type { ManageUser } from '@/lib/types/manage-user';
 
 interface UsersTableProps {
   users: ManageUser[] | null;

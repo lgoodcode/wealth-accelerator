@@ -7,7 +7,7 @@ import { usersAtom } from '@/lib/atoms/users';
 import { Loading } from '@/components/loading';
 import { Card, CardContent } from '@/components/ui/card';
 import { UsersTable } from './table/users-table';
-import type { ManageUser } from '@/lib/types';
+import type { ManageUser } from '@/lib/types/manage-user';
 
 interface UsersProps {
   usersData: ManageUser[] | null;

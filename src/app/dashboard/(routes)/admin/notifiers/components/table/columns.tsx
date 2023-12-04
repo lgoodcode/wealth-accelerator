@@ -5,7 +5,7 @@ import { Check, X } from 'lucide-react';
 
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
-import type { Notifier } from '@/lib/types';
+import type { Notifier } from '@/lib/types/notifier';
 
 export const columns: ColumnDef<Notifier>[] = [
   {

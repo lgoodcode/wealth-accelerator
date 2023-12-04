@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { ManageUser } from '@/lib/types';
+import type { ManageUser } from '@/lib/types/manage-user';
 
 interface TablePaginationProps {
   table: Table<ManageUser>;

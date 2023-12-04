@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 
-import type { Notifier } from '@/lib/types';
+import type { Notifier } from '@/lib/types/notifier';
 
 export const notifiersAtom = atom<Notifier[] | null>(null);
 

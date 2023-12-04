@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { ManageUser } from '@/lib/types';
+import type { ManageUser } from '@/lib/types/manage-user';
 
 interface ColumnHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<ManageUser>;

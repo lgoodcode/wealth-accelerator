@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { roleOptions } from './column-options';
 import { ColumnHeader } from './column-header';
 import { RowActions } from './row-actions';
-import type { ManageUser } from '@/lib/types';
+import type { ManageUser } from '@/lib/types/manage-user';
 
 export const columns: ColumnDef<ManageUser>[] = [
   {

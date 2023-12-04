@@ -7,7 +7,7 @@ import { Loading } from '@/components/loading';
 import { Card, CardContent } from '@/components/ui/card';
 import { notifiersAtom } from '../atoms';
 import { NotifiersTable } from './table/notifiers-table';
-import type { Notifier } from '@/lib/types';
+import type { Notifier } from '@/lib/types/notifier';
 
 interface NotifiersProps {
   notifiersData: Notifier[];

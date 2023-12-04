@@ -5,7 +5,7 @@ import { createSupabase } from '@/lib/supabase/server/create-supabase';
 import { PageError } from '@/components/page-error';
 import { Separator } from '@/components/ui/separator';
 import { Users } from './components/users';
-import type { ManageUser } from '@/lib/types';
+import type { ManageUser } from '@/lib/types/manage-user';
 
 export const metadata: Metadata = {
   title: 'Manage Users',
