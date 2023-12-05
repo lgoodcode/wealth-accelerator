@@ -207,7 +207,12 @@ export const serverSyncTransactions = async (
 
     // Take the access token and use it to request a new link token from Plaid for update mode
     if (isCredentialError && item.user_id) {
-      link_token = await createUpdateLinkToken(item.user_id, item.access_token);
+      try {
+        link_token = await createUpdateLinkToken(item.user_id, item.access_token);
+      } catch (error) {
+        generalError = error;
+        status = 500;
+      }
       // If it's a sync mutation error, then we need to reset the cursor and try again
     } else if (isSyncMutationError) {
       const { error: cursorError } = await supabaseAdmin
