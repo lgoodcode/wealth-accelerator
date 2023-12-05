@@ -7,7 +7,7 @@ import {
   type PlaidLinkOnExit,
   type PlaidLinkOnSuccess,
 } from 'react-plaid-link';
-import { captureException } from '@sentry/nextjs';
+import { captureException, captureMessage } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
 import { supabase } from '@/lib/supabase/client';
@@ -41,6 +41,13 @@ export const usePlaid = () => {
       if (updateMode) {
         if (selectedInstitution?.new_accounts && !hasAttemptedAccountUpdate) {
           setHasAttemptedAccountUpdate(true);
+
+          captureMessage('New accounts update', {
+            extra: {
+              metadata,
+              selectedInstitution,
+            },
+          });
 
           const { error } = await supabase
             .from('plaid')
