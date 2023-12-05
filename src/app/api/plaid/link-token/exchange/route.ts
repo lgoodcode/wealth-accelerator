@@ -70,7 +70,7 @@ async function exchangeLinkToken(request: Request) {
         expiration,
         access_token,
       })
-      .select('item_id, name, cursor, expiration')
+      .select('item_id, name, cursor, expiration, new_accounts')
       .single();
 
     if (insertInstitutionError ?? !item) {

@@ -1,6 +1,6 @@
 import { captureException, captureMessage } from '@sentry/nextjs';
 
-import { createLinkTokenRequest, plaidClient } from '@/lib/plaid/config';
+import { plaidClient } from '@/lib/plaid/config';
 import { supabaseAdmin } from '@/lib/supabase/server/admin';
 import { updateTransactions } from '@/lib/plaid/transactions/update-transactions';
 import { addTransactions } from '@/lib/plaid/transactions/add-transactions';
@@ -10,6 +10,7 @@ import {
   PlaidCredentialErrorCode,
   PlaidTransactionsSyncMutationErrorCode,
 } from '@/lib/plaid/types/sync';
+import { createLinkToken } from '@/lib/plaid/create-link-token';
 import type { Institution } from '@/lib/plaid/types/institutions';
 import type { Filter, UserFilter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
@@ -206,10 +207,12 @@ export const serverSyncTransactions = async (
 
     // Take the access token and use it to request a new link token from Plaid for update mode
     if (isCredentialError && item.user_id) {
-      const response = await plaidClient.linkTokenCreate(
-        createLinkTokenRequest(item.user_id, item.access_token)
-      );
-      link_token = response.data.link_token;
+      try {
+        link_token = await createLinkToken(item.user_id, item.access_token);
+      } catch (error) {
+        generalError = error;
+        status = 500;
+      }
       // If it's a sync mutation error, then we need to reset the cursor and try again
     } else if (isSyncMutationError) {
       const { error: cursorError } = await supabaseAdmin

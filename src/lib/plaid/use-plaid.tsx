@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   usePlaidLink,
   type PlaidLinkOptions,
@@ -7,10 +7,11 @@ import {
   type PlaidLinkOnExit,
   type PlaidLinkOnSuccess,
 } from 'react-plaid-link';
-import { captureException } from '@sentry/nextjs';
+import { captureException, captureMessage } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
-import { createLinkToken } from '@/lib/plaid/create-link-token';
+import { supabase } from '@/lib/supabase/client';
+import { getLinkToken } from '@/lib/plaid/get-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { clientSyncTransactions } from '@/lib/plaid/transactions/client-sync-transactions';
 import { displaySyncError } from '@/lib/plaid/transactions/display-sync-error';
@@ -19,6 +20,7 @@ import {
   updateModeAtom,
   addInstitutionAtom,
   isInsItemIdSyncingOrLoadingAtom,
+  selectedInstitutionAtom,
 } from '@/lib/plaid/atoms';
 import { Toast } from '@/components/ui/toast';
 import type { SyncTransactionsResponseError } from './types/sync';
@@ -26,15 +28,41 @@ import type { SyncTransactionsResponseError } from './types/sync';
 export const usePlaid = () => {
   const [linkToken, setLinkToken] = useAtom(linkTokenAtom);
   const [updateMode, setUpdateMode] = useAtom(updateModeAtom);
+  const selectedInstitution = useAtomValue(selectedInstitutionAtom);
   const setIsInsItemIdSyncingOrLoading = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
   const addInstitution = useSetAtom(addInstitutionAtom);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
+  const [hasAttemptedAccountUpdate, setHasAttemptedAccountUpdate] = useState(false);
 
   // On successful link, exchange the public token for an access token
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token, metadata) => {
       // Don't need to exchange the token if it's in update mode - the access token has not changed
       if (updateMode) {
+        if (selectedInstitution?.new_accounts && !hasAttemptedAccountUpdate) {
+          setHasAttemptedAccountUpdate(true);
+
+          captureMessage('New accounts update', {
+            extra: {
+              metadata,
+              selectedInstitution,
+            },
+          });
+
+          const { error } = await supabase
+            .from('plaid')
+            .update({ new_accounts: false })
+            .eq('item_id', selectedInstitution.item_id);
+
+          if (error) {
+            console.error(error);
+            captureException(error, {
+              extra: { selectedInstitution },
+            });
+            toast.error('Failed to update institution');
+          }
+        }
+
         return;
       }
 
@@ -161,9 +189,15 @@ export const usePlaid = () => {
       // Reset the link token if it was in update mode so it can't be used again
       // and reset the selection if the user wants to add a new institution
       // or click a different institution
-      if (updateMode && metadata.status === 'requires_credentials') {
+      if (updateMode) {
         setLinkToken(null);
         setUpdateMode(false);
+
+        // Once the user has exited the update mode, we can set the flag to false so that
+        // it doesn't show the update mode again immediately after exiting
+        if (selectedInstitution?.new_accounts && !hasAttemptedAccountUpdate) {
+          setHasAttemptedAccountUpdate(true);
+        }
       }
     },
     [updateMode]
@@ -188,12 +222,28 @@ export const usePlaid = () => {
     }
   }, [updateMode, linkToken, open]);
 
+  // Sets update for account update
+  useEffect(() => {
+    if (!hasAttemptedAccountUpdate && !updateMode && selectedInstitution?.new_accounts) {
+      setUpdateMode(true);
+      setIsGettingLinkToken(true);
+
+      getLinkToken(selectedInstitution.item_id)
+        .then(setLinkToken)
+        .catch((error) => {
+          console.error(error);
+          toast.error('Failed to create update link token');
+        })
+        .finally(() => setIsGettingLinkToken(false));
+    }
+  }, [updateMode, selectedInstitution]);
+
   // Get the link token
   useEffect(() => {
     if (!linkToken) {
       setIsGettingLinkToken(true);
 
-      createLinkToken()
+      getLinkToken()
         .then(setLinkToken)
         .catch((error) => {
           console.error(error);

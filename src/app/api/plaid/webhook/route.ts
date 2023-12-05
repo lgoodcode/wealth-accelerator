@@ -74,6 +74,29 @@ async function syncTransactionsWebhook(request: Request) {
       break;
     }
 
+    // https://plaid.com/docs/api/items/#new_accounts_available
+    // Need to set the update_available property of the item to trigger update mode in the client
+    // the next time the user loads the institution
+    case 'NEW_ACCOUNTS_AVAILABLE': {
+      const { error } = await supabaseAdmin
+        .from('plaid')
+        .update({ new_accounts: true })
+        .eq('item_id', item_id);
+
+      if (error) {
+        console.error(error);
+        captureException(error, {
+          extra: {
+            item_id,
+          },
+        });
+
+        return NextResponse.json({ error: 'Failed to update new_accounts' }, { status: 500 });
+      }
+
+      break;
+    }
+
     case 'ERROR': {
       console.error(body.error);
       captureException(body.error, {
