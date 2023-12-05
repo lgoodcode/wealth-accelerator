@@ -10,6 +10,7 @@ import {
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
+import { supabase } from '@/lib/supabase/client';
 import { getLinkToken } from '@/lib/plaid/get-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { clientSyncTransactions } from '@/lib/plaid/transactions/client-sync-transactions';
@@ -38,6 +39,23 @@ export const usePlaid = () => {
     async (public_token, metadata) => {
       // Don't need to exchange the token if it's in update mode - the access token has not changed
       if (updateMode) {
+        if (selectedInstitution?.new_accounts && !hasAttemptedAccountUpdate) {
+          setHasAttemptedAccountUpdate(true);
+
+          const { error } = await supabase
+            .from('plaid')
+            .update({ new_accounts: false })
+            .eq('item_id', selectedInstitution.item_id);
+
+          if (error) {
+            console.error(error);
+            captureException(error, {
+              extra: { selectedInstitution },
+            });
+            toast.error('Failed to update institution');
+          }
+        }
+
         return;
       }
 
