@@ -392,6 +392,7 @@ export interface Database {
           expiration: string
           item_id: string
           name: string
+          new_accounts: boolean
           user_id: string
         }
         Insert: {
@@ -400,6 +401,7 @@ export interface Database {
           expiration: string
           item_id: string
           name: string
+          new_accounts?: boolean
           user_id: string
         }
         Update: {
@@ -408,6 +410,7 @@ export interface Database {
           expiration?: string
           item_id?: string
           name?: string
+          new_accounts?: boolean
           user_id?: string
         }
         Relationships: [
