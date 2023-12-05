@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   usePlaidLink,
   type PlaidLinkOptions,
@@ -10,7 +10,7 @@ import {
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
-import { createLinkToken } from '@/lib/plaid/create-link-token';
+import { getLinkToken } from '@/lib/plaid/get-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { clientSyncTransactions } from '@/lib/plaid/transactions/client-sync-transactions';
 import { displaySyncError } from '@/lib/plaid/transactions/display-sync-error';
@@ -19,6 +19,7 @@ import {
   updateModeAtom,
   addInstitutionAtom,
   isInsItemIdSyncingOrLoadingAtom,
+  selectedInstitutionAtom,
 } from '@/lib/plaid/atoms';
 import { Toast } from '@/components/ui/toast';
 import type { SyncTransactionsResponseError } from './types/sync';
@@ -26,6 +27,7 @@ import type { SyncTransactionsResponseError } from './types/sync';
 export const usePlaid = () => {
   const [linkToken, setLinkToken] = useAtom(linkTokenAtom);
   const [updateMode, setUpdateMode] = useAtom(updateModeAtom);
+  const selectedInstitution = useAtomValue(selectedInstitutionAtom);
   const setIsInsItemIdSyncingOrLoading = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
   const addInstitution = useSetAtom(addInstitutionAtom);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
@@ -188,12 +190,27 @@ export const usePlaid = () => {
     }
   }, [updateMode, linkToken, open]);
 
+  useEffect(() => {
+    if (!updateMode && selectedInstitution?.new_accounts) {
+      setUpdateMode(true);
+      setIsGettingLinkToken(true);
+
+      getLinkToken(selectedInstitution.item_id)
+        .then(setLinkToken)
+        .catch((error) => {
+          console.error(error);
+          toast.error('Failed to create update link token');
+        })
+        .finally(() => setIsGettingLinkToken(false));
+    }
+  }, [updateMode, selectedInstitution]);
+
   // Get the link token
   useEffect(() => {
     if (!linkToken) {
       setIsGettingLinkToken(true);
 
-      createLinkToken()
+      getLinkToken()
         .then(setLinkToken)
         .catch((error) => {
           console.error(error);

@@ -10,10 +10,10 @@ import {
   PlaidCredentialErrorCode,
   PlaidTransactionsSyncMutationErrorCode,
 } from '@/lib/plaid/types/sync';
+import { createLinkToken } from '@/lib/plaid/create-link-token';
 import type { Institution } from '@/lib/plaid/types/institutions';
 import type { Filter, UserFilter } from '@/lib/plaid/types/transactions';
 import type { ServerSyncTransactions } from '@/lib/plaid/types/sync';
-import { createUpdateLinkToken } from '../create-update-link-token';
 
 /**
  * The number of transactions to retrieve per request. The maximum is 500.
@@ -208,7 +208,7 @@ export const serverSyncTransactions = async (
     // Take the access token and use it to request a new link token from Plaid for update mode
     if (isCredentialError && item.user_id) {
       try {
-        link_token = await createUpdateLinkToken(item.user_id, item.access_token);
+        link_token = await createLinkToken(item.user_id, item.access_token);
       } catch (error) {
         generalError = error;
         status = 500;

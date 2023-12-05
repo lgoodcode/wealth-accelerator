@@ -5,6 +5,7 @@ export type Institution = {
   access_token: string;
   cursor: string | null;
   expiration: string;
+  new_accounts: boolean;
 };
 
 /**
