@@ -31,6 +31,7 @@ export const usePlaid = () => {
   const setIsInsItemIdSyncingOrLoading = useSetAtom(isInsItemIdSyncingOrLoadingAtom);
   const addInstitution = useSetAtom(addInstitutionAtom);
   const [isGettingLinkToken, setIsGettingLinkToken] = useState(false);
+  const [hasAttemptedAccountUpdate, setHasAttemptedAccountUpdate] = useState(false);
 
   // On successful link, exchange the public token for an access token
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
@@ -163,9 +164,15 @@ export const usePlaid = () => {
       // Reset the link token if it was in update mode so it can't be used again
       // and reset the selection if the user wants to add a new institution
       // or click a different institution
-      if (updateMode && metadata.status === 'requires_credentials') {
+      if (updateMode) {
         setLinkToken(null);
         setUpdateMode(false);
+
+        // Once the user has exited the update mode, we can set the flag to false so that
+        // it doesn't show the update mode again immediately after exiting
+        if (selectedInstitution?.new_accounts && !hasAttemptedAccountUpdate) {
+          setHasAttemptedAccountUpdate(true);
+        }
       }
     },
     [updateMode]
@@ -190,8 +197,9 @@ export const usePlaid = () => {
     }
   }, [updateMode, linkToken, open]);
 
+  // Sets update for account update
   useEffect(() => {
-    if (!updateMode && selectedInstitution?.new_accounts) {
+    if (!hasAttemptedAccountUpdate && !updateMode && selectedInstitution?.new_accounts) {
       setUpdateMode(true);
       setIsGettingLinkToken(true);
 
