@@ -39,6 +39,8 @@ export const usePlaid = () => {
     async (public_token, metadata) => {
       // Don't need to exchange the token if it's in update mode - the access token has not changed
       if (updateMode) {
+        setUpdateMode(false);
+
         if (selectedInstitution?.new_accounts && !hasAttemptedAccountUpdate) {
           setHasAttemptedAccountUpdate(true);
 
