@@ -6,6 +6,7 @@ import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { selectedInstitutionAtom } from '@/lib/plaid/atoms';
+import { initcap } from '@/lib/utils/initcap';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
 import { InstitutionSelection } from './institution-selection';
 import { RenameInstitutionDialog } from './rename-institution-dialog';
 import { DeleteInstitutionDialog } from './delete-institution-dialog';
@@ -40,7 +40,7 @@ export function ManageInstitutions({ disabled }: ManageInstitutionsProps) {
       <div className="w-full mr-auto">
         {selectedInstitution && (
           <h2 className="text-4xl capitalize font-medium tracking-tighter">
-            {selectedInstitution?.name ?? 'Select an institution'}
+            {initcap(selectedInstitution?.name) ?? 'Select an institution'}
           </h2>
         )}
       </div>
