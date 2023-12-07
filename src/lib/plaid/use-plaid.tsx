@@ -167,7 +167,7 @@ export const usePlaid = () => {
           .finally(() => setIsInsItemIdSyncingOrLoading(null));
       }, 1000);
     },
-    [addInstitution, setIsInsItemIdSyncingOrLoading, setUpdateMode, updateMode]
+    [addInstitution, setIsInsItemIdSyncingOrLoading, setUpdateMode, updateMode, selectedInstitution]
   );
 
   const onEvent = useCallback<PlaidLinkOnEvent>((eventName, metadata) => {
