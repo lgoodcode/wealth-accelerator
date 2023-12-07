@@ -1,4 +1,3 @@
-DROP TYPE IF EXISTS plaid_account_type CASCADE;
 CREATE TYPE plaid_account_type AS enum ('personal', 'business', 'waa');
 ALTER TYPE plaid_account_type OWNER TO postgres;
 

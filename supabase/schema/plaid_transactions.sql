@@ -1,8 +1,6 @@
-DROP TYPE IF EXISTS category CASCADE;
 CREATE TYPE category AS ENUM ('Transfer', 'Money-In', 'Money-Out');
 ALTER TYPE category OWNER TO postgres;
 
-DROP TABLE IF EXISTS plaid_transactions CASCADE;
 CREATE TABLE plaid_transactions (
   id text PRIMARY KEY, -- the transaction id from Plaid
   item_id text NOT NULL REFERENCES plaid(item_id) ON DELETE CASCADE,

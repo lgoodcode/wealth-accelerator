@@ -1,4 +1,3 @@
-DROP TYPE IF EXISTS debt_snowball_debt;
 CREATE TYPE debt_snowball_debt AS (
   description text,
   amount numeric(12,2),
@@ -8,7 +7,6 @@ CREATE TYPE debt_snowball_debt AS (
 );
 ALTER TYPE debt_snowball_debt OWNER TO postgres;
 
-DROP TABLE IF EXISTS debt_snowball CASCADE;
 CREATE TABLE debt_snowball (
   id uuid PRIMARY KEY NOT NULL,
   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,

@@ -5,11 +5,9 @@
  * It is linked to the auth.users table via the id column.
  */
 
-DROP TYPE IF EXISTS user_role CASCADE;
 CREATE TYPE user_role AS enum ('USER', 'ADMIN');
 ALTER TYPE user_role OWNER TO postgres;
 
-DROP TABLE IF EXISTS public.users CASCADE;
 CREATE TABLE users (
   id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   name text NOT NULL,
