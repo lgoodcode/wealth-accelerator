@@ -10,7 +10,7 @@ import { waaInfoAtom } from '../../atoms';
 import type { WaaInfo } from '@/lib/types/waa-info';
 
 interface WaaInfosProps {
-  waaInfosData: WaaInfo[] | null;
+  waaInfosData: WaaInfo[];
 }
 
 export function WaaInfos({ waaInfosData }: WaaInfosProps) {
