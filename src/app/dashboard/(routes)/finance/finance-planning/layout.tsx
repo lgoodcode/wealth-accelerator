@@ -26,8 +26,8 @@ const sidebarNavItems: SidebarNavItem[] = [
     relativePath: '/waa-info',
   },
   {
-    title: 'Balances',
-    relativePath: '/balances',
+    title: 'Account Balances',
+    relativePath: '/account-balances',
   },
 ];
 
