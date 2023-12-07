@@ -33,10 +33,14 @@ CREATE POLICY "Can delete own institutions" ON public.plaid
   USING ((SELECT auth.uid()) = user_id);
 
 
-
--- Only allow the "name, cursor, expiration" columns to be updated
+/**
+ * Only allow the "name, cursor, expiration" columns to be updated
+ * and ensure that there are no duplicate account names for the same user
+ */
 CREATE OR REPLACE FUNCTION verify_update_plaid()
 RETURNS TRIGGER AS $$
+DECLARE
+  duplicate_count INT;
 BEGIN
   IF NEW.item_id <> OLD.item_id THEN
     RAISE EXCEPTION 'Updating "item_id" is not allowed';
@@ -46,6 +50,14 @@ BEGIN
   END IF;
   IF NEW.access_token <> OLD.access_token THEN
     RAISE EXCEPTION 'Updating "access_token" is not allowed';
+  END IF;
+
+  SELECT COUNT(*) INTO duplicate_count
+  FROM plaid p
+  WHERE LOWER(p.name) = LOWER(NEW.name) AND p.item_id != NEW.item_id;
+
+  IF duplicate_count > 0 THEN
+    RAISE EXCEPTION 'Duplicate account name for the same user is not allowed';
   END IF;
 
   RETURN NEW;
