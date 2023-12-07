@@ -10,10 +10,10 @@ CREATE INDEX IF NOT EXISTS idx_waa_user_id ON waa(user_id);
 ALTER TABLE waa OWNER TO postgres;
 ALTER TABLE waa ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Can view own waa or is admin" ON waa
+CREATE POLICY "Can view own waa" ON waa
   FOR SELECT
   TO authenticated
-  USING ((SELECT auth.uid()) = user_id OR (SELECT is_admin()));
+  USING ((SELECT auth.uid()) = user_id);
 
 CREATE POLICY "Can insert new waa" ON waa
   FOR INSERT
