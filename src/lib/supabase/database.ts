@@ -9,6 +9,59 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      balances_accounts: {
+        Row: {
+          id: number
+          name: string
+          user_id: string
+        }
+        Insert: {
+          id?: number
+          name: string
+          user_id: string
+        }
+        Update: {
+          id?: number
+          name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "balances_accounts_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      balances_entries: {
+        Row: {
+          account_id: number
+          amount: number
+          date: string
+          id: number
+        }
+        Insert: {
+          account_id: number
+          amount: number
+          date: string
+          id?: number
+        }
+        Update: {
+          account_id?: number
+          amount?: number
+          date?: string
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "balances_entries_account_id_fkey"
+            columns: ["account_id"]
+            referencedRelation: "balances_accounts"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       creative_cash_flow: {
         Row: {
           created_at: string
@@ -805,6 +858,10 @@ export interface Database {
         Args: {
           email: string
         }
+        Returns: boolean
+      }
+      is_own_balances_entry: {
+        Args: Record<PropertyKey, never>
         Returns: boolean
       }
       is_own_plaid_account: {
