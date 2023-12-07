@@ -225,20 +225,20 @@ export const usePlaid = () => {
   }, [updateMode, linkToken, open]);
 
   // Sets update for account update
-  useEffect(() => {
-    if (!hasAttemptedAccountUpdate && !updateMode && selectedInstitution?.new_accounts) {
-      setUpdateMode(true);
-      setIsGettingLinkToken(true);
+  // useEffect(() => {
+  //   if (!hasAttemptedAccountUpdate && !updateMode && selectedInstitution?.new_accounts) {
+  //     setUpdateMode(true);
+  //     setIsGettingLinkToken(true);
 
-      getLinkToken(selectedInstitution.item_id)
-        .then(setLinkToken)
-        .catch((error) => {
-          console.error(error);
-          toast.error('Failed to create update link token');
-        })
-        .finally(() => setIsGettingLinkToken(false));
-    }
-  }, [updateMode, selectedInstitution]);
+  //     getLinkToken(selectedInstitution.item_id)
+  //       .then(setLinkToken)
+  //       .catch((error) => {
+  //         console.error(error);
+  //         toast.error('Failed to create update link token');
+  //       })
+  //       .finally(() => setIsGettingLinkToken(false));
+  //   }
+  // }, [updateMode, selectedInstitution]);
 
   // Get the link token
   useEffect(() => {
