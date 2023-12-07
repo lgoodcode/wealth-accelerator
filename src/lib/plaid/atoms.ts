@@ -33,6 +33,12 @@ export const updateInstitutionsAtom = atom(
       // Item does not exist, add it to the array
       set(institutionsAtom, [...array, updatedInstitution]);
     }
+
+    // Update the selectedInstitutionIndexAtom
+    const selectedIndex = get(selectedInstitutionIndexAtom);
+    if (selectedIndex !== null && array[selectedIndex].item_id === updatedInstitution.item_id) {
+      set(selectedInstitutionIndexAtom, index);
+    }
   }
 );
 
