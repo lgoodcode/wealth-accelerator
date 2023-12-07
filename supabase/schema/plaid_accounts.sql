@@ -36,6 +36,9 @@ CREATE POLICY "Can delete own plaid accounts" ON plaid_accounts
   TO authenticated
   USING ((SELECT is_own_plaid_account()));
 
+/**
+ * Ensure that there are no duplicate account names for the same user
+ */
 CREATE OR REPLACE FUNCTION verify_update_plaid_accounts()
 RETURNS TRIGGER AS $$
 DECLARE
