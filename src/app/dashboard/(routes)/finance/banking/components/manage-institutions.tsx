@@ -6,7 +6,6 @@ import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { selectedInstitutionAtom } from '@/lib/plaid/atoms';
-import { initcap } from '@/lib/utils/initcap';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,7 +39,7 @@ export function ManageInstitutions({ disabled }: ManageInstitutionsProps) {
       <div className="w-full mr-auto">
         {selectedInstitution && (
           <h2 className="text-4xl capitalize font-medium tracking-tighter">
-            {initcap(selectedInstitution?.name) ?? 'Select an institution'}
+            {selectedInstitution?.name ?? 'Select an institution'}
           </h2>
         )}
       </div>
