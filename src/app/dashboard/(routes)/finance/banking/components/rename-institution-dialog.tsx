@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogClose,
   DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -88,13 +89,11 @@ export function RenameInstitutionDialog({
           </form>
         </Form>
         <DialogFooter>
-          <Button
-            variant="secondary"
-            disabled={form.formState.isSubmitting}
-            onClick={() => onOpenChange(false)}
-          >
-            Close
-          </Button>
+          <DialogClose asChild>
+            <Button variant="secondary" disabled={form.formState.isSubmitting}>
+              Close
+            </Button>
+          </DialogClose>
           <Button loading={form.formState.isSubmitting} onClick={form.handleSubmit(handleRename)}>
             Rename
           </Button>
