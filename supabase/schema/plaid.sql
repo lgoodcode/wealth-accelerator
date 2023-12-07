@@ -1,5 +1,3 @@
-
-DROP TABLE IF EXISTS plaid CASCADE;
 CREATE TABLE plaid (
   item_id text PRIMARY KEY,
   user_id uuid NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,

@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS creative_cash_flow CASCADE;
 CREATE TABLE creative_cash_flow (
   id uuid PRIMARY KEY NOT NULL,
   user_id uuid REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,

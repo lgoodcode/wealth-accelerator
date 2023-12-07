@@ -1,4 +1,3 @@
-DROP TYPE IF EXISTS debt_snowball_debt_payoff_debt;
 CREATE TYPE debt_snowball_debt_payoff_debt AS (
   description text
 );

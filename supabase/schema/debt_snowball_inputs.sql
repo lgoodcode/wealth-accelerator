@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS debt_snowball_inputs CASCADE;
 CREATE TABLE debt_snowball_inputs (
   id uuid PRIMARY KEY NOT NULL REFERENCES debt_snowball(id) ON DELETE CASCADE,
   additional_payment numeric(12,2) NOT NULL,

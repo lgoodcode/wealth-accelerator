@@ -1,5 +1,3 @@
-
-DROP TABLE IF EXISTS creative_cash_flow_inputs CASCADE;
 CREATE TABLE creative_cash_flow_inputs (
   id uuid PRIMARY KEY NOT NULL REFERENCES creative_cash_flow(id) ON DELETE CASCADE,
   start_date timestamp with time zone NOT NULL,
