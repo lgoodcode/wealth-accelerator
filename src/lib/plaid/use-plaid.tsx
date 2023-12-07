@@ -39,6 +39,8 @@ export const usePlaid = () => {
     async (public_token, metadata) => {
       // Don't need to exchange the token if it's in update mode - the access token has not changed
       if (updateMode) {
+        setUpdateMode(false);
+
         if (selectedInstitution?.new_accounts && !hasAttemptedAccountUpdate) {
           setHasAttemptedAccountUpdate(true);
 
@@ -165,7 +167,7 @@ export const usePlaid = () => {
           .finally(() => setIsInsItemIdSyncingOrLoading(null));
       }, 1000);
     },
-    [addInstitution, setIsInsItemIdSyncingOrLoading, setUpdateMode, updateMode]
+    [addInstitution, setIsInsItemIdSyncingOrLoading, setUpdateMode, updateMode, selectedInstitution]
   );
 
   const onEvent = useCallback<PlaidLinkOnEvent>((eventName, metadata) => {
@@ -223,20 +225,20 @@ export const usePlaid = () => {
   }, [updateMode, linkToken, open]);
 
   // Sets update for account update
-  useEffect(() => {
-    if (!hasAttemptedAccountUpdate && !updateMode && selectedInstitution?.new_accounts) {
-      setUpdateMode(true);
-      setIsGettingLinkToken(true);
+  // useEffect(() => {
+  //   if (!hasAttemptedAccountUpdate && !updateMode && selectedInstitution?.new_accounts) {
+  //     setUpdateMode(true);
+  //     setIsGettingLinkToken(true);
 
-      getLinkToken(selectedInstitution.item_id)
-        .then(setLinkToken)
-        .catch((error) => {
-          console.error(error);
-          toast.error('Failed to create update link token');
-        })
-        .finally(() => setIsGettingLinkToken(false));
-    }
-  }, [updateMode, selectedInstitution]);
+  //     getLinkToken(selectedInstitution.item_id)
+  //       .then(setLinkToken)
+  //       .catch((error) => {
+  //         console.error(error);
+  //         toast.error('Failed to create update link token');
+  //       })
+  //       .finally(() => setIsGettingLinkToken(false));
+  //   }
+  // }, [updateMode, selectedInstitution]);
 
   // Get the link token
   useEffect(() => {

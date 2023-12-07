@@ -20,6 +20,7 @@ async function CreateLinkToken(request: Request) {
   }
 
   try {
+    // If supplied an item_id, we are creating a link token for accounts update mode
     if (item_id) {
       const item = await getItemFromItemId(item_id);
 
@@ -27,7 +28,7 @@ async function CreateLinkToken(request: Request) {
         throw item.error;
       }
 
-      const link_token = await createLinkToken(user.id, item.data.access_token);
+      const link_token = await createLinkToken(user.id, item.data.access_token, true);
       return NextResponse.json<CreateLinkTokenResponse>({ link_token });
     }
 
