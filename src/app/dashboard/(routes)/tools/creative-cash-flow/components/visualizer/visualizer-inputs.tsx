@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
+import { VISUALIZER_WAA_KEY } from '@/config/constants/react-query';
 import { supabase } from '@/lib/supabase/client';
 import { PageError } from '@/components/page-error';
 import { Loading } from '@/components/loading';
@@ -73,7 +74,7 @@ export function VisualizerInputs({
     isFetching,
     isRefetching,
     data: waaInfos,
-  } = useQuery<WaaInfo[]>(['visualizer_waa'], () => getWaaInfo(user_id), {
+  } = useQuery<WaaInfo[]>([VISUALIZER_WAA_KEY], () => getWaaInfo(user_id), {
     initialData: initial_WaaInfo,
     staleTime: 1000 * 60 * 60, // 1 hour
   });
