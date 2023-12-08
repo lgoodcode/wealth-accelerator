@@ -54,7 +54,7 @@ BEGIN
 
   SELECT COUNT(*) INTO duplicate_count
   FROM plaid p
-  WHERE LOWER(p.name) = LOWER(NEW.name) AND p.item_id != NEW.item_id;
+  WHERE LOWER(p.name) = LOWER(NEW.name) AND p.user_id = NEW.user_id AND p.item_id != NEW.item_id;
 
   IF duplicate_count > 0 THEN
     RAISE EXCEPTION 'Duplicate account name for the same user is not allowed';
