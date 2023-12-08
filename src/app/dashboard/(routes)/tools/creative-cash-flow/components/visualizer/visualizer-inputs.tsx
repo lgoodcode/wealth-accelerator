@@ -81,10 +81,13 @@ export function VisualizerInputs({
   const noTransactions = !transactions.business.length && !transactions.personal.length;
   const isDisabled = noTransactions || !interval;
 
-  const handleSubmit = (data: VisualizerInputFormSchema) => {
+  const handleSubmit = async (data: VisualizerInputFormSchema) => {
     if (isDisabled) {
       return;
     }
+
+    // Sleep for 1 second to simulate loading
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const results = visualizeCcf({
       ...data,
