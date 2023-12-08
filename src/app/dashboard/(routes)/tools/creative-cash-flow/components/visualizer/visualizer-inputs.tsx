@@ -40,7 +40,6 @@ interface VisualizerInputsProps {
   user_id: string;
   transactions: VisualizerTransactions;
   initial_WaaInfo: WaaInfo[];
-  initial_balance_entries: BalancesEntryData[];
 }
 
 const getWaaInfo = async (user_id: string): Promise<WaaInfo[]> => {
@@ -73,7 +72,6 @@ export function VisualizerInputs({
   user_id,
   transactions,
   initial_WaaInfo,
-  initial_balance_entries,
 }: VisualizerInputsProps) {
   const setVisualizeCcf = useSetAtom(visualizeCcfAtom);
   const form = useForm<VisualizerInputFormSchema>({
@@ -95,7 +93,6 @@ export function VisualizerInputs({
     [CCF_BALANCE_ENTRIES_KEY],
     () => getAccountBalances(user_id),
     {
-      initialData: initial_balance_entries,
       staleTime: 1000 * 60 * 60, // 1 hour
     }
   );
@@ -118,7 +115,7 @@ export function VisualizerInputs({
       business_transactions: transactions.business,
       personal_transactions: transactions.personal,
       waaInfos,
-      balances_entries,
+      balances_entries: balances_entries || [],
     });
 
     console.log({ results });
