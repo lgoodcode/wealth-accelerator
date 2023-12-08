@@ -42,7 +42,7 @@ DECLARE
 BEGIN
   SELECT COUNT(*) INTO duplicate_count
   FROM balances_accounts ba
-  WHERE LOWER(ba.name) = LOWER(NEW.name) AND ba.id != NEW.id;
+  WHERE LOWER(ba.name) = LOWER(NEW.name) AND ba.user_id = NEW.user_id AND ba.id != NEW.id;
 
   IF duplicate_count > 0 THEN
     RAISE EXCEPTION 'Duplicate account name for the same user is not allowed';
@@ -110,3 +110,26 @@ CREATE POLICY "Can delete own balance entries" ON balances_entries
   FOR DELETE
   TO authenticated
   USING ((SELECT is_own_balances_entry()));
+
+
+
+CREATE OR REPLACE FUNCTION get_balances_entries(user_id uuid)
+RETURNS TABLE (
+  id int,
+  date timestamp with time zone,
+  amount numeric(12,2)
+) AS $$
+BEGIN
+  RETURN QUERY
+    SELECT
+      be.id,
+      be.date,
+      be.amount
+    FROM balances_entries be
+    JOIN balances_accounts ba ON ba.id = be.account_id
+    WHERE ba.user_id = $1
+    ORDER BY be.date DESC;
+END;
+$$ LANGUAGE plpgsql SECURITY definer;
+
+ALTER FUNCTION get_balances_entries(user_id uuid) OWNER TO postgres;
