@@ -108,6 +108,8 @@ export function VisualizerInputs({
       return;
     }
 
+    console.log({ data, transactions, waaInfos, balances_entries });
+
     // Sleep for 1 second to simulate loading
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -118,6 +120,8 @@ export function VisualizerInputs({
       waaInfos,
       balances_entries,
     });
+
+    console.log({ results });
 
     setVisualizeCcf(results);
   };
