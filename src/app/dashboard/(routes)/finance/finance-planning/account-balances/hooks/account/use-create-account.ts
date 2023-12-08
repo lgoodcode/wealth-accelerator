@@ -4,13 +4,13 @@ import { supabase } from '@/lib/supabase/client';
 import { CustomError } from '@/lib/utils/CustomError';
 import { initcap } from '@/lib/utils/initcap';
 import { useUser } from '@/hooks/use-user';
-import { addAccountAtom } from '../atoms';
+import { addAccountAtom } from '../../atoms';
 
 export const useCreateAccount = () => {
   const user = useUser();
   const addAccount = useSetAtom(addAccountAtom);
 
-  return async (name: string) => {
+  return async (name: string): Promise<string> => {
     const { error, data: newAccount } = await supabase
       .from('balances_accounts')
       .insert({

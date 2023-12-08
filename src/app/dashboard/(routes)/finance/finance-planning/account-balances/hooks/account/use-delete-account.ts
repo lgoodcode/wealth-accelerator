@@ -1,12 +1,12 @@
 import { useSetAtom } from 'jotai';
 
 import { supabase } from '@/lib/supabase/client';
-import { removeAccountAtom } from '../atoms';
+import { removeAccountAtom } from '../../atoms';
 
 export const useDeleteAccount = () => {
   const removeAccount = useSetAtom(removeAccountAtom);
 
-  return async (id: number) => {
+  return async (id: number): Promise<void> => {
     const { error } = await supabase.from('balances_accounts').delete().eq('id', id);
 
     if (error) {

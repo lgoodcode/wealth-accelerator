@@ -24,8 +24,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { accountSchema, type AccountSchema } from '../schema';
-import { useRenameAccount } from '../hooks/use-rename-account';
+import { accountSchema, type AccountSchema } from '../../schema';
+import { useRenameAccount } from '../hooks/account/use-rename-account';
 import type { BalancesAccount } from '@/lib/types/balances';
 
 interface RenameAccountDialogProps {

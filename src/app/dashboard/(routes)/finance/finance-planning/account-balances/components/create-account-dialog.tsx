@@ -24,8 +24,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useCreateAccount } from '../hooks/use-create-account';
-import { accountSchema, type AccountSchema } from '../schema';
+import { useCreateAccount } from '../hooks/account/use-create-account';
+import { accountSchema, type AccountSchema } from '../../schema';
 
 interface CreateAccountDialogProps {
   open: boolean;
@@ -65,7 +65,7 @@ export function CreateAccountDialog({ open, onOpenChange }: CreateAccountDialogP
 
   useEffect(() => {
     form.reset();
-  }, [form]);
+  }, [form, open]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

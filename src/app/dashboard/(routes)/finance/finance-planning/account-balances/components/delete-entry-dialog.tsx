@@ -11,41 +11,38 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useDeleteAccount } from '../hooks/account/use-delete-account';
-import type { BalancesAccount } from '@/lib/types/balances';
+import { useDeleteEntry } from '../hooks/entry/use-delete-entry';
+import { BalancesEntry } from '@/lib/types/balances';
 
-interface DeleteAccountDialogProps {
+interface DeleteEntryDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
-  account: BalancesAccount | null;
+  entry: BalancesEntry;
 }
 
-export function DeleteAccountDialog({ open, onOpenChange, account }: DeleteAccountDialogProps) {
-  const deleteAccount = useDeleteAccount();
+export function DeleteEntryDialog({ open, onOpenChange, entry }: DeleteEntryDialogProps) {
+  const deleteEntry = useDeleteEntry();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
-    if (!account) {
-      return;
-    }
+    const date = new Date(entry.date).toLocaleDateString();
 
     setIsDeleting(true);
 
-    await deleteAccount(account.id)
+    await deleteEntry(entry.id)
       .then(() => {
         toast.success(
           <span>
-            Account <span className="font-bold">{account.name}</span> has been removed
+            Balance entry record for <span className="font-bold">{date}</span> has been removed
           </span>
         );
-
         onOpenChange(false);
       })
       .catch((error) => {
         console.error(error);
         toast.error(
           <span>
-            Failed to remove account <span className="font-bold">{account.name}</span>
+            Failed to balance entry record for <span className="font-bold">{date}</span>
           </span>
         );
       })
@@ -57,11 +54,8 @@ export function DeleteAccountDialog({ open, onOpenChange, account }: DeleteAccou
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. <span className="font-bold">{account?.name}</span> and all
-            the data associated with it will be deleted.
-          </AlertDialogDescription>
         </AlertDialogHeader>
+        <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
           <Button variant="destructive" onClick={handleDelete} loading={isDeleting}>

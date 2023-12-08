@@ -736,6 +736,16 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: unknown
       }
+      get_balances_entries: {
+        Args: {
+          user_id: string
+        }
+        Returns: {
+          id: number
+          date: string
+          amount: number
+        }[]
+      }
       get_ccf_transactions_by_user_id: {
         Args: {
           user_id: string

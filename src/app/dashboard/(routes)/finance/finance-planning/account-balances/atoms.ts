@@ -1,9 +1,10 @@
 import { atom } from 'jotai';
 
-import type { BalancesAccount } from '@/lib/types/balances';
+import type { BalancesAccount, BalancesEntryData } from '@/lib/types/balances';
 
 export const accountsAtom = atom<BalancesAccount[] | null>(null);
 export const selectedAccountAtom = atom<BalancesAccount | null>(null);
+export const entriesAtom = atom<BalancesEntryData[] | null>(null);
 
 // Adds a newly connected institution to the institutions array
 export const addAccountAtom = atom(null, (get, set, newAccount: BalancesAccount) => {
