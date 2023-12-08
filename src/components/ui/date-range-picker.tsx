@@ -26,7 +26,7 @@ export function DateRangePicker({
   to,
   onSelect,
   onOpenChange,
-  text = 'Filter Dates',
+  text = 'Select Dates',
 }: DateRangePickerProps) {
   const date = selected ?? { from, to };
   const [isOpen, setIsOpen] = React.useState(false);

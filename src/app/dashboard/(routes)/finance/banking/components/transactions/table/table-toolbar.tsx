@@ -45,6 +45,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
           />
         )}
         <DateRangePicker
+          text="Filter Dates"
           selected={table.getColumn('date')?.getFilterValue() as DateRange}
           onSelect={(dateRange) => table.getColumn('date')?.setFilterValue(dateRange)}
         />
