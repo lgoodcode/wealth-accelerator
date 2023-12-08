@@ -42,7 +42,9 @@ DECLARE
 BEGIN
   SELECT COUNT(*) INTO duplicate_count
   FROM balances_accounts ba
-  WHERE LOWER(ba.name) = LOWER(NEW.name) AND ba.user_id = NEW.user_id AND ba.id != NEW.id;
+  WHERE ba.user_id = NEW.user_id
+    AND LOWER(ba.name) = LOWER(NEW.name)
+    AND ba.id != NEW.id;
 
   IF duplicate_count > 0 THEN
     RAISE EXCEPTION 'Duplicate account name for the same user is not allowed';
