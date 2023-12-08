@@ -118,6 +118,8 @@ export default async function CreativeCashFlowVisualizerPage() {
     personal: data!.transactions.personal,
   } as VisualizerTransactions;
 
+  console.log(data?.balanceEntries);
+
   return (
     <div className="p-8 space-y-6">
       <div className="flex flex-row justify-between">
