@@ -13,6 +13,7 @@ import { VisualizeResultsTable } from './table/visualize-results-table';
 enum DataTabs {
   Collections = 'collections',
   WAA = 'waa',
+  AccountBalances = 'account-balances',
 }
 
 enum ViewTabs {
@@ -23,31 +24,42 @@ enum ViewTabs {
 export function VisualizerResults() {
   const [activeDataTab, setActiveDataTab] = useState<DataTabs>(DataTabs.Collections);
   const [activeViewTab, setActiveViewTab] = useState<ViewTabs>(ViewTabs.Graph);
-  const handleDataTabChange = (value: string) =>
-    setActiveDataTab(value === 'collections' ? DataTabs.Collections : DataTabs.WAA);
-  const handleViewTabChange = (value: string) =>
-    setActiveViewTab(value === 'graph' ? ViewTabs.Graph : ViewTabs.Table);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
+
   const handlePaginationChange = (value: PaginationState) => setPagination(value);
 
   return (
     <div className="w-full h-full flex flex-col flex-grow gap-8">
       <div className="flex justify-between">
-        <Tabs className="w-full" value={activeDataTab} onValueChange={handleDataTabChange}>
-          <TabsList className="relative grid w-[360px] grid-cols-2">
+        <Tabs
+          className="w-full"
+          value={activeDataTab}
+          onValueChange={(value: string) => setActiveDataTab(value as DataTabs)}
+        >
+          <TabsList className="relative grid w-fit grid-cols-3">
             <TabsTrigger value={DataTabs.Collections} disabled={activeViewTab === ViewTabs.Table}>
               Collections
             </TabsTrigger>
             <TabsTrigger value={DataTabs.WAA} disabled={activeViewTab === ViewTabs.Table}>
               WAA
             </TabsTrigger>
+            <TabsTrigger
+              value={DataTabs.AccountBalances}
+              disabled={activeViewTab === ViewTabs.Table}
+            >
+              Account Balances
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
-        <Tabs className="w-full" value={activeViewTab} onValueChange={handleViewTabChange}>
+        <Tabs
+          className="w-full"
+          value={activeViewTab}
+          onValueChange={(value: string) => setActiveViewTab(value as ViewTabs)}
+        >
           <TabsList className="relative grid w-fit grid-cols-2 ml-auto">
             <TabsTrigger value={ViewTabs.Graph}>
               <AreaChart size={20} />
@@ -71,6 +83,11 @@ export function VisualizerResults() {
           {activeDataTab === DataTabs.WAA && (
             <ParentSize>
               {({ width, height }) => <BarChart dataKey="waa" width={width} height={height} />}
+            </ParentSize>
+          )}
+          {activeDataTab === DataTabs.AccountBalances && (
+            <ParentSize>
+              {({ width, height }) => <BarChart dataKey="balance" width={width} height={height} />}
             </ParentSize>
           )}
         </>

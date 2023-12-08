@@ -60,10 +60,30 @@ const getWaaInfo = async (user_id: string) => {
   };
 };
 
+const getBalanceEntries = async (user_id: string) => {
+  const supabase = createSupabase();
+  const { error, data } = await supabase.rpc('get_balances_entries', {
+    user_id,
+  });
+
+  if (error || !data) {
+    return {
+      error: error || new Error('No transactions returned'),
+      data: null,
+    };
+  }
+
+  return {
+    error: null,
+    data,
+  };
+};
+
 const getData = async (user_id: string) => {
   const [transactions, waaInfo] = await Promise.all([
     getTransactions(user_id),
     getWaaInfo(user_id),
+    getBalanceEntries(user_id),
   ]);
 
   if (transactions.error || waaInfo.error) {
@@ -78,6 +98,7 @@ const getData = async (user_id: string) => {
     data: {
       transactions: transactions.data,
       waaInfo: waaInfo.data,
+      balanceEntries: waaInfo.data,
     },
   };
 };
@@ -115,12 +136,13 @@ export default async function CreativeCashFlowVisualizerPage() {
         {/* <HelpButton title="Creative Cash Flow Help" content={CreativeCashFlowHelpContent} /> */}
       </div>
       <Separator className="mt-6" />
-      <div className="grid grid-cols-12 gap-8">
+      <div className="grid grid-cols-12 gap-8 h-[800px]">
         <div className="col-span-3">
           <VisualizerInputs
             user_id={user.id}
             transactions={transactions}
             initial_WaaInfo={data!.waaInfo}
+            initial_balance_entries={data!.balanceEntries}
           />
         </div>
         <div className="col-span-9">

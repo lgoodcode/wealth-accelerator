@@ -50,4 +50,17 @@ export const columns: ColumnDef<VisualizeCcf>[] = [
       );
     },
   },
+  {
+    accessorKey: 'balance',
+    header: ({ column }) => <ColumnHeader column={column} title="Account Balance" />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-2">
+          <span className="font-medium">
+            {dollarFormatter(row.getValue<VisualizeCcf['balance']>('balance'))}
+          </span>
+        </div>
+      );
+    },
+  },
 ];
