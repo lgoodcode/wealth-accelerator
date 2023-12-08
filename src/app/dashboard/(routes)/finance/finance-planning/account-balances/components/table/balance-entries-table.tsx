@@ -40,7 +40,8 @@ const getEntries = async (account_id?: number): Promise<BalancesEntry[]> => {
   const { error, data } = await supabase
     .from('balances_entries')
     .select('*')
-    .eq('account_id', account_id);
+    .eq('account_id', account_id)
+    .order('date', { ascending: false });
 
   if (error || !data) {
     throw error || new Error('No entries returned');

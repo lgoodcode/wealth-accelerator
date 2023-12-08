@@ -1,7 +1,10 @@
 import { useAtomValue } from 'jotai';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { ACCOUNT_BALANCES_ENTRIES_KEY } from '@/config/constants/react-query';
+import {
+  ACCOUNT_BALANCES_ENTRIES_KEY,
+  CCF_BALANCE_ENTRIES_KEY,
+} from '@/config/constants/react-query';
 import { supabase } from '@/lib/supabase/client';
 import { selectedAccountAtom } from '../../atoms';
 import type { BalancesEntry } from '@/lib/types/balances';
@@ -22,6 +25,10 @@ export const useDeleteEntry = () => {
     }
 
     queryClient.setQueryData([ACCOUNT_BALANCES_ENTRIES_KEY, account.id], (oldData: any) => {
+      return oldData.filter((entry: BalancesEntry) => entry.id !== id);
+    });
+    queryClient.setQueryData([CCF_BALANCE_ENTRIES_KEY], (oldData: any) => {
+      if (!oldData) return oldData;
       return oldData.filter((entry: BalancesEntry) => entry.id !== id);
     });
   };

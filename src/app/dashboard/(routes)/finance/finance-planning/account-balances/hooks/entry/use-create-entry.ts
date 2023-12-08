@@ -1,7 +1,10 @@
 import { useAtomValue } from 'jotai';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { ACCOUNT_BALANCES_ENTRIES_KEY } from '@/config/constants/react-query';
+import {
+  ACCOUNT_BALANCES_ENTRIES_KEY,
+  CCF_BALANCE_ENTRIES_KEY,
+} from '@/config/constants/react-query';
 import { useUser } from '@/hooks/use-user';
 import { supabase } from '@/lib/supabase/client';
 import { CustomError } from '@/lib/utils/CustomError';
@@ -37,6 +40,10 @@ export const useCreateEntry = () => {
     }
 
     queryClient.setQueryData([ACCOUNT_BALANCES_ENTRIES_KEY, account.id], (oldData: any) => {
+      return [...oldData, newEntry];
+    });
+    queryClient.setQueryData([CCF_BALANCE_ENTRIES_KEY], (oldData: any) => {
+      if (!oldData) return oldData;
       return [...oldData, newEntry];
     });
 
