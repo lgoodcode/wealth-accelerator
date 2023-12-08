@@ -31,3 +31,7 @@ export const updateUserNameAndEmailAtom = atom(
     });
   }
 );
+
+export const clearUserAtom = atom(null, (_get, set) => {
+  set(userAtom, null);
+});

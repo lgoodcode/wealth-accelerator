@@ -5,6 +5,7 @@ import { useAtom, useSetAtom } from 'jotai';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
+import { CREATIVE_CASH_FLOW_KEY } from '@/config/constants/react-query';
 import { supabase } from '@/lib/supabase/client';
 import { PageError } from '@/components/page-error';
 import { Loading } from '@/components/loading';
@@ -68,7 +69,7 @@ export function CreativeCashFlow({
   } = useQuery<{
     business: Transaction[];
     personal: Transaction[];
-  }>(['ccf'], () => getTransactions(user_id), {
+  }>([CREATIVE_CASH_FLOW_KEY], () => getTransactions(user_id), {
     initialData: initial_transactions,
     staleTime: 1000 * 60 * 60, // 1 hour
   });

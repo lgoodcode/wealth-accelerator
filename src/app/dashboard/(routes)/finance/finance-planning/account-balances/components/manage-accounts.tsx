@@ -4,8 +4,8 @@ import { useCallback, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 
+import { initcap } from '@/lib/utils/initcap';
 import { Button } from '@/components/ui/button';
-import { selectedInstitutionAtom } from '@/lib/plaid/atoms';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,18 +13,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { InstitutionSelection } from './institution-selection';
-import { RenameInstitutionDialog } from './rename-institution-dialog';
-import { DeleteInstitutionDialog } from './delete-institution-dialog';
+import { selectedAccountAtom } from '../atoms';
+import { AccountSelection } from './account-selection';
+import { RenameAccountDialog } from './rename-account-dialog';
+import { DeleteAccountDialog } from './delete-account-dialog';
 
-interface ManageInstitutionsProps {
-  disabled?: boolean;
-}
-
-export function ManageInstitutions({ disabled }: ManageInstitutionsProps) {
+export function ManageAccounts() {
+  const selectedAccount = useAtomValue(selectedAccountAtom);
   const [showRenameDialog, setShowRenameDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const selectedInstitution = useAtomValue(selectedInstitutionAtom);
 
   const handleRenameDialogOpenChange = useCallback((open?: boolean) => {
     setShowRenameDialog((prev) => open ?? !prev);
@@ -37,19 +34,19 @@ export function ManageInstitutions({ disabled }: ManageInstitutionsProps) {
   return (
     <div className="flex flex-col lg:flex-row w-full items-center justify-start">
       <div className="w-full mr-auto">
-        {selectedInstitution && (
-          <h2 className="text-4xl capitalize font-medium tracking-tighter">
-            {selectedInstitution?.name ?? 'Select an institution'}
+        {!!selectedAccount && (
+          <h2 className="text-3xl capitalize font-medium tracking-tighter">
+            {initcap(selectedAccount.name)}
           </h2>
         )}
       </div>
 
       <div className="flex w-full justify-start lg:justify-end items-center space-x-2">
-        <InstitutionSelection disabled={disabled} />
+        <AccountSelection />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="icon" variant="ghost" disabled={!selectedInstitution}>
+            <Button size="icon" variant="ghost" disabled={!selectedAccount}>
               <span className="sr-only">Actions</span>
               <MoreHorizontal className="w-8 h-8" />
             </Button>
@@ -70,16 +67,16 @@ export function ManageInstitutions({ disabled }: ManageInstitutionsProps) {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <RenameInstitutionDialog
+        <RenameAccountDialog
           open={showRenameDialog}
           onOpenChange={handleRenameDialogOpenChange}
-          institution={selectedInstitution}
+          account={selectedAccount}
         />
 
-        <DeleteInstitutionDialog
+        <DeleteAccountDialog
           open={showDeleteDialog}
           onOpenChange={handleDeleteDialogOpenChange}
-          institution={selectedInstitution}
+          account={selectedAccount}
         />
       </div>
     </div>

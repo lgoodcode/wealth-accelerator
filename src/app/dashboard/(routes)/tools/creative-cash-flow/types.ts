@@ -72,6 +72,7 @@ export type VisualizeCcf = {
   // business_overhead: number;
   // tax_account: number;
   waa: number;
+  balance: number;
 };
 
 export type VisualizeCcfDataKey = keyof Omit<VisualizeCcf, 'range'>;

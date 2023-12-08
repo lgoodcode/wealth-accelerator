@@ -52,11 +52,11 @@ export function InstitutionSelection({ disabled }: InstitutionSelectionProps) {
       </PopoverTrigger>
       <PopoverContent className="p-0 w-[420px]">
         <Command>
-          <CommandList>
-            <CommandGroup>
-              {!institutions.length
-                ? null
-                : institutions.map((ins) => (
+          {!!institutions && !!institutions.length && (
+            <>
+              <CommandList>
+                <CommandGroup>
+                  {institutions.map((ins) => (
                     <CommandItem
                       key={ins.item_id}
                       className="text-md"
@@ -69,9 +69,11 @@ export function InstitutionSelection({ disabled }: InstitutionSelectionProps) {
                       {ins.name}
                     </CommandItem>
                   ))}
-            </CommandGroup>
-          </CommandList>
-          <CommandSeparator />
+                </CommandGroup>
+              </CommandList>
+              <CommandSeparator />
+            </>
+          )}
           <CommandList>
             <CommandGroup>
               <CommandItem
@@ -81,7 +83,7 @@ export function InstitutionSelection({ disabled }: InstitutionSelectionProps) {
                 loading={isGettingLinkToken}
               >
                 <PlusCircle className="mr-2 h-5 w-5" />
-                Add institution
+                Add Institution
               </CommandItem>
             </CommandGroup>
           </CommandList>

@@ -36,15 +36,20 @@ CREATE POLICY "Can delete own plaid accounts" ON plaid_accounts
   TO authenticated
   USING ((SELECT is_own_plaid_account()));
 
+/**
+ * Ensure that there are no duplicate account names for the same user
+ */
 CREATE OR REPLACE FUNCTION verify_update_plaid_accounts()
 RETURNS TRIGGER AS $$
 DECLARE
   duplicate_count INT;
 BEGIN
+  -- Check for duplicates using the indexed item_id first
   SELECT COUNT(*) INTO duplicate_count
   FROM plaid_accounts pa
-  JOIN plaid p ON p.item_id = pa.item_id
-  WHERE pa.name = NEW.name AND pa.account_id != NEW.account_id;
+  WHERE pa.item_id = NEW.item_id
+    AND LOWER(pa.name) = LOWER(NEW.name)
+    AND pa.account_id != NEW.account_id;
 
   IF duplicate_count > 0 THEN
     RAISE EXCEPTION 'Duplicate account name for the same user is not allowed';
@@ -52,7 +57,7 @@ BEGIN
 
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY definer;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 ALTER FUNCTION verify_update_plaid_accounts() OWNER TO postgres;
 

@@ -16,6 +16,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogClose,
   DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -143,9 +144,11 @@ export function UpdateTransactionDialog({ open, onOpenChange, row }: UpdateTrans
           </form>
         </Form>
         <DialogFooter>
-          <Button variant="secondary" disabled={isLoading} onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
+          <DialogClose asChild>
+            <Button variant="secondary" disabled={isLoading}>
+              Cancel
+            </Button>
+          </DialogClose>
           <Button type="submit" loading={isLoading} onClick={form.handleSubmit(onSubmitUpdate)}>
             Save
           </Button>

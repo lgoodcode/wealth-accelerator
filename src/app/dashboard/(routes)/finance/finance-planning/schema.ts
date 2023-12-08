@@ -98,8 +98,16 @@ export const waaInfoSchema = z.object({
     }),
 });
 
+export const accountSchema = z.object({
+  name: z.string({
+    required_error: 'Please enter a name for the account.',
+  }),
+});
+
+export const balanceEntrySchema = waaInfoSchema;
+
 export type FinanceInfoSchema = z.infer<typeof financeInfoSchema>;
-
 export type RatesFormSchema = z.infer<ReturnType<typeof ratesFormSchema>>;
-
 export type WaaInfoSchema = z.infer<typeof waaInfoSchema>;
+export type AccountSchema = z.infer<typeof accountSchema>;
+export type BalanceEntrySchema = z.infer<typeof balanceEntrySchema>;

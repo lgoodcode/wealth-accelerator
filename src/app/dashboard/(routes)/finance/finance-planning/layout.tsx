@@ -25,6 +25,10 @@ const sidebarNavItems: SidebarNavItem[] = [
     title: 'WAA Information',
     relativePath: '/waa-info',
   },
+  {
+    title: 'Account Balances',
+    relativePath: '/account-balances',
+  },
 ];
 
 interface PersonalFinanceLayoutProps {

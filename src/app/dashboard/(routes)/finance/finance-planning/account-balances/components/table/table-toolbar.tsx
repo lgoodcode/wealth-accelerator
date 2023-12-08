@@ -6,11 +6,11 @@ import type { DateRange } from 'react-day-picker';
 
 import { Button } from '@/components/ui/button';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
-import { CreateWaaInfoDialog } from '../create-waa-info-dialog';
-import type { WaaInfo } from '@/lib/types/waa-info';
+import { CreateEntryDialog } from '../create-entry-dialog';
+import type { BalancesEntry } from '@/lib/types/balances';
 
 interface TableToolbarProps {
-  table: Table<WaaInfo>;
+  table: Table<BalancesEntry>;
 }
 
 export function TableToolbar({ table }: TableToolbarProps) {
@@ -36,7 +36,7 @@ export function TableToolbar({ table }: TableToolbarProps) {
         )}
       </div>
 
-      <CreateWaaInfoDialog />
+      <CreateEntryDialog />
     </div>
   );
 }

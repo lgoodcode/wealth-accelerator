@@ -7,12 +7,11 @@ import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
+import { CCF_BALANCE_ENTRIES_KEY, VISUALIZER_WAA_KEY } from '@/config/constants/react-query';
 import { supabase } from '@/lib/supabase/client';
-import { PageError } from '@/components/page-error';
 import { Loading } from '@/components/loading';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { PercentInput } from '@/components/ui/percent-input';
 import { DatePicker } from '@/components/ui/date-picker';
 import {
   Select,
@@ -34,6 +33,7 @@ import { visualizerInputFormSchema, type VisualizerInputFormSchema } from '../..
 import { visualizeCcfAtom } from '../../atoms';
 import { visualizeCcf } from '../../functions/creative-cash-flow-visualizer';
 import type { WaaInfo } from '@/lib/types/waa-info';
+import type { BalancesEntryData } from '@/lib/types/balances';
 import type { VisualizerTransactions } from '../../types';
 
 interface VisualizerInputsProps {
@@ -42,17 +42,30 @@ interface VisualizerInputsProps {
   initial_WaaInfo: WaaInfo[];
 }
 
-const getWaaInfo = async (user_id: string) => {
+const getWaaInfo = async (user_id: string): Promise<WaaInfo[]> => {
   const { error, data } = await supabase
     .from('waa')
     .select('id, date, amount')
-    .eq('user_id', user_id);
+    .eq('user_id', user_id)
+    .order('date', { ascending: true });
 
   if (error || !data) {
     throw error || new Error('No transactions returned');
   }
 
-  return data as WaaInfo[];
+  return data;
+};
+
+const getAccountBalances = async (user_id: string): Promise<BalancesEntryData[]> => {
+  const { error, data } = await supabase.rpc('get_balances_entries', {
+    user_id,
+  });
+
+  if (error || !data) {
+    throw error || new Error('No transactions returned');
+  }
+
+  return data;
 };
 
 export function VisualizerInputs({
@@ -68,29 +81,39 @@ export function VisualizerInputs({
       tax_account_rate: 25,
     },
   });
-  const {
-    isError,
-    isFetching,
-    isRefetching,
-    data: waaInfos,
-  } = useQuery<WaaInfo[]>(['visualizer_waa'], () => getWaaInfo(user_id), {
-    initialData: initial_WaaInfo,
-    staleTime: 1000 * 60 * 60, // 1 hour
-  });
+  const { isError: isErrorWaa, data: waaInfos } = useQuery<WaaInfo[]>(
+    [VISUALIZER_WAA_KEY],
+    () => getWaaInfo(user_id),
+    {
+      initialData: initial_WaaInfo,
+      staleTime: 1000 * 60 * 60, // 1 hour
+    }
+  );
+  const { isError: isErrorBalances, data: balances_entries } = useQuery<BalancesEntryData[]>(
+    [CCF_BALANCE_ENTRIES_KEY],
+    () => getAccountBalances(user_id),
+    {
+      staleTime: 1000 * 60 * 60, // 1 hour
+    }
+  );
   const interval = form.watch('interval');
   const noTransactions = !transactions.business.length && !transactions.personal.length;
   const isDisabled = noTransactions || !interval;
 
-  const handleSubmit = (data: VisualizerInputFormSchema) => {
+  const handleSubmit = async (data: VisualizerInputFormSchema) => {
     if (isDisabled) {
       return;
     }
+
+    // Sleep for 1 second to simulate loading
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const results = visualizeCcf({
       ...data,
       business_transactions: transactions.business,
       personal_transactions: transactions.personal,
       waaInfos,
+      balances_entries: balances_entries || [],
     });
 
     setVisualizeCcf(results);
@@ -104,12 +127,8 @@ export function VisualizerInputs({
     setVisualizeCcf([]);
   }, []);
 
-  if (isError) {
-    return <PageError />;
-  } else if (isFetching) {
-    return (
-      <Loading title={isRefetching ? 'Refetching Data' : 'Fetching Data'} className="mt-0 py-32" />
-    );
+  if (isErrorWaa || isErrorBalances) {
+    return <h3>Error</h3>;
   }
 
   return (
@@ -168,32 +187,6 @@ export function VisualizerInputs({
                     disabled={isDisabled}
                   />
                   <FormDescription>{inputLabels.end_date.description}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lifestyle_expenses_tax_rate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>{inputLabels.lifestyle_expenses_tax_rate.title}</FormLabel>
-                  <PercentInput placeholder="25%" {...field} disabled={isDisabled} />
-                  <FormDescription>
-                    {inputLabels.lifestyle_expenses_tax_rate.description}
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="tax_account_rate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>{inputLabels.tax_account_rate.title}</FormLabel>
-                  <PercentInput placeholder="25%" {...field} disabled={isDisabled} />
-                  <FormDescription>{inputLabels.tax_account_rate.description}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

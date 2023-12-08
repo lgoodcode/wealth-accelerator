@@ -115,7 +115,7 @@ export default async function CreativeCashFlowVisualizerPage() {
         {/* <HelpButton title="Creative Cash Flow Help" content={CreativeCashFlowHelpContent} /> */}
       </div>
       <Separator className="mt-6" />
-      <div className="grid grid-cols-12 gap-8">
+      <div className="grid grid-cols-12 gap-8 h-[800px]">
         <div className="col-span-3">
           <VisualizerInputs
             user_id={user.id}

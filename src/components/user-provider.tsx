@@ -24,6 +24,11 @@ export function UserProvider({ user, children }: UserProviderProps) {
       email: user.email,
       username: user.name,
     });
+
+    return () => {
+      setUser(null);
+      setSentryUser(null);
+    };
   }, [user]);
 
   return <>{children}</>;

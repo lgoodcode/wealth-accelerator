@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 
+import { CustomError } from '@/lib/utils/CustomError';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,40 +24,44 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { renameFormSchema, type RenameForm } from '../schema';
-import { useRenameInstitution } from '../hooks/use-rename-institution';
-import type { ClientInstitution } from '@/lib/plaid/types/institutions';
+import { accountSchema, type AccountSchema } from '../../schema';
+import { useRenameAccount } from '../hooks/account/use-rename-account';
+import type { BalancesAccount } from '@/lib/types/balances';
 
-interface RenameInstitutionDialogProps {
+interface RenameAccountDialogProps {
   open: boolean;
   onOpenChange: (open?: boolean) => void;
-  institution: ClientInstitution | null;
+  account: BalancesAccount | null;
 }
 
-export function RenameInstitutionDialog({
-  open,
-  onOpenChange,
-  institution,
-}: RenameInstitutionDialogProps) {
-  const renameInstitution = useRenameInstitution();
-  const form = useForm<RenameForm>({
-    resolver: zodResolver(renameFormSchema),
+export function RenameAccountDialog({ open, onOpenChange, account }: RenameAccountDialogProps) {
+  const renameAccount = useRenameAccount();
+  const form = useForm<AccountSchema>({
+    resolver: zodResolver(accountSchema),
   });
 
-  const handleRename = async (data: RenameForm) => {
-    if (!institution) {
+  const handleRename = async ({ name }: AccountSchema) => {
+    if (!account) {
       return;
     }
 
-    await renameInstitution(institution, data)
+    await renameAccount(account, name)
       .then(() => {
-        toast.success('Institution renamed');
+        toast.success('Account renamed');
         onOpenChange(false);
       })
       .catch((error) => {
+        if (error instanceof CustomError) {
+          form.setError('name', {
+            type: 'manual',
+            message: error.message,
+          });
+          return;
+        }
+
         console.error(error);
         captureException(error);
-        toast.error('Failed to rename institution');
+        toast.error('Failed to rename account');
       });
   };
 
@@ -68,8 +73,8 @@ export function RenameInstitutionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Rename Institution</DialogTitle>
-          <DialogDescription>Set a new name for this institution.</DialogDescription>
+          <DialogTitle>Rename Account</DialogTitle>
+          <DialogDescription>Set a new name for this account.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form noValidate onSubmit={form.handleSubmit(handleRename)}>
@@ -80,7 +85,7 @@ export function RenameInstitutionDialog({
                 <FormItem>
                   <FormLabel>New name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Institution name" {...field} />
+                    <Input placeholder="Account name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -88,6 +93,7 @@ export function RenameInstitutionDialog({
             />
           </form>
         </Form>
+
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="secondary" disabled={form.formState.isSubmitting}>

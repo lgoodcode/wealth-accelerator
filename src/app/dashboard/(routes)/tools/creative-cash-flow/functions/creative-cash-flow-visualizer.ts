@@ -2,6 +2,7 @@ import { add, differenceInWeeks, differenceInMonths } from 'date-fns';
 
 import { centsToDollars, dollarsToCents } from '@/lib/utils/currency';
 import type { WaaInfo } from '@/lib/types/waa-info';
+import type { BalancesEntryData } from '@/lib/types/balances';
 import type { CcfTransaction } from '../types';
 
 interface CreativeCashFlowManagementArgs {
@@ -13,6 +14,7 @@ interface CreativeCashFlowManagementArgs {
   lifestyle_expenses_tax_rate: number;
   tax_account_rate: number;
   waaInfos: WaaInfo[];
+  balances_entries: BalancesEntryData[];
 }
 
 const filterTransactionsByDate = (
@@ -35,6 +37,7 @@ export function visualizeCcf({
   lifestyle_expenses_tax_rate,
   tax_account_rate,
   waaInfos,
+  balances_entries,
 }: CreativeCashFlowManagementArgs) {
   if (!business_transactions.length && !personal_transactions.length) {
     throw new Error('There are no transactions to analyze.');
@@ -52,6 +55,8 @@ export function visualizeCcf({
     throw new Error('tax_account_rate is not defined');
   } else if (!waaInfos) {
     throw new Error('waaInfos is not defined');
+  } else if (!balances_entries) {
+    throw new Error('balances_entries is not defined');
   }
 
   // Convert the dollars to cents
@@ -66,6 +71,10 @@ export function visualizeCcf({
   waaInfos = waaInfos.map((waaInfo) => ({
     ...waaInfo,
     amount: dollarsToCents(waaInfo.amount),
+  }));
+  balances_entries = balances_entries.map((entry) => ({
+    ...entry,
+    amount: dollarsToCents(entry.amount),
   }));
 
   // Convert the tax rates to decimal values
@@ -105,6 +114,11 @@ export function visualizeCcf({
       const waaInfoDate = new Date(waaInfo.date);
       return waaInfoDate >= window_start_date && waaInfoDate <= window_end_date;
     });
+    // Get the balances entries within this range
+    const window_balances_entries = balances_entries.filter((entry) => {
+      const entryDate = new Date(entry.date);
+      return entryDate >= window_start_date && entryDate <= window_end_date;
+    });
 
     for (const transaction of window_business_transactions) {
       if (transaction.category === 'Money-In') {
@@ -137,6 +151,9 @@ export function visualizeCcf({
       },
       collections: centsToDollars(collections),
       waa: centsToDollars(window_waa_infos.reduce((acc, waaInfo) => acc + waaInfo.amount, 0)),
+      balance: centsToDollars(
+        window_balances_entries.reduce((acc, entry) => acc + entry.amount, 0)
+      ),
       // lifestyle_expenses: centsToDollars(lifestyle_expenses),
       // lifestyle_expenses_tax: centsToDollars(lifestyle_expenses_tax),
       // business_profit_before_tax: centsToDollars(business_profit_before_tax),

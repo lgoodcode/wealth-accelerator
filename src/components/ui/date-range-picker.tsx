@@ -16,6 +16,7 @@ interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   to?: Date;
   onSelect?: (dateRange: DateRange | undefined) => void;
   onOpenChange?: (isOpen: boolean) => void;
+  text?: string;
 }
 
 export function DateRangePicker({
@@ -25,6 +26,7 @@ export function DateRangePicker({
   to,
   onSelect,
   onOpenChange,
+  text = 'Select Dates',
 }: DateRangePickerProps) {
   const date = selected ?? { from, to };
   const [isOpen, setIsOpen] = React.useState(false);
@@ -71,7 +73,7 @@ export function DateRangePicker({
                 format(date.from, 'LLL dd, y')
               )
             ) : (
-              <span>Filter dates</span>
+              <span>{text}</span>
             )}
           </Button>
         </PopoverTrigger>
