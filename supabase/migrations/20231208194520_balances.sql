@@ -80,7 +80,7 @@ ALTER TABLE balances_entries OWNER TO postgres;
 ALTER TABLE balances_entries ENABLE ROW LEVEL SECURITY;
 
 -- Because the user_id is not stored in the balances_entries table, we need to join the balances_accounts table
-CREATE OR REPLACE FUNCTION is_own_balances_entry()
+CREATE OR REPLACE FUNCTION is_own_balances_entry(account_id int)
 RETURNS BOOLEAN AS $$
 BEGIN
   RETURN EXISTS (
@@ -90,28 +90,33 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION is_own_balances_entry() OWNER TO postgres;
+ALTER FUNCTION is_own_balances_entry(int) OWNER TO postgres;
 
+/**
+ * For the RLS, we pass in the account_id to the function so it can be used for both
+ * insert and update policies. This is because NEW isn't available for the insert policy.
+ */
 CREATE POLICY "Can view own balance entries" ON balances_entries
   FOR SELECT
   TO authenticated
-  USING ((SELECT is_own_balances_entry()));
+  USING ((SELECT is_own_balances_entry(account_id)));
 
+-- Using a trigger to verify that the account_id belongs to the user
 CREATE POLICY "Can insert new balance entries" ON balances_entries
   FOR INSERT
   TO authenticated
-  WITH CHECK ((SELECT is_own_balances_entry()));
+  WITH CHECK ((SELECT is_own_balances_entry(account_id)));
 
-CREATE POLICY "Can update own debt balance entries" ON balances_entries
+CREATE POLICY "Can update own balance entries" ON balances_entries
   FOR UPDATE
   TO authenticated
-  USING ((SELECT is_own_balances_entry()))
-  WITH CHECK ((SELECT is_own_balances_entry()));
+  USING ((SELECT is_own_balances_entry(account_id)))
+  WITH CHECK ((SELECT is_own_balances_entry(account_id)));
 
 CREATE POLICY "Can delete own balance entries" ON balances_entries
   FOR DELETE
   TO authenticated
-  USING ((SELECT is_own_balances_entry()));
+  USING ((SELECT is_own_balances_entry(account_id)));
 
 
 

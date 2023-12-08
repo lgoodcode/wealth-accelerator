@@ -24,8 +24,6 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA "extensions";
 
 CREATE EXTENSION IF NOT EXISTS "pgjwt" WITH SCHEMA "extensions";
 
-CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
-
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 CREATE TYPE "public"."category" AS ENUM (
@@ -708,7 +706,7 @@ BEGIN
     INNER JOIN plaid p ON p.item_id = pa.item_id
     INNER JOIN users u ON u.id = p.user_id
   WHERE
-    pa.type = 'personal' AND
+    pa.type IN ('personal', 'waa') AND
     u.id = $1 AND
     pa.enabled = true;
 
@@ -1109,6 +1107,8 @@ ALTER FUNCTION "public"."verify_update_debt_snowball"() OWNER TO "postgres";
 CREATE OR REPLACE FUNCTION "public"."verify_update_plaid"() RETURNS "trigger"
     LANGUAGE "plpgsql"
     AS $$
+DECLARE
+  duplicate_count INT;
 BEGIN
   IF NEW.item_id <> OLD.item_id THEN
     RAISE EXCEPTION 'Updating "item_id" is not allowed';
@@ -1118,6 +1118,14 @@ BEGIN
   END IF;
   IF NEW.access_token <> OLD.access_token THEN
     RAISE EXCEPTION 'Updating "access_token" is not allowed';
+  END IF;
+
+  SELECT COUNT(*) INTO duplicate_count
+  FROM plaid p
+  WHERE LOWER(p.name) = LOWER(NEW.name) AND p.user_id = NEW.user_id AND p.item_id != NEW.item_id;
+
+  IF duplicate_count > 0 THEN
+    RAISE EXCEPTION 'Duplicate account name for the same user is not allowed';
   END IF;
 
   RETURN NEW;
@@ -1135,7 +1143,7 @@ BEGIN
   SELECT COUNT(*) INTO duplicate_count
   FROM plaid_accounts pa
   JOIN plaid p ON p.item_id = pa.item_id
-  WHERE pa.name = NEW.name AND pa.account_id != NEW.account_id;
+  WHERE LOWER(pa.name) = LOWER(NEW.name) AND pa.item_id = NEW.item_id AND pa.account_id != NEW.account_id;
 
   IF duplicate_count > 0 THEN
     RAISE EXCEPTION 'Duplicate account name for the same user is not allowed';
@@ -1530,7 +1538,7 @@ CREATE POLICY "Can delete own debt snowball input data" ON "public"."debt_snowba
 
 CREATE POLICY "Can delete own debt snowball results" ON "public"."debt_snowball_results" FOR DELETE TO "authenticated" USING (( SELECT "public"."owns_debt_snowball_results"() AS "owns_debt_snowball_results"));
 
-CREATE POLICY "Can delete own debts" ON "public"."debts" FOR DELETE TO "authenticated" USING (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can delete own debts" ON "public"."debts" FOR DELETE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 CREATE POLICY "Can delete own institutions" ON "public"."plaid" FOR DELETE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
@@ -1554,7 +1562,7 @@ CREATE POLICY "Can insert new debt snowball input data" ON "public"."debt_snowba
 
 CREATE POLICY "Can insert new debt snowball results" ON "public"."debt_snowball_results" FOR INSERT TO "authenticated" WITH CHECK (( SELECT "public"."owns_debt_snowball_results"() AS "owns_debt_snowball_results"));
 
-CREATE POLICY "Can insert new debts" ON "public"."debts" FOR INSERT TO "authenticated" WITH CHECK (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can insert new debts" ON "public"."debts" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 CREATE POLICY "Can insert new institutions" ON "public"."plaid" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
@@ -1566,7 +1574,7 @@ CREATE POLICY "Can insert own plaid transactions" ON "public"."plaid_transaction
 
 CREATE POLICY "Can update own creative cash flow data" ON "public"."creative_cash_flow" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Can update own debt data" ON "public"."debts" FOR UPDATE TO "authenticated" USING (("auth"."uid"() = "user_id")) WITH CHECK (("auth"."uid"() = "user_id"));
+CREATE POLICY "Can update own debt data" ON "public"."debts" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 CREATE POLICY "Can update own debt data" ON "public"."waa" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
@@ -1598,7 +1606,7 @@ CREATE POLICY "Can view own debt snowball input data or if admin" ON "public"."d
 
 CREATE POLICY "Can view own debt snowball results or if admin" ON "public"."debt_snowball_results" FOR SELECT TO "authenticated" USING ((( SELECT "public"."owns_debt_snowball_results"() AS "owns_debt_snowball_results") OR ( SELECT "public"."is_admin"() AS "is_admin")));
 
-CREATE POLICY "Can view own debts or is admin" ON "public"."debts" FOR SELECT TO "authenticated" USING ((("auth"."uid"() = "user_id") OR "public"."is_admin"()));
+CREATE POLICY "Can view own debts or is admin" ON "public"."debts" FOR SELECT TO "authenticated" USING (((( SELECT "auth"."uid"() AS "uid") = "user_id") OR ( SELECT "public"."is_admin"() AS "is_admin")));
 
 CREATE POLICY "Can view own institutions" ON "public"."plaid" FOR SELECT TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
@@ -1608,7 +1616,7 @@ CREATE POLICY "Can view own plaid accounts" ON "public"."plaid_accounts" FOR SEL
 
 CREATE POLICY "Can view own plaid transactions" ON "public"."plaid_transactions" FOR SELECT TO "authenticated" USING (( SELECT "public"."is_own_plaid_transaction"() AS "is_own_plaid_transaction"));
 
-CREATE POLICY "Can view own waa or is admin" ON "public"."waa" FOR SELECT TO "authenticated" USING (((( SELECT "auth"."uid"() AS "uid") = "user_id") OR ( SELECT "public"."is_admin"() AS "is_admin")));
+CREATE POLICY "Can view own waa" ON "public"."waa" FOR SELECT TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 CREATE POLICY "Can view their own data and admins can view all user data" ON "public"."users" FOR SELECT TO "authenticated" USING ((("auth"."uid"() = "id") OR "public"."is_admin"("auth"."uid"())));
 
