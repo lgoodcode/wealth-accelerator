@@ -246,6 +246,8 @@ export const serverSyncTransactions = async (
       },
     };
 
+    console.log('result', result);
+
     console.error(result);
 
     if (result.error.plaid && result.error.plaid.isCredentialError) {
@@ -256,6 +258,7 @@ export const serverSyncTransactions = async (
         },
       });
     } else {
+      console.log('captureException');
       captureException('Failed to sync transactions', {
         extra: {
           item_id: item.item_id,
