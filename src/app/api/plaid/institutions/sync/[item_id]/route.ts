@@ -48,7 +48,6 @@ async function syncTransactions(_: Request, { params: { item_id } }: SyncInstitu
   const { error, data } = await serverSyncTransactions(item);
 
   if (error) {
-    console.log('triggered here');
     return NextResponse.json<SyncTransactionsResponse>(
       {
         hasMore: false,

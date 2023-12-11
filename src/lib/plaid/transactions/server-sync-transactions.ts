@@ -135,21 +135,23 @@ export const serverSyncTransactions = async (
     const removedError = await removeTransactions(data.removed, supabaseAdmin);
 
     if (addedError || updatedError || removedError) {
-      console.log({
-        error: {
-          status: 500,
-          general: addedError || updatedError || removedError,
-          plaid: null,
-          link_token: null,
+      const customError = {
+        status: 500,
+        general: addedError || updatedError || removedError,
+        plaid: null,
+        link_token: null,
+      };
+
+      console.error(customError);
+      captureException('Failed to sync transactions', {
+        extra: {
+          item_id: item.item_id,
+          error: customError,
         },
       });
+
       return {
-        error: {
-          status: 500,
-          general: addedError || updatedError || removedError,
-          plaid: null,
-          link_token: null,
-        },
+        error: customError,
         data: {
           hasMore: false,
           transactions: {
@@ -196,7 +198,6 @@ export const serverSyncTransactions = async (
       },
     };
   } catch (error: any) {
-    console.log('caught');
     const errorCode = error?.response?.data?.error_code as string;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
     const isSyncMutationError = errorCode === PlaidTransactionsSyncMutationErrorCode;
@@ -246,8 +247,6 @@ export const serverSyncTransactions = async (
         transactions: null,
       },
     };
-
-    console.log('result', result);
 
     console.error(result);
 
