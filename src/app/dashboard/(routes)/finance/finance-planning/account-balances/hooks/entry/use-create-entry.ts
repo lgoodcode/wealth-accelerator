@@ -46,7 +46,7 @@ export const useCreateEntry = () => {
         return [...oldData, newEntry];
       }
     );
-    queryClient.setQueryData<BalancesEntry[]>([CCF_BALANCE_ENTRIES_KEY], (oldData: any) => {
+    queryClient.setQueryData<BalancesEntry[]>([CCF_BALANCE_ENTRIES_KEY], (oldData) => {
       if (!oldData) return oldData;
       return [...oldData, newEntry];
     });
