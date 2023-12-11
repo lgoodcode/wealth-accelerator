@@ -135,21 +135,23 @@ export const serverSyncTransactions = async (
     const removedError = await removeTransactions(data.removed, supabaseAdmin);
 
     if (addedError || updatedError || removedError) {
-      console.log({
-        error: {
-          status: 500,
-          general: addedError || updatedError || removedError,
-          plaid: null,
-          link_token: null,
+      const customError = {
+        status: 500,
+        general: addedError || updatedError || removedError,
+        plaid: null,
+        link_token: null,
+      };
+
+      console.error(customError);
+      captureException('Failed to sync transactions', {
+        extra: {
+          item_id: item.item_id,
+          error: customError,
         },
       });
+
       return {
-        error: {
-          status: 500,
-          general: addedError || updatedError || removedError,
-          plaid: null,
-          link_token: null,
-        },
+        error: customError,
         data: {
           hasMore: false,
           transactions: {
@@ -228,7 +230,7 @@ export const serverSyncTransactions = async (
       }
     }
 
-    const customError = {
+    const result = {
       error: {
         status,
         general: generalError,
@@ -246,24 +248,25 @@ export const serverSyncTransactions = async (
       },
     };
 
-    console.error(customError);
+    console.error(result);
 
-    if (error.plaid && error.plaid.isCredentialError) {
+    if (result.error.plaid && result.error.plaid.isCredentialError) {
       captureMessage('Credentials error', {
         extra: {
           item_id: item.item_id,
-          error,
+          error: result.error,
         },
       });
     } else {
+      console.log('captureException');
       captureException('Failed to sync transactions', {
         extra: {
           item_id: item.item_id,
-          error,
+          error: result.error,
         },
       });
     }
 
-    return customError;
+    return result;
   }
 };
