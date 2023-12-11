@@ -26,18 +26,23 @@ export const useUpdateEntry = () => {
       throw error;
     }
 
-    queryClient.setQueryData([ACCOUNT_BALANCES_ENTRIES_KEY, entry.account_id], (oldData: any) => {
-      return oldData.map((oldEntry: BalancesEntry) => {
-        if (oldEntry.id === updatedEntry.id) {
-          return updatedEntry;
-        }
-        return oldEntry;
-      });
-    });
-    queryClient.setQueryData([CCF_BALANCE_ENTRIES_KEY], (oldData: any) => {
+    queryClient.setQueryData<BalancesEntry[]>(
+      [ACCOUNT_BALANCES_ENTRIES_KEY, entry.account_id],
+      (oldData) => {
+        if (!oldData) return oldData;
+
+        return oldData.map((oldEntry) => {
+          if (oldEntry.id === updatedEntry.id) {
+            return updatedEntry;
+          }
+          return oldEntry;
+        });
+      }
+    );
+    queryClient.setQueryData<BalancesEntry[]>([CCF_BALANCE_ENTRIES_KEY], (oldData) => {
       if (!oldData) return oldData;
 
-      return oldData.map((oldEntry: BalancesEntry) => {
+      return oldData.map((oldEntry) => {
         if (oldEntry.id === updatedEntry.id) {
           return updatedEntry;
         }

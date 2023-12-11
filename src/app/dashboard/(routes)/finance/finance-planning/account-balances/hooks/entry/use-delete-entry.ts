@@ -24,12 +24,16 @@ export const useDeleteEntry = () => {
       throw error;
     }
 
-    queryClient.setQueryData([ACCOUNT_BALANCES_ENTRIES_KEY, account.id], (oldData: any) => {
-      return oldData.filter((entry: BalancesEntry) => entry.id !== id);
-    });
-    queryClient.setQueryData([CCF_BALANCE_ENTRIES_KEY], (oldData: any) => {
+    queryClient.setQueryData<BalancesEntry[]>(
+      [ACCOUNT_BALANCES_ENTRIES_KEY, account.id],
+      (oldData) => {
+        if (!oldData) return oldData;
+        return oldData.filter((entry) => entry.id !== id);
+      }
+    );
+    queryClient.setQueryData<BalancesEntry[]>([CCF_BALANCE_ENTRIES_KEY], (oldData) => {
       if (!oldData) return oldData;
-      return oldData.filter((entry: BalancesEntry) => entry.id !== id);
+      return oldData.filter((entry) => entry.id !== id);
     });
   };
 };
