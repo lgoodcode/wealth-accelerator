@@ -228,7 +228,7 @@ export const serverSyncTransactions = async (
       }
     }
 
-    const customError = {
+    const result = {
       error: {
         status,
         general: generalError,
@@ -246,24 +246,24 @@ export const serverSyncTransactions = async (
       },
     };
 
-    console.error(customError);
+    console.error(result);
 
-    if (error.plaid && error.plaid.isCredentialError) {
+    if (result.error.plaid && result.error.plaid.isCredentialError) {
       captureMessage('Credentials error', {
         extra: {
           item_id: item.item_id,
-          error,
+          error: result.error,
         },
       });
     } else {
       captureException('Failed to sync transactions', {
         extra: {
           item_id: item.item_id,
-          error,
+          error: result.error,
         },
       });
     }
 
-    return customError;
+    return result;
   }
 };
