@@ -9,7 +9,6 @@ import { toast } from 'react-toastify';
 
 import { CCF_BALANCE_ENTRIES_KEY, VISUALIZER_WAA_KEY } from '@/config/constants/react-query';
 import { supabase } from '@/lib/supabase/client';
-import { Loading } from '@/components/loading';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { DatePicker } from '@/components/ui/date-picker';
