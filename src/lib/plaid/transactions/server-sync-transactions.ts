@@ -196,6 +196,7 @@ export const serverSyncTransactions = async (
       },
     };
   } catch (error: any) {
+    console.log('caught');
     const errorCode = error?.response?.data?.error_code as string;
     const isRateLimitError = errorCode === PlaidRateLimitErrorCode;
     const isSyncMutationError = errorCode === PlaidTransactionsSyncMutationErrorCode;
