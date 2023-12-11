@@ -39,10 +39,14 @@ export const useCreateEntry = () => {
       throw error;
     }
 
-    queryClient.setQueryData([ACCOUNT_BALANCES_ENTRIES_KEY, account.id], (oldData: any) => {
-      return [...oldData, newEntry];
-    });
-    queryClient.setQueryData([CCF_BALANCE_ENTRIES_KEY], (oldData: any) => {
+    queryClient.setQueryData<BalancesEntry[]>(
+      [ACCOUNT_BALANCES_ENTRIES_KEY, account.id],
+      (oldData) => {
+        if (!oldData) return oldData;
+        return [...oldData, newEntry];
+      }
+    );
+    queryClient.setQueryData<BalancesEntry[]>([CCF_BALANCE_ENTRIES_KEY], (oldData) => {
       if (!oldData) return oldData;
       return [...oldData, newEntry];
     });
