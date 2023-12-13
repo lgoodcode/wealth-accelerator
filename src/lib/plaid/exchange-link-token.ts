@@ -1,7 +1,7 @@
 import { fetcher } from '../utils/fetcher';
-import type { PlaidSuccessResponse, ExchangeLinkTokenResponse } from './types/link-token';
+import type { ExchangeLinkTokenBody, ExchangeLinkTokenResponse } from './types/link-token';
 
-export const exchangeLinkToken = async ({ public_token, metadata }: PlaidSuccessResponse) => {
+export const exchangeLinkToken = async ({ public_token, metadata }: ExchangeLinkTokenBody) => {
   const { error, data } = await fetcher<ExchangeLinkTokenResponse>(
     '/api/plaid/link-token/exchange',
     {
