@@ -662,6 +662,13 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      add_plaid_accounts: {
+        Args: {
+          item_id: string
+          accounts: Database["public"]["CompositeTypes"]["add_plaid_account_type"][]
+        }
+        Returns: boolean
+      }
       change_user_password: {
         Args: {
           current_password: string
@@ -871,7 +878,9 @@ export interface Database {
         Returns: boolean
       }
       is_own_balances_entry: {
-        Args: Record<PropertyKey, never>
+        Args: {
+          account_id: number
+        }
         Returns: boolean
       }
       is_own_plaid_account: {
@@ -915,6 +924,10 @@ export interface Database {
       user_role: "USER" | "ADMIN"
     }
     CompositeTypes: {
+      add_plaid_account_type: {
+        id: string
+        name: string
+      }
       ccf_plaid_transaction: {
         id: string
         item_id: string

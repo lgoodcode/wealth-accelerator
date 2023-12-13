@@ -7,10 +7,11 @@ import {
   type PlaidLinkOnExit,
   type PlaidLinkOnSuccess,
 } from 'react-plaid-link';
-import { captureException, captureMessage } from '@sentry/nextjs';
+import { captureException } from '@sentry/nextjs';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-import { supabase } from '@/lib/supabase/client';
+import { fetcher } from '@/lib/utils/fetcher';
 import { getLinkToken } from '@/lib/plaid/get-link-token';
 import { exchangeLinkToken } from '@/lib/plaid/exchange-link-token';
 import { clientSyncTransactions } from '@/lib/plaid/transactions/client-sync-transactions';
@@ -26,6 +27,7 @@ import { Toast } from '@/components/ui/toast';
 import type { SyncTransactionsResponseError } from './types/sync';
 
 export const usePlaid = () => {
+  const queryClient = useQueryClient();
   const [linkToken, setLinkToken] = useAtom(linkTokenAtom);
   const [updateMode, setUpdateMode] = useAtom(updateModeAtom);
   const selectedInstitution = useAtomValue(selectedInstitutionAtom);
@@ -44,24 +46,22 @@ export const usePlaid = () => {
         if (selectedInstitution?.new_accounts && !hasAttemptedAccountUpdate) {
           setHasAttemptedAccountUpdate(true);
 
-          captureMessage('New accounts update', {
-            extra: {
-              metadata,
-              selectedInstitution,
-            },
+          const { error } = await fetcher('/api/plaid/accounts/add', {
+            method: 'POST',
+            body: JSON.stringify({
+              item_id: selectedInstitution.item_id,
+              accounts: metadata.accounts.map((account) => ({
+                id: account.id,
+                name: account.name,
+              })),
+            }),
           });
-
-          const { error } = await supabase
-            .from('plaid')
-            .update({ new_accounts: false })
-            .eq('item_id', selectedInstitution.item_id);
 
           if (error) {
             console.error(error);
-            captureException(error, {
-              extra: { selectedInstitution },
-            });
-            toast.error('Failed to update institution');
+            toast.error('Failed to update accounts');
+          } else {
+            queryClient.refetchQueries({ queryKey: ['accounts', selectedInstitution.item_id] });
           }
         }
 
@@ -225,20 +225,20 @@ export const usePlaid = () => {
   }, [updateMode, linkToken, open]);
 
   // Sets update for account update
-  // useEffect(() => {
-  //   if (!hasAttemptedAccountUpdate && !updateMode && selectedInstitution?.new_accounts) {
-  //     setUpdateMode(true);
-  //     setIsGettingLinkToken(true);
+  useEffect(() => {
+    if (!hasAttemptedAccountUpdate && !updateMode && selectedInstitution?.new_accounts) {
+      setUpdateMode(true);
+      setIsGettingLinkToken(true);
 
-  //     getLinkToken(selectedInstitution.item_id)
-  //       .then(setLinkToken)
-  //       .catch((error) => {
-  //         console.error(error);
-  //         toast.error('Failed to create update link token');
-  //       })
-  //       .finally(() => setIsGettingLinkToken(false));
-  //   }
-  // }, [updateMode, selectedInstitution]);
+      getLinkToken(selectedInstitution.item_id)
+        .then(setLinkToken)
+        .catch((error) => {
+          console.error(error);
+          toast.error('Failed to create update link token');
+        })
+        .finally(() => setIsGettingLinkToken(false));
+    }
+  }, [updateMode, selectedInstitution]);
 
   // Get the link token
   useEffect(() => {
