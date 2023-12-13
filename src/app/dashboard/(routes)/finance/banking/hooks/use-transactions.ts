@@ -96,7 +96,6 @@ export const useTransactions = (item: ClientInstitution) => {
    * @returns An array of transactions
    */
   const handleGetTransactions = useCallback(async () => {
-    console.log('getting transactions');
     const link_token = await syncTransactions(item);
 
     if (link_token) {

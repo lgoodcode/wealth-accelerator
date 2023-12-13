@@ -13,3 +13,11 @@ export type ExchangeLinkTokenBody = {
 export type ExchangeLinkTokenResponse = {
   item: ClientInstitution;
 };
+
+export type PlaidInstitutionsAddBody = {
+  item_id: string;
+  accounts: Array<{
+    id: string;
+    name: string;
+  }>;
+};

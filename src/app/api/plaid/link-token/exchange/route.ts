@@ -21,23 +21,18 @@ async function exchangeLinkToken(request: Request) {
     return NextResponse.json({ error: 'No user found' }, { status: 401 });
   }
 
-  const body = await JsonParseApiRequest(request);
+  const body = await JsonParseApiRequest<ExchangeLinkTokenBody>(request);
 
-  if (!body) {
-    return NextResponse.json({ error: 'Invalid body' }, { status: 400 });
-  } else if (body instanceof Error) {
+  if (body instanceof Error) {
     return NextResponse.json({ error: body.message }, { status: 400 });
-  }
-
-  const { public_token, metadata } = body as ExchangeLinkTokenBody;
-
-  if (!public_token) {
+  } else if (!body.public_token) {
     return NextResponse.json({ error: 'Missing public_token' }, { status: 400 });
-  } else if (!metadata) {
+  } else if (!body.metadata) {
     return NextResponse.json({ error: 'Missing metadata' }, { status: 400 });
   }
 
   const supabase = createSupabase();
+  const { public_token, metadata } = body;
   const institution_name = metadata?.institution?.name || 'Unknown Institution';
   // Exchange the public token for an access token
   try {
