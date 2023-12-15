@@ -17,10 +17,10 @@ const sidebarNavItems: SidebarNavItem[] = [
     title: 'Finance Info',
     relativePath: '/finance-info',
   },
-  {
-    title: 'Index Fund Rates',
-    relativePath: '/index-fund-rates',
-  },
+  // {
+  //   title: 'Index Fund Rates',
+  //   relativePath: '/index-fund-rates',
+  // },
   {
     title: 'WAA Information',
     relativePath: '/waa-info',

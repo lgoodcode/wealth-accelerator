@@ -33,6 +33,26 @@ const tooltipStyles = {
   color: 'white',
 };
 
+type Interval = 'weekly' | 'monthly';
+
+function generateTestData(numberOfDataPoints: number, interval: Interval): VisualizeCcf[] {
+  const testData: VisualizeCcf[] = [];
+  for (let i = 0; i < numberOfDataPoints; i++) {
+    const end = new Date();
+    const start = new Date();
+    if (interval === 'weekly') {
+      start.setDate(end.getDate() - 7 * i);
+    } else if (interval === 'monthly') {
+      start.setMonth(end.getMonth() - i);
+    }
+    const collections = Math.floor(Math.random() * 10000);
+    const waa = Math.floor(Math.random() * 8000);
+    const balance = Math.floor(Math.random() * 10000);
+    testData.push({ range: { start, end }, collections, waa, balance });
+  }
+  return testData;
+}
+
 // util
 const formatDate = timeFormat("%b %d, '%y");
 const tickLabelProps = {
@@ -74,10 +94,16 @@ const Base = withTooltip<AreaProps, TooltipData>(
 
     if (width < 10) return null;
 
+    // const test_data = useMemo(() => {
+    //   return generateTestData(30, 'monthly');
+    // }, []);
+
+    // data = test_data;
+
     // bounds
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
-    const scalePaddingX = 50;
+    const scalePaddingX = 55;
     const scalePaddingY = 30;
     const yMax = innerHeight - scalePaddingY;
     // accessors
@@ -120,23 +146,23 @@ const Base = withTooltip<AreaProps, TooltipData>(
     };
 
     // tooltip handler
-    // const handleTooltip = useCallback(
-    //   (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
-    //     const { x } = localPoint(event) || { x: 0 };
-    //     const adjustedX = x - margin.left - scalePaddingX;
-    //     const step = xScale.bandwidth() + xScale.step() * xScale.padding();
-    //     const index = Math.round(adjustedX / step);
-    //     const d = data[index];
+    const handleTooltip = useCallback(
+      (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
+        const { x } = localPoint(event) || { x: 0 };
+        const adjustedX = x - margin.left - scalePaddingX;
+        const step = xScale.bandwidth() + xScale.step() * xScale.padding();
+        const index = Math.round(adjustedX / step);
+        const d = data[index];
 
-    //     showTooltip({
-    //       tooltipData: d,
-    //       // tooltipLeft: (xScale(getDate(d)) ?? 0) + scalePaddingX,
-    //       tooltipLeft: x + xScale.bandwidth() / 2,
-    //       tooltipTop: yScale(getCcfValue(d)),
-    //     });
-    //   },
-    //   [margin.left, scalePaddingX, xScale.bandwidth(), data, showTooltip, yScale, getCcfValue]
-    // );
+        showTooltip({
+          tooltipData: d,
+          // tooltipLeft: (xScale(getDate(d)) ?? 0) + scalePaddingX,
+          tooltipLeft: x + xScale.bandwidth() / 2,
+          tooltipTop: yScale(getCcfValue(d)),
+        });
+      },
+      [margin.left, scalePaddingX, xScale.bandwidth(), data, showTooltip, yScale, getCcfValue]
+    );
 
     return (
       <div>
@@ -206,10 +232,10 @@ const Base = withTooltip<AreaProps, TooltipData>(
               height={innerHeight - scalePaddingY * 2}
               fill="transparent"
               rx={14}
-              // onTouchStart={handleTooltip}
-              // onTouchMove={handleTooltip}
-              // onMouseMove={handleTooltip}
-              // onMouseLeave={() => hideTooltip()}
+              onTouchStart={handleTooltip}
+              onTouchMove={handleTooltip}
+              onMouseMove={handleTooltip}
+              onMouseLeave={() => hideTooltip()}
             />
             {tooltipData && (
               <g>
@@ -253,7 +279,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
               left={tooltipLeft}
               style={tooltipStyles}
             >
-              {`$${getCcfValue(tooltipData)}`}
+              {`${dollarFormatter(getCcfValue(tooltipData))}`}
             </TooltipWithBounds>
             <Tooltip
               top={innerHeight + margin.top - 14}

@@ -20,7 +20,7 @@ CREATE POLICY "Can insert new waa" ON waa
   TO authenticated
   WITH CHECK ((SELECT auth.uid()) = user_id);
 
-CREATE POLICY "Can update own debt data" ON waa
+CREATE POLICY "Can update own waa" ON waa
   FOR UPDATE
   TO authenticated
   USING ((SELECT auth.uid()) = user_id)
