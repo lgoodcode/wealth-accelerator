@@ -85,7 +85,16 @@ export function CreateWaaInfoDialog() {
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Date</FormLabel>
-                  <DatePicker className="w-full" date={field.value} onSelect={field.onChange} />
+                  <DatePicker
+                    className="w-full"
+                    date={field.value}
+                    onSelect={field.onChange}
+                    calendarProps={{
+                      disabled: {
+                        after: new Date(),
+                      },
+                    }}
+                  />
                   <FormDescription>Select the date you made the deposit</FormDescription>
                   <FormMessage />
                 </FormItem>

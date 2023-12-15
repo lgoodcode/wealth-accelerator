@@ -63,7 +63,6 @@ export function DatePicker({
         <Calendar
           mode="single"
           selected={date}
-          disabled={disabled}
           onSelect={handleSelect}
           initialFocus
           {...calendarProps}
