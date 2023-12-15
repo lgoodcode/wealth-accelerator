@@ -103,7 +103,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
     // bounds
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
-    const scalePaddingX = 50;
+    const scalePaddingX = 60;
     const scalePaddingY = 30;
     const yMax = innerHeight - scalePaddingY;
     // accessors
@@ -279,7 +279,7 @@ const Base = withTooltip<AreaProps, TooltipData>(
               left={tooltipLeft}
               style={tooltipStyles}
             >
-              {`$${getCcfValue(tooltipData)}`}
+              {`${dollarFormatter(getCcfValue(tooltipData))}`}
             </TooltipWithBounds>
             <Tooltip
               top={innerHeight + margin.top - 14}
