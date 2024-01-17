@@ -64,6 +64,8 @@ const getAccountBalances = async (user_id: string): Promise<BalancesEntryData[]>
     throw error || new Error('No transactions returned');
   }
 
+  console.log('account balances', data);
+
   return data;
 };
 
