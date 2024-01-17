@@ -169,6 +169,11 @@ export function VisualizerInputs({
                     date={field.value}
                     onSelect={field.onChange}
                     disabled={isDisabled}
+                    calendarProps={{
+                      disabled: {
+                        after: new Date(),
+                      },
+                    }}
                   />
                   <FormDescription>{inputLabels.start_date.description}</FormDescription>
                   <FormMessage />
@@ -186,6 +191,11 @@ export function VisualizerInputs({
                     date={field.value}
                     onSelect={field.onChange}
                     disabled={isDisabled}
+                    calendarProps={{
+                      disabled: {
+                        after: new Date(),
+                      },
+                    }}
                   />
                   <FormDescription>{inputLabels.end_date.description}</FormDescription>
                   <FormMessage />
