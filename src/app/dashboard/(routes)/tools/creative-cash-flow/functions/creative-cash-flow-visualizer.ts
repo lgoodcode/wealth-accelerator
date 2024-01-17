@@ -17,6 +17,17 @@ interface CreativeCashFlowManagementArgs {
   balances_entries: BalancesEntryData[];
 }
 
+const filterTransactionsByDate = (
+  transactions: CcfTransaction[],
+  start_date: Date,
+  end_date: Date
+) => {
+  return transactions.filter((transaction) => {
+    const transaction_time = new Date(transaction.date);
+    return transaction_time >= start_date && transaction_time <= end_date;
+  });
+};
+
 export function visualizeCcf({
   interval,
   business_transactions,
@@ -78,14 +89,18 @@ export function visualizeCcf({
       : differenceInMonths(end_date, start_date);
 
   const results = [];
-  let collections = 0;
 
-  for (let i = 0; i < num_periods; i++, collections = 0) {
+  for (let i = 0, collections = 0; i < num_periods; i++, collections = 0) {
     // Get the start and end dates for this window
     const window_start_date = add(start_date, { [duration]: i });
     const _window_end_date = add(window_start_date, { [duration]: 1 });
     const window_end_date = _window_end_date > end_date ? end_date : _window_end_date;
-
+    // Get the transactions within this window
+    const window_business_transactions = filterTransactionsByDate(
+      business_transactions,
+      window_start_date,
+      window_end_date
+    );
     // Get the WaaInfo within this range
     const window_waa_infos = waaInfos.filter((waaInfo) => {
       const waaInfoDate = new Date(waaInfo.date);
@@ -96,6 +111,12 @@ export function visualizeCcf({
       const entryDate = new Date(entry.date);
       return entryDate >= window_start_date && entryDate <= window_end_date;
     });
+
+    for (const transaction of window_business_transactions) {
+      if (transaction.category === 'Money-In') {
+        collections -= transaction.amount;
+      }
+    }
 
     results.push({
       range: {
