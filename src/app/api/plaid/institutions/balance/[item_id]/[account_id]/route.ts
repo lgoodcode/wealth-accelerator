@@ -52,17 +52,19 @@ async function getAccountBalance(
       },
     });
 
-    const balance = response.data.accounts[0].balances.available;
-
-    return NextResponse.json({ balance });
+    return NextResponse.json({
+      balance: response.data.accounts[0].balances.available,
+    });
   } catch (error: any) {
+    const errMsg = 'Failed to retrieve account balance';
     const extra = {
       item_id,
       account_id,
+      error: error.response.data,
     };
 
-    console.error(error, extra);
-    captureException(error, { extra });
-    return NextResponse.json({ error: 'Failed to retrieve account balance' }, { status: 500 });
+    console.error(errMsg, extra);
+    captureException(errMsg, { extra });
+    return NextResponse.json({ error: errMsg }, { status: 500 });
   }
 }

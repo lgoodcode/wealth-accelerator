@@ -55,11 +55,11 @@ export function creativeCashFlowManagement({
   const busi = [];
   const life = [];
 
-  console.log({
-    business_transactions,
-    personal_transactions,
-  });
-  console.group('collections');
+  // console.log({
+  //   business_transactions,
+  //   personal_transactions,
+  // });
+  // console.group('collections');
 
   for (const transaction of business_transactions) {
     const transaction_time = new Date(transaction.date).getTime();
@@ -89,11 +89,11 @@ export function creativeCashFlowManagement({
     }
   }
 
-  console.log('collections', col);
-  console.log('business_overhead', busi);
+  // console.log('collections', col);
+  // console.log('business_overhead', busi);
 
-  console.groupEnd();
-  console.group('personal');
+  // console.groupEnd();
+  // console.group('personal');
 
   business_overhead = Math.max(business_overhead, 0);
 
@@ -115,7 +115,7 @@ export function creativeCashFlowManagement({
     }
   }
 
-  console.groupEnd();
+  // console.groupEnd();
 
   const lifestyle_expenses_tax = lifestyle_expenses * lifestyle_expenses_tax_rate;
   const business_profit_before_tax =
