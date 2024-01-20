@@ -59,7 +59,7 @@ async function getAccountBalance(
     const extra = {
       item_id,
       account_id,
-      error,
+      error: error.response,
     };
 
     console.error(error, extra);
