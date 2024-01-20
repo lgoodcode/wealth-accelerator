@@ -59,10 +59,12 @@ async function getAccountBalance(
     const extra = {
       item_id,
       account_id,
+      error,
     };
 
     console.error(error, extra);
-    captureException(error, { extra });
+    console.warn(Object.keys(error));
+    captureException('Failed to retrieve account balance', { extra });
     return NextResponse.json({ error: 'Failed to retrieve account balance' }, { status: 500 });
   }
 }
